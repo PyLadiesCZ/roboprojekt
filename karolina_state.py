@@ -46,7 +46,6 @@ for i in range(len(data['tilesets'][0]['tiles'])):
     image_name = image_name[1:] # unelegant way of removing ../ at the beginning of the path
     json_dict[image_id] = image_name
 
-print(json_dict)
 def draw_tiles():
     img_dict = []
     for key in state:
@@ -75,13 +74,3 @@ def on_draw():
         tile.draw()
 
 pyglet.app.run()    
-
-   
-
-
-
-
-
-
-
-
