@@ -2,9 +2,10 @@
 
 import json
 
+map_name = "./maps/test_1.json"  # actual map path here
+
 # reading JSON file with testing map - one layer, no rotation
-def get_data():
-    map_name = "./maps/test_1.json"  # actual map path here
+def get_data(map_name):
     with open(map_name, encoding="utf-8") as f:
         data = json.load(f)
     return data
@@ -23,13 +24,13 @@ def get_coordinates(data):
             coordinates.append((x, y))
     return coordinates
 
-# getting the list of tiles ID's
+# getting the list of real tile ID's
 def get_ids(data):
-    tiles = data['layers'][0]['data']
+    tilelist = data["layers"][0]["data"]
     firstgid = data['tilesets'][0]['firstgid']
     tile_ids = []
-    for tile in tiles:
-        tile = tile + firstgid
+    for tile in tilelist:
+        tile = tile - firstgid
         tile_ids.append(tile)
     return tile_ids
 
