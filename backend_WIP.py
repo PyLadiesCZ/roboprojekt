@@ -26,10 +26,10 @@ def get_coordinates(data):
 # getting the list of tiles ID's
 def get_ids(data):
     tiles = data['layers'][0]['data']
-    firstgrid = data['tilesets'][0]['firstgrid']
+    firstgid = data['tilesets'][0]['firstgid']
     tile_ids = []
     for tile in tiles:
-        tile = tile + firstgrid
+        tile = tile + firstgid
         tile_ids.append(tile)
     return tile_ids
 
