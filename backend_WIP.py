@@ -24,21 +24,25 @@ def get_coordinates(data):
             coordinates.append((x, y))
     return coordinates
 
-# getting the list of real tile ID's
-def get_ids(data):
+# getting the list of json tiles
+def get_tiles(data):
     tilelist = data["layers"][0]["data"]
-    firstgid = data['tilesets'][0]['firstgid']
-    tile_ids = []
-    for tile in tilelist:
-        tile = tile - firstgid
-        tile_ids.append(tile)
-    return tile_ids
+    return tilelist
 
-# creates zip and transforms it to a dictionary of keys = (x, y) and values = [tile ID]
+# creates zip and transforms it to a dictionary of keys = (x, y) and values = [tiles]
 # if you're unsure about dict(), have a look at https://naucse.python.cz/2018/pyladies-brno-podzim/beginners/dict/
-state = dict(zip(coordinates, tile_ids))
+state = dict(zip(coordinates, tilelist))
 
 # get a dictionary with tile ID as a key and path to a real image as a value
-#...
-#...
+def get_real_ids(data):
+    firstgid = data['tilesets'][0]['firstgid']
+    real_image_path = {}
+    for i in range(len(data['tilesets'][0]['tiles'])):
+        image_id = data['tilesets'][0]['tiles'][i]['id']
+        real_image_id = image_id + firstgid
+        image_name = data['tilesets'][0]['tiles'][i]['image']
+        image_name = image_name[1:] # unelegant way of removing ../ at the beginning of the path
+        real_images[real_image_id] = image_name
+    return real_image_path
+
 #WIP
