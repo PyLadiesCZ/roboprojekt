@@ -2,7 +2,7 @@
 import pyglet
 import backend
 
-map_name = "./test1.json"
+map_name = "./test_1.json"
 data = backend.get_data(map_name)
 
 def get_windowsize(data):#in backend?
