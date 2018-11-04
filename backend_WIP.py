@@ -29,18 +29,20 @@ def get_tiles(data):
     tilelist = data["layers"][0]["data"]
     return tilelist
 
-# creates zip and transforms it to a dictionary of keys = (x, y) and values = [tiles]
+# getting the board state - creates zip and transforms it to a dictionary of keys = (x, y) and values = [tiles]
 # if you're unsure about dict(), have a look at https://naucse.python.cz/2018/pyladies-brno-podzim/beginners/dict/
-state = dict(zip(coordinates, tilelist))
+def get_coordinate_dict(coordinates, tilelist):
+    state = dict(zip(coordinates, tilelist))
+    return state
 
 # getting a dictionary with modified tile ID as a key and path to a real image as a value
 def get_real_ids(data):
     firstgid = data['tilesets'][0]['firstgid']
     real_images = {}
-    for i in range(len(data['tilesets'][0]['tiles'])):
-        real_image_id = data['tilesets'][0]['tiles'][i]['id']
+    for i in data['tilesets'][0]['tiles']:
+        real_image_id = i['id']
         image_id = real_image_id + firstgid
-        image_name = data['tilesets'][0]['tiles'][i]['image']
+        image_name = i['image']
         image_name = image_name[1:] # unelegant way of removing ../ at the beginning of the path
         real_images[image_id] = image_name
     return real_images
