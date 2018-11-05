@@ -2,7 +2,7 @@ import backend
 import frontend
 import pyglet
 
-map_name = "./test_1.json"
+map_name = "./maps/test_1.json"
 data = backend.get_data(map_name)
 
 window = frontend.init_window(data)

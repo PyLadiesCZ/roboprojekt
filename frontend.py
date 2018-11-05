@@ -1,32 +1,20 @@
 #this file is still in progress
 import pyglet
 import backend
+WIDTH = 12
+HEIGHT = 12
+TILE_WIDTH = 64
+TILE_HEIGHT = 64
 
-'''making of window based on function
-def get_windowsize(data):
-    map_field_height = data['layers'][0]['height']
-    map_field_width = data['layers'][0]['width']
-    tile_height = data['tileheight']
-    tile_width = data['tilewidth']
-    width = tile_width*map_field_width
-    height = tile_height*map_field_height
-    return width,height, tile_width, tile_height'''
 
-def init_window(data):
-    size = backend.get_windowsize(data)
-    width = size[0]
-    height = size[1]
-    tile_width = size[2]
-    tile_height= size[3]
+'''this function make  window for drawing'''
+def init_window(data, WIDTH, HEIGHT):
     window = pyglet.window.Window(width, height)
     return window
 
-#list of images
-def load_images(data, state):
+'''this function make a list of images'''
+def load_images(data, state, TILE_WIDTH, TILE_HEIGHT):
     real_images = backend.get_real_ids(data)
-    size = backend.get_windowsize(data)
-    tile_width = size[2]
-    tile_height= size[3]
     images = []
     for key in state:
         if state[key] in real_images:
@@ -40,7 +28,7 @@ def load_images(data, state):
             images.append(img)
     return images
 
-#drawing function
+'''this function is drawing a map'''
 def draw_board(state, images):
 
     for tile in images:
