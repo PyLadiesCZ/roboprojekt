@@ -9,7 +9,7 @@ TILE_HEIGHT = 64
 
 '''this function make  window for drawing'''
 def init_window(data, WIDTH, HEIGHT):
-    window = pyglet.window.Window(width, height)
+    window = pyglet.window.Window(WIDTH, HEIGHT)
     return window
 
 '''this function make a list of images'''
@@ -22,8 +22,8 @@ def load_images(data, state, TILE_WIDTH, TILE_HEIGHT):
             img.anchor_x = img.width//2
             img.anchor_y = img.height//2
             x, y = key
-            tile_x = x*tile_width
-            tile_y = y*tile_height
+            tile_x = x*TILE_WIDTH
+            tile_y = y*TILE_HEIGHT
             img = pyglet.sprite.Sprite(img, x=img.anchor_x+tile_x, y = img.anchor_y+tile_y)
             images.append(img)
     return images
