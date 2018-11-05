@@ -1,15 +1,15 @@
 #this file is still in progress
 import pyglet
 import backend
-WIDTH = 12
-HEIGHT = 12
+
 TILE_WIDTH = 64
 TILE_HEIGHT = 64
-
+WINDOW_WIDTH = 12*TILE_WIDTH
+WINDOW_HEIGHT = 12*TILE_HEIGHT
 
 '''this function make  window for drawing'''
-def init_window(data, WIDTH, HEIGHT):
-    window = pyglet.window.Window(WIDTH, HEIGHT)
+def init_window(WIDTH, HEIGHT):
+    window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT)
     return window
 
 '''this function make a list of images'''
