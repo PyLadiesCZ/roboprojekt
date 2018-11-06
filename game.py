@@ -7,16 +7,21 @@ TILE_HEIGHT = 64
 WINDOW_WIDTH = 12*TILE_WIDTH
 WINDOW_HEIGHT = 12*TILE_HEIGHT
 
-map_name = "./maps/test_1.json"
+map_name = "./maps/test_2.json"
 data = backend.get_data(map_name)
 
 window = frontend.init_window(WINDOW_WIDTH, WINDOW_HEIGHT)
 
 coordinates = backend.get_coordinates(data)
 tilelist = backend.get_tiles(data)
-state = backend.get_coordinate_dict(coordinates,tilelist)
+state = backend.get_coordinate_dict(coordinates, tilelist)
 
 images = frontend.load_images(data, state, TILE_WIDTH, TILE_HEIGHT)
+
+#print('coordinates', coordinates)
+#print('tilelist', tilelist)
+#print('state', state)
+#print('images', images)
 
 @window.event
 def on_draw():
