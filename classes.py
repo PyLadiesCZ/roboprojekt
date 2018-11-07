@@ -75,6 +75,7 @@ def perform_field_effect(self, game_state, field_effect):
         be_damaged(self, game_state)
         return game_state
 
+@dataclasses.dataclass
 class Directions:
     '''future square (where robot looks to)'''
     x: int
@@ -89,23 +90,27 @@ class Turn_direction(enum.Enum):
     BACK = 2
     LEFT = 3
 
+@dataclasses.dataclass
 class Program:
     cards: list <Card>
 
+@dataclasses.dataclass
 class Card:
     priority: int
     effect: Card_effect
     face_up: bool = True
 
+@dataclasses.dataclass
 class Card_effect:
     card_type: Card_type
     direction: Directions
     move: int
 
+@dataclasses.dataclass
 class Card_type:
     move: bool
     turn: bool
-    
+
 @dataclasses.dataclass
 class Field:
     effect: list <Field_effect>
@@ -114,7 +119,7 @@ class Field:
 class Field_effect:
     field_type_effect: Field_type_effect
     power: int
-    
+
 
 @dataclasses.dataclass
 class Field_type_effect:
@@ -125,18 +130,17 @@ class Field_type_effect:
     flag: Flag
     starting_position_change
     wall: Wall
-    
+
 @dataclasses.dataclass
 class Flag:
     ranking: int
     position: Position
 
-@dataclasses.dataclass    
+@dataclasses.dataclass
 class Position:
     x: int
     y: int
-    
+
 @dataclasses.dataclass
 class Wall:
-#need to be solved, issue created 
-    
+#need to be solved, issue created
