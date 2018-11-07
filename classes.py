@@ -1,3 +1,5 @@
+#WIP
+
 import enum
 import dataclasses
 
@@ -103,3 +105,38 @@ class Card_effect:
 class Card_type:
     move: bool
     turn: bool
+    
+@dataclasses.dataclass
+class Field:
+    effect: list <Field_effect>
+
+@dataclasses.dataclass
+class Field_effect:
+    field_type_effect: Field_type_effect
+    power: int
+    
+
+@dataclasses.dataclass
+class Field_type_effect:
+    movement: int
+    turn: Turn_direction
+    damage: bool
+    killing: bool
+    flag: Flag
+    starting_position_change
+    wall: Wall
+    
+@dataclasses.dataclass
+class Flag:
+    ranking: int
+    position: Position
+
+@dataclasses.dataclass    
+class Position:
+    x: int
+    y: int
+    
+@dataclasses.dataclass
+class Wall:
+#need to be solved, issue created 
+    
