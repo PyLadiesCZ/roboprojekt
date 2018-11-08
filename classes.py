@@ -11,7 +11,7 @@ class Robot:
     is_active: bool
     field: Position
     flags_count: int
-    robot_type: Robot_type
+    robot_type: RobotType
     initial_pozition: Position
     program: Program
 
@@ -53,7 +53,7 @@ class Robot:
         return game_state
 
 
-    def perform_card_effect(self, game_state, card_effect):
+    def perform_CardEffect(self, game_state, CardEffect):
         if ...:
             be_moved(self, game_state, move_direction, distance)
             return game_state
@@ -61,7 +61,7 @@ class Robot:
             be_turned(self, game_state, turn_direction)
             return game_state
 
-    def perform_field_effect(self, game_state, field_effect):
+    def perform_FieldEffect(self, game_state, FieldEffect):
         if ...:
             be_moved(self, game_state, move_direction, distance)
             return game_state
@@ -80,11 +80,11 @@ class Directions:
     '''future square (where robot looks to)'''
     x: int
     y: int
-    def turn_direction(self, Turn_direction):
+    def turn_direction(self, TurnDirection):
         ...
-        return x,y #????
+        return x,y
 
-class Turn_direction(enum.Enum):
+class TurnDirection(enum.Enum):
     FORWARD = 0
     RIGHT = 1
     BACK = 2
@@ -92,43 +92,43 @@ class Turn_direction(enum.Enum):
 
 @dataclasses.dataclass
 class Program:
-    cards: list(Card)
+    cards: list #Card
 
 @dataclasses.dataclass
 class Card:
     priority: int
-    effect: Card_effect
+    effect: CardEffect
     face_up: bool = True
 
 @dataclasses.dataclass
-class Card_effect:
-    card_type: Card_type
+class CardEffect:
+    card_type: CardType
     direction: Directions
     move: int
 
 @dataclasses.dataclass
-class Card_type:
+class CardType:
     move: bool
     turn: bool
 
 @dataclasses.dataclass
 class Field:
-    effect: list(Field_effect)
+    effect: list #FieldEffect
 
 @dataclasses.dataclass
-class Field_effect:
-    field_type_effect: Field_type_effect
+class FieldEffect:
+    field_type_effect: FieldTypeEffect
     power: int
 
 
 @dataclasses.dataclass
-class Field_type_effect:
+class FieldTypeEffect:
     movement: int
-    turn: Turn_direction
+    turn: TurnDirection
     damage: bool
     killing: bool
     flag: Flag
-    starting_position_change
+    starting_position_change: object
     wall: Wall
 
 @dataclasses.dataclass
