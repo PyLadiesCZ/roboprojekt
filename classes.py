@@ -53,7 +53,7 @@ class Robot:
         return game_state
 
 
-    def perform_CardEffect(self, game_state, CardEffect):
+    def perform_card_effect(self, game_state, card_effect):
         if ...:
             be_moved(self, game_state, move_direction, distance)
             return game_state
@@ -61,7 +61,7 @@ class Robot:
             be_turned(self, game_state, turn_direction)
             return game_state
 
-    def perform_FieldEffect(self, game_state, FieldEffect):
+    def perform_field_effect(self, game_state, field_effect):
         if ...:
             be_moved(self, game_state, move_direction, distance)
             return game_state
