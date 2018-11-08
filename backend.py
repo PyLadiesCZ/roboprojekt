@@ -15,21 +15,18 @@ def get_data(map_name):
     return data
 
 
-def get_coordinates(data):
+def get_coordinates(BOARD_HEIGHT, BOARD_WIDTH):
     '''
     returns a list of coordinates for individual tiles on the map
 
-    as an argument it loads "data", a dict created from decoded Tiled 1.2 JSON file
-    gets the size of the game board
+    as an argument it takes expected board height and width, constants stored in module game.
     gets x, y vectors for each tile and creates a list of all tile coordinates, for example:
        [(0, 11), (0, 10), (0, 9), ..., (0, 0), (1, 11), (1, 10), ..., (11, 1), (11, 0)]
     transformation with reversed is required as the json tiles are in an opposite direction
     '''
-    map_field_height = data['layers'][0]['height']
-    map_field_width = data['layers'][0]['width']
     coordinates = []
-    for y in reversed(range(map_field_height)):
-        for x in range(map_field_width):
+    for y in reversed(range(BOARD_HEIGHT)):
+        for x in range(BOARD_WIDTH):
             coordinates.append((x, y))
     return coordinates
 
@@ -41,7 +38,6 @@ def get_tiles(data):
     as an argument it loads "data", a dict created from decoded Tiled 1.2 JSON file
     from the list "data" within the list "layers" gets the list of all tiles
     '''
-
     rotation_dict = {0:0, 10:90, 12:180, 6:270}
     tilelist = {}
     for layer in data['layers']:

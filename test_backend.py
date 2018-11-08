@@ -5,5 +5,5 @@ import pytest
 def test_get_coordinates_returns_list(map_name):
     """Test that get_coordinates() returns a list for each map."""
     data = get_data('maps/' + map_name + '.json') 
-    coordinates = get_coordinates(data)
+    coordinates = get_coordinates(12, 12)
     assert isinstance(coordinates, list)
