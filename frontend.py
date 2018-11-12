@@ -13,7 +13,8 @@ def load_images(data, state, TILE_WIDTH, TILE_HEIGHT):
     images = []
     for layer in state:
         for key, value in state[layer].items():
-            coordinate, rotation = value
+            coordinate = value.id
+            rotation = value.rotation
             if coordinate in real_images:
                 img = pyglet.image.load(real_images[coordinate])
                 img.anchor_x = img.width//2
