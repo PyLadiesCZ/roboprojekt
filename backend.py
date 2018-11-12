@@ -3,6 +3,12 @@
 import json
 
 
+class Tile:
+    def __init__(self, id, rotation):
+        self.id = id
+        self.rotation = rotation
+
+
 def get_data(map_name):
     '''
     returns decoded JSON map file
@@ -50,7 +56,8 @@ def get_tiles(data):
             real_tile = data & 0xFFFFFF
             rotation_index = data >> (4*7)
             rotation = rotation_dict[rotation_index]
-            tilelist_layer.append((real_tile, rotation))
+            tile = Tile(real_tile, rotation)
+            tilelist_layer.append(tile)
         tilelist[layer['id']] = tilelist_layer
     return tilelist
 
