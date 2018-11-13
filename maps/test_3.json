@@ -14,7 +14,7 @@
          "y":0
         }, 
         {
-         "data":[2, 11, 10, 11, 10, 11, 10, 11, 10, 11, 10, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 7, 13, 0, 0, 0, 0, 0, 0, 0, 0, 1610612753, 1610612753, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 8, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1610612749, 0],
+         "data":[0, 2684354573, 0, 2684354573, 0, 2684354573, 2684354573, 0, 2684354573, 0, 2684354573, 38, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3221225485, 0, 0, 0, 2684354578, 0, 2684354578, 0, 38, 1610612754, 0, 0, 0, 13, 0, 2684354578, 33, 2684354578, 0, 2, 1610612754, 0, 1610612754, 0, 3221225485, 0, 0, 2, 2684354578, 0, 39, 30, 0, 1610612754, 0, 0, 0, 13, 0, 2684354578, 0, 2684354578, 0, 0, 1610612754, 32, 1610612754, 0, 3221225485, 0, 0, 31, 2684354578, 0, 2684354578, 0, 0, 1610612754, 2, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3221225485, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 41, 0, 42, 0, 43, 44, 0, 45, 0, 46, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":12,
          "id":2,
          "name":"layer 2",
@@ -26,22 +26,10 @@
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2684354576, 2684354577, 2684354577, 2684354577, 2684354577, 2684354577, 2684354577, 2684354577, 2684354577, 17, 3221225485, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0],
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354585, 0, 0, 24, 0, 2684354573, 0, 2684354573, 2684354573, 0, 2684354573, 0, 3221225496, 0, 0, 24, 13, 0, 0, 0, 0, 0, 0, 3221225485, 3221225496, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 3221225496, 0, 0, 24, 13, 0, 0, 0, 0, 0, 0, 3221225485, 3221225496, 0, 0, 24, 0, 1610612749, 0, 1610612749, 1610612749, 0, 1610612749, 0, 3221225496, 0, 0, 1610612761, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 3221225497, 0, 0, 0, 1610612749, 0, 1610612749, 0, 0, 1610612749, 0, 1610612749, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 13, 0, 13, 13, 13, 0, 13, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":12,
          "id":3,
          "name":"layer 3",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":12,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2684354573, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-         "height":12,
-         "id":4,
-         "name":"layer 4",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
@@ -68,7 +56,7 @@
          "margin":0,
          "name":"test",
          "spacing":0,
-         "tilecount":14,
+         "tilecount":43,
          "tileheight":65,
          "tiles":[
                 {
@@ -120,12 +108,6 @@
                  "imagewidth":64
                 }, 
                 {
-                 "id":11,
-                 "image":"..\/img\/squares\/png\/starting_square.png",
-                 "imageheight":64,
-                 "imagewidth":64
-                }, 
-                {
                  "id":12,
                  "image":"..\/img\/squares\/png\/wall.png",
                  "imageheight":64,
@@ -152,6 +134,186 @@
                 {
                  "id":16,
                  "image":"..\/img\/squares\/png\/laser_2.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":17,
+                 "image":"..\/img\/squares\/png\/conveyor_belt_1.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":18,
+                 "image":"..\/img\/squares\/png\/conveyor_belt_1_corner_l.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":19,
+                 "image":"..\/img\/squares\/png\/conveyor_belt_1_corner_r.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":20,
+                 "image":"..\/img\/squares\/png\/conveyor_belt_1_cross_l.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":21,
+                 "image":"..\/img\/squares\/png\/conveyor_belt_1_cross_r.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":22,
+                 "image":"..\/img\/squares\/png\/conveyor_belt_1_cross_t.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":23,
+                 "image":"..\/img\/squares\/png\/conveyor_belt_2.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":24,
+                 "image":"..\/img\/squares\/png\/conveyor_belt_2_corner.svg.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":25,
+                 "image":"..\/img\/squares\/png\/conveyor_belt_2_corner_l.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":26,
+                 "image":"..\/img\/squares\/png\/conveyor_belt_2_cross_l.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":27,
+                 "image":"..\/img\/squares\/png\/conveyor_belt_2_cross_r.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":28,
+                 "image":"..\/img\/squares\/png\/conveyor_belt_2_cross_t.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":29,
+                 "image":"..\/img\/squares\/png\/flag_1.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":30,
+                 "image":"..\/img\/squares\/png\/flag_2.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":31,
+                 "image":"..\/img\/squares\/png\/flag_3.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":32,
+                 "image":"..\/img\/squares\/png\/flag_4.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":33,
+                 "image":"..\/img\/squares\/png\/flag_5.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":34,
+                 "image":"..\/img\/squares\/png\/flag_6.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":35,
+                 "image":"..\/img\/squares\/png\/flag_7.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":36,
+                 "image":"..\/img\/squares\/png\/flag_8.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":37,
+                 "image":"..\/img\/squares\/png\/repair.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":38,
+                 "image":"..\/img\/squares\/png\/repair_2.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":39,
+                 "image":"..\/img\/squares\/png\/starting_square01.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":40,
+                 "image":"..\/img\/squares\/png\/starting_square02.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":41,
+                 "image":"..\/img\/squares\/png\/starting_square03.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":42,
+                 "image":"..\/img\/squares\/png\/starting_square04.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":43,
+                 "image":"..\/img\/squares\/png\/starting_square05.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":44,
+                 "image":"..\/img\/squares\/png\/starting_square06.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":45,
+                 "image":"..\/img\/squares\/png\/starting_square07.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
+                {
+                 "id":46,
+                 "image":"..\/img\/squares\/png\/starting_square08.png",
                  "imageheight":64,
                  "imagewidth":64
                 }],
