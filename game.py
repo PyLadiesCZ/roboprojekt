@@ -1,4 +1,4 @@
-'''
+"""
 The module game is part of RoboProject by Pyladies Brno.
 
 Key library is pyglet Python library  https://bitbucket.org/pyglet/pyglet/wiki/Home
@@ -11,7 +11,7 @@ The game module
     - calls pyglet window
     - calls various backend and frontend functions
     - draws the game map and runs pyglet
-'''
+"""
 
 import backend
 import frontend
@@ -43,7 +43,7 @@ images = frontend.load_images(data, state, TILE_WIDTH, TILE_HEIGHT)
 def on_draw():
     """
     this function clears the graphic window
-    and finally draws the board game 
+    and finally draws the board game
     """
     window.clear()
     frontend.draw_board(state, images)

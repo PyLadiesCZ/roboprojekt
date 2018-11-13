@@ -1,6 +1,6 @@
 # this file is still in progress #WIP
 
-'''
+"""
 The module frontend is part of RoboProject by Pyladies Brno.
 
 Key library is pyglet Python library  https://bitbucket.org/pyglet/pyglet/wiki/Home
@@ -10,31 +10,31 @@ The frontend module
     - creates a Pyglet window for drawing
     - loads pyglet sprites
     - draws images to display the game board
-'''
+"""
 
 import pyglet
 import backend
 
 
 def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
-    '''
+    """
     creates a pyglet window for graphic output
 
     is called in the game module and uses arguments
     WINDOW_WIDTH and WINDOW_HEIGHT from the game module
-    '''
+    """
     window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT)
     return window
 
 
 def load_images(data, state, TILE_WIDTH, TILE_HEIGHT):
-    '''
+    """
     makes a list of images
 
     calls backends' get_real_ids function (returning a dictionary of IDs)
     creates empty list of images and fills it with data from JSON
     (including layers, coordinates, rotation)
-    '''
+    """
     real_images = backend.get_real_ids(data)
     images = []
 
@@ -59,9 +59,9 @@ def load_images(data, state, TILE_WIDTH, TILE_HEIGHT):
 
 
 def draw_board(state, images):
-    '''
+    """
     draws the game map
-    '''
+    """
     for tile in images:
         tile.draw()
 
