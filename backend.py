@@ -1,4 +1,6 @@
-# [WIP] this file is still in progress
+"""
+Backend file contains functions for the game logic. 
+"""
 
 import json
 
@@ -10,27 +12,26 @@ class Tile:
 
 
 def get_data(map_name):
-    '''
-    returns decoded JSON map file
+    """
+    Return decoded JSON map file as a dictionary.
 
-    as an argument it loads a map of the game board created in Tiled 1.2 and saved as JSON file
+    map_name: a map of the game board created in Tiled 1.2 and saved as JSON file
     json.load() turns JSON encoded data into Python objects
-    '''
+    """
     with open(map_name, encoding="utf-8") as f:
         data = json.load(f)
     return data
 
 
 def get_coordinates(data):
-    '''
-    returns a list of coordinates for individual tiles on the map
+    """
+    Return a list of coordinates for individual tiles on the map.
 
-    as an argument it loads "data", a dict created from decoded Tiled 1.2 JSON file
-    gets the size of the game board
-    gets x, y vectors for each tile and creates a list of all tile coordinates, for example:
-       [(0, 11), (0, 10), (0, 9), ..., (0, 0), (1, 11), (1, 10), ..., (11, 1), (11, 0)]
-    transformation with reversed is required as the json tiles are in an opposite direction
-    '''
+    data: a dict created from decoded Tiled 1.2 JSON file
+    Get the size of the game board and x, y vectors for each tile and creates a list of all tile coordinates, for example:
+    [(0, 11), (0, 10), (0, 9), ..., (0, 0), (1, 11), (1, 10), ..., (11, 1), (11, 0)]
+    Transformation with reversed is required as the JSON tiles are in an opposite direction.
+    """
     map_field_height = data['layers'][0]['height']
     map_field_width = data['layers'][0]['width']
     coordinates = []
@@ -41,12 +42,12 @@ def get_coordinates(data):
 
 
 def get_tiles(data):
-    '''
-    returns the complete list of tiles
+    """
+    Return the complete list of tiles.
 
-    as an argument it loads "data", a dict created from decoded Tiled 1.2 JSON file
-    from the list "data" within the list "layers" gets the list of all tiles
-    '''
+    data: a dict created from decoded Tiled 1.2 JSON file
+    Get the list of all tiles from the list "data" within the list "layers". 
+    """
 
     rotation_dict = {0:0, 10:90, 12:180, 6:270}
     tilelist = {}
@@ -63,12 +64,13 @@ def get_tiles(data):
 
 
 def get_coordinate_dict(coordinates, tilelist):
-    '''
-    returns the game board state
+    """
+    Return the game board state.
 
-    as arguments it loads the list of coordinates and list of all tiles, zips it and transforms it to a dictionary of keys = (x, y) and values = [tiles]
-    more about dictionaries: https://naucse.python.cz/2018/pyladies-brno-podzim/beginners/dict/
-    '''
+    coordinates: a list of coordinates of all tiles
+    tilelist: a list of all tiles
+    More about dictionaries: https://naucse.python.cz/2018/pyladies-brno-podzim/beginners/dict/
+    """
     state = {}
     for layer in tilelist:
         state[layer] = dict(zip(coordinates, tilelist[layer]))
@@ -76,13 +78,12 @@ def get_coordinate_dict(coordinates, tilelist):
 
 
 def get_real_ids(data):
-    '''
-    returns a dictionary with modified tile ID as a key and path to a real image as a value
+    """
+    Return a dictionary with modified tile ID as a key and path to a real image as a value.
 
-    as an argument it loads "data", a dict created from decoded Tiled 1.2 JSON file
-    gets a number of the specific layer
-    creates a dictionary where tile ID is modified with the number of the layer so it matches the number of the tile in the tilelist
-    '''
+    data: a dict created from decoded Tiled 1.2 JSON file
+    Create a dictionary where tile ID is modified with the number of the layer so it matches the number of the tile in the tilelist.
+    """
     firstgid = data['tilesets'][0]['firstgid']
     real_images = {}
     for i in data['tilesets'][0]['tiles']:
@@ -94,4 +95,3 @@ def get_real_ids(data):
     return real_images
 
 
-# [WIP]
