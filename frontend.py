@@ -35,7 +35,6 @@ def load_images(data, state, TILE_WIDTH, TILE_HEIGHT):
     creates empty list of images and fills it with data from JSON
     (including layers, coordinates, rotation)
     """
-    real_images = backend.get_real_ids(data)
     images = []
 
     #filling the empty list of images
@@ -43,10 +42,10 @@ def load_images(data, state, TILE_WIDTH, TILE_HEIGHT):
         # state is distioary created in backends function get_coordiante_dict
 # !!!!!!!!!!!!!!!!!!! tuhle cast asi jeste rozsirit !!!!!!!!!!!!!!!!
         for key, value in state[layer].items():
-            coordinate = value.id
             rotation = value.rotation
-            if coordinate in real_images:
-                img = pyglet.image.load(real_images[coordinate])
+            path = value.path
+            if path != 0:
+                img = pyglet.image.load(path)
                 img.anchor_x = img.width//2
                 img.anchor_y = img.height//2
                 x, y = key
