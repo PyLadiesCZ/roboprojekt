@@ -41,19 +41,9 @@ def get_coordinates(data):
     return coordinates
 
 def get_tile_id(number):
-    """
-    Convert tile ID value to decimal system.
-    
-    number: tile ID value written in hexadecimal system.
-    """ 
     return number & 0xFFFFFF
 
 def get_tile_rotation(number):
-    """
-    Convert tile rotation value to decimal system.
-    
-    number: tile rotation value written in hexadecimal system.
-    """
     return number >> (4*7)
 
 def get_tiles(data):
