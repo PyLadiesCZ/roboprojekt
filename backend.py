@@ -40,6 +40,21 @@ def get_coordinates(data):
             coordinates.append((x, y))
     return coordinates
 
+def get_tile_id(number):
+    """
+    Convert tile ID value to decimal system.
+    
+    number: tile ID value written in hexadecimal system.
+    """ 
+    return number & 0xFFFFFF
+
+def get_tile_rotation(number):
+    """
+    Convert tile rotation value to decimal system.
+    
+    number: tile rotation value written in hexadecimal system.
+    """
+    return number >> (4*7)
 
 def get_tiles(data):
     """
@@ -54,8 +69,8 @@ def get_tiles(data):
     for layer in data['layers']:
         tilelist_layer = []
         for data in layer['data']:
-            real_tile = data & 0xFFFFFF
-            rotation_index = data >> (4*7)
+            real_tile = get_tile_id(data)
+            rotation_index = get_tile_rotation(data)
             rotation = rotation_dict[rotation_index]
             tile = Tile(real_tile, rotation)
             tilelist_layer.append(tile)
