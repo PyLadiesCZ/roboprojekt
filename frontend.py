@@ -55,11 +55,25 @@ def load_images(data, state, TILE_WIDTH, TILE_HEIGHT):
                 images.append(img)
     return images
 
+def load_robots(starting_coordinate_list, TILE_WIDTH, TILE_HEIGHT):
+    robots = []
+    for coordinate in starting_coordinate_list:
+        x, y = coordinate
+        img = pyglet.image.load('./img/robots/png/terka_robot_map.png')
+        img.anchor_x = img.width//2
+        img.anchor_y = img.height//2
 
-def draw_board(state, images):
+        tile_x = x*TILE_WIDTH
+        tile_y = y*TILE_HEIGHT
+        img = pyglet.sprite.Sprite(img, x=img.anchor_x+tile_x, y=img.anchor_y+tile_y)
+        robots.append(img)
+    return robots
+
+def draw_board(state, images, robots):
     """
     draws the game map
     """
+    images.extend(robots)
     for tile in images:
         tile.draw()
 

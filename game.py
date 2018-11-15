@@ -39,6 +39,9 @@ state = backend.get_coordinate_dict(coordinates, tilelist)
 images = frontend.load_images(data, state, TILE_WIDTH, TILE_HEIGHT)
 
 
+starting_coordinate_list = backend.get_starting_coordinate_list(state)
+robots = frontend.load_robots(starting_coordinate_list, TILE_WIDTH, TILE_HEIGHT)
+
 @window.event
 def on_draw():
     """
@@ -46,7 +49,7 @@ def on_draw():
     and finally draws the board game
     """
     window.clear()
-    frontend.draw_board(state, images)
+    frontend.draw_board(state, images, robots)
 
 # this runs the pyglet library
 pyglet.app.run()
