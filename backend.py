@@ -38,6 +38,11 @@ def get_coordinates(data):
             coordinates.append((x, y))
     return coordinates
 
+def get_tile_id(number):
+    return number & 0xFFFFFF
+
+def get_tile_rotation(number):
+    return number >> (4*7)
 
 def get_tiles(data):
     """
@@ -51,11 +56,11 @@ def get_tiles(data):
     for layer in data['layers']:
         tilelist_layer = []
         for data in layer['data']:
-            id = data & 0xFFFFFF
+            id = get_tile_id(data)
             if id == 0:
                 tile = Tile(0, 0)
             else:
-                rotation_index = data >> (4*7)
+                rotation_index = get_tile_rotation(data)
                 rotation = rotation_dict[rotation_index]
                 tile = Tile(rotation, paths[id])
             tilelist_layer.append(tile)
