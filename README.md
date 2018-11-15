@@ -6,3 +6,9 @@ This course was created primarilly for those who succesfully passed the PyLadies
 The assignment of this project is transforming board game RoboRally to computer version so the final result should be working playable computer game.
 
 You can follow the progress on our [blog](https://roboprojekt.pyladies.cz/).
+
+### Requirements
+To succesfully run the project you need to install [pyglet](https://bitbucket.org/pyglet/pyglet/wiki/Home) library.
+```
+python -m pip install pyglet
+```
