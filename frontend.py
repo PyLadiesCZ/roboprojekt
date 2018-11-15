@@ -16,7 +16,6 @@ import pyglet
 import random
 
 
-
 def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
     """
     creates a pyglet window for graphic output
@@ -51,16 +50,18 @@ def load_images(data, state, TILE_WIDTH, TILE_HEIGHT):
                 images.append(img)
     return images
 
-def load_robots(starting_coordinate, robot_path, TILE_WIDTH, TILE_HEIGHT):
+
+def load_robots(starting_coordinates, robot_paths, TILE_WIDTH, TILE_HEIGHT):
     robots = []
-    for coordinate in starting_coordinate:
+    for coordinate in starting_coordinates:
         x, y = coordinate
-        if robot_path:
-            path = random.choice(robot_path)
-            robot_path.remove(path)
+        if robot_paths:
+            path = random.choice(robot_paths)
+            robot_paths.remove(path)
             img = sprite(path, coordinate, TILE_WIDTH, TILE_HEIGHT)
             robots.append(img)
     return robots
+
 
 def sprite(path, coordinate, TILE_WIDTH, TILE_HEIGHT):
     x, y = coordinate
@@ -71,6 +72,7 @@ def sprite(path, coordinate, TILE_WIDTH, TILE_HEIGHT):
     tile_y = y*TILE_HEIGHT
     img = pyglet.sprite.Sprite(img, x=img.anchor_x+tile_x, y=img.anchor_y+tile_y)
     return img
+
 
 def draw_board(state, images, robots):
     """

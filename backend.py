@@ -62,6 +62,7 @@ def get_tiles(data):
         tilelist[layer['id']] = tilelist_layer
     return tilelist
 
+
 def get_coordinate_dict(coordinates, tilelist):
     """
     Return the game board state.
@@ -73,7 +74,7 @@ def get_coordinate_dict(coordinates, tilelist):
     state = {}
     for layer in tilelist:
         state[layer] = dict(zip(coordinates, tilelist[layer]))
-    return state #{1: {(0, 11): <backend.Tile object at 0x7f21f93abfd0>,
+    return state
 
 
 def get_paths(data):
@@ -89,27 +90,29 @@ def get_paths(data):
         image_path = i['image']
         image_path = image_path[1:]  # unelegant way of removing ../ at the beginning of the path
         paths[image_id] = image_path
-    return paths #{1: './img/squares/png/ground.png',
+    return paths
 
-def get_starting_coordinate(state):
+
+def get_starting_coordinates(state):
     """
-    Return a list with coordinates where are starting square
+    Return a list with coordinates where are starting squares
     ...
     """
-    starting_coordinate = []
+    starting_coordinates = []
     for list in state.items():
         for key, value in list[1].items():
             for i in range(9):
                 if value.path == (f"./img/squares/png/starting_square0{i}.png"):
-                    starting_coordinate.append(key)
-    return starting_coordinate
+                    starting_coordinates.append(key)
+    return starting_coordinates
 
-def get_robot_path():
+
+def get_robot_paths():
     """
     Return a list with paths to robots images
     ...
     """
-    robot_path = []
-    for robot in Path('./img/robots_map/png/').iterdir():#search image file 
-        robot_path.append(robot)
-    return robot_path
+    robot_paths = []
+    for robot in Path('./img/robots_map/png/').iterdir():#search image file
+        robot_paths.append(robot)
+    return robot_paths
