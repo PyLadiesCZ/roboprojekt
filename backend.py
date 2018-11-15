@@ -102,7 +102,7 @@ def get_starting_coordinates(state):
     for list in state.items():
         for key, value in list[1].items():
             for i in range(9):
-                if value.path == (f"./img/squares/png/starting_square0{i}.png"):
+                if value.path == ("./img/squares/png/starting_square0{}.png".format(i)):
                     starting_coordinates.append(key)
     return starting_coordinates
 
