@@ -14,8 +14,7 @@ The frontend module
 
 import pyglet
 import random
-TILE_WIDTH = 64
-TILE_HEIGHT = 64
+
 
 
 def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
@@ -29,7 +28,7 @@ def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
     return window
 
 
-def load_images(data, state):
+def load_images(data, state, TILE_WIDTH, TILE_HEIGHT):
     """
     makes a list of images
 
@@ -43,27 +42,27 @@ def load_images(data, state):
     for layer in state:
         # state is distioary created in backends function get_coordiante_dict
 # !!!!!!!!!!!!!!!!!!! tuhle cast asi jeste rozsirit !!!!!!!!!!!!!!!!
-        for coordinate, value in state[layer].items():
+        for key, value in state[layer].items():
             rotation = value.rotation
             path = value.path
             if path != 0:
-                img = sprite(path, coordinate)
+                img = sprite(path, key, TILE_WIDTH, TILE_HEIGHT)
                 img.rotation = rotation
                 images.append(img)
     return images
 
-def load_robots(starting_coordinate, robot_path):
+def load_robots(starting_coordinate, robot_path, TILE_WIDTH, TILE_HEIGHT):
     robots = []
     for coordinate in starting_coordinate:
         x, y = coordinate
         if robot_path:
             path = random.choice(robot_path)
             robot_path.remove(path)
-            img = sprite(path, coordinate)
+            img = sprite(path, coordinate, TILE_WIDTH, TILE_HEIGHT)
             robots.append(img)
     return robots
 
-def sprite(path, coordinate):
+def sprite(path, coordinate, TILE_WIDTH, TILE_HEIGHT):
     x, y = coordinate
     img = pyglet.image.load(path)
     img.anchor_x = img.width//2

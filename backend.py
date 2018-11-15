@@ -102,10 +102,14 @@ def get_starting_coordinate(state):
             for i in range(9):
                 if value.path == (f"./img/squares/png/starting_square0{i}.png"):
                     starting_coordinate.append(key)
-    return(starting_coordinate)
+    return starting_coordinate
 
 def get_robot_path():
+    """
+    Return a list with paths to robots images
+    ...
+    """
     robot_path = []
-    for robot in Path('./img/robots_map/png/').iterdir():
+    for robot in Path('./img/robots_map/png/').iterdir():#search image file 
         robot_path.append(robot)
     return robot_path
