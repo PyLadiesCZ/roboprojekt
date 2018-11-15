@@ -13,8 +13,10 @@ The frontend module
 """
 
 import pyglet
-from pathlib import Path
 import random
+TILE_WIDTH = 64
+TILE_HEIGHT = 64
+
 
 def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
     """
@@ -27,7 +29,7 @@ def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
     return window
 
 
-def load_images(data, state, TILE_WIDTH, TILE_HEIGHT):
+def load_images(data, state):
     """
     makes a list of images
 
@@ -41,39 +43,35 @@ def load_images(data, state, TILE_WIDTH, TILE_HEIGHT):
     for layer in state:
         # state is distioary created in backends function get_coordiante_dict
 # !!!!!!!!!!!!!!!!!!! tuhle cast asi jeste rozsirit !!!!!!!!!!!!!!!!
-        for key, value in state[layer].items():
+        for coordinate, value in state[layer].items():
             rotation = value.rotation
             path = value.path
             if path != 0:
-                img = pyglet.image.load(path)
-                img.anchor_x = img.width//2
-                img.anchor_y = img.height//2
-                x, y = key
-                tile_x = x*TILE_WIDTH
-                tile_y = y*TILE_HEIGHT
-                img = pyglet.sprite.Sprite(img, x=img.anchor_x+tile_x, y=img.anchor_y+tile_y)
+                img = sprite(path, coordinate)
                 img.rotation = rotation
                 images.append(img)
     return images
 
-def load_robots(starting_coordinate_list, TILE_WIDTH, TILE_HEIGHT):
+def load_robots(starting_coordinate, robot_path):
     robots = []
-    robot_list = []
-    for robot in Path('./img/robots_map/png/').iterdir():
-        robot_list.append(robot)
-
-    for coordinate in starting_coordinate_list:
+    for coordinate in starting_coordinate:
         x, y = coordinate
-        i = random.choice(robot_list)
-        robot_list.remove(i)
-        img = pyglet.image.load(i)
-        img.anchor_x = img.width//2
-        img.anchor_y = img.height//2
-        tile_x = x*TILE_WIDTH
-        tile_y = y*TILE_HEIGHT
-        img = pyglet.sprite.Sprite(img, x=img.anchor_x+tile_x, y=img.anchor_y+tile_y)
-        robots.append(img)
+        if robot_path:
+            path = random.choice(robot_path)
+            robot_path.remove(path)
+            img = sprite(path, coordinate)
+            robots.append(img)
     return robots
+
+def sprite(path, coordinate):
+    x, y = coordinate
+    img = pyglet.image.load(path)
+    img.anchor_x = img.width//2
+    img.anchor_y = img.height//2
+    tile_x = x*TILE_WIDTH
+    tile_y = y*TILE_HEIGHT
+    img = pyglet.sprite.Sprite(img, x=img.anchor_x+tile_x, y=img.anchor_y+tile_y)
+    return img
 
 def draw_board(state, images, robots):
     """

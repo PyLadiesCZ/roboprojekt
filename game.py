@@ -36,11 +36,12 @@ tilelist = backend.get_tiles(data)
 state = backend.get_coordinate_dict(coordinates, tilelist)
 
 # loading pyglet sprites by the frontend module
-images = frontend.load_images(data, state, TILE_WIDTH, TILE_HEIGHT)
+images = frontend.load_images(data, state)
 
 
-starting_coordinate_list = backend.get_starting_coordinate_list(state)
-robots = frontend.load_robots(starting_coordinate_list, TILE_WIDTH, TILE_HEIGHT)
+starting_coordinate = backend.get_starting_coordinate(state)
+robot_path = backend.get_robot_path()
+robots = frontend.load_robots(starting_coordinate, robot_path)
 
 @window.event
 def on_draw():

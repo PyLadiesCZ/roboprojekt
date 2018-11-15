@@ -3,7 +3,7 @@ Backend file contains functions for the game logic.
 """
 
 import json
-
+from pathlib import Path
 
 class Tile:
     def __init__(self, rotation, path):
@@ -91,15 +91,21 @@ def get_paths(data):
         paths[image_id] = image_path
     return paths #{1: './img/squares/png/ground.png',
 
-def get_starting_coordinate_list(state):
+def get_starting_coordinate(state):
     """
     Return a list with coordinates where are starting square
     ...
     """
-    starting_coordinate_list = []
+    starting_coordinate = []
     for list in state.items():
         for key, value in list[1].items():
             for i in range(9):
                 if value.path == (f"./img/squares/png/starting_square0{i}.png"):
-                    starting_coordinate_list.append(key)
-    return(starting_coordinate_list)
+                    starting_coordinate.append(key)
+    return(starting_coordinate)
+
+def get_robot_path():
+    robot_path = []
+    for robot in Path('./img/robots_map/png/').iterdir():
+        robot_path.append(robot)
+    return robot_path
