@@ -60,23 +60,7 @@ def get_tiles(data):
                 tile = Tile(rotation, paths[id])
             tilelist_layer.append(tile)
         tilelist[layer['id']] = tilelist_layer
-    #print(tilelist)#{1: [<backend.Tile object at 0x7f18549a2f98>,
-    # for list in tilelist.items():
-    #     if list[1][100].rotation == 0:
-    #         print('yes')
-    # for list in tilelist.items():
-    #     print(list[1][1].path)
     return tilelist
-
-def get_starting_coordinate_list(state):
-    starting_coordinate_list = []
-    for list in state.items():
-        for key, value in list[1].items():
-            for i in range(9):
-                if value.path ==(f"./img/squares/png/starting_square0{i}.png"):
-                    starting_coordinate_list.append(key)
-    return(starting_coordinate_list)
-
 
 def get_coordinate_dict(coordinates, tilelist):
     """
@@ -89,8 +73,7 @@ def get_coordinate_dict(coordinates, tilelist):
     state = {}
     for layer in tilelist:
         state[layer] = dict(zip(coordinates, tilelist[layer]))
-    #print(state) #{1: {(0, 11): <backend.Tile object at 0x7f21f93abfd0>,
-    return state
+    return state #{1: {(0, 11): <backend.Tile object at 0x7f21f93abfd0>,
 
 
 def get_paths(data):
@@ -106,5 +89,17 @@ def get_paths(data):
         image_path = i['image']
         image_path = image_path[1:]  # unelegant way of removing ../ at the beginning of the path
         paths[image_id] = image_path
-    #print(paths) #{1: './img/squares/png/ground.png',
-    return paths
+    return paths #{1: './img/squares/png/ground.png',
+
+def get_starting_coordinate_list(state):
+    """
+    Return a list with coordinates where are starting square
+    ...
+    """
+    starting_coordinate_list = []
+    for list in state.items():
+        for key, value in list[1].items():
+            for i in range(9):
+                if value.path == (f"./img/squares/png/starting_square0{i}.png"):
+                    starting_coordinate_list.append(key)
+    return(starting_coordinate_list)

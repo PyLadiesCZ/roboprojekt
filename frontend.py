@@ -13,7 +13,8 @@ The frontend module
 """
 
 import pyglet
-
+from pathlib import Path
+import random
 
 def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
     """
@@ -57,12 +58,17 @@ def load_images(data, state, TILE_WIDTH, TILE_HEIGHT):
 
 def load_robots(starting_coordinate_list, TILE_WIDTH, TILE_HEIGHT):
     robots = []
+    robot_list = []
+    for robot in Path('./img/robots_map/png/').iterdir():
+        robot_list.append(robot)
+
     for coordinate in starting_coordinate_list:
         x, y = coordinate
-        img = pyglet.image.load('./img/robots/png/terka_robot_map.png')
+        i = random.choice(robot_list)
+        robot_list.remove(i)
+        img = pyglet.image.load(i)
         img.anchor_x = img.width//2
         img.anchor_y = img.height//2
-
         tile_x = x*TILE_WIDTH
         tile_y = y*TILE_HEIGHT
         img = pyglet.sprite.Sprite(img, x=img.anchor_x+tile_x, y=img.anchor_y+tile_y)
