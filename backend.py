@@ -1,14 +1,14 @@
 """
-Backend file contains functions for the game logic. 
+Backend file contains functions for the game logic.
 """
 
 import json
 
 
 class Tile:
-    def __init__(self, id, rotation):
-        self.id = id
+    def __init__(self, rotation, path):
         self.rotation = rotation
+        self.path = path
 
 
 def get_data(map_name):
@@ -32,11 +32,9 @@ def get_coordinates(data):
     [(0, 11), (0, 10), (0, 9), ..., (0, 0), (1, 11), (1, 10), ..., (11, 1), (11, 0)]
     Transformation with reversed is required as the JSON tiles are in an opposite direction.
     """
-    map_field_height = data['layers'][0]['height']
-    map_field_width = data['layers'][0]['width']
     coordinates = []
-    for y in reversed(range(map_field_height)):
-        for x in range(map_field_width):
+    for y in reversed(range(data['layers'][0]['height'])):
+        for x in range(data['layers'][0]['width']):
             coordinates.append((x, y))
     return coordinates
 
@@ -48,21 +46,23 @@ def get_tile_rotation(number):
 
 def get_tiles(data):
     """
-    Return the complete list of tiles.
+    Return dictionary of tiles together with path to image and its rotation.
 
     data: a dict created from decoded Tiled 1.2 JSON file
-    Get the list of all tiles from the list "data" within the list "layers". 
     """
-
+    paths = get_paths(data)
     rotation_dict = {0:0, 10:90, 12:180, 6:270}
     tilelist = {}
     for layer in data['layers']:
         tilelist_layer = []
         for data in layer['data']:
-            real_tile = get_tile_id(data)
-            rotation_index = get_tile_rotation(data)
-            rotation = rotation_dict[rotation_index]
-            tile = Tile(real_tile, rotation)
+            id = get_tile_id(data)
+            if id == 0:
+                tile = Tile(0, 0)
+            else:
+                rotation_index = get_tile_rotation(data)
+                rotation = rotation_dict[rotation_index]
+                tile = Tile(rotation, paths[id])
             tilelist_layer.append(tile)
         tilelist[layer['id']] = tilelist_layer
     return tilelist
@@ -82,21 +82,17 @@ def get_coordinate_dict(coordinates, tilelist):
     return state
 
 
-def get_real_ids(data):
+def get_paths(data):
     """
     Return a dictionary with modified tile ID as a key and path to a real image as a value.
 
     data: a dict created from decoded Tiled 1.2 JSON file
     Create a dictionary where tile ID is modified with the number of the layer so it matches the number of the tile in the tilelist.
     """
-    firstgid = data['tilesets'][0]['firstgid']
-    real_images = {}
+    paths = {}
     for i in data['tilesets'][0]['tiles']:
-        real_image_id = i['id']
-        image_id = real_image_id + firstgid
-        image_name = i['image']
-        image_name = image_name[1:]  # unelegant way of removing ../ at the beginning of the path
-        real_images[image_id] = image_name
-    return real_images
-
-
+        image_id = i['id'] + data['tilesets'][0]['firstgid']
+        image_path = i['image']
+        image_path = image_path[1:]  # unelegant way of removing ../ at the beginning of the path
+        paths[image_id] = image_path
+    return paths
