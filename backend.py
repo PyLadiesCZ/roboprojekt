@@ -46,21 +46,18 @@ def get_tiles(data):
     data: a dict created from decoded Tiled 1.2 JSON file
     """
     paths = get_paths(data)
-
     rotation_dict = {0:0, 10:90, 12:180, 6:270}
     tilelist = {}
     for layer in data['layers']:
         tilelist_layer = []
         for data in layer['data']:
             id = data & 0xFFFFFF
-
             if id == 0:
                 tile = Tile(0, 0)
             else:
                 rotation_index = data >> (4*7)
                 rotation = rotation_dict[rotation_index]
                 tile = Tile(rotation, paths[id])
-
             tilelist_layer.append(tile)
         tilelist[layer['id']] = tilelist_layer
     return tilelist

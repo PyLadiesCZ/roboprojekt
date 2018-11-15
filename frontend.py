@@ -13,7 +13,6 @@ The frontend module
 """
 
 import pyglet
-import backend
 
 
 def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
