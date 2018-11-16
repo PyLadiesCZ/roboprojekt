@@ -53,7 +53,9 @@ def load_images(data, state, TILE_WIDTH, TILE_HEIGHT):
 
 def load_robots(robots_start, TILE_WIDTH, TILE_HEIGHT):
     robots = []
-    for coordinate, path in robots_start.items():
+    for coordinate, value in robots_start.items():
+        rotation = value.rotation
+        path = value.path
         img = sprite(path, coordinate, TILE_WIDTH, TILE_HEIGHT)
         robots.append(img)
     return robots

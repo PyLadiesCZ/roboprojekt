@@ -11,6 +11,10 @@ class Tile:
         self.rotation = rotation
         self.path = path
 
+class Robot:
+    def __init__(self, rotation, path):
+        self.rotation = rotation
+        self.path = path
 
 def get_data(map_name):
     """
@@ -114,7 +118,8 @@ def get_robot_paths():
     ...
     """
     robot_paths = []
-    for robot in Path('./img/robots_map/png/').iterdir():#search image file
+    for path in Path('./img/robots_map/png/').iterdir():#search image file
+        robot = Robot(0, path)
         robot_paths.append(robot)
     return robot_paths
 
