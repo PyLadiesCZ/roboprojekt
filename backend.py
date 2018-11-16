@@ -4,6 +4,7 @@ Backend file contains functions for the game logic.
 
 import json
 from pathlib import Path
+import random
 
 class Tile:
     def __init__(self, rotation, path):
@@ -116,3 +117,13 @@ def get_robot_paths():
     for robot in Path('./img/robots_map/png/').iterdir():#search image file
         robot_paths.append(robot)
     return robot_paths
+
+def get_robots_to_start(starting_coordinates, robot_paths):
+    robots_start = {}
+    for coordinate in starting_coordinates:
+        x, y = coordinate
+        if robot_paths:
+            path = random.choice(robot_paths)
+            robot_paths.remove(path)
+            robots_start[coordinate] = path
+    return robots_start

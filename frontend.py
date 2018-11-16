@@ -13,7 +13,7 @@ The frontend module
 """
 
 import pyglet
-import random
+
 
 
 def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
@@ -51,15 +51,11 @@ def load_images(data, state, TILE_WIDTH, TILE_HEIGHT):
     return images
 
 
-def load_robots(starting_coordinates, robot_paths, TILE_WIDTH, TILE_HEIGHT):
+def load_robots(robots_start, TILE_WIDTH, TILE_HEIGHT):
     robots = []
-    for coordinate in starting_coordinates:
-        x, y = coordinate
-        if robot_paths:
-            path = random.choice(robot_paths)
-            robot_paths.remove(path)
-            img = sprite(path, coordinate, TILE_WIDTH, TILE_HEIGHT)
-            robots.append(img)
+    for coordinate, path in robots_start.items():
+        img = sprite(path, coordinate, TILE_WIDTH, TILE_HEIGHT)
+        robots.append(img)
     return robots
 
 

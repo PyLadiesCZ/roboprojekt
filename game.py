@@ -38,10 +38,11 @@ state = backend.get_coordinate_dict(coordinates, tilelist)
 # calling functions from the backend module to draw robots on startin squares
 starting_coordinates = backend.get_starting_coordinates(state)
 robot_paths = backend.get_robot_paths()
+robots_start = backend.get_robots_to_start(starting_coordinates, robot_paths)
 
 # loading pyglet sprites by the frontend module
 images = frontend.load_images(data, state, TILE_WIDTH, TILE_HEIGHT)
-robots = frontend.load_robots(starting_coordinates, robot_paths, TILE_WIDTH, TILE_HEIGHT)
+robots = frontend.load_robots(robots_start, TILE_WIDTH, TILE_HEIGHT)
 
 
 
