@@ -3,13 +3,18 @@ Backend file contains functions for the game logic.
 """
 
 import json
-
+from pathlib import Path
+import random
 
 class Tile:
     def __init__(self, rotation, path):
         self.rotation = rotation
         self.path = path
 
+class Robot:
+    def __init__(self, rotation, path):
+        self.rotation = rotation
+        self.path = path
 
 def get_data(map_name):
     """
@@ -96,3 +101,39 @@ def get_paths(data):
         image_path = image_path[1:]  # unelegant way of removing ../ at the beginning of the path
         paths[image_id] = image_path
     return paths
+
+
+def get_starting_coordinates(state):
+    """
+    Return a list with coordinates where are starting squares
+    ...
+    """
+    starting_coordinates = []
+    for list in state.items():
+        for key, value in list[1].items():
+            for i in range(9):
+                if value.path == ("./img/squares/png/starting_square0{}.png".format(i)):
+                    starting_coordinates.append(key)
+    return starting_coordinates
+
+
+def get_robot_paths():
+    """
+    Return a list with paths to robots images
+    ...
+    """
+    robot_paths = []
+    for path in Path('./img/robots_map/png/').iterdir():#search image file
+        robot = Robot(0, path)
+        robot_paths.append(robot)
+    return robot_paths
+
+def get_robots_to_start(starting_coordinates, robot_paths):
+    robots_start = {}
+    for coordinate in starting_coordinates:
+        x, y = coordinate
+        if robot_paths:
+            path = random.choice(robot_paths)
+            robot_paths.remove(path)
+            robots_start[coordinate] = path
+    return robots_start

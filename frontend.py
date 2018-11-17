@@ -15,6 +15,7 @@ The frontend module
 import pyglet
 
 
+
 def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
     """
     creates a pyglet window for graphic output
@@ -34,32 +35,47 @@ def load_images(data, state, TILE_WIDTH, TILE_HEIGHT):
     creates empty list of images and fills it with data from JSON
     (including layers, coordinates, rotation)
     """
-    images = []
 
+    images = []
     #filling the empty list of images
     for layer in state:
         # state is distioary created in backends function get_coordiante_dict
 # !!!!!!!!!!!!!!!!!!! tuhle cast asi jeste rozsirit !!!!!!!!!!!!!!!!
-        for key, value in state[layer].items():
-            rotation = value.rotation
-            path = value.path
-            if path != 0:
-                img = pyglet.image.load(path)
-                img.anchor_x = img.width//2
-                img.anchor_y = img.height//2
-                x, y = key
-                tile_x = x*TILE_WIDTH
-                tile_y = y*TILE_HEIGHT
-                img = pyglet.sprite.Sprite(img, x=img.anchor_x+tile_x, y=img.anchor_y+tile_y)
-                img.rotation = rotation
-                images.append(img)
+        img = sprite(state[layer],images, TILE_WIDTH, TILE_HEIGHT)
+        images.extend(img)
     return images
 
 
-def draw_board(state, images):
+
+def load_robots(robots_start, TILE_WIDTH, TILE_HEIGHT):
+    robots = []
+    img = sprite(robots_start,robots, TILE_WIDTH, TILE_HEIGHT)
+    robots.extend(img)
+    return robots
+
+
+def sprite(img_dict, list, TILE_WIDTH, TILE_HEIGHT):
+    for coordinate, value in img_dict.items():
+        rotation = value.rotation
+        path = value.path
+        if path != 0:
+            x, y = coordinate
+            img = pyglet.image.load(path)
+            img.anchor_x = img.width//2
+            img.anchor_y = img.height//2
+            tile_x = x*TILE_WIDTH
+            tile_y = y*TILE_HEIGHT
+            img = pyglet.sprite.Sprite(img, x=img.anchor_x+tile_x, y=img.anchor_y+tile_y)
+            img.rotation = rotation
+            list.append(img)
+    return list
+
+
+def draw_board(state, images, robots):
     """
     draws the game map
     """
+    images.extend(robots)
     for tile in images:
         tile.draw()
 

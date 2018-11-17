@@ -35,8 +35,17 @@ coordinates = backend.get_coordinates(data)
 tilelist = backend.get_tiles(data)
 state = backend.get_coordinate_dict(coordinates, tilelist)
 
+# calling functions from the backend module to draw robots on startin squares
+starting_coordinates = backend.get_starting_coordinates(state)
+robot_paths = backend.get_robot_paths()
+robots_start = backend.get_robots_to_start(starting_coordinates, robot_paths)
+
 # loading pyglet sprites by the frontend module
 images = frontend.load_images(data, state, TILE_WIDTH, TILE_HEIGHT)
+robots = frontend.load_robots(robots_start, TILE_WIDTH, TILE_HEIGHT)
+
+
+
 
 
 @window.event
@@ -46,7 +55,7 @@ def on_draw():
     and finally draws the board game
     """
     window.clear()
-    frontend.draw_board(state, images)
+    frontend.draw_board(state, images, robots)
 
 # this runs the pyglet library
 pyglet.app.run()
