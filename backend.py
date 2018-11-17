@@ -6,15 +6,24 @@ import json
 from pathlib import Path
 import random
 
+
 class Tile:
     def __init__(self, rotation, path):
         self.rotation = rotation
         self.path = path
 
+
 class Robot:
     def __init__(self, rotation, path):
         self.rotation = rotation
         self.path = path
+
+
+class State:
+    def __init__(self, board, robots):
+        self.board = board
+        self.robots = robots
+
 
 def get_data(map_name):
     """
@@ -43,49 +52,6 @@ def get_coordinates(data):
             coordinates.append((x, y))
     return coordinates
 
-def get_tile_id(number):
-    return number & 0xFFFFFF
-
-def get_tile_rotation(number):
-    return number >> (4*7)
-
-def get_tiles(data):
-    """
-    Return dictionary of tiles together with path to image and its rotation.
-
-    data: a dict created from decoded Tiled 1.2 JSON file
-    """
-    paths = get_paths(data)
-    rotation_dict = {0:0, 10:90, 12:180, 6:270}
-    tilelist = {}
-    for layer in data['layers']:
-        tilelist_layer = []
-        for data in layer['data']:
-            id = get_tile_id(data)
-            if id == 0:
-                tile = Tile(0, 0)
-            else:
-                rotation_index = get_tile_rotation(data)
-                rotation = rotation_dict[rotation_index]
-                tile = Tile(rotation, paths[id])
-            tilelist_layer.append(tile)
-        tilelist[layer['id']] = tilelist_layer
-    return tilelist
-
-
-def get_coordinate_dict(coordinates, tilelist):
-    """
-    Return the game board state.
-
-    coordinates: a list of coordinates of all tiles
-    tilelist: a list of all tiles
-    More about dictionaries: https://naucse.python.cz/2018/pyladies-brno-podzim/beginners/dict/
-    """
-    state = {}
-    for layer in tilelist:
-        state[layer] = dict(zip(coordinates, tilelist[layer]))
-    return state
-
 
 def get_paths(data):
     """
@@ -103,13 +69,49 @@ def get_paths(data):
     return paths
 
 
-def get_starting_coordinates(state):
+def get_tile_id(number):
+    return number & 0xFFFFFF
+
+
+def get_tile_rotation(number):
+    return number >> (4*7)
+
+
+def get_board(data):
+    """
+    Return dictionary of tiles together with path to image and its rotation.
+
+    data: a dict created from decoded Tiled 1.2 JSON file
+    coordinates: a list of coordinates of all tiles
+
+    More about dictionaries: https://naucse.python.cz/2018/pyladies-brno-podzim/beginners/dict/
+    """
+    paths = get_paths(data)
+    coordinates = get_coordinates(data)
+    rotation_dict = {0: 0, 10: 90, 12: 180, 6: 270}
+    board = {}
+    for layer in data['layers']:
+        tiles_layer = []
+        for data in layer['data']:
+            id = get_tile_id(data)
+            if id == 0:
+                tile = Tile(0, 0)
+            else:
+                rotation_index = get_tile_rotation(data)
+                rotation = rotation_dict[rotation_index]
+                tile = Tile(rotation, paths[id])
+            tiles_layer.append(tile)
+            board[layer['id']] = dict(zip(coordinates, tiles_layer))
+    return board
+
+
+def get_starting_coordinates(board):
     """
     Return a list with coordinates where are starting squares
     ...
     """
     starting_coordinates = []
-    for list in state.items():
+    for list in board.items():
         for key, value in list[1].items():
             for i in range(9):
                 if value.path == ("./img/squares/png/starting_square0{}.png".format(i)):
@@ -123,17 +125,26 @@ def get_robot_paths():
     ...
     """
     robot_paths = []
-    for path in Path('./img/robots_map/png/').iterdir():#search image file
+    for path in Path('./img/robots_map/png/').iterdir():  # search image file
         robot = Robot(0, path)
         robot_paths.append(robot)
     return robot_paths
 
-def get_robots_to_start(starting_coordinates, robot_paths):
+
+def get_robots_to_start(board):
+    starting_coordinates = get_starting_coordinates(board)
+    robot_paths = get_robot_paths()
     robots_start = {}
     for coordinate in starting_coordinates:
-        x, y = coordinate
         if robot_paths:
-            path = random.choice(robot_paths)
-            robot_paths.remove(path)
-            robots_start[coordinate] = path
+            robot = random.choice(robot_paths)
+            robot_paths.remove(robot)
+            robots_start[coordinate] = robot
     return robots_start
+
+
+def get_start_state(data):
+    board = get_board(data)
+    robots_start = get_robots_to_start(board)
+    state = State(board, robots_start)
+    return state

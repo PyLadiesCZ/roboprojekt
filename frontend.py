@@ -1,5 +1,3 @@
-# this file is still in progress #WIP
-
 """
 The module frontend is part of RoboProject by Pyladies Brno.
 
@@ -15,7 +13,6 @@ The frontend module
 import pyglet
 
 
-
 def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
     """
     creates a pyglet window for graphic output
@@ -27,34 +24,29 @@ def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
     return window
 
 
-def load_images(data, state, TILE_WIDTH, TILE_HEIGHT):
+def load_images(state, TILE_WIDTH, TILE_HEIGHT):
     """
     makes a list of images
 
-    calls backends' get_real_ids function (returning a dictionary of IDs)
     creates empty list of images and fills it with data from JSON
     (including layers, coordinates, rotation)
     """
 
     images = []
-    #filling the empty list of images
-    for layer in state:
-        # state is distioary created in backends function get_coordiante_dict
-# !!!!!!!!!!!!!!!!!!! tuhle cast asi jeste rozsirit !!!!!!!!!!!!!!!!
-        img = sprite(state[layer],images, TILE_WIDTH, TILE_HEIGHT)
+    for layer in state.board:
+        img = sprite(state.board[layer], TILE_WIDTH, TILE_HEIGHT)
+        # print(state.board[layer])
         images.extend(img)
     return images
 
 
-
-def load_robots(robots_start, TILE_WIDTH, TILE_HEIGHT):
-    robots = []
-    img = sprite(robots_start,robots, TILE_WIDTH, TILE_HEIGHT)
-    robots.extend(img)
+def load_robots(state, TILE_WIDTH, TILE_HEIGHT):
+    robots = sprite(state.robots, TILE_WIDTH, TILE_HEIGHT)
     return robots
 
 
-def sprite(img_dict, list, TILE_WIDTH, TILE_HEIGHT):
+def sprite(img_dict, TILE_WIDTH, TILE_HEIGHT):
+    list = []
     for coordinate, value in img_dict.items():
         rotation = value.rotation
         path = value.path
@@ -71,13 +63,10 @@ def sprite(img_dict, list, TILE_WIDTH, TILE_HEIGHT):
     return list
 
 
-def draw_board(state, images, robots):
+def draw_board(images, robots):
     """
     draws the game map
     """
     images.extend(robots)
     for tile in images:
         tile.draw()
-
-
-# WIP
