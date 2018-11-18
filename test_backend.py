@@ -52,9 +52,9 @@ def test_get_board_instance():
     If the test_3.json map is changed or removed, the test needs to be updated."""
 
     data = get_data("maps/test_3.json")
-    tilelist = get_board(data)
-    assert isinstance(tilelist, dict)
-    assert isinstance(tilelist[1], list)
+    board = get_board(data)
+    assert isinstance(board, dict)
+    assert isinstance(board[1], dict)
 
 @pytest.mark.parametrize(("input_number", "converted_number"),
                          [(1, 1),
