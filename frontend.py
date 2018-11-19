@@ -1,5 +1,3 @@
-# this file is still in progress #WIP
-
 """
 The module frontend is part of RoboProject by Pyladies Brno.
 
@@ -26,42 +24,49 @@ def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
     return window
 
 
-def load_images(data, state, TILE_WIDTH, TILE_HEIGHT):
+def load_images(state, TILE_WIDTH, TILE_HEIGHT):
     """
     makes a list of images
 
-    calls backends' get_real_ids function (returning a dictionary of IDs)
     creates empty list of images and fills it with data from JSON
     (including layers, coordinates, rotation)
     """
-    images = []
 
-    #filling the empty list of images
-    for layer in state:
-        # state is distioary created in backends function get_coordiante_dict
-# !!!!!!!!!!!!!!!!!!! tuhle cast asi jeste rozsirit !!!!!!!!!!!!!!!!
-        for key, value in state[layer].items():
-            rotation = value.rotation
-            path = value.path
-            if path != 0:
-                img = pyglet.image.load(path)
-                img.anchor_x = img.width//2
-                img.anchor_y = img.height//2
-                x, y = key
-                tile_x = x*TILE_WIDTH
-                tile_y = y*TILE_HEIGHT
-                img = pyglet.sprite.Sprite(img, x=img.anchor_x+tile_x, y=img.anchor_y+tile_y)
-                img.rotation = rotation
-                images.append(img)
+    images = []
+    for layer in state.board:
+        img = sprite(state.board[layer], TILE_WIDTH, TILE_HEIGHT)
+        # print(state.board[layer])
+        images.extend(img)
     return images
 
 
-def draw_board(state, images):
+def load_robots(state, TILE_WIDTH, TILE_HEIGHT):
+    robots = sprite(state.robots, TILE_WIDTH, TILE_HEIGHT)
+    return robots
+
+
+def sprite(img_dict, TILE_WIDTH, TILE_HEIGHT):
+    list = []
+    for coordinate, value in img_dict.items():
+        rotation = value.rotation
+        path = value.path
+        if path != 0:
+            x, y = coordinate
+            img = pyglet.image.load(path)
+            img.anchor_x = img.width//2
+            img.anchor_y = img.height//2
+            tile_x = x*TILE_WIDTH
+            tile_y = y*TILE_HEIGHT
+            img = pyglet.sprite.Sprite(img, x=img.anchor_x+tile_x, y=img.anchor_y+tile_y)
+            img.rotation = rotation
+            list.append(img)
+    return list
+
+
+def draw_board(images, robots):
     """
     draws the game map
     """
+    images.extend(robots)
     for tile in images:
         tile.draw()
-
-
-# WIP
