@@ -1,24 +1,20 @@
 """
-The module frontend is part of RoboProject by Pyladies Brno.
-
-Key library is pyglet Python library  https://bitbucket.org/pyglet/pyglet/wiki/Home
-This module imports the backend module and is imported in game module.
-
 The frontend module
-    - creates a Pyglet window for drawing
-    - loads pyglet sprites
-    - draws images to display the game board
+    - deal with graphic output
+    - define a Pyglet window for drawing and create sprites from images
 """
 
 import pyglet
 
+# define the board and size of tiles:
+TILE_WIDTH = 64
+TILE_HEIGHT = 64
+WINDOW_WIDTH = 12*TILE_WIDTH
+WINDOW_HEIGHT = 12*TILE_HEIGHT
 
 def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
     """
-    creates a pyglet window for graphic output
-
-    is called in the game module and uses arguments
-    WINDOW_WIDTH and WINDOW_HEIGHT from the game module
+    create a pyglet window for graphic output
     """
     window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT)
     return window
@@ -26,10 +22,9 @@ def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
 
 def load_images(state, TILE_WIDTH, TILE_HEIGHT):
     """
-    makes a list of images
+    return list of images
 
-    creates empty list of images and fills it with data from JSON
-    (including layers, coordinates, rotation)
+    input needed - loaded data fron JSON, dictionary state, size of tiles
     """
 
     images = []
@@ -41,11 +36,21 @@ def load_images(state, TILE_WIDTH, TILE_HEIGHT):
 
 
 def load_robots(state, TILE_WIDTH, TILE_HEIGHT):
+    """
+    return sprites of robots
+
+    input needed - dictionary state, size of tiles
+    """
     robots = sprite(state.robots, TILE_WIDTH, TILE_HEIGHT)
     return robots
 
 
 def sprite(img_dict, TILE_WIDTH, TILE_HEIGHT):
+    """
+    return list of sprites of items
+
+    input needed - dictionary img_dict, size of tiles
+    """
     list = []
     for coordinate, value in img_dict.items():
         rotation = value.rotation
@@ -65,7 +70,7 @@ def sprite(img_dict, TILE_WIDTH, TILE_HEIGHT):
 
 def draw_board(images, robots):
     """
-    draws the game map
+    draw the images of tiles into map
     """
     images.extend(robots)
     for tile in images:
