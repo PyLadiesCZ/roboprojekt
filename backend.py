@@ -92,16 +92,15 @@ def get_board(data):
     board = {coordinate: [] for coordinate in coordinates}
     rotation_dict = {0: 0, 10: 90, 12: 180, 6: 270}
     for layer in data['layers']:
-        for ind in range(len(layer['data'])):
-            data = layer['data'][ind]
+        for data, coordinate in zip(layer['data'], coordinates):
             id = get_tile_id(data)
-            tiles = board[coordinates[ind]]
+            tiles = board[coordinate]
             if id != 0:
                 rotation_index = get_tile_rotation(data)
                 rotation = rotation_dict[rotation_index]
                 tile = Tile(rotation, paths[id])
                 tiles.append(tile)
-                board[coordinates[ind]] = tiles
+                board[coordinate] = tiles
     return board
 
 
