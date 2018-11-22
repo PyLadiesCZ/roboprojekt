@@ -12,6 +12,7 @@ TILE_HEIGHT = 64
 WINDOW_WIDTH = 12*TILE_WIDTH
 WINDOW_HEIGHT = 12*TILE_HEIGHT
 
+
 def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
     """
     create a pyglet window for graphic output
@@ -28,9 +29,8 @@ def load_images(state, TILE_WIDTH, TILE_HEIGHT):
     """
 
     images = []
-    for layer in state.board:
-        img = sprite(state.board[layer], TILE_WIDTH, TILE_HEIGHT)
-        # print(state.board[layer])
+    for coordinate, tiles in state.board.items():
+        img = sprite(coordinate, tiles, TILE_WIDTH, TILE_HEIGHT)
         images.extend(img)
     return images
 
@@ -41,31 +41,33 @@ def load_robots(state, TILE_WIDTH, TILE_HEIGHT):
 
     input needed - dictionary state, size of tiles
     """
-    robots = sprite(state.robots, TILE_WIDTH, TILE_HEIGHT)
-    return robots
+    robot_imgs = []
+    for robot in state.robots:
+        robot_img = sprite(robot.coordinates, [robot], TILE_WIDTH, TILE_HEIGHT)
+        robot_imgs.extend(robot_img)
+    return robot_imgs
 
 
-def sprite(img_dict, TILE_WIDTH, TILE_HEIGHT):
+def sprite(coordinate, tiles, TILE_WIDTH, TILE_HEIGHT):
     """
     return list of sprites of items
 
     input needed - dictionary img_dict, size of tiles
     """
-    list = []
-    for coordinate, value in img_dict.items():
-        rotation = value.rotation
-        path = value.path
-        if path != 0:
-            x, y = coordinate
-            img = pyglet.image.load(path)
-            img.anchor_x = img.width//2
-            img.anchor_y = img.height//2
-            tile_x = x*TILE_WIDTH
-            tile_y = y*TILE_HEIGHT
-            img = pyglet.sprite.Sprite(img, x=img.anchor_x+tile_x, y=img.anchor_y+tile_y)
-            img.rotation = rotation
-            list.append(img)
-    return list
+    imgs = []
+    for tile in tiles:
+        rotation = tile.rotation
+        path = tile.path
+        x, y = coordinate
+        img = pyglet.image.load(path)
+        img.anchor_x = img.width//2
+        img.anchor_y = img.height//2
+        tile_x = x*TILE_WIDTH
+        tile_y = y*TILE_HEIGHT
+        img = pyglet.sprite.Sprite(img, x=img.anchor_x+tile_x, y=img.anchor_y+tile_y)
+        img.rotation = rotation
+        imgs.append(img)
+    return imgs
 
 
 def draw_board(images, robots):
