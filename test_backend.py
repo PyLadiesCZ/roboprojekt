@@ -54,7 +54,6 @@ def test_get_board_instance():
     data = get_data("maps/test_3.json")
     board = get_board(data)
     assert isinstance(board, dict)
-    assert isinstance(board[1], dict)
 
 @pytest.mark.parametrize(("input_number", "converted_number"),
                          [(1, 1),
