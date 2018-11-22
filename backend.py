@@ -12,6 +12,9 @@ class Tile:
         self.rotation = rotation
         self.path = path
 
+    def __repr__(self):
+    return "<Tile> {} {}>".format(self.rotation, self.path)
+
 
 class Robot:
     def __init__(self, rotation, path, coordinates):
@@ -19,12 +22,16 @@ class Robot:
         self.path = path
         self.coordinates = coordinates
 
+    def __repr__(self):
+    return "<Robot> {} {} {}>".format(self.rotation, self.path, self.coordinates)
 
 class State:
     def __init__(self, board, robots):
         self.board = board
         self.robots = robots
 
+    def __repr__(self):
+    return "<State> {} {}>".format(self.board, self.robots)
 
 def get_data(map_name):
     """
