@@ -61,14 +61,18 @@ def test_get_board_instance():
                          (2684354584, 24),
                          (1610612749, 13)])
 def test_convert_tile_id(input_number, converted_number):
+    """Take number from layer's data (JSON file) and assert it was correctly transformed to valid tile ID."""
+
     assert get_tile_id(input_number) == converted_number
 
 
 @pytest.mark.parametrize(("input_number", "converted_number"),
                          [(1, 0),
-                         (2684354573, 10),
-                         (2684354584, 10),
-                         (1610612749, 6),
-                         (3221225497, 12)])
+                         (2684354573, 90),
+                         (2684354584, 90),
+                         (1610612749, 270),
+                         (3221225497, 180)])
 def test_convert_tile_rotation(input_number, converted_number):
+    """Take number from layer's data (JSON file) and assert it was correctly transformed to valid rotation in degrees."""
+
     assert get_tile_rotation(input_number) == converted_number
