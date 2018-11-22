@@ -14,9 +14,10 @@ class Tile:
 
 
 class Robot:
-    def __init__(self, rotation, path):
+    def __init__(self, rotation, path, coordinates):
         self.rotation = rotation
         self.path = path
+        self.coordinates = coordinates
 
 
 class State:
@@ -88,20 +89,19 @@ def get_board(data):
     """
     paths = get_paths(data)
     coordinates = get_coordinates(data)
+    board = {coordinate: [] for coordinate in coordinates}
     rotation_dict = {0: 0, 10: 90, 12: 180, 6: 270}
-    board = {}
     for layer in data['layers']:
-        tiles_layer = []
-        for data in layer['data']:
+        for ind in range(len(layer['data'])):
+            data = layer['data'][ind]
             id = get_tile_id(data)
-            if id == 0:
-                tile = Tile(0, 0)
-            else:
+            tiles = board[coordinates[ind]]
+            if id != 0:
                 rotation_index = get_tile_rotation(data)
                 rotation = rotation_dict[rotation_index]
                 tile = Tile(rotation, paths[id])
-            tiles_layer.append(tile)
-            board[layer['id']] = dict(zip(coordinates, tiles_layer))
+                tiles.append(tile)
+                board[coordinates[ind]] = tiles
     return board
 
 
@@ -111,8 +111,8 @@ def get_starting_coordinates(board):
     ...
     """
     starting_coordinates = []
-    for list in board.items():
-        for key, value in list[1].items():
+    for key, list in board.items():
+        for value in list:
             for i in range(9):
                 if value.path == ("./img/squares/png/starting_square0{}.png".format(i)):
                     starting_coordinates.append(key)
@@ -126,20 +126,20 @@ def get_robot_paths():
     """
     robot_paths = []
     for path in Path('./img/robots_map/png/').iterdir():  # search image file
-        robot = Robot(0, path)
-        robot_paths.append(robot)
+        robot_paths.append(path)
     return robot_paths
 
 
 def get_robots_to_start(board):
     starting_coordinates = get_starting_coordinates(board)
     robot_paths = get_robot_paths()
-    robots_start = {}
+    robots_start = []
     for coordinate in starting_coordinates:
         if robot_paths:
-            robot = random.choice(robot_paths)
-            robot_paths.remove(robot)
-            robots_start[coordinate] = robot
+            path = random.choice(robot_paths)
+            robot_paths.remove(path)
+            robot = Robot(0, path, coordinate)
+            robots_start.append(robot)
     return robots_start
 
 
