@@ -14,7 +14,7 @@ class Tile:
     def __repr__(self):
         return "<Tile> {} {}>".format(self.rotation, self.path)
 
- class Robot:
+class Robot:
     def __init__(self, rotation, path, coordinates):
         self.rotation = rotation
         self.path = path
@@ -23,7 +23,7 @@ class Tile:
     def __repr__(self):
         return "<Robot> {} {} {}>".format(self.rotation, self.path, self.coordinates)
 
- class State:
+class State:
     def __init__(self, board, robots):
         self.board = board
         self.robots = robots
