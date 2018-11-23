@@ -115,7 +115,7 @@ def get_board(data):
             id = get_tile_id(data)
             tiles = board[coordinate]
 
-            # if id == 0 - don't create Tile object
+            # if id == 0 there is empty space here, ergo don't create Tile object
             # otherwise add Tile object to the list of objects on the same coordinates
             if id != 0:
                 rotation = get_tile_rotation(data)
