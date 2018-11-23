@@ -7,6 +7,7 @@ The game module
 import backend
 import frontend
 import pyglet
+import sys
 
 # load JSON map data from the backend module
 # currently the actual map is a constant, in future probably asks the player to choose
