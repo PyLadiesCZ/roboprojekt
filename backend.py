@@ -20,7 +20,7 @@ class Tile:
         self.path = path
         self.coordinates = coordinates
 
-     def __repr__(self):
+    def __repr__(self):
         return "<Robot> {} {} {}>".format(self.rotation, self.path, self.coordinates)
 
  class State:
@@ -28,7 +28,7 @@ class Tile:
         self.board = board
         self.robots = robots
 
-     def __repr__(self):
+    def __repr__(self):
         return "<State> {} {}>".format(self.board, self.robots)
 
 def get_data(map_name):
