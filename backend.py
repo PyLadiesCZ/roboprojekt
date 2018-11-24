@@ -20,6 +20,25 @@ class Robot:
         self.path = path
         self.coordinates = coordinates
 
+    def move_robot(self, distance):
+        """
+        this method calculates new coordinates of a robot
+        """
+        
+        (x, y) = self.coordinates
+        
+        if self.rotation == 0:
+            y += distance 
+        elif self.rotation == 90:
+            x += distance
+        elif self.rotation == 180:
+            y -= distance
+        elif self.rotation == 270:
+            x -= distance
+            
+        self.coordinates = (x, y)
+    
+
     def __repr__(self):
         return "<Robot> {} {} {}>".format(self.rotation, self.path, self.coordinates)
 
