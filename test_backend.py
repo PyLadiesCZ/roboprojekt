@@ -82,12 +82,18 @@ def test_convert_tile_rotation(input_number, converted_number):
                           ((3, 3), 90, 2, (5, 3)),
                           ((3, 3), 180, 2, (3, 1)),
                           ((3, 3), 270, 2, (1, 3))])
-def test_move_robot(input_coordinates, input_rotation, distance, output_coordinates):
+def test_robot_walk(input_coordinates, input_rotation, distance, output_coordinates):
     robot = Robot(input_rotation, None, input_coordinates)
-    robot.move_robot(distance)
+    robot.walk(distance)
     assert robot.coordinates == output_coordinates
 
-
-
-                          
+@pytest.mark.parametrize(("input_coordinates", "input_rotation", "distance", "output_coordinates"),
+                         [((3, 3), 0, 2, (3, 5)),
+                          ((3, 3), 90, 2, (5, 3)),
+                          ((3, 3), 180, 2, (3, 1)),
+                          ((3, 3), 270, 2, (1, 3))])
+def test_robot_move(input_coordinates, input_rotation, distance, output_coordinates):
+    robot = Robot(0, None, input_coordinates)
+    robot.move(input_rotation, distance)
+    assert robot.coordinates == output_coordinates
 
