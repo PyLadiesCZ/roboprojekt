@@ -10,7 +10,6 @@ import pyglet
 import sys
 
 # load JSON map data from the backend module
-# currently the actual map is a constant, in future probably asks the player to choose
 
 if len(sys.argv) == 1:
     map_name = "maps/test_3.json"
