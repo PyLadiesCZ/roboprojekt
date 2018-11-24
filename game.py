@@ -7,10 +7,15 @@ The game module
 import backend
 import frontend
 import pyglet
+import sys
 
 # load JSON map data from the backend module
-# currently the actual map is a constant, in future probably asks the player to choose
-map_name = "./maps/test_3.json"
+
+if len(sys.argv) == 1:
+    map_name = "maps/test_3.json"
+else:
+    map_name = sys.argv[1]
+    
 data = backend.get_data(map_name)
 
 # load pyglet graphic window from the frontend module
