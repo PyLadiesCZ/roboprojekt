@@ -1,4 +1,4 @@
-from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_rotation
+from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_rotation, Robot
 import pytest
 
 @pytest.mark.parametrize("map_name", ["test_1", "test_2", "test_3"])
@@ -76,3 +76,18 @@ def test_convert_tile_rotation(input_number, converted_number):
     """Take number from layer's data (JSON file) and assert it was correctly transformed to valid rotation in degrees."""
 
     assert get_tile_rotation(input_number) == converted_number
+    
+@pytest.mark.parametrize(("input_coordinates", "input_rotation", "distance", "output_coordinates"),
+                         [((3, 3), 0, 2, (3, 5)),
+                          ((3, 3), 90, 2, (5, 3)),
+                          ((3, 3), 180, 2, (3, 1)),
+                          ((3, 3), 270, 2, (1, 3))])
+def test_move_robot(input_coordinates, input_rotation, distance, output_coordinates):
+    robot = Robot(input_rotation, None, input_coordinates)
+    robot.move_robot(distance)
+    assert robot.coordinates == output_coordinates
+
+
+
+                          
+
