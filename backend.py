@@ -28,13 +28,12 @@ class State:
 
 def get_data(map_name):
     """
-    Return decoded JSON map file as a dictionary.
+    Return a dictionary of decoded JSON map file.
 
-    map_name: a map of the game board created in Tiled 1.2 and saved as JSON file
-    json.load() turns JSON encoded data into Python objects
+    map_name: a map of the game board created in Tiled 1.2 and saved as a JSON file
     """
-    with open(map_name, encoding="utf-8") as f:
-        data = json.load(f)
+    with open(map_name, encoding="utf-8") as map_file:
+        data = json.load(map_file)
     return data
 
 
@@ -43,7 +42,9 @@ def get_coordinates(data):
     Return a list of coordinates for individual tiles on the map.
 
     data: a dict created from decoded Tiled 1.2 JSON file
-    Get the size of the game board and x, y vectors for each tile and creates a list of all tile coordinates, for example:
+
+    Get the size of the game board and x, y vectors for each tile
+    and creates a list of all tile coordinates, for example:
     [(0, 11), (0, 10), (0, 9), ..., (0, 0), (1, 11), (1, 10), ..., (11, 1), (11, 0)]
     Transformation with reversed is required as the JSON tiles are in an opposite direction.
     """
@@ -56,46 +57,55 @@ def get_coordinates(data):
 
 def get_paths(data):
     """
-    Return a dictionary with modified tile ID as a key and path to a real image as a value.
+    Get paths to tiles images.
 
     data: a dict created from decoded Tiled 1.2 JSON file
-    Create a dictionary where tile ID is modified with the number of the layer so it matches the number of the tile in the tilelist.
+
+    Return a dictionary with modified tile ID as a key and path to file
+    of the image as a value.
+
+    Create a dictionary where tile ID is modified with the number of the
+    tileset used in Tiled 1.2 so it matches the number of the tile in the tilelist.
     """
     paths = {}
-    for i in data['tilesets'][0]['tiles']:
-        image_id = i['id'] + data['tilesets'][0]['firstgid']
-        image_path = i['image']
-        image_path = image_path[1:]  # unelegant way of removing ../ at the beginning of the path
-        paths[image_id] = image_path
+    for json_tile in data['tilesets'][0]['tiles']:
+        id = json_tile['id'] + data['tilesets'][0]['firstgid']
+        path = json_tile['image']
+        path = path[1:]  # unelegant way of removing ../ at the beginning of the path
+        paths[id] = path
     return paths
 
 
-def get_tile_id(number):
+def get_tile_id(tile_number):
     """
-    Get actual tile ID.
+    Return actual tile ID.
 
-    Transform number to return the one corresponding with ID's stored in "tilesets" part of JSON map format.
+    Perform bitwise AND of tile_number to get tile ID that is equal to
+    addiction of 'firstgid' value of tileset and tile ID stored in "tilesets"
+    part of JSON map format.
     """
-    return number & 0xFFFFFF
+    return tile_number & 0xFFFFFF
 
 
-def get_tile_rotation(number):
+def get_tile_rotation(tile_number):
     """
-    Get actual tile rotation.
+    Return actual tile rotation.
 
-    Transform number to return the value of degrees in which the tile is rotated.
+    Transform tile_number to return the value of tile's rotation in degrees.
     """
     rotation_dict = {0: 0, 10: 90, 12: 180, 6: 270}
-    rotation_number = number >> (4*7)
+    rotation_number = tile_number >> (4*7)
 
     return rotation_dict[rotation_number]
 
 
 def get_board(data):
     """
-    Get dictionary of coordinates containing matching Tile objects.
+    Create game board from provided data from JSON file.
 
     data: a dict created from decoded Tiled 1.2 JSON file
+
+    Return dictionary of coordinates containing matching Tile objects.
 
     Create a board in format {(11, 0): [Tile, Tile, Tile], (11, 1): [Tile]...}.
     Tile object is created for every matching coordinates.
@@ -111,14 +121,14 @@ def get_board(data):
     for layer in data['layers']:
 
         # make tuple containing tile data and matching coordinates
-        for data, coordinate in zip(layer['data'], coordinates):
-            id = get_tile_id(data)
+        for tile_number, coordinate in zip(layer['data'], coordinates):
+            id = get_tile_id(tile_number)
             tiles = board[coordinate]
 
             # if id == 0 there is empty space here, ergo don't create Tile object
             # otherwise add Tile object to the list of objects on the same coordinates
             if id != 0:
-                rotation = get_tile_rotation(data)
+                rotation = get_tile_rotation(tile_number)
                 tile = Tile(rotation, paths[id])
                 tiles.append(tile)
                 board[coordinate] = tiles
@@ -127,43 +137,50 @@ def get_board(data):
 
 def get_starting_coordinates(board):
     """
-    Get a list with coordinates of starting squares.
+    Get starting coordinates for robots.
 
     board: dictionary returned by get_board().
-    Find the objects which are starting squares (matching attribute path of Tile object),
-    then add the key of those squares to the list.
+
+    Return a list with coordinates of starting tiles.
+
+    Find the objects which are starting tiles (matching attribute path of Tile object),
+    then add coordinate of those tiles to the list of starting coordinates.
     """
     starting_coordinates = []
-    for key, list in board.items():
-        for value in list:
+    for coordinate, tiles in board.items():
+        for tile in tiles:
             # range(9) because there may be max. 8 starting squares
             for i in range(9):
-                if value.path == ("./img/squares/png/starting_square0{}.png".format(i)):
-                    starting_coordinates.append(key)
+                if tile.path == ("./img/squares/png/starting_square0{}.png".format(i)):
+                    starting_coordinates.append(coordinate)
     return starting_coordinates
 
 
 def get_robot_paths():
     """
-    Get a list of paths to robots images.
+    Return a list of paths to robots images.
 
     Using pathlib.Path library add all the files in given directory to the list.
     Ex. [PosixPath('img/robots_map/png/MintBot.png'), PosixPath('img/robots_map/png/terka_robot_map.png')].
     """
     robot_paths = []
-    for path in Path('./img/robots_map/png/').iterdir():  # search image file
-        robot_paths.append(path)
+    for robot_path in Path('./img/robots_map/png/').iterdir():  # search image file
+        robot_paths.append(robot_path)
     return robot_paths
 
 
 def get_robots_to_start(board):
     """
-    Get list of robots on the starting squares of the board.
+    Place robots on starting tiles.
 
-    board: dictionary returned by get_board().
+    board: dictionary returned by get_board()
 
-    Initialize Robot objects on the starting square coordinates with random choice of robot's avatar on particular square.
-    Once the robot is randomly chosen, it is removed from the list (it cannot appear twice on the board).
+    Return list of robots on the starting tiles of the board.
+
+    Initialize Robot objects on the starting tiles coordinates with random
+    choice of robot's avatar on particular tile.
+    Once the robot is randomly chosen, it is removed from the list
+    (it cannot appear twice on the board).
     On the beginning all the Robot objects have implicit 0 degree rotation.
     """
     starting_coordinates = get_starting_coordinates(board)
@@ -171,7 +188,8 @@ def get_robots_to_start(board):
     robots_start = []
     for coordinate in starting_coordinates:
 
-        # Condition to assure no exception in case robot_paths is shorter than coordinate's list
+        # Condition to assure no exception in case robot_paths is shorter
+        # than coordinate's list
         if robot_paths:
             path = random.choice(robot_paths)
             robot_paths.remove(path)
