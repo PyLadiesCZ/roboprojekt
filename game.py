@@ -9,35 +9,38 @@ import frontend
 import pyglet
 import sys
 
-# load JSON map data from the backend module
 
+# Get map name from command line.
+# Enable user to select game map, when launched from command line.
+# To run for exmaple game on 'test_2' map enter: python game.py maps/test_2.json
+# When game map isn't specified, default map is set to "maps/test_3.json".
 if len(sys.argv) == 1:
     map_name = "maps/test_3.json"
 else:
     map_name = sys.argv[1]
-    
+
+# Load JSON map data from the backend module.
 data = backend.get_data(map_name)
 
-# load pyglet graphic window from the frontend module
-window = frontend.init_window(frontend.WINDOW_WIDTH, frontend.WINDOW_HEIGHT)
-
-
+# Get starting state of the game from the backend module.
 state = backend.get_start_state(data)
 
-# load pyglet sprites by the frontend module
-images = frontend.load_images(state, frontend.TILE_WIDTH, frontend.TILE_HEIGHT)
-robots = frontend.load_robots(state, frontend.TILE_WIDTH, frontend.TILE_HEIGHT)
+# Load pyglet graphic window from the frontend module.
+window = frontend.init_window(data)
+
+# Load pyglet sprites by the frontend module.
+tile_sprites = frontend.load_tiles(state, data)
+robot_sprites = frontend.load_robots(state, data)
 
 
 @window.event
 def on_draw():
     """
-    this function clears the graphic window
-    and finally draws the board game
+    Clears the graphic window and draw the game board.
     """
     window.clear()
-    frontend.draw_board(images, robots)
+    frontend.draw_board(tile_sprites, robot_sprites)
 
 
-# this runs the pyglet library
+# Run the pyglet library.
 pyglet.app.run()
