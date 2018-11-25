@@ -6,19 +6,24 @@ The frontend module
 
 import pyglet
 
+# define the board and size of tiles:
+TILE_WIDTH = 64
+TILE_HEIGHT = 64
+WINDOW_WIDTH = 12*TILE_WIDTH
+WINDOW_HEIGHT = 12*TILE_HEIGHT
 
-def init_window(data):
+
+def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
     """
     Return a pyglet window for graphic outputself.
 
     data: a dict created from decoded Tiled 1.2 JSON file
     """
-    window = pyglet.window.Window(data["width"] * data["tilewidth"],
-                                  data["height"] * data["tileheight"])
+    window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT)
     return window
 
 
-def load_tiles(state, data):
+def load_tiles(state, TILE_WIDTH, TILE_HEIGHT):
     """
     Return list of sprites of tiles.
 
@@ -28,12 +33,12 @@ def load_tiles(state, data):
 
     tile_sprites = []
     for coordinate, tiles in state.board.items():
-        sprites = sprite(coordinate, tiles, data)
+        sprites = sprite(coordinate, tiles, TILE_WIDTH, TILE_HEIGHT)
         tile_sprites.extend(sprites)
     return tile_sprites
 
 
-def load_robots(state, data):
+def load_robots(state, TILE_WIDTH, TILE_HEIGHT):
     """
     Return list of sprites of robots.
 
@@ -42,12 +47,12 @@ def load_robots(state, data):
     """
     robot_sprites = []
     for robot in state.robots:
-        robot_sprite = sprite(robot.coordinates, [robot], data)
+        robot_sprite = sprite(robot.coordinates, [robot], TILE_WIDTH, TILE_HEIGHT)
         robot_sprites.extend(robot_sprite)
     return robot_sprites
 
 
-def sprite(coordinate, items, data):
+def sprite(coordinate, items, TILE_WIDTH, TILE_HEIGHT):
     """
     Return list of sprites of items.
 
@@ -63,8 +68,8 @@ def sprite(coordinate, items, data):
         img = pyglet.image.load(path)
         img.anchor_x = img.width//2
         img.anchor_y = img.height//2
-        item_x = x*data["tilewidth"]
-        item_y = y*data["tileheight"]
+        item_x = x*TILE_WIDTH
+        item_y = y*TILE_HEIGHT
         img_sprite = pyglet.sprite.Sprite(img, x=img.anchor_x + item_x,
                                                y=img.anchor_y + item_y)
         img_sprite.rotation = rotation
