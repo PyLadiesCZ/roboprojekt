@@ -22,6 +22,32 @@ class Robot:
         self.path = path
         self.coordinates = coordinates
 
+    def walk(self, distance):
+        """
+        this method moves a robot to new coordinates based on its rotation
+        """
+
+        self.move(self.rotation, distance)
+
+    def move(self, rotation, distance):
+        """
+        this method moves a robot to new coordinates based on @rotation
+        """
+        
+        (x, y) = self.coordinates
+        
+        if rotation == 0:
+            y += distance 
+        elif rotation == 90:
+            x += distance
+        elif rotation == 180:
+            y -= distance
+        elif rotation == 270:
+            x -= distance
+            
+        self.coordinates = (x, y)
+    
+
     def __repr__(self):
         return "<Robot> {} {} {}>".format(self.rotation, self.path, self.coordinates)
 

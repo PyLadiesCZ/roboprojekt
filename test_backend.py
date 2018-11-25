@@ -1,4 +1,4 @@
-from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_rotation
+from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_rotation, Robot
 import pytest
 
 
@@ -89,3 +89,33 @@ def test_convert_tile_rotation(tile_number, converted_number):
     transformed to valid rotation in degrees.
     """
     assert get_tile_rotation(tile_number) == converted_number
+
+
+@pytest.mark.parametrize(("input_coordinates", "input_rotation", "distance", "output_coordinates"),
+                         [((3, 3), 0, 2, (3, 5)),
+                          ((3, 3), 90, 2, (5, 3)),
+                          ((3, 3), 180, 2, (3, 1)),
+                          ((3, 3), 270, 2, (1, 3))])
+def test_robot_walk(input_coordinates, input_rotation, distance, output_coordinates):
+    """
+    Take robot's coordinates, rotation and distance and assert robot walked
+    to correct coordinates.
+    """
+    robot = Robot(input_rotation, None, input_coordinates)
+    robot.walk(distance)
+    assert robot.coordinates == output_coordinates
+
+
+@pytest.mark.parametrize(("input_coordinates", "input_direction", "distance", "output_coordinates"),
+                         [((3, 3), 0, 2, (3, 5)),
+                          ((3, 3), 90, 2, (5, 3)),
+                          ((3, 3), 180, 2, (3, 1)),
+                          ((3, 3), 270, 2, (1, 3))])
+def test_robot_move(input_coordinates, input_direction, distance, output_coordinates):
+    """
+    Take robot's coordinates, move's direction and distance and assert robot
+    was moved to correct coordinates.
+    """
+    robot = Robot(0, None, input_coordinates)
+    robot.move(input_direction, distance)
+    assert robot.coordinates == output_coordinates

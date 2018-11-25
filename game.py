@@ -2,6 +2,7 @@
 The game module
     - coordinate everything and run the game
     - call pyglet window, various backend and frontend functions
+    - choose standard or other map to be loaded
 """
 
 import backend
@@ -9,13 +10,12 @@ import frontend
 import pyglet
 import sys
 
-
-# Get map name from command line.
-# Enable user to select game map, when launched from command line.
-# To run for exmaple game on 'test_2' map enter: python game.py maps/test_2.json
-# When game map isn't specified, default map is set to "maps/test_3.json".
+# load JSON map data from the backend module
 if len(sys.argv) == 1:
     map_name = "maps/test_3.json"
+
+# if other map should be loaded, use extra argument "maps/MAP_NAME.json" when calling game.py by Python
+        # for example: python game.py maps/test_2.json
 else:
     map_name = sys.argv[1]
 
@@ -28,19 +28,31 @@ state = backend.get_start_state(data)
 # Load pyglet graphic window from the frontend module.
 window = frontend.init_window(data)
 
-# Load pyglet sprites by the frontend module.
-tile_sprites = frontend.load_tiles(state, data)
-robot_sprites = frontend.load_robots(state, data)
-
 
 @window.event
 def on_draw():
     """
-    Clears the graphic window and draw the game board.
+    Clears the graphic window and draw the game board and robots.
     """
+
+    # load pyglet sprites by the frontend module
+    tile_sprites = frontend.load_tiles(state, data)
+    robot_sprites = frontend.load_robots(state, data)
+
     window.clear()
     frontend.draw_board(tile_sprites, robot_sprites)
 
+
+def move_once(t):
+    """
+    Move all robots 2 tiles forward.
+    """
+
+    for robot in state.robots:
+        robot.walk(2)
+
+
+pyglet.clock.schedule_once(move_once, 3)
 
 # Run the pyglet library.
 pyglet.app.run()
