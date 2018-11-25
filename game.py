@@ -2,6 +2,7 @@
 The game module
     - coordinate everything and run the game
     - call pyglet window, various backend and frontend functions
+    - choose standard or other map to be loaded
 """
 
 import backend
@@ -10,9 +11,11 @@ import pyglet
 import sys
 
 # load JSON map data from the backend module
-
 if len(sys.argv) == 1:
     map_name = "maps/test_3.json"
+
+# if other map should be loaded, use extra argument "maps/MAP_NAME.json" when calling game.py by Python
+        # for example: python game.py maps/test_2.json
 else:
     map_name = sys.argv[1]
 
@@ -27,8 +30,8 @@ state = backend.get_start_state(data)
 @window.event
 def on_draw():
     """
-    this function clears the graphic window
-    and finally draws the board game
+    clear the graphic window
+    and finally draw the board game
     """
 
     # load pyglet sprites by the frontend module
@@ -40,7 +43,7 @@ def on_draw():
 
 def move_once(t):
     """
-    this function moves all robots 2 tiles forward
+    move all robots 2 tiles forward
     """
 
     for robot in state.robots:
