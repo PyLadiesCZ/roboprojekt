@@ -16,7 +16,6 @@ WINDOW_HEIGHT = 12*TILE_HEIGHT
 def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
     """
     create a pyglet window for graphic output
-
     input needed - size of window
     """
     window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT)
@@ -26,7 +25,6 @@ def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
 def load_images(state, TILE_WIDTH, TILE_HEIGHT):
     """
     return list of images
-
     input needed - dictionary state, size of tiles
     """
     images = []
@@ -39,7 +37,6 @@ def load_images(state, TILE_WIDTH, TILE_HEIGHT):
 def load_robots(state, TILE_WIDTH, TILE_HEIGHT):
     """
     return sprites of robots
-
     input needed - dictionary state, size of tiles
     """
     robot_imgs = []
@@ -52,7 +49,6 @@ def load_robots(state, TILE_WIDTH, TILE_HEIGHT):
 def sprite(coordinate, tiles, TILE_WIDTH, TILE_HEIGHT):
     """
     return list of sprites of items
-
     input needed - coordinate, tiles, size of tiles
     """
     imgs = []

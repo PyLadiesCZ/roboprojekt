@@ -33,6 +33,7 @@ def on_draw():
     clear the graphic window
     and finally draw the board game
     """
+
     # load pyglet sprites by the frontend module
     images = frontend.load_images(state, frontend.TILE_WIDTH, frontend.TILE_HEIGHT)
     robots = frontend.load_robots(state, frontend.TILE_WIDTH, frontend.TILE_HEIGHT)
@@ -44,10 +45,11 @@ def move_once(t):
     """
     move all robots 2 tiles forward
     """
+
     for robot in state.robots:
-        robot.move_robot(2)
+        robot.walk(2)
 
 pyglet.clock.schedule_once(move_once, 3)
 
-# run the pyglet library
+# this runs the pyglet library
 pyglet.app.run()
