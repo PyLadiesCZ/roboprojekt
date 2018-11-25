@@ -24,29 +24,28 @@ class Robot:
 
     def walk(self, distance):
         """
-        this method moves a robot to new coordinates based on its rotation
+        Move a robot to new coordinates based on its rotation.
         """
 
         self.move(self.rotation, distance)
 
-    def move(self, rotation, distance):
+    def move(self, direction, distance):
         """
-        this method moves a robot to new coordinates based on @rotation
+        Move a robot to new coordinates according to direction of the move.
         """
-        
+
         (x, y) = self.coordinates
-        
-        if rotation == 0:
-            y += distance 
-        elif rotation == 90:
+
+        if direction == 0:
+            y += distance
+        elif direction == 90:
             x += distance
-        elif rotation == 180:
+        elif direction == 180:
             y -= distance
-        elif rotation == 270:
+        elif direction == 270:
             x -= distance
-            
+
         self.coordinates = (x, y)
-    
 
     def __repr__(self):
         return "<Robot> {} {} {}>".format(self.rotation, self.path, self.coordinates)
@@ -100,7 +99,7 @@ def get_paths(data):
     of the image as a value.
 
     Create a dictionary where tile ID is modified with the number of the
-    tileset used in Tiled 1.2 so it matches the number of the tile in the tilelist.
+    tileset used in Tiled 1.2, so it matches the tile number in the tilelist.
     """
     paths = {}
     for json_tile in data['tilesets'][0]['tiles']:
@@ -113,20 +112,20 @@ def get_paths(data):
 
 def get_tile_id(tile_number):
     """
-    Return actual tile ID.
+    Return tile ID.
 
-    Perform bitwise AND of tile_number to get tile ID that is equal to
-    addiction of 'firstgid' value of tileset and tile ID stored in "tilesets"
-    part of JSON map format.
+    Transform tile_number to get tile ID that is equal to
+    addiction of 'firstgid' value of tileset and tile ID stored in 'tilesets'
+    part of JSON map format. The same ID that is used as a key in dict 'paths'.
     """
     return tile_number & 0xFFFFFF
 
 
 def get_tile_rotation(tile_number):
     """
-    Return actual tile rotation.
+    Return tile rotation.
 
-    Transform tile_number to return the value of tile's rotation in degrees.
+    Transform tile_number to get the value of tile's rotation in degrees.
     """
     rotation_dict = {0: 0, 10: 90, 12: 180, 6: 270}
     rotation_number = tile_number >> (4*7)
