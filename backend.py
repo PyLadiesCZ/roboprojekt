@@ -20,20 +20,27 @@ class Robot:
         self.path = path
         self.coordinates = coordinates
 
-    def move_robot(self, distance):
+    def walk(self, distance):
         """
-        this method calculates new coordinates of a robot
+        this method moves a robot to new coordinates based on its rotation
+        """
+
+        self.move(self.rotation, distance)
+
+    def move(self, rotation, distance):
+        """
+        this method moves a robot to new coordinates based on @rotation
         """
         
         (x, y) = self.coordinates
         
-        if self.rotation == 0:
+        if rotation == 0:
             y += distance 
-        elif self.rotation == 90:
+        elif rotation == 90:
             x += distance
-        elif self.rotation == 180:
+        elif rotation == 180:
             y -= distance
-        elif self.rotation == 270:
+        elif rotation == 270:
             x -= distance
             
         self.coordinates = (x, y)
