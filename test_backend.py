@@ -1,4 +1,4 @@
-from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_rotation
+from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_rotation, get_paths
 import pytest
 
 @pytest.mark.parametrize("map_name", ["test_1", "test_2", "test_3"])
@@ -76,3 +76,12 @@ def test_convert_tile_rotation(input_number, converted_number):
     """Take number from layer's data (JSON file) and assert it was correctly transformed to valid rotation in degrees."""
 
     assert get_tile_rotation(input_number) == converted_number
+
+
+def test_dict_paths_is_correct():
+    data = get_data("maps/test_3.json")
+    paths = get_paths(data)
+    for key, value in paths.items():
+        assert isinstance(key, int)
+        assert isinstance(value, str)
+    assert isinstance(paths, dict)

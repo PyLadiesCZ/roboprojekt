@@ -193,3 +193,6 @@ def get_start_state(data):
     robots_start = get_robots_to_start(board)
     state = State(board, robots_start)
     return state
+
+data = get_data("maps/test_3.json")
+paths = get_paths(data)
