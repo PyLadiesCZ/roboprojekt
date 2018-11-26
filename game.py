@@ -19,37 +19,41 @@ if len(sys.argv) == 1:
 else:
     map_name = sys.argv[1]
 
+# Load JSON map data from the backend module.
 data = backend.get_data(map_name)
 
-# load pyglet graphic window from the frontend module
+# Get starting state of the game from the backend module.
+state = backend.get_start_state(data)
+
+
+# Load pyglet graphic window from the frontend module.
 window = frontend.init_window(frontend.WINDOW_WIDTH, frontend.WINDOW_HEIGHT)
 
-
-state = backend.get_start_state(data)
 
 @window.event
 def on_draw():
     """
-    clear the graphic window
-    and finally draw the board game
+    Clears the graphic window and draw the game board and robots.
     """
 
     # load pyglet sprites by the frontend module
-    images = frontend.load_images(state, frontend.TILE_WIDTH, frontend.TILE_HEIGHT)
-    robots = frontend.load_robots(state, frontend.TILE_WIDTH, frontend.TILE_HEIGHT)
+    tile_sprites = frontend.load_tiles(state, frontend.TILE_WIDTH, frontend.TILE_HEIGHT)
+    robot_sprites = frontend.load_robots(state, frontend.TILE_WIDTH, frontend.TILE_HEIGHT)
 
     window.clear()
-    frontend.draw_board(images, robots)
+    frontend.draw_board(tile_sprites, robot_sprites)
+
 
 def move_once(t):
     """
-    move all robots 2 tiles forward
+    Move all robots 2 tiles forward.
     """
 
     for robot in state.robots:
         robot.walk(2)
 
+
 pyglet.clock.schedule_once(move_once, 3)
 
-# this runs the pyglet library
+# Run the pyglet library.
 pyglet.app.run()

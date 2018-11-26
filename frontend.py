@@ -15,62 +15,75 @@ WINDOW_HEIGHT = 12*TILE_HEIGHT
 
 def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
     """
-    create a pyglet window for graphic output
-    input needed - size of window
+    Return a pyglet window for graphic outputself.
+
+    data: a dict created from decoded Tiled 1.2 JSON file
     """
     window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT)
     return window
 
 
-def load_images(state, TILE_WIDTH, TILE_HEIGHT):
+def load_tiles(state, TILE_WIDTH, TILE_HEIGHT):
     """
-    return list of images
-    input needed - dictionary state, size of tiles
+    Return list of sprites of tiles.
+
+    state: State object containing game board and robots
+    data: a dict created from decoded Tiled 1.2 JSON file
     """
-    images = []
+
+    tile_sprites = []
     for coordinate, tiles in state.board.items():
-        img = sprite(coordinate, tiles, TILE_WIDTH, TILE_HEIGHT)
-        images.extend(img)
-    return images
+        sprites = sprite(coordinate, tiles, TILE_WIDTH, TILE_HEIGHT)
+        tile_sprites.extend(sprites)
+    return tile_sprites
 
 
 def load_robots(state, TILE_WIDTH, TILE_HEIGHT):
     """
-    return sprites of robots
-    input needed - dictionary state, size of tiles
+    Return list of sprites of robots.
+
+    state: State object containing game board and robots
+    data: a dict created from decoded Tiled 1.2 JSON file
     """
-    robot_imgs = []
+    robot_sprites = []
     for robot in state.robots:
-        robot_img = sprite(robot.coordinates, [robot], TILE_WIDTH, TILE_HEIGHT)
-        robot_imgs.extend(robot_img)
-    return robot_imgs
+        robot_sprite = sprite(robot.coordinates, [robot], TILE_WIDTH, TILE_HEIGHT)
+        robot_sprites.extend(robot_sprite)
+    return robot_sprites
 
 
-def sprite(coordinate, tiles, TILE_WIDTH, TILE_HEIGHT):
+def sprite(coordinate, items, TILE_WIDTH, TILE_HEIGHT):
     """
-    return list of sprites of items
-    input needed - coordinate, tiles, size of tiles
+    Return list of sprites of items.
+
+    coordinate: coordinate of tiles or robot
+    items: a list of Tile or Robot objects
+    data: a dict created from decoded Tiled 1.2 JSON file
     """
-    imgs = []
-    for tile in tiles:
-        rotation = tile.rotation
-        path = tile.path
+    items_sprites = []
+    for item in items:
+        rotation = item.rotation
+        path = item.path
         x, y = coordinate
         img = pyglet.image.load(path)
         img.anchor_x = img.width//2
         img.anchor_y = img.height//2
-        tile_x = x*TILE_WIDTH
-        tile_y = y*TILE_HEIGHT
-        img = pyglet.sprite.Sprite(img, x=img.anchor_x+tile_x, y=img.anchor_y+tile_y)
-        img.rotation = rotation
-        imgs.append(img)
-    return imgs
+        item_x = x*TILE_WIDTH
+        item_y = y*TILE_HEIGHT
+        img_sprite = pyglet.sprite.Sprite(img, x=img.anchor_x + item_x,
+                                               y=img.anchor_y + item_y)
+        img_sprite.rotation = rotation
+        items_sprites.append(img_sprite)
+    return items_sprites
 
 
-def draw_board(images, robots):
+def draw_board(tile_sprites, robot_sprites):
     """
-    draw the images of tiles into map
+    Draw the images of tiles and robots into map.
+
+    tile_sprites: a list of tiles sprites
+    robot_sprites: a list of robots sprites
     """
-    images.extend(robots)
-    for tile in images:
-        tile.draw()
+    tile_sprites.extend(robot_sprites)
+    for tile_sprite in tile_sprites:
+        tile_sprite.draw()
