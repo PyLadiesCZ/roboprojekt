@@ -25,9 +25,14 @@ data = backend.get_data(map_name)
 # Get starting state of the game from the backend module.
 state = backend.get_start_state(data)
 
+# Constants for frontend module.
+TILE_WIDTH = data["tilewidth"]
+TILE_HEIGHT = data["tileheight"]
+WINDOW_WIDTH = data["width"]*TILE_WIDTH
+WINDOW_HEIGHT = data["height"]*TILE_HEIGHT
 
 # Load pyglet graphic window from the frontend module.
-window = frontend.init_window(frontend.WINDOW_WIDTH, frontend.WINDOW_HEIGHT)
+window = frontend.init_window()
 
 
 @window.event
@@ -37,8 +42,8 @@ def on_draw():
     """
 
     # load pyglet sprites by the frontend module
-    tile_sprites = frontend.load_tiles(state, frontend.TILE_WIDTH, frontend.TILE_HEIGHT)
-    robot_sprites = frontend.load_robots(state, frontend.TILE_WIDTH, frontend.TILE_HEIGHT)
+    tile_sprites = frontend.load_tiles(state)
+    robot_sprites = frontend.load_robots(state)
 
     window.clear()
     frontend.draw_board(tile_sprites, robot_sprites)
