@@ -525,7 +525,7 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"po\u0161kozen\u00ed",
+                         "name":"damage",
                          "type":"int",
                          "value":-1
                         }],
@@ -538,7 +538,7 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"po\u0161kozen\u00ed",
+                         "name":"damage",
                          "type":"int",
                          "value":-1
                         }],
