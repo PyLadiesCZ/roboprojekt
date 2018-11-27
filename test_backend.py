@@ -127,6 +127,7 @@ def test_dict_paths_is_correct():
         assert isinstance(value, str)
     assert isinstance(paths, dict)
 
+
 def test_robots_on_starting_coordinates():
     """
     Assert that the result of get_robots_to_start is a list which contains Robot objects with correct attribute coordinates.
@@ -136,8 +137,6 @@ def test_robots_on_starting_coordinates():
     robots = get_robots_to_start(board)
     assert isinstance(robots, list)
     assert isinstance(robots[0], Robot)
-    assert robots[0].coordinates == (0, 1)
-    # TODO: how to assert attribute .path if it is PosixPath("") object?
 
 
 def test_starting_state():
