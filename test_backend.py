@@ -141,6 +141,9 @@ def test_robots_on_starting_coordinates():
 
 
 def test_starting_state():
+    """
+    Assert that created starting state (board and robots) contains the correct instances of objects.
+    """
     data = get_data("maps/test_3.json")
     ss = get_start_state(data)
     assert isinstance(ss, State)
@@ -149,7 +152,6 @@ def test_starting_state():
     assert isinstance(ss.board, dict)
     assert isinstance(ss.board[0, 0], list)
     assert isinstance(ss.board[0, 0][0], Tile)
-
 
 
 @pytest.mark.parametrize(("input_coordinates", "input_rotation", "distance", "output_coordinates"),
