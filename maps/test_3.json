@@ -89,7 +89,7 @@
                          "type":"bool",
                          "value":true
                         }],
-                 "type":"laser_base"
+                 "type":"laser"
                 }, 
                 {
                  "id":3,
@@ -184,7 +184,7 @@
                          "type":"bool",
                          "value":true
                         }],
-                 "type":"laser_base"
+                 "type":"laser"
                 }, 
                 {
                  "id":14,
@@ -220,7 +220,7 @@
                          "type":"bool",
                          "value":true
                         }],
-                 "type":"laser_base"
+                 "type":"laser"
                 }, 
                 {
                  "id":16,
@@ -247,6 +247,11 @@
                  "imagewidth":64,
                  "properties":[
                         {
+                         "name":"crossroads",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
                          "name":"direction",
                          "type":"int",
                          "value":0
@@ -264,6 +269,11 @@
                  "imageheight":64,
                  "imagewidth":64,
                  "properties":[
+                        {
+                         "name":"crossroads",
+                         "type":"bool",
+                         "value":false
+                        }, 
                         {
                          "name":"direction",
                          "type":"int",
@@ -283,6 +293,11 @@
                  "imagewidth":64,
                  "properties":[
                         {
+                         "name":"crossroads",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
                          "name":"direction",
                          "type":"int",
                          "value":1
@@ -300,6 +315,11 @@
                  "imageheight":64,
                  "imagewidth":64,
                  "properties":[
+                        {
+                         "name":"crossroads",
+                         "type":"bool",
+                         "value":true
+                        }, 
                         {
                          "name":"direction",
                          "type":"int",
@@ -319,6 +339,11 @@
                  "imagewidth":64,
                  "properties":[
                         {
+                         "name":"crossroads",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"direction",
                          "type":"int",
                          "value":1
@@ -336,6 +361,11 @@
                  "imageheight":64,
                  "imagewidth":64,
                  "properties":[
+                        {
+                         "name":"crossroads",
+                         "type":"bool",
+                         "value":true
+                        }, 
                         {
                          "name":"direction",
                          "type":"int",
@@ -355,6 +385,11 @@
                  "imagewidth":64,
                  "properties":[
                         {
+                         "name":"crossroads",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
                          "name":"direction",
                          "type":"int",
                          "value":0
@@ -372,6 +407,11 @@
                  "imageheight":64,
                  "imagewidth":64,
                  "properties":[
+                        {
+                         "name":"crossroads",
+                         "type":"bool",
+                         "value":false
+                        }, 
                         {
                          "name":"direction",
                          "type":"int",
@@ -391,6 +431,11 @@
                  "imagewidth":64,
                  "properties":[
                         {
+                         "name":"crossroads",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
                          "name":"direction",
                          "type":"int",
                          "value":3
@@ -408,6 +453,11 @@
                  "imageheight":64,
                  "imagewidth":64,
                  "properties":[
+                        {
+                         "name":"crossroads",
+                         "type":"bool",
+                         "value":true
+                        }, 
                         {
                          "name":"direction",
                          "type":"int",
@@ -427,6 +477,11 @@
                  "imagewidth":64,
                  "properties":[
                         {
+                         "name":"crossroads",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"direction",
                          "type":"int",
                          "value":1
@@ -444,6 +499,11 @@
                  "imageheight":64,
                  "imagewidth":64,
                  "properties":[
+                        {
+                         "name":"crossroads",
+                         "type":"bool",
+                         "value":true
+                        }, 
                         {
                          "name":"direction",
                          "type":"int",
@@ -463,9 +523,9 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"\u010d\u00edslo",
+                         "name":"number",
                          "type":"int",
-                         "value":0
+                         "value":1
                         }],
                  "type":"flag"
                 }, 
@@ -474,6 +534,12 @@
                  "image":"..\/img\/squares\/png\/flag_2.png",
                  "imageheight":64,
                  "imagewidth":64,
+                 "properties":[
+                        {
+                         "name":"number",
+                         "type":"int",
+                         "value":2
+                        }],
                  "type":"flag"
                 }, 
                 {
@@ -481,6 +547,12 @@
                  "image":"..\/img\/squares\/png\/flag_3.png",
                  "imageheight":64,
                  "imagewidth":64,
+                 "properties":[
+                        {
+                         "name":"number",
+                         "type":"int",
+                         "value":3
+                        }],
                  "type":"flag"
                 }, 
                 {
@@ -488,6 +560,12 @@
                  "image":"..\/img\/squares\/png\/flag_4.png",
                  "imageheight":64,
                  "imagewidth":64,
+                 "properties":[
+                        {
+                         "name":"number",
+                         "type":"int",
+                         "value":4
+                        }],
                  "type":"flag"
                 }, 
                 {
@@ -495,6 +573,12 @@
                  "image":"..\/img\/squares\/png\/flag_5.png",
                  "imageheight":64,
                  "imagewidth":64,
+                 "properties":[
+                        {
+                         "name":"number",
+                         "type":"int",
+                         "value":5
+                        }],
                  "type":"flag"
                 }, 
                 {
@@ -502,6 +586,12 @@
                  "image":"..\/img\/squares\/png\/flag_6.png",
                  "imageheight":64,
                  "imagewidth":64,
+                 "properties":[
+                        {
+                         "name":"number",
+                         "type":"int",
+                         "value":6
+                        }],
                  "type":"flag"
                 }, 
                 {
@@ -509,6 +599,12 @@
                  "image":"..\/img\/squares\/png\/flag_7.png",
                  "imageheight":64,
                  "imagewidth":64,
+                 "properties":[
+                        {
+                         "name":"number",
+                         "type":"int",
+                         "value":7
+                        }],
                  "type":"flag"
                 }, 
                 {
@@ -516,6 +612,12 @@
                  "image":"..\/img\/squares\/png\/flag_8.png",
                  "imageheight":64,
                  "imagewidth":64,
+                 "properties":[
+                        {
+                         "name":"number",
+                         "type":"int",
+                         "value":8
+                        }],
                  "type":"flag"
                 }, 
                 {
