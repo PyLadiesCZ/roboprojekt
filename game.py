@@ -5,8 +5,8 @@ The game module
     - choose standard or other map to be loaded
 """
 
-import backend
-import frontend
+from backend import get_start_state
+from frontend import init_window, draw_board
 import pyglet
 import sys
 
@@ -19,34 +19,20 @@ if len(sys.argv) == 1:
 else:
     map_name = sys.argv[1]
 
-# Load JSON map data from the backend module.
-data = backend.get_data(map_name)
-
 # Get starting state of the game from the backend module.
-state = backend.get_start_state(data)
-
-# Constants for frontend module.
-TILE_WIDTH = data["tilewidth"]
-TILE_HEIGHT = data["tileheight"]
-WINDOW_WIDTH = data["width"]*TILE_WIDTH
-WINDOW_HEIGHT = data["height"]*TILE_HEIGHT
+state = get_start_state(map_name)
 
 # Load pyglet graphic window from the frontend module.
-window = frontend.init_window()
+window = init_window(state)
 
 
 @window.event
 def on_draw():
     """
-    Clears the graphic window and draw the game board and robots.
+    Clears the graphic window and draw the game state (board and robots).
     """
-
-    # load pyglet sprites by the frontend module
-    tile_sprites = frontend.load_tiles(state)
-    robot_sprites = frontend.load_robots(state)
-
     window.clear()
-    frontend.draw_board(tile_sprites, robot_sprites)
+    draw_board(state)
 
 
 def move_once(t):

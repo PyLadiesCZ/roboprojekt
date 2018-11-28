@@ -6,15 +6,19 @@ The frontend module
 
 import pyglet
 
+# Constatnts for size of tile image in px
+TILE_WIDTH = 64
+TILE_HEIGHT = 64
 
-def init_window():
+
+def init_window(state):
     """
     Return a pyglet window for graphic outputself.
 
     data: a dict created from decoded Tiled 1.2 JSON file
     """
-    from game import WINDOW_WIDTH, WINDOW_HEIGHT
-
+    WINDOW_WIDTH = state.sizes[0] * TILE_WIDTH
+    WINDOW_HEIGHT = state.sizes[1] * TILE_HEIGHT
     window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT)
     return window
 
@@ -55,8 +59,6 @@ def sprite(coordinate, items):
     items: a list of Tile or Robot objects
     data: a dict created from decoded Tiled 1.2 JSON file
     """
-    from game import TILE_WIDTH, TILE_HEIGHT
-
     items_sprites = []
     for item in items:
         rotation = item.rotation
@@ -74,13 +76,14 @@ def sprite(coordinate, items):
     return items_sprites
 
 
-def draw_board(tile_sprites, robot_sprites):
+def draw_board(state):
     """
     Draw the images of tiles and robots into map.
 
-    tile_sprites: a list of tiles sprites
-    robot_sprites: a list of robots sprites
+    state: State object containing game board and robots
     """
+    tile_sprites = load_tiles(state)
+    robot_sprites = load_robots(state)
     tile_sprites.extend(robot_sprites)
     for tile_sprite in tile_sprites:
         tile_sprite.draw()
