@@ -5,7 +5,7 @@ Backend file contains functions for the game logic.
 import json
 from pathlib import Path
 import random
-
+from enum import Enum
 
 class Tile:
     def __init__(self, rotation, path):
@@ -27,23 +27,17 @@ class Robot:
         Move a robot to new coordinates based on its rotation.
         """
 
-        self.move(self.rotation, distance)
+        self.move(distance)
 
-    def move(self, direction, distance):
+    def move(self, distance):
         """
         Move a robot to new coordinates according to direction of the move.
         """
 
         (x, y) = self.coordinates
-
-        if direction == 0:
-            y += distance
-        elif direction == 90:
-            x += distance
-        elif direction == 180:
-            y -= distance
-        elif direction == 270:
-            x -= distance
+        (new_x, new_y) = self.rotation.new_coordinates((x, y))
+        x = x + (new_x * distance)
+        y = y + (new_y * distance)
 
         self.coordinates = (x, y)
 
@@ -59,6 +53,35 @@ class State:
     def __repr__(self):
         return "<State> {} {}>".format(self.board, self.robots)
 
+
+class Rotation(Enum):
+    N = 0
+    E = 90
+    S = 180
+    W = 270
+
+    def __add__(self, other):
+        return Rotation(self.value + other.value)
+
+    def rotate(self, where_to):
+        if where_to == "right":
+            return Rotation((self.value + 90) % 360)
+        if where_to == "left":
+            return Rotation((self.value + 270) % 360)
+        if where_to == "upside_down":
+            return Rotation((self.value + 180) % 360)
+
+    def new_coordinates(self, coordinates):
+        (x, y) = coordinates
+        if self == Rotation.N:
+            coordinates = (0, 1)
+        if self == Rotation.E:
+            coordinates = (1, 0)
+        if self == Rotation.S:
+            coordinates = (0, -1)
+        if self == Rotation.W:
+            coordinates = (-1, 0)
+        return coordinates
 
 def get_data(map_name):
     """
@@ -127,7 +150,7 @@ def get_tile_rotation(tile_number):
 
     Transform tile_number to get the value of tile's rotation in degrees.
     """
-    rotation_dict = {0: 0, 10: 90, 12: 180, 6: 270}
+    rotation_dict = {0: Rotation.N, 10: Rotation.E, 12: Rotation.S, 6: Rotation.W}
     rotation_number = tile_number >> (4*7)
 
     return rotation_dict[rotation_number]
@@ -227,7 +250,7 @@ def get_robots_to_start(board):
         if robot_paths:
             path = random.choice(robot_paths)
             robot_paths.remove(path)
-            robot = Robot(0, path, coordinate)
+            robot = Robot(Rotation.N, path, coordinate)
             robots_start.append(robot)
     return robots_start
 

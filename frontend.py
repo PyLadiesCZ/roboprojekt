@@ -62,7 +62,7 @@ def sprite(coordinate, items, TILE_WIDTH, TILE_HEIGHT):
     """
     items_sprites = []
     for item in items:
-        rotation = item.rotation
+        rotation = item.rotation.value
         path = item.path
         x, y = coordinate
         img = pyglet.image.load(path)
