@@ -46,12 +46,12 @@ def on_draw():
 
 def move_once(t):
     """
-    Move all robots 2 tiles forward.
+    Move all robots 2 tiles forward and rotate 180 degrees.
     """
 
     for robot in state.robots:
         robot.walk(2)
-
+        robot.rotate("upside_down")
 
 pyglet.clock.schedule_once(move_once, 3)
 

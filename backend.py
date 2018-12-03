@@ -22,6 +22,9 @@ class Robot:
         self.path = path
         self.coordinates = coordinates
 
+    def __repr__(self):
+        return "<Robot> {} {} {}>".format(self.direction, self.path, self.coordinates)
+
     def walk(self, distance):
         """
         Move a robot to new coordinates based on its direction.
@@ -41,8 +44,12 @@ class Robot:
 
         self.coordinates = (x, y)
 
-    def __repr__(self):
-        return "<Robot> {} {} {}>".format(self.direction, self.path, self.coordinates)
+    def rotate(self, where_to):
+        """
+        Rotate robot according to a given direction.
+        """
+
+        self.direction = self.direction.get_new_direction(where_to)
 
 
 class State:
@@ -66,7 +73,7 @@ class Direction(Enum):
 
         Override standard enum __new__ method.
         vector: new coordinates (where the robot goes to)
-        tile_property: map tile (exported from Tiled 1.2) property: value. 
+        tile_property: map tile property: value (custom - added in Tiled).
         Makes it possible to change vector and tile_property when the object is rotated.
         With degrees change (value) there comes the coordinates (vector) change and tile_property.
         """
@@ -76,7 +83,7 @@ class Direction(Enum):
         obj.tile_property = tile_property
         return obj
 
-    def rotate(self, where_to):
+    def get_new_direction(self, where_to):
         """
         Get new direction of given object.
 
