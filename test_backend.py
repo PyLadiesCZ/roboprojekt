@@ -1,4 +1,4 @@
-from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_rotation, Robot, Rotation
+from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_direction, Robot, Direction
 import pytest
 
 
@@ -84,44 +84,44 @@ def test_convert_tile_id(tile_number, converted_number):
 
 
 @pytest.mark.parametrize(("tile_number", "converted_number"),
-                         [(1, Rotation.N),
-                         (2684354573, Rotation.E),
-                         (2684354584, Rotation.E),
-                         (1610612749, Rotation.W),
-                         (3221225497, Rotation.S)])
-def test_convert_tile_rotation(tile_number, converted_number):
+                         [(1, Direction.N),
+                         (2684354573, Direction.E),
+                         (2684354584, Direction.E),
+                         (1610612749, Direction.W),
+                         (3221225497, Direction.S)])
+def test_convert_tile_direction(tile_number, converted_number):
     """
     Take number from layer's data (JSON file) and assert it was correctly
-    transformed to valid rotation in degrees.
+    transformed to valid direction in degrees.
     """
-    assert get_tile_rotation(tile_number) == converted_number
+    assert get_tile_direction(tile_number) == converted_number
 
 
-@pytest.mark.parametrize(("input_coordinates", "input_rotation", "distance", "output_coordinates"),
-                         [((3, 3), Rotation.N, 2, (3, 5)),
-                          ((3, 3), Rotation.E, 2, (5, 3)),
-                          ((3, 3), Rotation.S, 2, (3, 1)),
-                          ((3, 3), Rotation.W, 2, (1, 3))])
-def test_robot_walk(input_coordinates, input_rotation, distance, output_coordinates):
+@pytest.mark.parametrize(("input_coordinates", "input_direction", "distance", "output_coordinates"),
+                         [((3, 3), Direction.N, 2, (3, 5)),
+                          ((3, 3), Direction.E, 2, (5, 3)),
+                          ((3, 3), Direction.S, 2, (3, 1)),
+                          ((3, 3), Direction.W, 2, (1, 3))])
+def test_robot_walk(input_coordinates, input_direction, distance, output_coordinates):
     """
-    Take robot's coordinates, rotation and distance and assert robot walked
+    Take robot's coordinates, direction and distance and assert robot walked
     to correct coordinates.
     """
-    robot = Robot(input_rotation, None, input_coordinates)
+    robot = Robot(input_direction, None, input_coordinates)
     robot.walk(distance)
     assert robot.coordinates == output_coordinates
 
 
 @pytest.mark.parametrize(("input_coordinates", "input_direction", "distance", "output_coordinates"),
-                         [((3, 3), Rotation.N, 2, (3, 5)),
-                          ((3, 3), Rotation.E, 2, (5, 3)),
-                          ((3, 3), Rotation.S, 2, (3, 1)),
-                          ((3, 3), Rotation.W, 2, (1, 3))])
+                         [((3, 3), Direction.N, 2, (3, 5)),
+                          ((3, 3), Direction.E, 2, (5, 3)),
+                          ((3, 3), Direction.S, 2, (3, 1)),
+                          ((3, 3), Direction.W, 2, (1, 3))])
 def test_robot_move(input_coordinates, input_direction, distance, output_coordinates):
     """
     Take robot's coordinates, move's direction and distance and assert robot
     was moved to correct coordinates.
     """
-    robot = Robot(input_direction, None, input_coordinates)
-    robot.move(distance)
+    robot = Robot(Direction.N, None, input_coordinates)
+    robot.move(input_direction, distance)
     assert robot.coordinates == output_coordinates

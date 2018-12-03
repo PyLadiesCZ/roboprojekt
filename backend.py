@@ -8,41 +8,41 @@ import random
 from enum import Enum
 
 class Tile:
-    def __init__(self, rotation, path):
-        self.rotation = rotation
+    def __init__(self, direction, path):
+        self.direction = direction
         self.path = path
 
     def __repr__(self):
-        return "<Tile> {} {}>".format(self.rotation, self.path)
+        return "<Tile> {} {}>".format(self.direction, self.path)
 
 
 class Robot:
-    def __init__(self, rotation, path, coordinates):
-        self.rotation = rotation
+    def __init__(self, direction, path, coordinates):
+        self.direction = direction
         self.path = path
         self.coordinates = coordinates
 
     def walk(self, distance):
         """
-        Move a robot to new coordinates based on its rotation.
+        Move a robot to new coordinates based on its direction.
         """
 
-        self.move(distance)
+        self.move(self.direction, distance)
 
-    def move(self, distance):
+    def move(self, direction, distance):
         """
         Move a robot to new coordinates according to direction of the move.
         """
 
         (x, y) = self.coordinates
-        (new_x, new_y) = self.rotation.new_coordinates((x, y))
+        (new_x, new_y) = direction.vector
         x = x + (new_x * distance)
         y = y + (new_y * distance)
 
         self.coordinates = (x, y)
 
     def __repr__(self):
-        return "<Robot> {} {} {}>".format(self.rotation, self.path, self.coordinates)
+        return "<Robot> {} {} {}>".format(self.direction, self.path, self.coordinates)
 
 
 class State:
@@ -54,34 +54,38 @@ class State:
         return "<State> {} {}>".format(self.board, self.robots)
 
 
-class Rotation(Enum):
-    N = 0
-    E = 90
-    S = 180
-    W = 270
+class Direction(Enum):
+    N = (0, (0, +1))
+    E = (90, (+1, 0))
+    S = (180, (0, -1))
+    W = (270, (-1, 0))
 
-    def __add__(self, other):
-        return Rotation(self.value + other.value)
+    def __new__(cls, keycode, vector):
+        """
+        Get attributes value and vector of the given Direction class values.
+
+        Override standard enum __new__ method.
+        Makes it possible to change vector when the object is rotated.
+        With degrees change (value) there comes the vector change (vector).
+        """
+        obj = object.__new__(cls)
+        obj._value_ = keycode
+        obj.vector = vector
+        return obj
 
     def rotate(self, where_to):
-        if where_to == "right":
-            return Rotation((self.value + 90) % 360)
-        if where_to == "left":
-            return Rotation((self.value + 270) % 360)
-        if where_to == "upside_down":
-            return Rotation((self.value + 180) % 360)
+        """
+        Get new direction of given object.
 
-    def new_coordinates(self, coordinates):
-        (x, y) = coordinates
-        if self == Rotation.N:
-            coordinates = (0, 1)
-        if self == Rotation.E:
-            coordinates = (1, 0)
-        if self == Rotation.S:
-            coordinates = (0, -1)
-        if self == Rotation.W:
-            coordinates = (-1, 0)
-        return coordinates
+        Change attribute direction according to argument where_to, passed from TDB class DirectionOfRotation.
+        """
+        if where_to == "right":
+            return Direction((self.value + 90) % 360)
+        if where_to == "left":
+            return Direction((self.value + 270) % 360)
+        if where_to == "upside_down":
+            return Direction((self.value + 180) % 360)
+
 
 def get_data(map_name):
     """
@@ -144,16 +148,16 @@ def get_tile_id(tile_number):
     return tile_number & 0xFFFFFF
 
 
-def get_tile_rotation(tile_number):
+def get_tile_direction(tile_number):
     """
-    Return tile rotation.
+    Return tile direction.
 
-    Transform tile_number to get the value of tile's rotation in degrees.
+    Transform tile_number to get the value of tile's direction in degrees.
     """
-    rotation_dict = {0: Rotation.N, 10: Rotation.E, 12: Rotation.S, 6: Rotation.W}
-    rotation_number = tile_number >> (4*7)
+    direction_dict = {0: Direction.N, 10: Direction.E, 12: Direction.S, 6: Direction.W}
+    direction_number = tile_number >> (4*7)
 
-    return rotation_dict[rotation_number]
+    return direction_dict[direction_number]
 
 
 def get_board(data):
@@ -185,8 +189,8 @@ def get_board(data):
             # if id == 0 there is empty space here, ergo don't create Tile object
             # otherwise add Tile object to the list of objects on the same coordinates
             if id != 0:
-                rotation = get_tile_rotation(tile_number)
-                tile = Tile(rotation, paths[id])
+                direction = get_tile_direction(tile_number)
+                tile = Tile(direction, paths[id])
                 tiles.append(tile)
                 board[coordinate] = tiles
     return board
@@ -238,7 +242,7 @@ def get_robots_to_start(board):
     choice of robot's avatar on particular tile.
     Once the robot is randomly chosen, it is removed from the list
     (it cannot appear twice on the board).
-    On the beginning all the Robot objects have implicit 0 degree rotation.
+    On the beginning all the Robot objects have implicit 0 degree direction.
     """
     starting_coordinates = get_starting_coordinates(board)
     robot_paths = get_robot_paths()
@@ -250,7 +254,7 @@ def get_robots_to_start(board):
         if robot_paths:
             path = random.choice(robot_paths)
             robot_paths.remove(path)
-            robot = Robot(Rotation.N, path, coordinate)
+            robot = Robot(Direction.N, path, coordinate)
             robots_start.append(robot)
     return robots_start
 
