@@ -55,22 +55,25 @@ class State:
 
 
 class Direction(Enum):
-    N = (0, (0, +1))
-    E = (90, (+1, 0))
-    S = (180, (0, -1))
-    W = (270, (-1, 0))
+    N = 0, (0, +1), 0
+    E = 90, (+1, 0), 1
+    S = 180, (0, -1), 2
+    W = 270, (-1, 0), 3
 
-    def __new__(cls, keycode, vector):
+    def __new__(cls, keycode, vector, tile_property):
         """
         Get attributes value and vector of the given Direction class values.
 
         Override standard enum __new__ method.
-        Makes it possible to change vector when the object is rotated.
-        With degrees change (value) there comes the vector change (vector).
+        vector: new coordinates (where the robot goes to)
+        tile_property: map tile (exported from Tiled 1.2) property: value. 
+        Makes it possible to change vector and tile_property when the object is rotated.
+        With degrees change (value) there comes the coordinates (vector) change and tile_property.
         """
         obj = object.__new__(cls)
         obj._value_ = keycode
         obj.vector = vector
+        obj.tile_property = tile_property
         return obj
 
     def rotate(self, where_to):
