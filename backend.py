@@ -5,11 +5,11 @@ Backend file contains functions for the game logic.
 import json
 from pathlib import Path
 import random
-
+from enum import Enum
 
 class Tile:
-    def __init__(self, rotation, path):
-        self.rotation = rotation
+    def __init__(self, direction, path):
+        self.direction = direction
         self.path = path
 
     def __repr__(self):
@@ -17,17 +17,20 @@ class Tile:
 
 
 class Robot:
-    def __init__(self, rotation, path, coordinates):
-        self.rotation = rotation
+    def __init__(self, direction, path, coordinates):
+        self.direction = direction
         self.path = path
         self.coordinates = coordinates
 
+    def __repr__(self):
+        return "<Robot> {} {} {}>".format(self.direction, self.path, self.coordinates)
+
     def walk(self, distance):
         """
-        Move a robot to new coordinates based on its rotation.
+        Move a robot to new coordinates based on its direction.
         """
 
-        self.move(self.rotation, distance)
+        self.move(self.direction, distance)
 
     def move(self, direction, distance):
         """
@@ -35,20 +38,18 @@ class Robot:
         """
 
         (x, y) = self.coordinates
-
-        if direction == 0:
-            y += distance
-        elif direction == 90:
-            x += distance
-        elif direction == 180:
-            y -= distance
-        elif direction == 270:
-            x -= distance
+        (new_x, new_y) = direction.coor_delta
+        x = x + (new_x * distance)
+        y = y + (new_y * distance)
 
         self.coordinates = (x, y)
 
-    def __repr__(self):
-        return "<Robot> {} {} {}>".format(self.rotation, self.path, self.coordinates)
+    def rotate(self, where_to):
+        """
+        Rotate robot according to a given direction.
+        """
+
+        self.direction = self.direction.get_new_direction(where_to)
 
 
 class State:
@@ -58,6 +59,45 @@ class State:
 
     def __repr__(self):
         return "<State {} {}>".format(self.board, self.robots)
+
+
+class Direction(Enum):
+    N = 0, (0, +1), 0
+    E = 90, (+1, 0), 1
+    S = 180, (0, -1), 2
+    W = 270, (-1, 0), 3
+
+    def __new__(cls, degrees, coor_delta, tile_property):
+        """
+        Get attributes value and vector of the given Direction class values.
+
+        Override standard enum __new__ method.
+        vector: new coordinates (where the robot goes to)
+        tile_property: map tile property: value (custom - added in Tiled).
+        Makes it possible to change vector and tile_property when the object is rotated.
+        With degrees change (value) there comes the coordinates (vector) change and tile_property.
+
+        More info about enum - official documentation: https://docs.python.org/3/library/enum.html
+        Blog post with the exact __new__() usage: http://xion.io/post/code/python-enums-are-ok.html 
+        """
+        obj = object.__new__(cls)
+        obj._value_ = degrees
+        obj.coor_delta = coor_delta
+        obj.map_property = tile_property
+        return obj
+
+    def get_new_direction(self, where_to):
+        """
+        Get new direction of given object.
+
+        Change attribute direction according to argument where_to, passed from TDB class DirectionOfRotation.
+        """
+        if where_to == "right":
+            return Direction((self.value + 90) % 360)
+        if where_to == "left":
+            return Direction((self.value + 270) % 360)
+        if where_to == "upside_down":
+            return Direction((self.value + 180) % 360)
 
 
 def get_data(map_name):
@@ -121,16 +161,16 @@ def get_tile_id(tile_number):
     return tile_number & 0xFFFFFF
 
 
-def get_tile_rotation(tile_number):
+def get_tile_direction(tile_number):
     """
-    Return tile rotation.
+    Return tile direction.
 
-    Transform tile_number to get the value of tile's rotation in degrees.
+    Transform tile_number to get the value of tile's direction in degrees.
     """
-    rotation_dict = {0: 0, 10: 90, 12: 180, 6: 270}
-    rotation_number = tile_number >> (4*7)
+    direction_dict = {0: Direction.N, 10: Direction.E, 12: Direction.S, 6: Direction.W}
+    direction_number = tile_number >> (4*7)
 
-    return rotation_dict[rotation_number]
+    return direction_dict[direction_number]
 
 
 def get_board(data):
@@ -162,8 +202,8 @@ def get_board(data):
             # if id == 0 there is empty space here, ergo don't create Tile object
             # otherwise add Tile object to the list of objects on the same coordinates
             if id != 0:
-                rotation = get_tile_rotation(tile_number)
-                tile = Tile(rotation, paths[id])
+                direction = get_tile_direction(tile_number)
+                tile = Tile(direction, paths[id])
                 tiles.append(tile)
                 board[coordinate] = tiles
     return board
@@ -215,7 +255,7 @@ def get_robots_to_start(board):
     choice of robot's avatar on particular tile.
     Once the robot is randomly chosen, it is removed from the list
     (it cannot appear twice on the board).
-    On the beginning all the Robot objects have implicit 0 degree rotation.
+    On the beginning all the Robot objects have implicit 0 degree direction.
     """
     starting_coordinates = get_starting_coordinates(board)
     robot_paths = get_robot_paths()
@@ -227,7 +267,7 @@ def get_robots_to_start(board):
         if robot_paths:
             path = random.choice(robot_paths)
             robot_paths.remove(path)
-            robot = Robot(0, path, coordinate)
+            robot = Robot(Direction.N, path, coordinate)
             robots_start.append(robot)
     return robots_start
 
