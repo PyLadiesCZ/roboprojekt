@@ -1,4 +1,4 @@
-from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_rotation, get_paths, get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, Tile, Direction
+from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_direction, get_paths, get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, Tile, Direction
 from pathlib import Path
 
 import pytest
