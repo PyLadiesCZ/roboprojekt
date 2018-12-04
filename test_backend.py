@@ -71,7 +71,7 @@ def test_board_structure():
     board = get_board(data)
     example_tile = board[0, 0]
     assert example_tile[0].path == "./img/squares/png/ground.png"
-    assert example_tile[0].direction == 0
+    assert example_tile[0].direction == Direction.N
 
 
 def test_starting_coordinates():
