@@ -13,7 +13,7 @@ class Tile:
         self.path = path
 
     def __repr__(self):
-        return "<Tile> {} {}>".format(self.direction, self.path)
+        return "<Tile {} {}>".format(self.rotation, self.path)
 
 
 class Robot:
@@ -58,7 +58,7 @@ class State:
         self.robots = robots
 
     def __repr__(self):
-        return "<State> {} {}>".format(self.board, self.robots)
+        return "<State {} {}>".format(self.board, self.robots)
 
 
 class Direction(Enum):
