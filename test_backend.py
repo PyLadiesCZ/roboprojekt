@@ -1,5 +1,6 @@
-from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_rotation, get_paths, get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, Tile
+from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_rotation, get_paths, get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, Tile, Direction
 from pathlib import Path
+
 import pytest
 
 
@@ -22,36 +23,42 @@ def test_map_returns_correct_data_list():
     assert data["layers"][0]["data"] == [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
 
 
-@pytest.mark.parametrize(("id_number", "expected_value"),
+@pytest.mark.parametrize(("index_number", "expected_value"),
                          [(0, 0),
                           (2, 2),
                           (4, 6),
                           (6, 9),
-                          (13, 16), ])
-def test_map_returns_correct_image_ID(id_number, expected_value):
+                          (13, 17), ])
+def test_map_returns_correct_image_ID(index_number, expected_value):
     """
     Take JSON file with test_1 map and assert correct image ID.
+
+    index_number: tiles list instance index
+    expected value: "id" stored in tiles list
 
     If the test_1.json map is changed or removed, the test needs to be updated.
     """
     data = get_data("maps/test_1.json")
-    assert data["tilesets"][0]["tiles"][id_number]["id"] == expected_value
+    assert data["tilesets"][0]["tiles"][index_number]["id"] == expected_value
 
 
-@pytest.mark.parametrize(("id_number", "expected_value"),
+@pytest.mark.parametrize(("index_number", "expected_value"),
                          [(0, "../img/squares/png/ground.png"),
                           (2, "../img/squares/png/laser_1_base.png"),
                           (4, "../img/squares/png/gear_r.png"),
                           (6, "../img/squares/png/pusher_1_3_5.png"),
-                          (13, "../img/squares/png/laser_2.png"), ])
-def test_map_returns_correct_image_path(id_number, expected_value):
+                          (13, "../img/squares/png/conveyor_belt_1.png"), ])
+def test_map_returns_correct_image_path(index_number, expected_value):
     """
     Take JSON file with test_1 map and assert correct image path.
+
+    index_number: tiles list instance index
+    expected value: "image" stored in tiles list
 
     If the test_1.json map is changed or removed, the test needs to be updated.
     """
     data = get_data("maps/test_1.json")
-    assert data["tilesets"][0]["tiles"][id_number]["image"] == expected_value
+    assert data["tilesets"][0]["tiles"][index_number]["image"] == expected_value
 
 
 def test_board_structure():
@@ -102,17 +109,17 @@ def test_convert_tile_id(tile_number, converted_number):
 
 
 @pytest.mark.parametrize(("tile_number", "converted_number"),
-                         [(1, 0),
-                         (2684354573, 90),
-                         (2684354584, 90),
-                         (1610612749, 270),
-                         (3221225497, 180)])
-def test_convert_tile_rotation(tile_number, converted_number):
+                         [(1, Direction.N),
+                         (2684354573, Direction.E),
+                         (2684354584, Direction.E),
+                         (1610612749, Direction.W),
+                         (3221225497, Direction.S)])
+def test_convert_tile_direction(tile_number, converted_number):
     """
     Take number from layer's data (JSON file) and assert it was correctly
-    transformed to valid rotation in degrees.
+    transformed to valid direction in degrees.
     """
-    assert get_tile_rotation(tile_number) == converted_number
+    assert get_tile_direction(tile_number) == converted_number
 
 
 def test_dict_paths_is_correct():
@@ -153,31 +160,31 @@ def test_starting_state():
     assert isinstance(ss.board[0, 0][0], Tile)
 
 
-@pytest.mark.parametrize(("input_coordinates", "input_rotation", "distance", "output_coordinates"),
-                         [((3, 3), 0, 2, (3, 5)),
-                          ((3, 3), 90, 2, (5, 3)),
-                          ((3, 3), 180, 2, (3, 1)),
-                          ((3, 3), 270, 2, (1, 3))])
-def test_robot_walk(input_coordinates, input_rotation, distance, output_coordinates):
+@pytest.mark.parametrize(("input_coordinates", "input_direction", "distance", "output_coordinates"),
+                         [((3, 3), Direction.N, 2, (3, 5)),
+                          ((3, 3), Direction.E, 2, (5, 3)),
+                          ((3, 3), Direction.S, 2, (3, 1)),
+                          ((3, 3), Direction.W, 2, (1, 3))])
+def test_robot_walk(input_coordinates, input_direction, distance, output_coordinates):
     """
-    Take robot's coordinates, rotation and distance and assert robot walked
+    Take robot's coordinates, direction and distance and assert robot walked
     to correct coordinates.
     """
-    robot = Robot(input_rotation, None, input_coordinates)
+    robot = Robot(input_direction, None, input_coordinates)
     robot.walk(distance)
     assert robot.coordinates == output_coordinates
 
 
 @pytest.mark.parametrize(("input_coordinates", "input_direction", "distance", "output_coordinates"),
-                         [((3, 3), 0, 2, (3, 5)),
-                          ((3, 3), 90, 2, (5, 3)),
-                          ((3, 3), 180, 2, (3, 1)),
-                          ((3, 3), 270, 2, (1, 3))])
+                         [((3, 3), Direction.N, 2, (3, 5)),
+                          ((3, 3), Direction.E, 2, (5, 3)),
+                          ((3, 3), Direction.S, 2, (3, 1)),
+                          ((3, 3), Direction.W, 2, (1, 3))])
 def test_robot_move(input_coordinates, input_direction, distance, output_coordinates):
     """
     Take robot's coordinates, move's direction and distance and assert robot
     was moved to correct coordinates.
     """
-    robot = Robot(0, None, input_coordinates)
+    robot = Robot(Direction.N, None, input_coordinates)
     robot.move(input_direction, distance)
     assert robot.coordinates == output_coordinates
