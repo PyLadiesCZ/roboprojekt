@@ -53,9 +53,10 @@ class Robot:
 
 
 class State:
-    def __init__(self, board, robots):
+    def __init__(self, board, robots, sizes):
         self.board = board
         self.robots = robots
+        self.sizes = sizes
 
     def __repr__(self):
         return "<State {} {}>".format(self.board, self.robots)
@@ -272,7 +273,7 @@ def get_robots_to_start(board):
     return robots_start
 
 
-def get_start_state(data):
+def get_start_state(map_name):
     """
     Get starting state of game.
 
@@ -281,7 +282,9 @@ def get_start_state(data):
     Create board and robots on starting squares, initialize State object containing both Tile and Robot object.
     Return State object.
     """
+    data = get_data(map_name)
+    sizes = [data["width"], data["height"]]
     board = get_board(data)
     robots_start = get_robots_to_start(board)
-    state = State(board, robots_start)
+    state = State(board, robots_start, sizes)
     return state

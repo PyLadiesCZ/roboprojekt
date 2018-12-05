@@ -6,39 +6,37 @@ The frontend module
 
 import pyglet
 
-# define the board and size of tiles:
+# Constatnts for size of tile image in px
 TILE_WIDTH = 64
 TILE_HEIGHT = 64
-WINDOW_WIDTH = 12*TILE_WIDTH
-WINDOW_HEIGHT = 12*TILE_HEIGHT
 
 
-def init_window(WINDOW_WIDTH, WINDOW_HEIGHT):
+def init_window(state):
     """
     Return a pyglet window for graphic outputself.
 
     data: a dict created from decoded Tiled 1.2 JSON file
     """
-    window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT)
+    window = pyglet.window.Window(state.sizes[0] * TILE_WIDTH,
+                                  state.sizes[1] * TILE_HEIGHT)
     return window
 
 
-def load_tiles(state, TILE_WIDTH, TILE_HEIGHT):
+def load_tiles(state):
     """
     Return list of sprites of tiles.
 
     state: State object containing game board and robots
     data: a dict created from decoded Tiled 1.2 JSON file
     """
-
     tile_sprites = []
     for coordinate, tiles in state.board.items():
-        sprites = sprite(coordinate, tiles, TILE_WIDTH, TILE_HEIGHT)
+        sprites = sprite(coordinate, tiles)
         tile_sprites.extend(sprites)
     return tile_sprites
 
 
-def load_robots(state, TILE_WIDTH, TILE_HEIGHT):
+def load_robots(state):
     """
     Return list of sprites of robots.
 
@@ -47,12 +45,12 @@ def load_robots(state, TILE_WIDTH, TILE_HEIGHT):
     """
     robot_sprites = []
     for robot in state.robots:
-        robot_sprite = sprite(robot.coordinates, [robot], TILE_WIDTH, TILE_HEIGHT)
+        robot_sprite = sprite(robot.coordinates, [robot])
         robot_sprites.extend(robot_sprite)
     return robot_sprites
 
 
-def sprite(coordinate, items, TILE_WIDTH, TILE_HEIGHT):
+def sprite(coordinate, items):
     """
     Return list of sprites of items.
 
@@ -77,13 +75,14 @@ def sprite(coordinate, items, TILE_WIDTH, TILE_HEIGHT):
     return items_sprites
 
 
-def draw_board(tile_sprites, robot_sprites):
+def draw_board(state):
     """
     Draw the images of tiles and robots into map.
 
-    tile_sprites: a list of tiles sprites
-    robot_sprites: a list of robots sprites
+    state: State object containing game board and robots
     """
+    tile_sprites = load_tiles(state)
+    robot_sprites = load_robots(state)
     tile_sprites.extend(robot_sprites)
     for tile_sprite in tile_sprites:
         tile_sprite.draw()

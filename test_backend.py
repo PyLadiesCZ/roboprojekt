@@ -125,3 +125,16 @@ def test_robot_move(input_coordinates, input_direction, distance, output_coordin
     robot = Robot(Direction.N, None, input_coordinates)
     robot.move(input_direction, distance)
     assert robot.coordinates == output_coordinates
+
+
+@pytest.mark.parametrize("map_name", ["test_1", "test_2", "test_3", "test_4"])
+def test_tile_size(map_name):
+    """
+    Take size of tiles used in JSON files and assert correct tile size.
+
+    This test has to be removed, when width and height of tile image are
+    no longer constants used for tile drawing.
+    """
+    data = get_data("maps/" + map_name + ".json")
+    assert data["tilewidth"] == 64
+    assert data["tileheight"] == 64
