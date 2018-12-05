@@ -8,12 +8,13 @@ import random
 
 
 class Tile:
-    def __init__(self, rotation, path):
+    def __init__(self, rotation, path, type):
         self.rotation = rotation
         self.path = path
+        self.type = type
 
     def __repr__(self):
-        return "<Tile> {} {}>".format(self.rotation, self.path)
+        return "<Tile> {} {}>".format(self.rotation, self.type)
 
 
 class Robot:
@@ -109,6 +110,13 @@ def get_paths(data):
         paths[id] = path
     return paths
 
+def get_type(data):
+    types = {}
+    for json_tile in data['tilesets'][0]['tiles']:
+        id = json_tile['id'] + data['tilesets'][0]['firstgid']
+        type = json_tile['type']
+        types[id] = type
+    return types
 
 def get_tile_id(tile_number):
     """
@@ -132,6 +140,14 @@ def get_tile_rotation(tile_number):
 
     return rotation_dict[rotation_number]
 
+def type_index(type, tiles):
+    for i, tile in enumerate(tiles):
+        if tile.type == type:
+            print(i)
+            return i
+    print(i)
+    raise LookupError(type)
+
 
 def get_board(data):
     """
@@ -149,7 +165,7 @@ def get_board(data):
     """
     paths = get_paths(data)
     coordinates = get_coordinates(data)
-
+    types = get_type(data)
     # create dictionary of coordinates where value is empty list for further transformation
     board = {coordinate: [] for coordinate in coordinates}
     for layer in data['layers']:
@@ -163,7 +179,8 @@ def get_board(data):
             # otherwise add Tile object to the list of objects on the same coordinates
             if id != 0:
                 rotation = get_tile_rotation(tile_number)
-                tile = Tile(rotation, paths[id])
+
+                tile = Tile(rotation, paths[id], types[id])
                 tiles.append(tile)
                 board[coordinate] = tiles
     return board

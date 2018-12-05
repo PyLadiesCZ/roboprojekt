@@ -1,6 +1,6 @@
 from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_rotation, Robot
 import pytest
-
+from pathlib import Path
 
 @pytest.mark.parametrize("map_name", ["test_1", "test_2", "test_3"])
 def test_get_coordinates_returns_list(map_name):
@@ -125,3 +125,61 @@ def test_robot_move(input_coordinates, input_direction, distance, output_coordin
     robot = Robot(0, None, input_coordinates)
     robot.move(input_direction, distance)
     assert robot.coordinates == output_coordinates
+
+
+def type_index(type, tiles):
+    for i, tile in enumerate(tiles):
+        if tile.type == type:
+            return i
+    raise LookupError(type)
+
+
+def first(text):
+    order_squares = {
+    'ground':"A_ground",
+    'hole':"B_hole",
+    'starting_square':"B_starting_square",
+    'repair':"B_repair",
+    'flag':"C_repair",
+    'belt':"B_belt",
+    'gear':"B_gear",
+    'pusher':"D_pusher",
+    'laser':"D_laser",
+    'wall':"D_wall"}
+    for key, value in order_squares.items():
+        if order_squares[text]:
+            return order_squares[text]
+
+def img_list(map_name):
+    data = get_data("maps/" + map_name + ".json")
+    board = get_board(data)
+
+    for key, value in board.items():
+        square_type = []
+        for i in value:
+            square_type.append(first(i.type)[0])
+        a = 0
+        b = 0
+        c = 0
+        for letter in square_type:
+            if letter == 'A':
+                a+=1
+            if letter == 'B':
+                b+=1
+            if letter == 'C':
+                c+=1
+        if a >1 or b > 1 or c > 1:
+            return False
+    b = len(square_type)
+    if b<6:
+        for i in range(b,6):
+            square_type.append('Z')
+        print(a)
+    if square_type[0]<=square_type[1]<=square_type[2]<=square_type[3]<=square_type[4]<=square_type[5]:
+        return True
+    else:
+        return square_type
+
+@pytest.mark.parametrize("map_name", ["test_7","test_6", "test_5", "test_3"])
+def test_map_is_valid(map_name):
+    assert img_list(map_name) == True
