@@ -23,7 +23,7 @@ class Robot:
         self.coordinates = coordinates
 
     def __repr__(self):
-        return "<Robot> {} {} {}>".format(self.direction, self.path, self.coordinates)
+        return "<Robot {} {} {}>".format(self.direction, self.path, self.coordinates)
 
     def walk(self, distance):
         """
