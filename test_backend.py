@@ -1,6 +1,6 @@
 from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_direction, get_paths, get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, Tile, Direction
 from pathlib import Path
-
+import pytest
 
 @pytest.mark.parametrize("map_name", ["test_1", "test_2", "test_3"])
 def test_get_coordinates_returns_list(map_name):
@@ -69,7 +69,7 @@ def test_board_structure():
     board = get_board(data)
     example_tile = board[0, 0]
     assert example_tile[0].path == "./img/squares/png/ground.png"
-    assert example_tile[0].direction == 0
+    assert example_tile[0].direction == Direction.N
 
 
 def test_starting_coordinates():
@@ -148,8 +148,7 @@ def test_starting_state():
     """
     Assert that created starting state (board and robots) contains the correct instances of objects.
     """
-    data = get_data("maps/test_3.json")
-    ss = get_start_state(data)
+    ss = get_start_state("maps/test_3.json")
     assert isinstance(ss, State)
     assert isinstance(ss.robots, list)
     assert isinstance(ss.robots[0], Robot)
