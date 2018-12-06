@@ -1,6 +1,6 @@
-from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_direction, Robot, Direction
+from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_direction, get_paths, get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, Tile, Direction
+from pathlib import Path
 import pytest
-
 
 @pytest.mark.parametrize("map_name", ["test_1", "test_2", "test_3"])
 def test_get_coordinates_returns_list(map_name):
@@ -59,15 +59,38 @@ def test_map_returns_correct_image_path(index_number, expected_value):
     assert data["tilesets"][0]["tiles"][index_number]["image"] == expected_value
 
 
-def test_get_board_instance():
+def test_board_structure():
     """
-    Take JSON file with test_3 map and assert correct tilelist is returned.
+    Take board (based on JSON test_3 map) and assert correct board structure is returned.
 
     If the test_3.json map is changed or removed, the test needs to be updated.
     """
     data = get_data("maps/test_3.json")
     board = get_board(data)
-    assert isinstance(board, dict)
+    example_tile = board[0, 0]
+    assert example_tile[0].path == "./img/squares/png/ground.png"
+    assert example_tile[0].direction == Direction.N
+
+
+def test_starting_coordinates():
+    """
+    Take board (based on JSON test_3 map) and assert correct starting coordinates are returned.
+
+    If the test_3.json map is changed or removed, the test needs to be updated.
+    """
+    data = get_data("maps/test_3.json")
+    board = get_board(data)
+    assert len(get_starting_coordinates(board)) == 8
+    assert isinstance(get_starting_coordinates(board), list)
+
+
+def test_robot_paths():
+    """
+    Get list of robot paths, assert that instance of the list is Path object. The list will change in time, it is not possible to test length or all the paths.
+    """
+    robot_paths = get_robot_paths()
+    assert isinstance(robot_paths, list)
+    assert isinstance(robot_paths[0], Path)
 
 
 @pytest.mark.parametrize(("tile_number", "converted_number"),
@@ -95,6 +118,43 @@ def test_convert_tile_direction(tile_number, converted_number):
     transformed to valid direction in degrees.
     """
     assert get_tile_direction(tile_number) == converted_number
+
+
+def test_dict_paths_is_correct():
+    """
+    Assert that the result of get_paths() is a dictionary.
+    Assert that the paths structure is valid: integer is tile ID, string is path to the picture.
+    """
+    data = get_data("maps/test_3.json")
+    paths = get_paths(data)
+    for key, value in paths.items():
+        assert isinstance(key, int)
+        assert isinstance(value, str)
+    assert isinstance(paths, dict)
+
+
+def test_robots_on_starting_coordinates():
+    """
+    Assert that the result of get_robots_to_start is a list which contains Robot objects with correct attribute coordinates.
+    """
+    data = get_data("maps/test_3.json")
+    board = get_board(data)
+    robots = get_robots_to_start(board)
+    assert isinstance(robots, list)
+    assert isinstance(robots[0], Robot)
+
+
+def test_starting_state():
+    """
+    Assert that created starting state (board and robots) contains the correct instances of objects.
+    """
+    ss = get_start_state("maps/test_3.json")
+    assert isinstance(ss, State)
+    assert isinstance(ss.robots, list)
+    assert isinstance(ss.robots[0], Robot)
+    assert isinstance(ss.board, dict)
+    assert isinstance(ss.board[0, 0], list)
+    assert isinstance(ss.board[0, 0][0], Tile)
 
 
 @pytest.mark.parametrize(("input_coordinates", "input_direction", "distance", "output_coordinates"),
