@@ -1,6 +1,5 @@
-from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_rotation, get_paths, get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, Tile
+from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_direction, get_paths, get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, Tile, Direction
 from pathlib import Path
-import pytest
 
 
 @pytest.mark.parametrize("map_name", ["test_1", "test_2", "test_3"])
@@ -70,7 +69,7 @@ def test_board_structure():
     board = get_board(data)
     example_tile = board[0, 0]
     assert example_tile[0].path == "./img/squares/png/ground.png"
-    assert example_tile[0].rotation == 0
+    assert example_tile[0].direction == 0
 
 
 def test_starting_coordinates():
@@ -108,17 +107,17 @@ def test_convert_tile_id(tile_number, converted_number):
 
 
 @pytest.mark.parametrize(("tile_number", "converted_number"),
-                         [(1, 0),
-                         (2684354573, 90),
-                         (2684354584, 90),
-                         (1610612749, 270),
-                         (3221225497, 180)])
-def test_convert_tile_rotation(tile_number, converted_number):
+                         [(1, Direction.N),
+                         (2684354573, Direction.E),
+                         (2684354584, Direction.E),
+                         (1610612749, Direction.W),
+                         (3221225497, Direction.S)])
+def test_convert_tile_direction(tile_number, converted_number):
     """
     Take number from layer's data (JSON file) and assert it was correctly
-    transformed to valid rotation in degrees.
+    transformed to valid direction in degrees.
     """
-    assert get_tile_rotation(tile_number) == converted_number
+    assert get_tile_direction(tile_number) == converted_number
 
 
 def test_dict_paths_is_correct():
@@ -159,31 +158,44 @@ def test_starting_state():
     assert isinstance(ss.board[0, 0][0], Tile)
 
 
-@pytest.mark.parametrize(("input_coordinates", "input_rotation", "distance", "output_coordinates"),
-                         [((3, 3), 0, 2, (3, 5)),
-                          ((3, 3), 90, 2, (5, 3)),
-                          ((3, 3), 180, 2, (3, 1)),
-                          ((3, 3), 270, 2, (1, 3))])
-def test_robot_walk(input_coordinates, input_rotation, distance, output_coordinates):
+@pytest.mark.parametrize(("input_coordinates", "input_direction", "distance", "output_coordinates"),
+                         [((3, 3), Direction.N, 2, (3, 5)),
+                          ((3, 3), Direction.E, 2, (5, 3)),
+                          ((3, 3), Direction.S, 2, (3, 1)),
+                          ((3, 3), Direction.W, 2, (1, 3))])
+def test_robot_walk(input_coordinates, input_direction, distance, output_coordinates):
     """
-    Take robot's coordinates, rotation and distance and assert robot walked
+    Take robot's coordinates, direction and distance and assert robot walked
     to correct coordinates.
     """
-    robot = Robot(input_rotation, None, input_coordinates)
+    robot = Robot(input_direction, None, input_coordinates)
     robot.walk(distance)
     assert robot.coordinates == output_coordinates
 
 
 @pytest.mark.parametrize(("input_coordinates", "input_direction", "distance", "output_coordinates"),
-                         [((3, 3), 0, 2, (3, 5)),
-                          ((3, 3), 90, 2, (5, 3)),
-                          ((3, 3), 180, 2, (3, 1)),
-                          ((3, 3), 270, 2, (1, 3))])
+                         [((3, 3), Direction.N, 2, (3, 5)),
+                          ((3, 3), Direction.E, 2, (5, 3)),
+                          ((3, 3), Direction.S, 2, (3, 1)),
+                          ((3, 3), Direction.W, 2, (1, 3))])
 def test_robot_move(input_coordinates, input_direction, distance, output_coordinates):
     """
     Take robot's coordinates, move's direction and distance and assert robot
     was moved to correct coordinates.
     """
-    robot = Robot(0, None, input_coordinates)
+    robot = Robot(Direction.N, None, input_coordinates)
     robot.move(input_direction, distance)
     assert robot.coordinates == output_coordinates
+
+
+@pytest.mark.parametrize("map_name", ["test_1", "test_2", "test_3", "test_4"])
+def test_tile_size(map_name):
+    """
+    Take size of tiles used in JSON files and assert correct tile size.
+
+    This test has to be removed, when width and height of tile image are
+    no longer constants used for tile drawing.
+    """
+    data = get_data("maps/" + map_name + ".json")
+    assert data["tilewidth"] == 64
+    assert data["tileheight"] == 64
