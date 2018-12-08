@@ -7,13 +7,50 @@ from pathlib import Path
 import random
 from enum import Enum
 
+
 class Tile:
-    def __init__(self, direction, path):
+    def __init__(self, direction, path, type):
         self.direction = direction
         self.path = path
+        self.type = type
 
     def __repr__(self):
-        return "<Tile {} {}>".format(self.rotation, self.path)
+        return "<Tile {} {}>".format(self.direction, self.type)
+
+    def can_move_from(self, direction):
+        """
+        Verify movement from tile in specific direction.
+
+        Return a boolean.
+
+        True - There is not a wall in direction of the move.
+        False - There is a wall in direction of the move.
+        """
+        # The direction of the wall is the same as the direction in which
+        # robot wants to move from the tile.
+        if (self.type == "wall" and self.direction == direction):
+            move = False
+        else:
+            move = True
+        return move
+
+    def can_move_to(self, direction):
+        """
+        Verify movement to tile from specific direction.
+
+        Return a boolean.
+
+        True - There is not a wall in direction of the move.
+        False - There is a wall in direction of the move.
+        """
+        # If there is a wall in direction of the robot movement,
+        # than the direction of the robot goes against the direction of the wall.
+        # Because of that the tile is rotate upside down.
+        if (self.type == "wall" and self.direction.get_new_direction("upside_down") == direction):
+            move = False
+        else:
+            move = True
+        return move
 
 
 class Robot:
@@ -25,24 +62,42 @@ class Robot:
     def __repr__(self):
         return "<Robot {} {} {}>".format(self.direction, self.path, self.coordinates)
 
-    def walk(self, distance):
+    def walk(self, distance, state):
         """
         Move a robot to new coordinates based on its direction.
         """
 
-        self.move(self.direction, distance)
+        self.move(self.direction, distance, state)
 
-    def move(self, direction, distance):
+    def move(self, direction, distance, state):
         """
         Move a robot to new coordinates according to direction of the move.
         """
-
-        (x, y) = self.coordinates
-        (new_x, new_y) = direction.coor_delta
-        x = x + (new_x * distance)
-        y = y + (new_y * distance)
-
-        self.coordinates = (x, y)
+        for __ in range(distance):
+            old_tiles = state.board[self.coordinates]
+            # On the current tile; check wall in the direction of next move.
+            for tile in old_tiles:
+                tile_move = tile.can_move_from(direction)
+                if tile_move is False:
+                    break
+            if tile_move:
+                # There is no wall, so get new coordinates
+                (x, y) = self.coordinates
+                (new_x, new_y) = direction.coor_delta
+                x = x + new_x
+                y = y + new_y
+                new_tiles = state.board[(x, y)]
+                # Check wall on the next tile in the direction of the robot movement.
+                for tile in new_tiles:
+                    tile_move = tile.can_move_to(direction)
+                    if tile_move is False:
+                        break
+                if tile_move:
+                    self.coordinates = (x, y)
+                else:
+                    break
+            else:
+                break
 
     def rotate(self, where_to):
         """
@@ -79,7 +134,7 @@ class Direction(Enum):
         With degrees change (value) there comes the coordinates (vector) change and tile_property.
 
         More info about enum - official documentation: https://docs.python.org/3/library/enum.html
-        Blog post with the exact __new__() usage: http://xion.io/post/code/python-enums-are-ok.html 
+        Blog post with the exact __new__() usage: http://xion.io/post/code/python-enums-are-ok.html
         """
         obj = object.__new__(cls)
         obj._value_ = degrees
@@ -151,6 +206,23 @@ def get_paths(data):
     return paths
 
 
+def get_properties(data):
+    """
+    Get tile types.
+
+    data: a dict created from decoded Tiled 1.2 JSON file
+
+    Return a dictionary with modified tile ID as a key and type of tile as a value.
+
+    In the future this function will be modified to get more tile properties!!!
+    """
+    types = {}
+    for json_tile in data['tilesets'][0]['tiles']:
+        id = json_tile['id'] + data['tilesets'][0]['firstgid']
+        types[id] = json_tile['type']
+    return types
+
+
 def get_tile_id(tile_number):
     """
     Return tile ID.
@@ -190,6 +262,7 @@ def get_board(data):
     """
     paths = get_paths(data)
     coordinates = get_coordinates(data)
+    types = get_properties(data)
 
     # create dictionary of coordinates where value is empty list for further transformation
     board = {coordinate: [] for coordinate in coordinates}
@@ -204,7 +277,7 @@ def get_board(data):
             # otherwise add Tile object to the list of objects on the same coordinates
             if id != 0:
                 direction = get_tile_direction(tile_number)
-                tile = Tile(direction, paths[id])
+                tile = Tile(direction, paths[id], types[id])
                 tiles.append(tile)
                 board[coordinate] = tiles
     return board
