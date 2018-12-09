@@ -134,21 +134,20 @@ def type_index(type, tiles):
     raise LookupError(type)
 
 
-def first(text):
+def get_order_squares(text):
     order_squares = {
-    'ground':"A_ground",
-    'hole':"B_hole",
-    'starting_square':"B_starting_square",
-    'repair':"B_repair",
-    'flag':"C_repair",
-    'belt':"B_belt",
-    'gear':"B_gear",
-    'pusher':"D_pusher",
-    'laser':"D_laser",
-    'wall':"D_wall"}
+    'ground':"A",
+    'hole':"B",
+    'starting_square':"B",
+    'repair':"B",
+    'belt':"B",
+    'gear':"B",
+    'flag':"C",
+    'pusher':"D",
+    'laser':"D",
+    'wall':"D"}
     for key, value in order_squares.items():
-        if order_squares[text]:
-            return order_squares[text]
+        return order_squares.get(text)
 
 def img_list(map_name):
     data = get_data("maps/" + map_name + ".json")
@@ -157,25 +156,25 @@ def img_list(map_name):
     for key, value in board.items():
         square_type = []
         for i in value:
-            square_type.append(first(i.type)[0])
+            square_type.append( get_order_squares(i.type)[0])
         a = 0
         b = 0
         c = 0
         for letter in square_type:
             if letter == 'A':
-                a+=1
+                a += 1
             if letter == 'B':
-                b+=1
+                b += 1
             if letter == 'C':
-                c+=1
-        if a >1 or b > 1 or c > 1:
+                c += 1
+        if a > 1 or b > 1 or c > 1:
             return False
     b = len(square_type)
-    if b<6:
-        for i in range(b,6):
+    if b < 6:
+        for i in range(b, 6):
             square_type.append('Z')
         print(a)
-    if square_type[0]<=square_type[1]<=square_type[2]<=square_type[3]<=square_type[4]<=square_type[5]:
+    if square_type[0] <= square_type[1] <= square_type[2] <= square_type[3] <= square_type[4] <= square_type[5]:
         return True
     else:
         return square_type
