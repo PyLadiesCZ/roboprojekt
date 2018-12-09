@@ -13,7 +13,7 @@ class Tile:
         self.path = path
 
     def __repr__(self):
-        return "<Tile {} {}>".format(self.rotation, self.path)
+        return "<Tile {} {}>".format(self.direction, self.path)
 
 
 class Robot:
@@ -79,7 +79,7 @@ class Direction(Enum):
         With degrees change (value) there comes the coordinates (vector) change and tile_property.
 
         More info about enum - official documentation: https://docs.python.org/3/library/enum.html
-        Blog post with the exact __new__() usage: http://xion.io/post/code/python-enums-are-ok.html 
+        Blog post with the exact __new__() usage: http://xion.io/post/code/python-enums-are-ok.html
         """
         obj = object.__new__(cls)
         obj._value_ = degrees
