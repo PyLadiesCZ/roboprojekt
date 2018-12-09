@@ -8,8 +8,6 @@ import random
 from enum import Enum
 
 class Tile:
-
-
     def __init__(self, direction, path, type):
         self.direction = direction
         self.path = path
@@ -213,7 +211,6 @@ def get_board(data):
             # otherwise add Tile object to the list of objects on the same coordinates
             if id != 0:
                 direction = get_tile_direction(tile_number)
-
                 tile = Tile(direction, paths[id], types[id])
                 tiles.append(tile)
                 board[coordinate] = tiles
