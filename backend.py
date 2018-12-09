@@ -9,20 +9,15 @@ from enum import Enum
 
 class Tile:
 
-    def __init__(self, rotation, path, type):
-        self.rotation = rotation
 
-    def __init__(self, direction, path):
+    def __init__(self, direction, path, type):
         self.direction = direction
-
         self.path = path
         self.type = type
 
     def __repr__(self):
 
-        return "<Tile> {} {}>".format(self.rotation, self.type)
-
-        return "<Tile {} {}>".format(self.direction, self.path)
+        return "<Tile {} {}>".format(self.direction, self.type)
 
 
 
@@ -164,8 +159,7 @@ def get_type(data):
     types = {}
     for json_tile in data['tilesets'][0]['tiles']:
         id = json_tile['id'] + data['tilesets'][0]['firstgid']
-        type = json_tile['type']
-        types[id] = type
+        types[id] = json_tile['type']
     return types
 
 def get_tile_id(tile_number):
@@ -189,15 +183,6 @@ def get_tile_direction(tile_number):
     direction_number = tile_number >> (4*7)
 
     return direction_dict[direction_number]
-
-def type_index(type, tiles):
-    for i, tile in enumerate(tiles):
-        if tile.type == type:
-            print(i)
-            return i
-    print(i)
-    raise LookupError(type)
-
 
 def get_board(data):
     """
@@ -229,7 +214,7 @@ def get_board(data):
             # otherwise add Tile object to the list of objects on the same coordinates
             if id != 0:
                 direction = get_tile_direction(tile_number)
-                tile = Tile(direction, paths[id])
+                tile = Tile(direction, paths[id], types[id])
                 tiles.append(tile)
                 board[coordinate] = tiles
     return board

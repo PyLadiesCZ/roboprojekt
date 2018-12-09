@@ -1,7 +1,7 @@
 from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_direction, get_paths, get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, Tile, Direction
+from pathlib import Path
 from validator import img_list
 import pytest
-from pathlib import Path
 
 @pytest.mark.parametrize("map_name", ["test_1", "test_2", "test_3"])
 def test_get_coordinates_returns_list(map_name):
@@ -15,7 +15,6 @@ def test_get_coordinates_returns_list(map_name):
 def test_map_returns_correct_data_list():
     """
     Take JSON file with test_1 map and assert correct data list.
-
     If the test_1.json map is changed or removed, the test needs to be updated.
     """
     data = get_data("maps/test_1.json")
@@ -31,10 +30,8 @@ def test_map_returns_correct_data_list():
 def test_map_returns_correct_image_ID(index_number, expected_value):
     """
     Take JSON file with test_1 map and assert correct image ID.
-
     index_number: tiles list instance index
     expected value: "id" stored in tiles list
-
     If the test_1.json map is changed or removed, the test needs to be updated.
     """
     data = get_data("maps/test_1.json")
@@ -50,10 +47,8 @@ def test_map_returns_correct_image_ID(index_number, expected_value):
 def test_map_returns_correct_image_path(index_number, expected_value):
     """
     Take JSON file with test_1 map and assert correct image path.
-
     index_number: tiles list instance index
     expected value: "image" stored in tiles list
-
     If the test_1.json map is changed or removed, the test needs to be updated.
     """
     data = get_data("maps/test_1.json")
@@ -63,7 +58,6 @@ def test_map_returns_correct_image_path(index_number, expected_value):
 def test_board_structure():
     """
     Take board (based on JSON test_3 map) and assert correct board structure is returned.
-
     If the test_3.json map is changed or removed, the test needs to be updated.
     """
     data = get_data("maps/test_3.json")
@@ -76,7 +70,6 @@ def test_board_structure():
 def test_starting_coordinates():
     """
     Take board (based on JSON test_3 map) and assert correct starting coordinates are returned.
-
     If the test_3.json map is changed or removed, the test needs to be updated.
     """
     data = get_data("maps/test_3.json")
@@ -186,3 +179,19 @@ def test_robot_move(input_coordinates, input_direction, distance, output_coordin
     robot = Robot(Direction.N, None, input_coordinates)
     robot.move(input_direction, distance)
     assert robot.coordinates == output_coordinates
+
+
+@pytest.mark.parametrize("map_name", ["test_1", "test_2", "test_3", "test_4"])
+def test_tile_size(map_name):
+    """
+    Take size of tiles used in JSON files and assert correct tile size.
+    This test has to be removed, when width and height of tile image are
+    no longer constants used for tile drawing.
+    """
+    data = get_data("maps/" + map_name + ".json")
+    assert data["tilewidth"] == 64
+    assert data["tileheight"] == 64
+
+@pytest.mark.parametrize("map_name", ["test_3","test_5",])
+def test_map_is_valid(map_name):
+    assert img_list(map_name) == True

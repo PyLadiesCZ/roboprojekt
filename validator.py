@@ -13,7 +13,7 @@ def get_order_squares(text):
     'pusher':"D",
     'laser':"D",
     'wall':"D"}
-    return order_squares.get(text)
+    return order_squares[text]
 
 def img_list(map_name):
     data = get_data("maps/" + map_name + ".json")
@@ -22,7 +22,7 @@ def img_list(map_name):
     for type in board.values():
         square_type_letter = []
         for i in type:
-            square_type.append(get_order_squares(i.type))
+            square_type_letter.append(get_order_squares(i.type)[0])
 
         a = 0
         b = 0
@@ -35,14 +35,13 @@ def img_list(map_name):
             if letter == 'C':
                 c += 1
         if a > 1 or b > 1 or c > 1:
-            return False
+            return square_type_letter
+    letter_count = len(square_type_letter)
+    if letter_count < 6:
+        for i in range(letter_count, 6):
+            square_type_letter.append('Z')
 
-    if len(square_type) < 6:
-        for i in range(b, 6):
-            square_type.append('Z')
-        print(a)
-    for i in range(6):
-        if square_type[i]<= square_type[i+1]:
-            return True
+    if square_type_letter[0] <= square_type_letter[1] <= square_type_letter[2] <= square_type_letter[3] <= square_type_letter[4] <= square_type_letter[5]:
+        return True
     else:
-        return square_type
+        return square_type_letter
