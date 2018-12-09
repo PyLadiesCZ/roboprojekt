@@ -71,7 +71,7 @@ class Robot:
         """
         Move a robot to new coordinates according to direction of the move.
         """
-        for _ in range(distance):
+        for step in range(distance):
             old_tiles = state.board[self.coordinates]
             # On the current tile; check wall in the direction of next move.
             for tile in old_tiles:
@@ -92,6 +92,8 @@ class Robot:
                         break
                 if tile_move:
                     self.coordinates = (x, y)
+            else:
+                break
 
     def rotate(self, where_to):
         """
