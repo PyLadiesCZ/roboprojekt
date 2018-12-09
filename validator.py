@@ -19,10 +19,10 @@ def img_list(map_name):
     data = get_data("maps/" + map_name + ".json")
     board = get_board(data)
 
-    for type in board.values():
+    for coordinate, type in board.items():
         square_type_letter = []
         for i in type:
-            square_type_letter.append(get_order_squares(i.type)[0])
+            square_type_letter.append(get_order_squares(i.type))
 
         a = 0
         b = 0
@@ -35,13 +35,11 @@ def img_list(map_name):
             if letter == 'C':
                 c += 1
         if a > 1 or b > 1 or c > 1:
-            return square_type_letter
-    letter_count = len(square_type_letter)
-    if letter_count < 6:
-        for i in range(letter_count, 6):
-            square_type_letter.append('Z')
+            return coordinate, a, b, c
+        letter_count = len(square_type_letter)
+        print(coordinate)
+        for i in range(letter_count-1):
 
-    if square_type_letter[0] <= square_type_letter[1] <= square_type_letter[2] <= square_type_letter[3] <= square_type_letter[4] <= square_type_letter[5]:
-        return True
-    else:
-        return square_type_letter
+            if square_type_letter[i] > square_type_letter[i+1]:
+                return coordinate, square_type_letter[i]
+    return True

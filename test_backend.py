@@ -192,6 +192,6 @@ def test_tile_size(map_name):
     assert data["tilewidth"] == 64
     assert data["tileheight"] == 64
 
-@pytest.mark.parametrize("map_name", ["test_3","test_5",])
+@pytest.mark.parametrize("map_name", ["test_3", "test_5"])
 def test_map_is_valid(map_name):
     assert img_list(map_name) == True

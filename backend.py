@@ -16,7 +16,6 @@ class Tile:
         self.type = type
 
     def __repr__(self):
-
         return "<Tile {} {}>".format(self.direction, self.type)
 
 
@@ -214,6 +213,7 @@ def get_board(data):
             # otherwise add Tile object to the list of objects on the same coordinates
             if id != 0:
                 direction = get_tile_direction(tile_number)
+
                 tile = Tile(direction, paths[id], types[id])
                 tiles.append(tile)
                 board[coordinate] = tiles
