@@ -29,10 +29,9 @@ class Tile:
         # The direction of the wall is the same as the direction in which
         # robot wants to move from the tile.
         if (self.type == "wall" and self.direction == direction):
-            move = False
+            return False
         else:
-            move = True
-        return move
+            return True
 
     def can_move_to(self, direction):
         """
@@ -47,10 +46,9 @@ class Tile:
         # than the direction of the robot goes against the direction of the wall.
         # Because of that the tile is rotate upside down.
         if (self.type == "wall" and self.direction.get_new_direction("upside_down") == direction):
-            move = False
+            return False
         else:
-            move = True
-        return move
+            return True
 
 
 class Robot:
@@ -73,7 +71,7 @@ class Robot:
         """
         Move a robot to new coordinates according to direction of the move.
         """
-        for __ in range(distance):
+        for _ in range(distance):
             old_tiles = state.board[self.coordinates]
             # On the current tile; check wall in the direction of next move.
             for tile in old_tiles:
@@ -94,10 +92,6 @@ class Robot:
                         break
                 if tile_move:
                     self.coordinates = (x, y)
-                else:
-                    break
-            else:
-                break
 
     def rotate(self, where_to):
         """
