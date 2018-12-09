@@ -256,7 +256,7 @@ def get_board(data):
     """
     paths = get_paths(data)
     coordinates = get_coordinates(data)
-    types = get_properties(data)
+    types = get_type(data)
 
     # create dictionary of coordinates where value is empty list for further transformation
     board = {coordinate: [] for coordinate in coordinates}
