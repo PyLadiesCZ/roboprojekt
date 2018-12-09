@@ -202,15 +202,13 @@ def get_paths(data):
     return paths
 
 
-def get_properties(data):
+def get_type(data):
     """
     Get tile types.
 
     data: a dict created from decoded Tiled 1.2 JSON file
 
     Return a dictionary with modified tile ID as a key and type of tile as a value.
-
-    In the future this function will be modified to get more tile properties!!!
     """
     types = {}
     for json_tile in data['tilesets'][0]['tiles']:
