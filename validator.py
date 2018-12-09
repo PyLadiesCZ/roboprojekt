@@ -20,13 +20,14 @@ def img_list(map_name):
     board = get_board(data)
 
     for type in board.values():
-        square_type = []
+        square_type_letter = []
         for i in type:
-            square_type.append(get_order_squares(i.type)[0])
+            square_type.append(get_order_squares(i.type))
+
         a = 0
         b = 0
         c = 0
-        for letter in square_type:
+        for letter in square_type_letter:
             if letter == 'A':
                 a += 1
             if letter == 'B':
@@ -35,12 +36,13 @@ def img_list(map_name):
                 c += 1
         if a > 1 or b > 1 or c > 1:
             return False
-    b = len(square_type)
-    if b < 6:
+
+    if len(square_type) < 6:
         for i in range(b, 6):
             square_type.append('Z')
         print(a)
-    if square_type[0] <= square_type[1] <= square_type[2] <= square_type[3] <= square_type[4] <= square_type[5]:
-        return True
+    for i in range(6):
+        if square_type[i]<= square_type[i+1]:
+            return True
     else:
         return square_type

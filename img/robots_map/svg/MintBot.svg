@@ -18,8 +18,8 @@
    sodipodi:docname="MintBot.svg"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
    inkscape:export-filename="C:\pyladies\robo\roboprojekt\img\robots_map\png\MintBot.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-xdpi="91.336533"
+   inkscape:export-ydpi="91.336533">
   <defs
      id="defs2">
     <linearGradient
@@ -609,18 +609,22 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="8.0000001"
-     inkscape:cx="29.91084"
-     inkscape:cy="41.550025"
+     inkscape:zoom="6.0692309"
+     inkscape:cx="54.566777"
+     inkscape:cy="51.453222"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
-     showgrid="false"
+     showgrid="true"
      units="px"
-     inkscape:window-width="1600"
-     inkscape:window-height="877"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1" />
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid902" />
+  </sodipodi:namedview>
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -640,7 +644,7 @@
      transform="translate(0,-280.06665)">
     <g
        id="g8474"
-       transform="matrix(0.8494125,0,0,0.79076873,1.262604,60.794571)"
+       transform="matrix(0.8494125,0,0,0.79076873,1.3388942,60.794571)"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90">
       <rect
@@ -660,7 +664,7 @@
     </g>
     <g
        id="g4711"
-       transform="matrix(0.8494125,0,0,0.79076873,1.1895566,60.794571)"
+       transform="matrix(0.8494125,0,0,0.79076873,1.2658468,60.794571)"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90">
       <g
@@ -743,7 +747,7 @@
        id="g8688"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"
-       transform="matrix(0.8494125,0,0,0.79076873,1.2626485,60.376123)">
+       transform="matrix(0.8494125,0,0,0.79076873,1.3389387,60.376123)">
       <path
          sodipodi:nodetypes="ccccc"
          inkscape:connector-curvature="0"
