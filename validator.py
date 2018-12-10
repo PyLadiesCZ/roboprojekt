@@ -1,3 +1,9 @@
+"""
+This file is called by Pytest test_backend.py
+It checks that the maps have correct structure
+Don't call it separately
+"""
+
 from backend import get_board, get_data
 
 
