@@ -8,12 +8,14 @@ import random
 from enum import Enum
 
 class Tile:
-    def __init__(self, direction, path):
+    def __init__(self, direction, path, type):
         self.direction = direction
         self.path = path
+        self.type = type
 
     def __repr__(self):
-        return "<Tile {} {}>".format(self.direction, self.path)
+        return "<Tile {} {}>".format(self.direction, self.type)
+
 
 
 class Robot:
@@ -150,6 +152,12 @@ def get_paths(data):
         paths[id] = path
     return paths
 
+def get_type(data):
+    types = {}
+    for json_tile in data['tilesets'][0]['tiles']:
+        id = json_tile['id'] + data['tilesets'][0]['firstgid']
+        types[id] = json_tile['type']
+    return types
 
 def get_tile_id(tile_number):
     """
@@ -173,7 +181,6 @@ def get_tile_direction(tile_number):
 
     return direction_dict[direction_number]
 
-
 def get_board(data):
     """
     Create game board from provided data from JSON file.
@@ -190,7 +197,7 @@ def get_board(data):
     """
     paths = get_paths(data)
     coordinates = get_coordinates(data)
-
+    types = get_type(data)
     # create dictionary of coordinates where value is empty list for further transformation
     board = {coordinate: [] for coordinate in coordinates}
     for layer in data['layers']:
@@ -204,7 +211,7 @@ def get_board(data):
             # otherwise add Tile object to the list of objects on the same coordinates
             if id != 0:
                 direction = get_tile_direction(tile_number)
-                tile = Tile(direction, paths[id])
+                tile = Tile(direction, paths[id], types[id])
                 tiles.append(tile)
                 board[coordinate] = tiles
     return board
