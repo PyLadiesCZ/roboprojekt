@@ -155,7 +155,7 @@ def get_paths(data):
 
 def set_new_robot():
     """
-    Set new robot for star of the game
+    Set new robot for start of the game.
     """
     lifecount = int(3)
     flagcount = int(0)
@@ -272,7 +272,10 @@ def get_robots_to_start(board):
     starting_coordinates = get_starting_coordinates(board)
     robot_paths = get_robot_paths()
     robots_start = []
-    robot_info = set_new_robot()
+    lifecount = set_new_robot()
+    flagcount = set_new_robot()
+    injurycount = set_new_robot()
+    
     for coordinate in starting_coordinates:
 
         # Condition to assure no exception in case robot_paths is shorter
