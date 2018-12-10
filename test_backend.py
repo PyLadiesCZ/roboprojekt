@@ -1,6 +1,6 @@
 from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_direction, get_paths, get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, Tile, Direction
 from pathlib import Path
-from validator import img_list
+from validator import check_squares
 import pytest
 
 @pytest.mark.parametrize("map_name", ["test_1", "test_2", "test_3"])
@@ -194,8 +194,8 @@ def test_tile_size(map_name):
 
 @pytest.mark.parametrize("map_name", ["test_3", "test_5"])
 def test_map_is_valid(map_name):
-    assert img_list(map_name) == True
+    assert check_squares(map_name) == True
 
 @pytest.mark.parametrize("map_name", ["test_6"])
 def test_map_is_invalid(map_name):
-    assert img_list(map_name) != True
+    assert check_squares(map_name) != True 
