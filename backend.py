@@ -73,26 +73,35 @@ class Robot:
         """
         for step in range(distance):
             old_tiles = state.board[self.coordinates]
-            # On the current tile; check wall in the direction of next move.
+            # On the current tile: Check wall in the direction of next move.
             for tile in old_tiles:
-                tile_move = tile.can_move_from(direction)
-                if tile_move is False:
+                move_from = tile.can_move_from(direction)
+                if move_from is False:
                     break
-            if tile_move:
-                # There is no wall, so get new coordinates
+            if move_from:
+                # There is no wall, so get new coordinates.
                 (x, y) = self.coordinates
                 (new_x, new_y) = direction.coor_delta
                 x = x + new_x
                 y = y + new_y
                 new_tiles = state.board[(x, y)]
-                # Check wall on the next tile in the direction of the robot movement.
+                # Check wall on the next tile in the direction of the move.
                 for tile in new_tiles:
-                    tile_move = tile.can_move_to(direction)
-                    if tile_move is False:
+                    move_to = tile.can_move_to(direction)
+                    if move_to is False:
                         break
-                if tile_move:
+                if move_to:
                     self.coordinates = (x, y)
+                else:
+                    # On the next tile: There is a wall in the direction
+                    # of the move.
+                    # Coordinates won't be changed. Break the loop, don't check
+                    # these tiles again.
+                    break
             else:
+                # On the current tile: There is a wall in the direction
+                # of the move.
+                # Break the loop, don't check next tile.
                 break
 
     def rotate(self, where_to):
