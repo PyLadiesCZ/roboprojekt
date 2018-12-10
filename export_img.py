@@ -3,6 +3,7 @@ import subprocess
 from pathlib import Path
 
 base = Path(".")
+
 inkscape = "C:/Program Files/Inkscape/inkscape"
 def prevod_svg_png():
     for soubor in base.glob("*.svg"):
