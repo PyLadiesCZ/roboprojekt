@@ -17,13 +17,16 @@ class Tile:
 
 
 class Robot:
-    def __init__(self, direction, path, coordinates):
+    def __init__(self, direction, path, coordinates, lifecount, flagcount, injurycount):
         self.direction = direction
         self.path = path
         self.coordinates = coordinates
+        self.lifecount = lifecount
+        self.flagcount = flagcount
+        self.injurycount = injurycount
 
     def __repr__(self):
-        return "<Robot {} {} {}>".format(self.direction, self.path, self.coordinates)
+        return "<Robot {} {} {} {} {} {}>".format(self.direction, self.path, self.coordinates, self.lifecount, self.flagcount, self.injurycount)
 
     def walk(self, distance):
         """
@@ -150,6 +153,14 @@ def get_paths(data):
         paths[id] = path
     return paths
 
+def set_new_robot():
+    """
+    Set new robot for star of the game
+    """
+    lifecount = int(3)
+    flagcount = int(0)
+    injurycount = int(0)
+    return (lifecount, flagcount, injurycount)
 
 def get_tile_id(tile_number):
     """
@@ -261,6 +272,7 @@ def get_robots_to_start(board):
     starting_coordinates = get_starting_coordinates(board)
     robot_paths = get_robot_paths()
     robots_start = []
+    robot_info = set_new_robot()
     for coordinate in starting_coordinates:
 
         # Condition to assure no exception in case robot_paths is shorter
@@ -268,7 +280,7 @@ def get_robots_to_start(board):
         if robot_paths:
             path = random.choice(robot_paths)
             robot_paths.remove(path)
-            robot = Robot(Direction.N, path, coordinate)
+            robot = Robot(Direction.N, path, coordinate, lifecount, flagcount, injurycount)
             robots_start.append(robot)
     return robots_start
 
