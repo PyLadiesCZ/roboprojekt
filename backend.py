@@ -153,14 +153,26 @@ def get_paths(data):
         paths[id] = path
     return paths
 
-def set_new_robot():
+def set_lifecount():
     """
-    Set new robot for start of the game.
+    Set lifecount of a new robot at the start of the game.
     """
     lifecount = int(3)
+    return lifecount
+
+def set_flagcount():
+    """
+    Set flagcount of a new robot at the start of the game.
+    """
     flagcount = int(0)
+    return flagcount
+
+def set_injurycount():
+    """
+    Set injurycount of a new robot at the start of the game.
+    """
     injurycount = int(0)
-    return (lifecount, flagcount, injurycount)
+    return injurycount
 
 def get_tile_id(tile_number):
     """
@@ -272,10 +284,10 @@ def get_robots_to_start(board):
     starting_coordinates = get_starting_coordinates(board)
     robot_paths = get_robot_paths()
     robots_start = []
-    lifecount = set_new_robot()
-    flagcount = set_new_robot()
-    injurycount = set_new_robot()
-    
+    lifecount = set_lifecount()
+    flagcount = set_flagcount()
+    injurycount = set_injurycount()
+
     for coordinate in starting_coordinates:
 
         # Condition to assure no exception in case robot_paths is shorter
