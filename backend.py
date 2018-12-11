@@ -7,6 +7,7 @@ from pathlib import Path
 import random
 from enum import Enum
 
+
 class Tile:
     def __init__(self, direction, path, type):
         self.direction = direction
@@ -16,6 +17,38 @@ class Tile:
     def __repr__(self):
         return "<Tile {} {}>".format(self.direction, self.type)
 
+    def can_move_from(self, direction):
+        """
+        Verify movement from tile in specific direction.
+
+        Return a boolean.
+
+        True - There is not a wall in direction of the move.
+        False - There is a wall in direction of the move.
+        """
+        # The direction of the wall is the same as the direction in which
+        # robot wants to move from the tile.
+        if (self.type == "wall" and self.direction == direction):
+            return False
+        else:
+            return True
+
+    def can_move_to(self, direction):
+        """
+        Verify movement to tile from specific direction.
+
+        Return a boolean.
+
+        True - There is not a wall in direction of the move.
+        False - There is a wall in direction of the move.
+        """
+        # If there is a wall in direction of the robot movement,
+        # than the direction of the robot goes against the direction of the wall.
+        # Because of that the tile is rotate upside down.
+        if (self.type == "wall" and self.direction.get_new_direction("upside_down") == direction):
+            return False
+        else:
+            return True
 
 
 class Robot:
@@ -27,24 +60,49 @@ class Robot:
     def __repr__(self):
         return "<Robot {} {} {}>".format(self.direction, self.path, self.coordinates)
 
-    def walk(self, distance):
+    def walk(self, distance, state):
         """
         Move a robot to new coordinates based on its direction.
         """
 
-        self.move(self.direction, distance)
+        self.move(self.direction, distance, state)
 
-    def move(self, direction, distance):
+    def move(self, direction, distance, state):
         """
         Move a robot to new coordinates according to direction of the move.
         """
-
-        (x, y) = self.coordinates
-        (new_x, new_y) = direction.coor_delta
-        x = x + (new_x * distance)
-        y = y + (new_y * distance)
-
-        self.coordinates = (x, y)
+        for step in range(distance):
+            old_tiles = state.board[self.coordinates]
+            # On the current tile: Check wall in the direction of next move.
+            for tile in old_tiles:
+                move_from = tile.can_move_from(direction)
+                if move_from is False:
+                    break
+            if move_from:
+                # There is no wall, so get new coordinates.
+                (x, y) = self.coordinates
+                (new_x, new_y) = direction.coor_delta
+                x = x + new_x
+                y = y + new_y
+                new_tiles = state.board[(x, y)]
+                # Check wall on the next tile in the direction of the move.
+                for tile in new_tiles:
+                    move_to = tile.can_move_to(direction)
+                    if move_to is False:
+                        break
+                if move_to:
+                    self.coordinates = (x, y)
+                else:
+                    # On the next tile: There is a wall in the direction
+                    # of the move.
+                    # Coordinates won't be changed. Break the loop, don't check
+                    # these tiles again.
+                    break
+            else:
+                # On the current tile: There is a wall in the direction
+                # of the move.
+                # Break the loop, don't check next tile.
+                break
 
     def rotate(self, where_to):
         """
@@ -152,12 +210,21 @@ def get_paths(data):
         paths[id] = path
     return paths
 
-def get_type(data):
+
+def get_types(data):
+    """
+    Get tile types.
+
+    data: a dict created from decoded Tiled 1.2 JSON file
+
+    Return a dictionary with modified tile ID as a key and type of tile as a value.
+    """
     types = {}
     for json_tile in data['tilesets'][0]['tiles']:
         id = json_tile['id'] + data['tilesets'][0]['firstgid']
         types[id] = json_tile['type']
     return types
+
 
 def get_tile_id(tile_number):
     """
@@ -181,6 +248,7 @@ def get_tile_direction(tile_number):
 
     return direction_dict[direction_number]
 
+
 def get_board(data):
     """
     Create game board from provided data from JSON file.
@@ -197,7 +265,8 @@ def get_board(data):
     """
     paths = get_paths(data)
     coordinates = get_coordinates(data)
-    types = get_type(data)
+    types = get_types(data)
+
     # create dictionary of coordinates where value is empty list for further transformation
     board = {coordinate: [] for coordinate in coordinates}
     for layer in data['layers']:

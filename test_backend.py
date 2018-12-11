@@ -153,31 +153,35 @@ def test_starting_state():
 
 @pytest.mark.parametrize(("input_coordinates", "input_direction", "distance", "output_coordinates"),
                          [((3, 3), Direction.N, 2, (3, 5)),
-                          ((3, 3), Direction.E, 2, (5, 3)),
-                          ((3, 3), Direction.S, 2, (3, 1)),
-                          ((3, 3), Direction.W, 2, (1, 3))])
+                          ((3, 3), Direction.E, 2, (3, 3)),
+                          ((3, 3), Direction.S, 2, (3, 2)),
+                          ((3, 3), Direction.W, 2, (2, 3))])
 def test_robot_walk(input_coordinates, input_direction, distance, output_coordinates):
     """
     Take robot's coordinates, direction and distance and assert robot walked
     to correct coordinates.
     """
+    state = get_start_state("maps/test_3.json")
     robot = Robot(input_direction, None, input_coordinates)
-    robot.walk(distance)
+    robot.walk(distance, state)
     assert robot.coordinates == output_coordinates
 
 
 @pytest.mark.parametrize(("input_coordinates", "input_direction", "distance", "output_coordinates"),
-                         [((3, 3), Direction.N, 2, (3, 5)),
-                          ((3, 3), Direction.E, 2, (5, 3)),
-                          ((3, 3), Direction.S, 2, (3, 1)),
-                          ((3, 3), Direction.W, 2, (1, 3))])
+                         [((0, 1), Direction.N, 3, (0, 4)),
+                          ((8, 1), Direction.N, 3, (8, 3)),
+                          ((10, 1), Direction.N, 3, (10, 2)),
+                          ((3, 3), Direction.E, 2, (3, 3)),
+                          ((3, 3), Direction.S, 2, (3, 2)),
+                          ((3, 3), Direction.W, 2, (2, 3))])
 def test_robot_move(input_coordinates, input_direction, distance, output_coordinates):
     """
     Take robot's coordinates, move's direction and distance and assert robot
     was moved to correct coordinates.
     """
+    state = get_start_state("maps/test_3.json")
     robot = Robot(Direction.N, None, input_coordinates)
-    robot.move(input_direction, distance)
+    robot.move(input_direction, distance, state)
     assert robot.coordinates == output_coordinates
 
 
