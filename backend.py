@@ -211,7 +211,7 @@ def get_paths(data):
     return paths
 
 
-def get_type(data):
+def get_types(data):
     """
     Get tile types.
 
@@ -265,7 +265,7 @@ def get_board(data):
     """
     paths = get_paths(data)
     coordinates = get_coordinates(data)
-    types = get_type(data)
+    types = get_types(data)
 
     # create dictionary of coordinates where value is empty list for further transformation
     board = {coordinate: [] for coordinate in coordinates}
