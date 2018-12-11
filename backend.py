@@ -17,6 +17,7 @@ class Tile:
     def __repr__(self):
         return "<Tile {} {}>".format(self.direction, self.type)
 
+
     def can_move_from(self, direction):
         """
         Verify movement from tile in specific direction.
@@ -210,6 +211,12 @@ def get_paths(data):
         paths[id] = path
     return paths
 
+def get_type(data):
+    types = {}
+    for json_tile in data['tilesets'][0]['tiles']:
+        id = json_tile['id'] + data['tilesets'][0]['firstgid']
+        types[id] = json_tile['type']
+    return types
 
 def get_type(data):
     """
@@ -247,7 +254,6 @@ def get_tile_direction(tile_number):
     direction_number = tile_number >> (4*7)
 
     return direction_dict[direction_number]
-
 
 def get_board(data):
     """
