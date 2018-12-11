@@ -17,13 +17,13 @@ class Tile:
 
 
 class Robot:
-    def __init__(self, direction, path, coordinates, lifecount, flagcount, injurycount):
+    def __init__(self, direction, path, coordinates):
         self.direction = direction
         self.path = path
         self.coordinates = coordinates
-        self.lifecount = lifecount
-        self.flagcount = flagcount
-        self.injurycount = injurycount
+        self.lifecount = 3
+        self.flagcount = 0
+        self.injurycount = 0
 
     def __repr__(self):
         return "<Robot {} {} {} {} {} {}>".format(self.direction, self.path, self.coordinates, self.lifecount, self.flagcount, self.injurycount)
@@ -153,27 +153,6 @@ def get_paths(data):
         paths[id] = path
     return paths
 
-def set_lifecount():
-    """
-    Set lifecount of a new robot at the start of the game.
-    """
-    lifecount = int(3)
-    return lifecount
-
-def set_flagcount():
-    """
-    Set flagcount of a new robot at the start of the game.
-    """
-    flagcount = int(0)
-    return flagcount
-
-def set_injurycount():
-    """
-    Set injurycount of a new robot at the start of the game.
-    """
-    injurycount = int(0)
-    return injurycount
-
 def get_tile_id(tile_number):
     """
     Return tile ID.
@@ -284,9 +263,6 @@ def get_robots_to_start(board):
     starting_coordinates = get_starting_coordinates(board)
     robot_paths = get_robot_paths()
     robots_start = []
-    lifecount = set_lifecount()
-    flagcount = set_flagcount()
-    injurycount = set_injurycount()
 
     for coordinate in starting_coordinates:
 
@@ -295,7 +271,7 @@ def get_robots_to_start(board):
         if robot_paths:
             path = random.choice(robot_paths)
             robot_paths.remove(path)
-            robot = Robot(Direction.N, path, coordinate, lifecount, flagcount, injurycount)
+            robot = Robot(Direction.N, path, coordinate)
             robots_start.append(robot)
     return robots_start
 
