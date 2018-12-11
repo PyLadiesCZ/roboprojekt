@@ -1,10 +1,16 @@
+"""
+Program for exporting images in svg format to png format.
+
+Open file in directory where you have svg images saved.
+First update inkscape path, where you have inscape installed on your computer - 'inkscape'
+"""
 import sys
 import subprocess
 from pathlib import Path
 
-base = Path(".")
+base = Path(".") #current directory where are svg images
 
-inkscape = "C:/Program Files/Inkscape/inkscape"
+inkscape = "C:/Program Files/Inkscape/inkscape" #update
 def prevod_svg_png():
     for soubor in base.glob("*.svg"):
         jmeno = str(soubor)
