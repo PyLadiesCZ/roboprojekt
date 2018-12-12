@@ -16,9 +16,9 @@ inkscape_paths = [
     ]
 
 def run_inkscape(path):
-"""
-Check if inscape path run Inscape
-"""
+    """
+    Check if inscape path run Inscape
+    """
     try:
         subprocess.run([path, "--version"],
                        stdin=subprocess.DEVNULL,
@@ -29,9 +29,9 @@ Check if inscape path run Inscape
         return False
 
 def find_inkscape_path():
-"""
-Return first functional Inkscape path
-"""
+    """
+    Return first functional Inkscape path
+    """
     for path in inkscape_paths:
         if run_inkscape(path):
             return path
@@ -39,9 +39,9 @@ Return first functional Inkscape path
 inkscape = find_inkscape_path()
 
 def export_svg_png():
-"""
-Export img in svg to img.png
-"""
+    """
+    Export img in svg to img.png
+    """
     for img in base.glob("*.svg"):
         name = str(img)
         parts = []
@@ -53,7 +53,6 @@ Export img in svg to img.png
                 parts.append(part)
             new_name = str(Path(*parts))
         subprocess.run([inkscape, name, "--export-png="+ new_name, "--export-area-page"],check = True,)
-
 
 export_svg_png()
 print("Done")
