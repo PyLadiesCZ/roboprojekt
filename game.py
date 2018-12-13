@@ -41,7 +41,7 @@ def move_once(t):
     """
 
     for robot in state.robots:
-        robot.walk(2)
+        robot.walk(3, state)
         robot.rotate("upside_down")
 
 pyglet.clock.schedule_once(move_once, 3)
