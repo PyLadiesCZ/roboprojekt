@@ -35,7 +35,7 @@ def get_card_pack():
 def deal_cards():
     card_pack = get_card_pack()
     deal_cards_list = {}
-    for i in range(9-robot_data.injurycount):
+    for i in range(9-robot_data.damagecount):
         deal_cards_list[i+1] =  card_pack.pop()
     return deal_cards_list
 

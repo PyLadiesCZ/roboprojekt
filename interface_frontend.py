@@ -103,7 +103,7 @@ def draw_interface(sprites):
 
 def interface():
     draw_interface(create_sprites(InterfaceData.interface))
-    draw_interface(create_sprites(InterfaceData.tokens)[0:interface_state.robot_data.injurycount])
+    draw_interface(create_sprites(InterfaceData.tokens)[0:interface_state.robot_data.damagecount])
     draw_interface(cards_sprites())
     draw_interface(create_sprites(InterfaceData.lives)[0:interface_state.robot_data.lifecount])
     if interface_state.power_down == True:
