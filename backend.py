@@ -58,10 +58,10 @@ class Robot:
         self.coordinates = coordinates
         self.lifecount = 3
         self.flagcount = 0
-        self.damagecount = 0
+        self.injurycount = 0
 
     def __repr__(self):
-        return "<Robot {} {} {} Lifes: {} Flags: {} Damages: {}>".format(self.direction, self.path, self.coordinates, self.lifecount, self.flagcount, self.damagecount)
+        return "<Robot {} {} {} Lifes: {} Flags: {} Damages: {}>".format(self.direction, self.path, self.coordinates, self.lifecount, self.flagcount, self.injurycount)
 
     def walk(self, distance, state):
         """
@@ -213,6 +213,22 @@ def get_paths(data):
         paths[id] = path
     return paths
 
+
+def get_types(data):
+    """
+    Get tile types.
+
+    data: a dict created from decoded Tiled 1.2 JSON file
+
+    Return a dictionary with modified tile ID as a key and type of tile as a value.
+    """
+    types = {}
+    for json_tile in data['tilesets'][0]['tiles']:
+        id = json_tile['id'] + data['tilesets'][0]['firstgid']
+        types[id] = json_tile['type']
+    return types
+
+
 def get_tile_id(tile_number):
     """
     Return tile ID.
@@ -324,7 +340,6 @@ def get_robots_to_start(board):
     starting_coordinates = get_starting_coordinates(board)
     robot_paths = get_robot_paths()
     robots_start = []
-
     for coordinate in starting_coordinates:
 
         # Condition to assure no exception in case robot_paths is shorter
