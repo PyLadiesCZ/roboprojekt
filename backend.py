@@ -58,10 +58,10 @@ class Robot:
         self.coordinates = coordinates
         self.lifecount = 3
         self.flagcount = 0
-        self.injurycount = 0
+        self.damagecount = 0
 
     def __repr__(self):
-        return "<Robot {} {} {} Lifes: {} Flags: {} Damages: {}>".format(self.direction, self.path, self.coordinates, self.lifecount, self.flagcount, self.injurycount)
+        return "<Robot {} {} {} Lifes: {} Flags: {} Damages: {}>".format(self.direction, self.path, self.coordinates, self.lifecount, self.flagcount, self.damagecount)
 
     def walk(self, distance, state):
         """
