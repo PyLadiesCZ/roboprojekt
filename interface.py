@@ -5,13 +5,15 @@ robot_data = Robot(Direction.N, "./img/robots/png/MintBot_front.png", (4, 4))
 
 
 class InterfaceState:
-    def __init__(self, cards, power_down, robot_data):
-        self.cards = cards
-        self.power_down = power_down
+    def __init__(self, deal_cards, robot_data):
+        self.deal_cards = deal_cards
         self.robot_data = robot_data
+        self.my_cards = []
+        self.power_down = False
+        self.select_cursor = 0
 
     def __repr__(self):
-        return "<InterfaceState Cards: {}, Power Down: {}, Robot: {}>".format(self.cards, self.power_down, self.robot_data)
+        return "<InterfaceState Cards: {}, My Cards: {}, Power Down: {}, Robot: {}>".format(self.deal_cards, self.my_card, self.power_down, self.robot_data)
 
 # cartds_count, first_number, last_number
 def get_card_pack():
@@ -31,20 +33,15 @@ def get_card_pack():
     return(card_pack)
 
 
-def deal_cards():
+def get_deal_cards():
     card_pack = get_card_pack()
-    deal_cards_list = {}
+    deal_cards_list = []
     for i in range(9-robot_data.damagecount):
-        deal_cards_list[i+1] =  card_pack.pop()
+        deal_cards_list.append((card_pack.pop()))
     return deal_cards_list
 
 
-def get_power_down():
-    return False
-
-
 def get_interface_state():
-    cards = deal_cards()
-    power_down = get_power_down()
-    interface_state = InterfaceState(cards, power_down, robot_data)
+    deal_cards = get_deal_cards()
+    interface_state = InterfaceState(deal_cards, robot_data)
     return interface_state
