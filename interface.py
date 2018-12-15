@@ -4,7 +4,6 @@ from backend import Robot, Direction
 robot_data = Robot(Direction.N, "./img/robots/png/MintBot_front.png", (4, 4))
 
 
-
 class InterfaceState:
     def __init__(self, cards, power_down, robot_data):
         self.cards = cards
@@ -14,7 +13,7 @@ class InterfaceState:
     def __repr__(self):
         return "<InterfaceState Cards: {}, Power Down: {}, Robot: {}>".format(self.cards, self.power_down, self.robot_data)
 
-
+# cartds_count, first_number, last_number
 def get_card_pack():
     cards_types = {'u_turn': [6, 50, 56],
                 'back_up': [5, 250, 255],

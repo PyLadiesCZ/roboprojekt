@@ -52,8 +52,6 @@ def get_cards_on_table_coordinates():
     return cards_on_table_coordinates
 
 
-
-
 def cards_sprites():
     cards_on_table_coordinates = get_cards_on_table_coordinates()
     sprites = []
@@ -111,6 +109,7 @@ def interface():
     draw_interface(create_sprites(InterfaceData.flags)[0:interface_state.robot_data.flagcount])
     draw_interface(create_sprites(InterfaceData.my_robot))
 
+
 def create_label():
     return pyglet.text.Label(
                              font_size=18,
@@ -132,6 +131,10 @@ def on_draw():
 def on_text(text):
     label.text = text
     print(text)
+    if text == 'p' and interface_state.power_down == False:
+        interface_state.power_down = True
+    elif text == 'p':
+        interface_state.power_down = False
     on_draw()
 
 def tick(dt):
