@@ -4,6 +4,10 @@ from validator import check_squares
 import pytest
 
 maps = []
+"""
+Create a list of all maps. 
+To be used as an argument for the functions which need to go through all maps so they don't need to be added manually.
+"""
 for i in Path('maps/').glob('test_*.json'):
     maps.append(str(i))
 
