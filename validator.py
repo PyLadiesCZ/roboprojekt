@@ -22,12 +22,12 @@ def get_order_squares(text):
     return order_squares[text]
 
 def check_squares(map_name):
-    #data = get_data("maps/" + map_name + ".json")
-    board, sizes = get_board("maps/" + map_name + ".json")
     """
     Change the list of types squares to the letters.
     A, B and C type can be only once in type list.
     """
+    board, sizes = get_board("maps/" + map_name + ".json")
+
     for coordinate, type in board.items():
         square_type_letter = []
         square_type_and_direction = []
