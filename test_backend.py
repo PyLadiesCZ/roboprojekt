@@ -10,13 +10,6 @@ maps = []
 for i in Path('maps/').glob('test_*.json'):
     maps.append(str(i))
 
-@pytest.mark.parametrize("map_name", maps)
-def test_get_coordinates_returns_list(map_name):
-    """Test that get_coordinates() returns a list for each map."""
-    data = get_data(map_name)
-    coordinates = get_coordinates(data)
-    assert isinstance(coordinates, list)
-
 
 # Set of tests checking the structure of read JSON file (supposed to come from Tiled 1.2)
 def test_map_returns_correct_data_list():
