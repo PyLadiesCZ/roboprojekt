@@ -4,7 +4,7 @@ It checks that the maps have correct structure
 Don't call it separately
 """
 
-from backend import get_board, get_data
+from loading import get_board, get_data
 
 
 def get_order_squares(text):
@@ -22,8 +22,8 @@ def get_order_squares(text):
     return order_squares[text]
 
 def check_squares(map_name):
-    data = get_data("maps/" + map_name + ".json")
-    board = get_board(data)
+    #data = get_data("maps/" + map_name + ".json")
+    board, sizes = get_board("maps/" + map_name + ".json")
     """
     Change the list of types squares to the letters.
     A, B and C type can be only once in type list.

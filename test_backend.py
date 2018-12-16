@@ -1,14 +1,10 @@
-from backend import get_board, get_coordinates, get_data, get_tile_id, get_tile_direction, get_paths, get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, Tile, Direction
+from backend import  get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State
+from util import Tile, Direction
+from loading import get_coordinates, get_data, get_tile_id, get_tile_direction, get_board, get_paths
 from pathlib import Path
 from validator import check_squares
 import pytest
 
-@pytest.mark.parametrize("map_name", ["test_1", "test_2", "test_3"])
-def test_get_coordinates_returns_list(map_name):
-    """Test that get_coordinates() returns a list for each map."""
-    data = get_data("maps/" + map_name + ".json")
-    coordinates = get_coordinates(data)
-    assert isinstance(coordinates, list)
 
 
 # Set of tests checking the structure of read JSON file (supposed to come from Tiled 1.2)
@@ -60,8 +56,7 @@ def test_board_structure():
     Take board (based on JSON test_3 map) and assert correct board structure is returned.
     If the test_3.json map is changed or removed, the test needs to be updated.
     """
-    data = get_data("maps/test_3.json")
-    board = get_board(data)
+    board, _ = get_board("maps/test_3.json")
     example_tile = board[0, 0]
     assert example_tile[0].path == "./img/squares/png/ground.png"
     assert example_tile[0].direction == Direction.N
@@ -72,8 +67,7 @@ def test_starting_coordinates():
     Take board (based on JSON test_3 map) and assert correct starting coordinates are returned.
     If the test_3.json map is changed or removed, the test needs to be updated.
     """
-    data = get_data("maps/test_3.json")
-    board = get_board(data)
+    board, _ = get_board("maps/test_3.json")
     assert len(get_starting_coordinates(board)) == 8
     assert isinstance(get_starting_coordinates(board), list)
 
@@ -131,8 +125,7 @@ def test_robots_on_starting_coordinates():
     """
     Assert that the result of get_robots_to_start is a list which contains Robot objects with correct attribute coordinates.
     """
-    data = get_data("maps/test_3.json")
-    board = get_board(data)
+    board, _ = get_board("maps/test_3.json")
     robots = get_robots_to_start(board)
     assert isinstance(robots, list)
     assert isinstance(robots[0], Robot)
@@ -202,4 +195,4 @@ def test_map_is_valid(map_name):
 
 @pytest.mark.parametrize("map_name", ["test_6"])
 def test_map_is_invalid(map_name):
-    assert check_squares(map_name) != True 
+    assert check_squares(map_name) != True
