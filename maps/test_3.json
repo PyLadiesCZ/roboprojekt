@@ -142,6 +142,11 @@
                  "imagewidth":64,
                  "properties":[
                         {
+                         "name":"game_round",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
                          "name":"move",
                          "type":"int",
                          "value":-1
@@ -154,6 +159,11 @@
                  "imageheight":64,
                  "imagewidth":64,
                  "properties":[
+                        {
+                         "name":"game_round",
+                         "type":"int",
+                         "value":0
+                        }, 
                         {
                          "name":"move",
                          "type":"int",

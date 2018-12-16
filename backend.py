@@ -9,13 +9,35 @@ from enum import Enum
 
 
 class Tile:
-    def __init__(self, direction, path, type):
+    def __init__(self, direction, path):
         self.direction = direction
         self.path = path
-        self.type = type
 
     def __repr__(self):
-        return "<Tile {} {}>".format(self.direction, self.type)
+        return "<{} {}>".format(type(self).__name__, self.direction)
+
+    def tile_factory(direction, path, type, properties):
+        if type == 'wall':
+            return WallTile(direction, path)
+        elif type == 'hole':
+            return HoleTile(direction, path)
+        elif type == 'starting_square':
+            return StartTile(direction, path)
+        elif type == 'laser':
+            return LaserTile(direction, path, properties)
+        elif type == 'gear':
+            return GearTile(direction, path, properties)
+        elif type == 'pusher':
+            return PusherTile(direction, path, properties)
+        elif type == 'belt':
+            return BeltTile(direction, path, properties)
+        elif type == 'flag':
+            return FlagTile(direction, path, properties)
+        elif type == 'repair':
+            return RepairTile(direction, path, properties)
+        else:
+            return Tile(direction, path)
+# Wall
 
     def can_move_from(self, direction):
         """
@@ -26,12 +48,7 @@ class Tile:
         True - There is not a wall in direction of the move.
         False - There is a wall in direction of the move.
         """
-        # The direction of the wall is the same as the direction in which
-        # robot wants to move from the tile.
-        if (self.type == "wall" and self.direction == direction):
-            return False
-        else:
-            return True
+        return True
 
     def can_move_to(self, direction):
         """
@@ -45,10 +62,121 @@ class Tile:
         # If there is a wall in direction of the robot movement,
         # than the direction of the robot goes against the direction of the wall.
         # Because of that the tile is rotate upside down.
-        if (self.type == "wall" and self.direction.get_new_direction("upside_down") == direction):
-            return False
-        else:
-            return True
+        return True
+
+# Hole
+    def kill_robot(self, robot_life_count):
+        return robot_life_count
+
+# Starting square
+
+# Laser
+    def shoot_robot(self, robot_damage_count):
+        return robot_damage_count
+
+# Gear
+    def rotate_robot(self, robot_direction):
+        return robot_direction
+
+# Pusher
+    def push_robot(self, robot_coordinates):
+        return robot_coordinates
+
+# Belt
+    def move_robot(self, robot_coordinates):
+        return robot_coordinates
+
+# Flag
+    def collect_flag(self, robot_flag_count):
+        return robot_flag_count
+
+# Repair
+    def heal_robot(self, robot_damage_count):
+        return robot_damage_count
+
+
+class WallTile(Tile):
+    def can_move_from(self, direction):
+        # The direction of the wall is the same as the direction in which
+        # robot wants to move from the tile.
+        return not (self.direction == direction)
+
+    def can_move_to(self, direction):
+        # If there is a wall in direction of the robot movement,
+        # than the direction of the robot goes against the direction of the wall.
+        # Because of that the tile is rotate upside down.
+        return not (self.direction.get_new_direction("upside_down") == direction)
+
+
+class HoleTile(Tile):
+    def kill_robot(self, robot_life_count):
+        if robot_life_count > 1:
+            robot_life_count -= 1
+
+
+class StartTile(Tile):
+    pass
+
+
+class LaserTile(Tile):
+    def __init__(self, direction, path, properties):
+        self.laser_start = properties[0]["value"]
+        self.laser_number = properties[1]["value"]
+        super().__init__(direction, path)
+
+    def shoot_robot(self, state):
+        pass
+
+
+class GearTile(Tile):
+    def __init__(self, direction, path, properties):
+        self.direction_move = properties[0]["value"]
+        super().__init__(direction, path)
+
+    def rotate_robot(self, state):
+        pass
+
+
+class PusherTile(Tile):
+    def __init__(self, direction, path, properties):
+        self.game_round = properties[0]["value"]
+        self.move_count = properties[1]["value"]
+        super().__init__(direction, path)
+
+    def push_robot(self, state):
+        pass
+
+
+class BeltTile(Tile):
+    def __init__(self, direction, path, properties):
+        self.crossroads = properties[0]["value"]
+        self.belt_direction = properties[1]["value"]
+        self.move_count = properties[2]["value"]
+        super().__init__(direction, path)
+
+    def move_robot(self, state):
+        pass
+
+
+class FlagTile(Tile):
+    def __init__(self, direction, path, properties):
+        self.flag_number = properties[0]["value"]
+        super().__init__(direction, path)
+
+    def collect_flag(self, state):
+        pass
+
+
+class RepairTile(Tile):
+    def __init__(self, direction, path, properties):
+        self.damage_count = properties[0]["value"]
+        super().__init__(direction, path)
+
+    def heal_robot(self, robot_damage_count):
+        print(robot_damage_count)
+        if robot_damage_count > 0:
+            robot_damage_count += self.damage_count
+        return robot_damage_count
 
 
 class Robot:
@@ -58,7 +186,7 @@ class Robot:
         self.coordinates = coordinates
         self.lifecount = 3
         self.flagcount = 0
-        self.damagecount = 0
+        self.damagecount = 1
 
     def __repr__(self):
         return "<Robot {} {} {} Lifes: {} Flags: {} Damages: {}>".format(self.direction, self.path, self.coordinates, self.lifecount, self.flagcount, self.damagecount)
@@ -113,6 +241,13 @@ class Robot:
         """
 
         self.direction = self.direction.get_new_direction(where_to)
+
+    def apply_tile_effects(self, state):
+        tiles = state.board[(self.coordinates)]
+        for tile in tiles:
+            self.lifecount = tile.kill_robot(self.lifecount)
+            self.damagecount = tile.heal_robot(self.damagecount)
+        return self
 
 
 class State:
@@ -229,6 +364,23 @@ def get_types(data):
     return types
 
 
+def get_properties(data):
+    """
+
+    """
+    types = get_types(data)
+    properties = {}
+    no_properties_tiles = {'ground', 'hole', 'wall', 'starting_square'}
+    for json_tile in data['tilesets'][0]['tiles']:
+        id = json_tile['id'] + data['tilesets'][0]['firstgid']
+        if types[id] not in no_properties_tiles:
+            properties[id] = json_tile['properties']
+        else:
+            # Dá se to vyřešit jinak???
+            properties[id] = []
+    return properties
+
+
 def get_tile_id(tile_number):
     """
     Return tile ID.
@@ -269,7 +421,7 @@ def get_board(data):
     paths = get_paths(data)
     coordinates = get_coordinates(data)
     types = get_types(data)
-
+    properties = get_properties(data)
     # create dictionary of coordinates where value is empty list for further transformation
     board = {coordinate: [] for coordinate in coordinates}
     for layer in data['layers']:
@@ -283,7 +435,8 @@ def get_board(data):
             # otherwise add Tile object to the list of objects on the same coordinates
             if id != 0:
                 direction = get_tile_direction(tile_number)
-                tile = Tile(direction, paths[id], types[id])
+                tile = Tile.tile_factory(direction, paths[id], types[id], properties[id])
+                # tile = Tile(direction, paths[id], types[id], properties[id])
                 tiles.append(tile)
                 board[coordinate] = tiles
     return board

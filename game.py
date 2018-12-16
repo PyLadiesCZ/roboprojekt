@@ -41,8 +41,11 @@ def move_once(t):
     """
 
     for robot in state.robots:
-        robot.walk(3, state)
+        robot.walk(2, state)
         robot.rotate("upside_down")
+        robot.apply_tile_effects(state)
+        print(robot)
+
 
 pyglet.clock.schedule_once(move_once, 3)
 
