@@ -26,7 +26,7 @@ def check_squares(map_name):
     Change the list of types squares to the letters.
     A, B and C type can be only once in type list.
     """
-    board, sizes = get_board(map_name)
+    board = get_board(map_name)
 
     for coordinate, type in board.items():
         square_type_letter = []

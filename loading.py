@@ -28,11 +28,10 @@ def get_coordinates(data):
     Transformation with reversed is required as the JSON tiles are in an opposite direction.
     """
     coordinates = []
-    map_size = (data['width'], data['height'])
-    for y in reversed(range(map_size[1])):
-        for x in range(map_size[0]):
+    for y in reversed(range(data["height"])):
+        for x in range(data["width"]):
             coordinates.append((x, y))
-    return coordinates, map_size
+    return coordinates
 
 
 def get_paths(data):
@@ -110,7 +109,7 @@ def get_board(map_name):
     """
     data = get_data(map_name)
     paths = get_paths(data)
-    coordinates, map_size = get_coordinates(data)
+    coordinates = get_coordinates(data)
     types = get_types(data)
 
     # create dictionary of coordinates where value is empty list for further transformation
@@ -129,4 +128,4 @@ def get_board(map_name):
                 tile = Tile(direction, paths[id], types[id])
                 tiles.append(tile)
                 board[coordinate] = tiles
-    return board, map_size
+    return board

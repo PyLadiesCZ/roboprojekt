@@ -60,7 +60,7 @@ def test_board_structure():
     Take board (based on JSON test_3 map) and assert correct board structure is returned.
     If the test_3.json map is changed or removed, the test needs to be updated.
     """
-    board, _ = get_board("maps/test_3.json")
+    board = get_board("maps/test_3.json")
     example_tile = board[0, 0]
     assert example_tile[0].path == "./img/squares/png/ground.png"
     assert example_tile[0].direction == Direction.N
@@ -71,7 +71,7 @@ def test_starting_coordinates():
     Take board (based on JSON test_3 map) and assert correct starting coordinates are returned.
     If the test_3.json map is changed or removed, the test needs to be updated.
     """
-    board, _ = get_board("maps/test_3.json")
+    board = get_board("maps/test_3.json")
     assert len(get_starting_coordinates(board)) == 8
     assert isinstance(get_starting_coordinates(board), list)
 
@@ -129,7 +129,7 @@ def test_robots_on_starting_coordinates():
     """
     Assert that the result of get_robots_to_start is a list which contains Robot objects with correct attribute coordinates.
     """
-    board, _ = get_board("maps/test_3.json")
+    board = get_board("maps/test_3.json")
     robots = get_robots_to_start(board)
     assert isinstance(robots, list)
     assert isinstance(robots[0], Robot)

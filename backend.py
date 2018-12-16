@@ -144,6 +144,21 @@ def get_robots_to_start(board):
     return robots_start
 
 
+def get_tile_count(board):
+    """
+    From the board coordinates get the count of tiles in horizontal (x) and vertical (y) ax.
+
+    Takes board: result of get_board() from loading module.
+    """
+    x_set = set()
+    y_set = set()
+    for coordinate in board.keys():
+        x, y = coordinate
+        x_set.add(x)
+        y_set.add(y)
+    return len(x_set), len(y_set)
+
+
 def get_start_state(map_name):
     """
     Get starting state of game.
@@ -153,8 +168,8 @@ def get_start_state(map_name):
     Create board and robots on starting squares, initialize State object containing both Tile and Robot object.
     Return State object.
     """
-    #sizes = [data["width"], data["height"]]
-    board, map_size = get_board(map_name)
+    board = get_board(map_name)
+    tile_count = get_tile_count(board)
     robots_start = get_robots_to_start(board)
-    state = State(board, robots_start, map_size)
+    state = State(board, robots_start, tile_count)
     return state
