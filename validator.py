@@ -22,7 +22,7 @@ def get_order_squares(text):
     return order_squares[text]
 
 def check_squares(map_name):
-    data = get_data("maps/" + map_name + ".json")
+    data = get_data( map_name)
     board = get_board(data)
     """
     Change the list of types squares to the letters.

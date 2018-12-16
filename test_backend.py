@@ -3,10 +3,14 @@ from pathlib import Path
 from validator import check_squares
 import pytest
 
-@pytest.mark.parametrize("map_name", ["test_1", "test_2", "test_3"])
+maps = []
+for i in Path('maps/').glob('test_*.json'):
+    maps.append(str(i))
+
+@pytest.mark.parametrize("map_name", maps)
 def test_get_coordinates_returns_list(map_name):
     """Test that get_coordinates() returns a list for each map."""
-    data = get_data("maps/" + map_name + ".json")
+    data = get_data(map_name)
     coordinates = get_coordinates(data)
     assert isinstance(coordinates, list)
 
@@ -185,21 +189,23 @@ def test_robot_move(input_coordinates, input_direction, distance, output_coordin
     assert robot.coordinates == output_coordinates
 
 
-@pytest.mark.parametrize("map_name", ["test_1", "test_2", "test_3", "test_4"])
+@pytest.mark.parametrize("map_name", maps)
 def test_tile_size(map_name):
     """
     Take size of tiles used in JSON files and assert correct tile size.
     This test has to be removed, when width and height of tile image are
     no longer constants used for tile drawing.
     """
-    data = get_data("maps/" + map_name + ".json")
+    data = get_data(map_name)
     assert data["tilewidth"] == 64
     assert data["tileheight"] == 64
 
-@pytest.mark.parametrize("map_name", ["test_3", "test_5"])
+@pytest.mark.parametrize("map_name", maps)
 def test_map_is_valid(map_name):
     assert check_squares(map_name) == True
 
-@pytest.mark.parametrize("map_name", ["test_6"])
+
+
+@pytest.mark.parametrize("map_name", ["maps/bad_map.json"])
 def test_map_is_invalid(map_name):
-    assert check_squares(map_name) != True 
+    assert check_squares(map_name) != True
