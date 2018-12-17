@@ -41,9 +41,10 @@ def move_once(t):
     """
 
     for robot in state.robots:
-        robot.walk(2, state)
-        robot.rotate("upside_down")
+        robot.walk(3, state)
         robot.apply_tile_effects(state)
+        # robot.rotate("upside_down")
+        # robot.walk(4, state)
         print(robot)
 
 

@@ -16,10 +16,10 @@ class Tile:
     def tile_factory(direction, path, type, properties):
         if type == 'wall':
             return WallTile(direction, path)
-        elif type == 'hole':
-            return HoleTile(direction, path)
         elif type == 'starting_square':
             return StartTile(direction, path)
+        elif type == 'hole':
+            return HoleTile(direction, path)
         elif type == 'laser':
             return LaserTile(direction, path, properties)
         elif type == 'gear':
@@ -62,34 +62,32 @@ class Tile:
         return True
 
 # Hole
-    def kill_robot(self, robot_life_count):
-        return robot_life_count
+    def kill_robot(self, robot, state):
+        return robot
 
-# Starting square
-
-# Laser
-    def shoot_robot(self, robot_damage_count):
-        return robot_damage_count
-
-# Gear
-    def rotate_robot(self, robot_direction):
-        return robot_direction
+# Belt - TO DO!
+    def move_robot(self, robot, state):
+        return robot
 
 # Pusher
-    def push_robot(self, robot_coordinates):
-        return robot_coordinates
+    def push_robot(self, robot, state):
+        return robot
 
-# Belt
-    def move_robot(self, robot_coordinates):
-        return robot_coordinates
+# Gear
+    def rotate_robot(self, robot):
+        return robot
+
+# Laser - TO DO!
+    def shoot_robot(self, robot, state):
+        return robot
 
 # Flag
-    def collect_flag(self, robot_flag_count):
-        return robot_flag_count
+    def collect_flag(self, robot):
+        return robot
 
 # Repair
-    def heal_robot(self, robot_damage_count):
-        return robot_damage_count
+    def repair_robot(self, robot):
+        return robot
 
 
 class WallTile(Tile):
@@ -105,43 +103,19 @@ class WallTile(Tile):
         return not (self.direction.get_new_direction("upside_down") == direction)
 
 
-class HoleTile(Tile):
-    def kill_robot(self, robot_life_count):
-        if robot_life_count > 1:
-            robot_life_count -= 1
-
-
 class StartTile(Tile):
     pass
 
 
-class LaserTile(Tile):
-    def __init__(self, direction, path, properties):
-        self.laser_start = properties[0]["value"]
-        self.laser_number = properties[1]["value"]
-        super().__init__(direction, path)
-
-    def shoot_robot(self, state):
-        pass
-
-
-class GearTile(Tile):
-    def __init__(self, direction, path, properties):
-        self.direction_move = properties[0]["value"]
-        super().__init__(direction, path)
-
-    def rotate_robot(self, state):
-        pass
-
-
-class PusherTile(Tile):
-    def __init__(self, direction, path, properties):
-        self.game_round = properties[0]["value"]
-        self.move_count = properties[1]["value"]
-        super().__init__(direction, path)
-
-    def push_robot(self, state):
-        pass
+class HoleTile(Tile):
+    def kill_robot(self, robot, state):
+        if robot.lifes > 1:
+            robot.lifes -= 1
+            robot.coordinates = robot.start_coordinates
+            robot.direction = Direction.N
+        elif robot.lifes == 1:
+            robot.lifes -= 1
+            robot.death = True
 
 
 class BeltTile(Tile):
@@ -152,6 +126,39 @@ class BeltTile(Tile):
         super().__init__(direction, path)
 
     def move_robot(self, state):
+        # TO DO!
+        pass
+
+
+class PusherTile(Tile):
+    def __init__(self, direction, path, properties):
+        self.game_round = properties[0]["value"]
+        super().__init__(direction, path)
+
+    def push_robot(self, robot, state):
+        if state.game_round % 2 and self.game_round:
+            robot.move(self.direction.get_new_direction("upside_down"), 1, state)
+        elif state.game_round % 2 == self.game_round:
+            robot.move(self.direction.get_new_direction("upside_down"), 1, state)
+
+
+class GearTile(Tile):
+    def __init__(self, direction, path, properties):
+        self.move_direction = properties[0]["value"]
+        super().__init__(direction, path)
+
+    def rotate_robot(self, robot):
+        robot.direction = robot.direction.get_new_direction(self.move_direction)
+
+
+class LaserTile(Tile):
+    def __init__(self, direction, path, properties):
+        self.laser_start = properties[0]["value"]
+        self.laser_number = properties[1]["value"]
+        super().__init__(direction, path)
+
+    def shoot_robot(self, robot, state):
+        # TO DO!
         pass
 
 
@@ -160,19 +167,21 @@ class FlagTile(Tile):
         self.flag_number = properties[0]["value"]
         super().__init__(direction, path)
 
-    def collect_flag(self, state):
-        pass
+    def collect_flag(self, robot):
+        if (robot.flags + 1) == self.flag_number:
+            robot.flags += 1
 
 
 class RepairTile(Tile):
     def __init__(self, direction, path, properties):
-        self.damage_count = properties[0]["value"]
+        self.new_start = properties[0]["value"]
         super().__init__(direction, path)
 
-    def heal_robot(self, robot_damage_count):
-        if robot_damage_count > 0:
-            robot_damage_count += self.damage_count
-        return robot_damage_count
+    def repair_robot(self, robot):
+        if robot.damages > 0:
+            robot.damages -= 1
+        if self.new_start:
+            robot.start_coordinates = robot.coordinates
 
 
 class Direction(Enum):

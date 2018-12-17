@@ -3,21 +3,24 @@ Backend file contains functions for the game logic.
 """
 from pathlib import Path
 import random
-from util import Tile, Direction
+from util import Tile, Direction, HoleTile
 from loading import get_board
 
 
 class Robot:
-    def __init__(self, direction, path, coordinates):
+    def __init__(self, direction, path, start_coordinates, coordinates):
         self.direction = direction
         self.path = path
+        self.start_coordinates = start_coordinates
         self.coordinates = coordinates
-        self.lifecount = 3
-        self.flagcount = 0
-        self.damagecount = 1
+        self.lifes = 3
+        self.flags = 0
+        self.damages = 1
+        self.power_down = False
+        self.death = False
 
     def __repr__(self):
-        return "<Robot {} {} {} Lifes: {} Flags: {} Damages: {}>".format(self.direction, self.path, self.coordinates, self.lifecount, self.flagcount, self.damagecount)
+        return "<Robot {} {} {} Lifes: {} Flags: {} Damages: {}>".format(self.direction, self.path, self.coordinates, self.lifes, self.flags, self.damages)
 
     def walk(self, distance, state):
         """
@@ -42,6 +45,10 @@ class Robot:
                 (new_x, new_y) = direction.coor_delta
                 x = x + new_x
                 y = y + new_y
+                # When the robot leaves the map, robot dies
+                if (x, y) not in state.board:
+                    HoleTile.kill_robot(HoleTile, self, state)
+                    break
                 new_tiles = state.board[(x, y)]
                 # Check wall on the next tile in the direction of the move.
                 for tile in new_tiles:
@@ -72,9 +79,24 @@ class Robot:
     def apply_tile_effects(self, state):
         tiles = state.board[(self.coordinates)]
         for tile in tiles:
-            self.lifecount = tile.kill_robot(self.lifecount)
-            self.damagecount = tile.heal_robot(self.damagecount)
-        return self
+            # První budou efekty pohybu:
+            # 1) Dvojité šipky udělají jeden krok
+            # 2) Jednoduché šipky + dvojité šipky udělají jeden krok
+            # 3) Aktivují se pushery
+            # 4) Aktivují se geary - otočení robota o 90°
+            tile.move_robot(self, state)  # TO DO!
+            tile.push_robot(self, state)
+            tile.rotate_robot(self)
+            tile.kill_robot(self, state)
+
+            # Aktivace laserů:
+            # 1) Lasery políček
+            # 2) Lasery robotů - # TO DO!
+            tile.shoot_robot(self, state)  # TO DO!
+
+            # Sbírání vlajek a opravy robotů
+            tile.collect_flag(self)
+            tile.repair_robot(self)
 
 
 class State:
@@ -82,6 +104,7 @@ class State:
         self.board = board
         self.robots = robots
         self.sizes = sizes
+        self.game_round = 1
 
     def __repr__(self):
         return "<State {} {}>".format(self.board, self.robots)
@@ -145,7 +168,7 @@ def get_robots_to_start(board):
         if robot_paths:
             path = random.choice(robot_paths)
             robot_paths.remove(path)
-            robot = Robot(Direction.N, path, coordinate)
+            robot = Robot(Direction.N, path, coordinate, coordinate)
             robots_start.append(robot)
     return robots_start
 
