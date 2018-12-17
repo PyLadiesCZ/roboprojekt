@@ -18,7 +18,7 @@ def init_window(state):
     data: a dict created from decoded Tiled 1.2 JSON file
     """
     window = pyglet.window.Window(state.sizes[0] * TILE_WIDTH,
-                                  state.sizes[1] * TILE_HEIGHT)
+                                  state.sizes[1] * TILE_HEIGHT, resizable=True)
     return window
 
 
