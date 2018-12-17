@@ -40,7 +40,7 @@ inkscape = find_inkscape_path()
 
 def export_svg_png():
     """
-    Export img in svg to img.png
+    Export img.svg to img.png
     """
     for img in base.glob("*.svg"):
         name = str(img)
@@ -52,7 +52,7 @@ def export_svg_png():
             else:
                 parts.append(part)
             new_name = str(Path(*parts))
-        subprocess.run([inkscape, name, "--export-png="+ new_name, "--export-area-page"],check = True,)
+        subprocess.run([inkscape, name, "--export-png="+ "../png/" + new_name, "--export-area-page"],check = True,)
 
 export_svg_png()
 print("Done")
