@@ -65,24 +65,18 @@ def cards_sprites(cards_type_dict, coordinates):
         name, value = card_type
         x, y = coordinates[i]
 
-        """
-        Add a universal card background
-        """
+        #Add a universal card background
         img = pyglet.image.load(img_type_paths['background'])
         sprite = pyglet.sprite.Sprite(img, x, y)
         sprites.append(sprite)
 
-        """
-        Add a card type symbol
-        """
-
+        #Add a card type symbol
         img = pyglet.image.load(img_type_paths[name])
         sprite = pyglet.sprite.Sprite(img, x, y)
         sprites.append(sprite)
 
-        """
-        Card value (number on the card)
-        """
+
+        #Card value (number on the card)
         x = x + 70
         y = y + 118
         text = pyglet.text.Label(text = str(value), font_size = 14, x = x, y = y, anchor_x = 'right')
@@ -117,32 +111,26 @@ def draw_interface(sprites):
 
 
 def interface():
-    """
-    Interface
-    """
+
+    #Interface
     draw_interface(create_sprites(InterfaceData.interface))
 
-    """
-    Robot
-    """
+    #Robot
     draw_interface(create_sprites(InterfaceData.my_robot))
 
     draw_interface(create_sprites(InterfaceData.lives)[0:interface_state.robot_data.lifecount])
     draw_interface(create_sprites(InterfaceData.tokens)[0:interface_state.robot_data.damagecount])
     draw_interface(create_sprites(InterfaceData.flags)[0:interface_state.robot_data.flagcount])
 
-    """
-    Cards
-    """
+
+    #Cards
     draw_interface(cards_sprites(interface_state.deal_cards, cards_table_coordinates))
     draw_interface(cards_sprites(interface_state.my_cards, cursor_coordinates))
 
     draw_interface(block_card('select', selected_cards))
     draw_interface(block_card('cursor', [cards_hand_coordinates[interface_state.select_cursor]]))
 
-    """
-    Power Down
-    """
+    #Power Down
     if interface_state.power_down == True:
         draw_interface(create_sprites(InterfaceData.power_down))
 
@@ -158,20 +146,19 @@ def on_text(text):
     print(text)
 
     if text == 'p':
-        """
-        Put and take a Power Down token
-        """
+
+        #Put and take a Power Down token
+
         if interface_state.power_down == False:
             interface_state.power_down = True
         else:
             interface_state.power_down = False
 
     if text in CARD_KEYS:
-        """
-        Select a card and take it in your "hand"
 
-        Selected card is in "GREEN" cursor
-        """
+        #Select a card and take it in your "hand"
+        #Selected card is in "GREEN" cursor
+
         index = CARD_KEYS.index(text)
         if len(interface_state.my_cards) < 5:
             if interface_state.deal_cards[index] not in interface_state.my_cards:
@@ -181,18 +168,14 @@ def on_text(text):
                     interface_state.select_cursor += 1
                 selected_cards.append(cards_table_coordinates[index])
 
-
+    #Move  selector cursor to the right
     if text == 'm':
-        """
-        Move  selector cursor to the right
-        """
         print(interface_state.select_cursor)
         if interface_state.select_cursor < 4:
             interface_state.select_cursor += 1
+
+    #Move selector cursor to the left
     if text == 'n':
-        """
-        Move selector cursor to the left
-        """
         print(interface_state.select_cursor)
         if interface_state.select_cursor > 0:
             interface_state.select_cursor -= 1
