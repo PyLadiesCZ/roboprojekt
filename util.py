@@ -170,6 +170,7 @@ class FlagTile(Tile):
     def collect_flag(self, robot):
         if (robot.flags + 1) == self.flag_number:
             robot.flags += 1
+            robot.start_coordinates = robot.coordinates
 
 
 class RepairTile(Tile):
