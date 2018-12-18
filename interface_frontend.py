@@ -172,6 +172,14 @@ def on_text(text):
                 interface_state.cursor_index += 1
             print(selected_cards)
 
+    # return selected cards back to the "table"
+    if text == 'o':
+        interface_state.cursor_index = 0
+        selected_cards.clear()
+        interface_state.my_cards.clear()
+        cards_selected_coordinates.clear()
+
+
     #Move  selector cursor to the right
     if text == 'm':
         print(interface_state.cursor_index)
