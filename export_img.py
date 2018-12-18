@@ -3,7 +3,6 @@ Program export images in svg format to png format.
 Open file in directory where you have svg images saved.
 """
 import os
-import sys
 import subprocess
 from pathlib import Path
 
@@ -63,7 +62,7 @@ def export_svg_png():
             else:
                 parts.append(part)
             new_name = str(Path(*parts))
-        subprocess.run([inkscape, name,"--export-png=" + "../png/" +new_name,"--export-area-page"],check = True,)
+        subprocess.run([inkscape, name, "--export-png=" + "../png/" + new_name, "--export-area-page"], check = True,)
 
 create_png_directory()
 export_svg_png()
