@@ -10,7 +10,7 @@ class InterfaceState:
         self.robot_data = robot_data
         self.my_cards = []
         self.power_down = False
-        self.select_cursor = 0
+        self.cursor_index = 0 # 0-4
 
     def __repr__(self):
         return "<InterfaceState Cards: {}, My Cards: {}, Power Down: {}, Robot: {}>".format(self.deal_cards, self.my_card, self.power_down, self.robot_data)

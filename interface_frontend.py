@@ -11,9 +11,6 @@ cards_row_1 = [(47, 384), 5, 144]
 cards_row_2 = [(120, 224), 4, 144]
 cards_row = [cards_row_1, cards_row_2]
 my_cards = [[(47, 576), 5, 144]]
-selected_cards = []
-
-CARD_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
 
 img_type_paths = {'u_turn': 'interface/png/u_turn.png',
@@ -53,12 +50,8 @@ def get_cards_coordinates(cards_list):
             cards_coordinates.append((x, y))
     return cards_coordinates
 
-cards_table_coordinates = get_cards_coordinates(cards_row)
-cards_hand_coordinates = get_cards_coordinates(my_cards)
-cursor_coordinates = []
 
-
-def cards_sprites(cards_type_dict, coordinates):
+def get_cards_sprites(cards_type_dict, coordinates):
     sprites = []
     for i, card_type in enumerate(cards_type_dict, 0):
 
@@ -74,7 +67,6 @@ def cards_sprites(cards_type_dict, coordinates):
         img = pyglet.image.load(img_type_paths[name])
         sprite = pyglet.sprite.Sprite(img, x, y)
         sprites.append(sprite)
-
 
         #Card value (number on the card)
         x = x + 70
@@ -124,11 +116,11 @@ def interface():
 
 
     #Cards
-    draw_interface(cards_sprites(interface_state.deal_cards, cards_table_coordinates))
-    draw_interface(cards_sprites(interface_state.my_cards, cursor_coordinates))
+    draw_interface(get_cards_sprites(interface_state.deal_cards, cards_table_coordinates))
+    draw_interface(get_cards_sprites(interface_state.my_cards, cards_selected_coordinates))
 
     draw_interface(block_card('select', selected_cards))
-    draw_interface(block_card('cursor', [cards_hand_coordinates[interface_state.select_cursor]]))
+    draw_interface(block_card('cursor', [cards_hand_coordinates[interface_state.cursor_index]]))
 
     #Power Down
     if interface_state.power_down == True:
@@ -141,44 +133,56 @@ def on_draw():
     interface()
 
 
+#CARD_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+CARD_KEYS= ["q", "w", "e", "r", "t", "a","s", "d", "f"]
+cards_table_coordinates = get_cards_coordinates(cards_row)
+cards_hand_coordinates = get_cards_coordinates(my_cards)
+cards_selected_coordinates = []
+selected_cards = [] # types of cards
+
+
 @window.event
 def on_text(text):
     print(text)
 
+    #Put and take a Power Down token
     if text == 'p':
-
-        #Put and take a Power Down token
-
         if interface_state.power_down == False:
             interface_state.power_down = True
         else:
             interface_state.power_down = False
 
     if text in CARD_KEYS:
-
         #Select a card and take it in your "hand"
         #Selected card is in "GREEN" cursor
-
         index = CARD_KEYS.index(text)
-        if len(interface_state.my_cards) < 5:
-            if interface_state.deal_cards[index] not in interface_state.my_cards:
-                interface_state.my_cards.append(interface_state.deal_cards[index])
-                cursor_coordinates.append(cards_hand_coordinates[interface_state.select_cursor])
-                if interface_state.select_cursor < 4:
-                    interface_state.select_cursor += 1
-                selected_cards.append(cards_table_coordinates[index])
+
+        if interface_state.deal_cards[index] not in interface_state.my_cards:
+            if cards_hand_coordinates[interface_state.cursor_index] in cards_selected_coordinates:
+                s = cards_selected_coordinates.index(cards_hand_coordinates[interface_state.cursor_index])
+                cards_selected_coordinates.pop(s)
+                interface_state.my_cards.pop(s)
+                selected_cards.pop(s)
+
+            interface_state.my_cards.append(interface_state.deal_cards[index])
+            cards_selected_coordinates.append(cards_hand_coordinates[interface_state.cursor_index])
+            selected_cards.append(cards_table_coordinates[index])
+
+            if interface_state.cursor_index < 4:
+                interface_state.cursor_index += 1
+            print(selected_cards)
 
     #Move  selector cursor to the right
     if text == 'm':
-        print(interface_state.select_cursor)
-        if interface_state.select_cursor < 4:
-            interface_state.select_cursor += 1
+        print(interface_state.cursor_index)
+        if interface_state.cursor_index < 4:
+            interface_state.cursor_index += 1
 
     #Move selector cursor to the left
     if text == 'n':
-        print(interface_state.select_cursor)
-        if interface_state.select_cursor > 0:
-            interface_state.select_cursor -= 1
+        print(interface_state.cursor_index)
+        if interface_state.cursor_index > 0:
+            interface_state.cursor_index -= 1
 
 # def tick(dt):
 #     pass
