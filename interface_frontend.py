@@ -179,6 +179,17 @@ def on_text(text):
         interface_state.my_cards.clear()
         cards_selected_coordinates.clear()
 
+    # return one selected card back to the "table"    
+    if text == 'i':
+        s = cards_selected_coordinates.index(cards_hand_coordinates[interface_state.cursor_index])
+        cards_selected_coordinates.pop(s)
+        interface_state.my_cards.pop(s)
+        selected_cards.pop(s)
+
+
+
+
+
 
     #Move  selector cursor to the right
     if text == 'm':
