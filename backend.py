@@ -47,7 +47,7 @@ class Robot:
                 y = y + new_y
                 # When the robot leaves the map, robot dies
                 if (x, y) not in state.board:
-                    HoleTile.kill_robot(HoleTile, self, state)
+                    HoleTile.kill_robot(HoleTile, self)
                     break
                 new_tiles = state.board[(x, y)]
                 # Check wall on the next tile in the direction of the move.
@@ -87,7 +87,7 @@ class Robot:
             tile.move_robot(self, state)  # TO DO!
             tile.push_robot(self, state)
             tile.rotate_robot(self)
-            tile.kill_robot(self, state)
+            tile.kill_robot(self)
 
             # Aktivace laserů:
             # 1) Lasery políček
