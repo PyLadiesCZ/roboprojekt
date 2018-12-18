@@ -7,10 +7,10 @@ from enum import Enum
 window = pyglet.window.Window(768, 1024)
 interface_state = get_interface_state()
 
-cards_row_1 = [(47, 384), 5, 144]
-cards_row_2 = [(120, 224), 4, 144]
-cards_row = [cards_row_1, cards_row_2]
-my_cards = [[(47, 576), 5, 144]]
+cards_table_row_1 = [(47, 384), 5, 144]
+cards_table_row_2 = [(120, 224), 4, 144]
+cards_row = [cards_table_row_1, cards_table_row_2]
+cards_hand = [[(47, 576), 5, 144]]
 
 
 img_type_paths = {'u_turn': 'interface/png/u_turn.png',
@@ -51,9 +51,9 @@ def get_cards_coordinates(cards_list):
     return cards_coordinates
 
 
-def get_cards_sprites(cards_type_dict, coordinates):
+def create_cards_sprites(cards_type_list, coordinates):
     sprites = []
-    for i, card_type in enumerate(cards_type_dict, 0):
+    for i, card_type in enumerate(cards_type_list, 0):
 
         name, value = card_type
         x, y = coordinates[i]
@@ -76,7 +76,7 @@ def get_cards_sprites(cards_type_dict, coordinates):
     return sprites
 
 
-def block_card(type, coordinates):
+def create_blocked_card_sprites(type, coordinates):
     sprites = []
     for coordinate in coordinates:
         x, y = coordinate
@@ -86,7 +86,7 @@ def block_card(type, coordinates):
     return sprites
 
 
-def create_sprites(element):
+def create_element_sprites(element):
     sprites = []
     for i in range(element.elements_count):
         x, y = element.first_coordinates
@@ -105,26 +105,26 @@ def draw_interface(sprites):
 def interface():
 
     #Interface
-    draw_interface(create_sprites(InterfaceData.interface))
+    draw_interface(create_element_sprites(InterfaceData.interface))
 
     #Robot
-    draw_interface(create_sprites(InterfaceData.my_robot))
+    draw_interface(create_element_sprites(InterfaceData.my_robot))
 
-    draw_interface(create_sprites(InterfaceData.lives)[0:interface_state.robot_data.lifecount])
-    draw_interface(create_sprites(InterfaceData.tokens)[0:interface_state.robot_data.damagecount])
-    draw_interface(create_sprites(InterfaceData.flags)[0:interface_state.robot_data.flagcount])
+    draw_interface(create_element_sprites(InterfaceData.lives)[0:interface_state.robot_data.lifecount])
+    draw_interface(create_element_sprites(InterfaceData.tokens)[0:interface_state.robot_data.damagecount])
+    draw_interface(create_element_sprites(InterfaceData.flags)[0:interface_state.robot_data.flagcount])
 
 
     #Cards
-    draw_interface(get_cards_sprites(interface_state.deal_cards, cards_table_coordinates))
-    draw_interface(get_cards_sprites(interface_state.my_cards, cards_selected_coordinates))
+    draw_interface(create_cards_sprites(interface_state.deal_cards, cards_table_coordinates))
+    draw_interface(create_cards_sprites(interface_state.my_cards, cards_selected_coordinates))
 
-    draw_interface(block_card('select', selected_cards))
-    draw_interface(block_card('cursor', [cards_hand_coordinates[interface_state.cursor_index]]))
+    draw_interface(create_blocked_card_sprites('select', cards_selected_types))
+    draw_interface(create_blocked_card_sprites('cursor', [cards_hand_coordinates[interface_state.cursor_index]]))
 
     #Power Down
     if interface_state.power_down == True:
-        draw_interface(create_sprites(InterfaceData.power_down))
+        draw_interface(create_element_sprites(InterfaceData.power_down))
 
 
 @window.event
@@ -136,9 +136,9 @@ def on_draw():
 #CARD_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 CARD_KEYS= ["q", "w", "e", "r", "t", "a","s", "d", "f"]
 cards_table_coordinates = get_cards_coordinates(cards_row)
-cards_hand_coordinates = get_cards_coordinates(my_cards)
+cards_hand_coordinates = get_cards_coordinates(cards_hand)
 cards_selected_coordinates = []
-selected_cards = [] # types of cards
+cards_selected_types = [] # types of cards
 
 
 @window.event
@@ -162,29 +162,30 @@ def on_text(text):
                 s = cards_selected_coordinates.index(cards_hand_coordinates[interface_state.cursor_index])
                 cards_selected_coordinates.pop(s)
                 interface_state.my_cards.pop(s)
-                selected_cards.pop(s)
+                cards_selected_types.pop(s)
 
             interface_state.my_cards.append(interface_state.deal_cards[index])
             cards_selected_coordinates.append(cards_hand_coordinates[interface_state.cursor_index])
-            selected_cards.append(cards_table_coordinates[index])
+            cards_selected_types.append(cards_table_coordinates[index])
 
             if interface_state.cursor_index < 4:
                 interface_state.cursor_index += 1
-            print(selected_cards)
+            print(cards_selected_types)
 
     # return selected cards back to the "table"
     if text == 'o':
         interface_state.cursor_index = 0
-        selected_cards.clear()
+        cards_selected_types.clear()
         interface_state.my_cards.clear()
         cards_selected_coordinates.clear()
 
     # return one selected card back to the "table"
     if text == 'i':
-        s = cards_selected_coordinates.index(cards_hand_coordinates[interface_state.cursor_index])
-        cards_selected_coordinates.pop(s)
-        interface_state.my_cards.pop(s)
-        selected_cards.pop(s)
+        if cards_hand_coordinates[interface_state.cursor_index] in cards_selected_coordinates:
+            s = cards_selected_coordinates.index(cards_hand_coordinates[interface_state.cursor_index])
+            cards_selected_coordinates.pop(s)
+            interface_state.my_cards.pop(s)
+            cards_selected_types.pop(s)
 
 
     #Move  selector cursor to the right
