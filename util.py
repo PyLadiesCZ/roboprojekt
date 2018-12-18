@@ -70,9 +70,10 @@ class Tile:
         """
         Take away one robot life or kill robot.
 
-        Take and return Robot class.
+        Return a boolean.
+        True - Robot died.
         """
-        return robot
+        return False
 
 # Belt - TO DO!
     def move_robot(self, robot, state):
@@ -107,9 +108,10 @@ class Tile:
         robot: Robot class
         state: State class
 
-        Return Robot class.
+        Return a boolean.
+        True - Robot shoot to death.
         """
-        return robot
+        return False
 
 # Flag
     def collect_flag(self, robot):
@@ -149,17 +151,9 @@ class StartTile(Tile):
 
 
 class HoleTile(Tile):
+    # Call robot's method for dying
     def kill_robot(self, robot):
-        # Check number of robot lifes.
-        if robot.lifes > 1:
-            # Robot has 2 or more lifes, so it can ressurect at its starting coordinates.
-            robot.lifes -= 1
-            robot.coordinates = robot.start_coordinates
-            robot.direction = Direction.N
-        elif robot.lifes == 1:
-            # Robot has only one life, so it dies.
-            robot.lifes -= 1
-            robot.death = True
+        return robot.die()
 
 
 class BeltTile(Tile):
@@ -255,10 +249,12 @@ class LaserTile(Tile):
             if robot.damages < 9 - self.laser_number:
                 # Laser won't kill robot, but it will damage robot.
                 robot.damages += self.laser_number
+                return False
             else:
                 # Robot is damaged so much, that laser kills it.
-                robot.damges = 0
-                HoleTile.kill_robot(HoleTile, robot)
+                return robot.die()
+        else:
+            return False
 
 
 class FlagTile(Tile):

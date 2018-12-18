@@ -3,7 +3,7 @@ Backend file contains functions for the game logic.
 """
 from pathlib import Path
 import random
-from util import Tile, Direction, HoleTile
+from util import Tile, Direction
 from loading import get_board
 
 
@@ -15,7 +15,7 @@ class Robot:
         self.coordinates = coordinates
         self.lifes = 3
         self.flags = 0
-        self.damages = 1
+        self.damages = 8
         self.power_down = False
         self.death = False
 
@@ -47,7 +47,7 @@ class Robot:
                 y = y + new_y
                 # When the robot leaves the map, robot dies
                 if (x, y) not in state.board:
-                    HoleTile.kill_robot(HoleTile, self)
+                    self.die()
                     break
                 new_tiles = state.board[(x, y)]
                 # Check wall on the next tile in the direction of the move.
@@ -69,6 +69,20 @@ class Robot:
                 # Break the loop, don't check next tile.
                 break
 
+    def die(self):
+        # Check number of robot lifes.
+        if self.lifes > 1:
+            # Robot has 2 or more lifes, so it can ressurect at its starting coordinates.
+            self.lifes -= 1
+            self.damages = 0
+            self.coordinates = self.start_coordinates
+            self.direction = Direction.N
+        elif self.lifes == 1:
+            # Robot has only one life, so it dies.
+            self.lifes -= 1
+            self.death = True
+        return True
+
     def rotate(self, where_to):
         """
         Rotate robot according to a given direction.
@@ -87,13 +101,15 @@ class Robot:
             tile.move_robot(self, state)  # TO DO!
             tile.push_robot(self, state)
             tile.rotate_robot(self)
-            tile.kill_robot(self)
+            if tile.kill_robot(self):
+                break
 
             # Aktivace laserů:
             # 1) Lasery políček
             # 2) Lasery robotů - # TO DO!
-            tile.shoot_robot(self, state)  # TO DO!
-
+            if tile.shoot_robot(self, state):
+                # True if robot shoot to death
+                break
             # Sbírání vlajek a opravy robotů
             tile.collect_flag(self)
             tile.repair_robot(self)
