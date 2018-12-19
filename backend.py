@@ -14,13 +14,13 @@ class Robot:
         self.path_front = path_front
         self.coordinates = coordinates
         self.start_coordinates = coordinates
-        self.lifes = 3
+        self.lives = 3
         self.flags = 0
         self.damages = 9
         self.death = False
 
     def __repr__(self):
-        return "<Robot {} {} {} Lifes: {} Flags: {} Damages: {}>".format(self.direction, self.path, self.coordinates, self.lifes, self.flags, self.damages)
+        return "<Robot {} {} {} Lives: {} Flags: {} Damages: {}>".format(self.direction, self.path, self.coordinates, self.lives, self.flags, self.damages)
 
     def walk(self, distance, state):
         """
@@ -67,12 +67,12 @@ class Robot:
                 break
 
     def die(self):
-        self.lifes -= 1
+        self.lives -= 1
         # Notification of robot's death during the game round.
         self.death = True
-        # Check number of robot lifes.
-        if self.lifes >= 1:
-            # Robot has 1 or more lifes, so it can ressurect at its starting coordinates.
+        # Check number of robot lives.
+        if self.lives >= 1:
+            # Robot has 1 or more lives, so it can ressurect at its starting coordinates.
             self.damages = 0
             self.coordinates = self.start_coordinates
             self.direction = Direction.N
@@ -253,7 +253,7 @@ def tile_effects(state):
                 tile.collect_flag(robot)
                 tile.repair_robot(robot)
 
-    # Delete robots with zero lifes
-    state.robots = [robot for robot in state.robots if robot.lifes > 0]
+    # Delete robots with zero lives
+    state.robots = [robot for robot in state.robots if robot.lives > 0]
     for robot in state.robots:
         robot.death = False
