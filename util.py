@@ -45,10 +45,9 @@ class Tile:
         """
         Take away one robot life or kill robot.
 
-        Return a boolean.
-        True - Robot died.
+        Take and return Robot class.
         """
-        return False
+        return robot
 
 # Belt - TO DO!
     def move_robot(self, robot, state):
@@ -82,6 +81,8 @@ class Tile:
 
         robot: Robot class
         state: State class
+
+        Return Robot class.
         """
         return robot
 
@@ -123,8 +124,8 @@ class StartTile(Tile):
 
 
 class HoleTile(Tile):
-    # Call robot's method for dying
     def kill_robot(self, robot):
+        # Call robot's method for dying
         return robot.die()
 
 
@@ -156,6 +157,7 @@ class PusherTile(Tile):
         elif state.game_round % 2 == self.game_round:
             # Pusher for odd game rounds.
             robot.move(self.direction.get_new_direction("upside_down"), 1, state)
+        # Check hole on the next coordinates.
         tiles = state.get_tiles(robot.coordinates)
         for tile in tiles:
             tile.kill_robot(robot)
@@ -221,7 +223,7 @@ class LaserTile(Tile):
         if hit:
             # No robots found in the direction of incoming laser.
             # So do damage to robot.
-            if robot.damages < (9 - self.laser_number):
+            if robot.damages < (10 - self.laser_number):
                 # Laser won't kill robot, but it will damage robot.
                 robot.damages += self.laser_number
             else:

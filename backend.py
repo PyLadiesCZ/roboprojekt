@@ -16,7 +16,7 @@ class Robot:
         self.start_coordinates = coordinates
         self.lifes = 3
         self.flags = 0
-        self.damages = 8
+        self.damages = 9
         self.death = False
 
     def __repr__(self):
@@ -45,7 +45,7 @@ class Robot:
                 (new_x, new_y) = direction.coor_delta
                 x = x + new_x
                 y = y + new_y
-                # When the robot leaves the map, robot dies
+                # Get new list of tiles
                 new_tiles = state.get_tiles((x, y))
                 # Check wall on the next tile in the direction of the move.
                 for tile in new_tiles:
@@ -68,6 +68,7 @@ class Robot:
 
     def die(self):
         self.lifes -= 1
+        # Notification of robot's death during the game round.
         self.death = True
         # Check number of robot lifes.
         if self.lifes >= 1:
@@ -95,9 +96,16 @@ class State:
         return "<State {} {}>".format(self._board, self.robots)
 
     def get_tiles(self, coordinates):
+        """
+        Get new list of tiles.
+
+        coordinates: tuple of x and y coordinate
+        """
         if coordinates in self._board:
             return self._board[coordinates]
         else:
+            # Coordinates are out of game board.
+            # Return hole tile.
             return [HoleTile(Direction.N, None, [])]
 
 
@@ -199,26 +207,34 @@ def get_start_state(map_name):
 
 
 def tile_effects(state):
-
+    """
+    Apply tile effects according to game rules.
+    """
     # Activate belts
-        # 1) Dvojité šipky udělají jeden krok
-        # 2) Jednoduché šipky + dvojité šipky udělají jeden krok
+        # 1) Express belts move 1 space
+        # 2) Express belts and normal belts move 1 space
 
     # Activate pusher
     for robot in state.robots:
         if not robot.death:
             tiles = state.get_tiles(robot.coordinates)
             for tile in tiles:
+                # Kill robot if it is standing on hole tile.
+                # After completed cards play part with integration of robot
+                # dying after card movement. This line can be deleted.
                 tile.kill_robot(robot)
+                # All set. Start moving.
                 tile.push_robot(robot, state)
                 if robot.death:
                     break
+
     # Activate gear
     for robot in state.robots:
         if not robot.death:
             tiles = state.get_tiles(robot.coordinates)
             for tile in tiles:
                 tile.rotate_robot(robot)
+
     # Activate laser
     for robot in state.robots:
         if not robot.death:
