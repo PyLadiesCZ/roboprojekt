@@ -8,11 +8,12 @@ from loading import get_board
 
 
 class Robot:
-    def __init__(self, direction, path, start_coordinates, coordinates):
+    def __init__(self, direction, path, path_front, coordinates):
         self.direction = direction
         self.path = path
-        self.start_coordinates = start_coordinates
+        self.path_front = path_front
         self.coordinates = coordinates
+        self.start_coordinates = coordinates
         self.lifes = 3
         self.flags = 0
         self.damages = 8
@@ -156,7 +157,9 @@ def get_robot_paths():
     """
     robot_paths = []
     for robot_path in Path('./img/robots_map/png/').iterdir():  # search image file
-        robot_paths.append(robot_path)
+        name = robot_path.name
+        robot_front_path = './img/robots/png/' + name
+        robot_paths.append((robot_path, robot_front_path))
     return robot_paths
 
 
@@ -182,9 +185,10 @@ def get_robots_to_start(board):
         # Condition to assure no exception in case robot_paths is shorter
         # than coordinate's list
         if robot_paths:
-            path = random.choice(robot_paths)
-            robot_paths.remove(path)
-            robot = Robot(Direction.N, path, coordinate, coordinate)
+            paths = random.choice(robot_paths)
+            robot_paths.remove(paths)
+            path, path_front = paths
+            robot = Robot(Direction.N, path, path_front, coordinate)
             robots_start.append(robot)
     return robots_start
 
