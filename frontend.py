@@ -45,7 +45,7 @@ def load_robots(state):
     """
     robot_sprites = []
     for robot in state.robots:
-        if not robot.death:
+        if robot.lifes > 0:
             robot_sprite = sprite(robot.coordinates, [robot])
             robot_sprites.extend(robot_sprite)
     return robot_sprites

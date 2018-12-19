@@ -18,7 +18,6 @@ class Robot:
         self.flags = 0
         self.damages = 8
         self.power_down = False
-        self.death = False
 
     def __repr__(self):
         return "<Robot {} {} {} Lifes: {} Flags: {} Damages: {}>".format(self.direction, self.path, self.coordinates, self.lifes, self.flags, self.damages)
@@ -81,7 +80,6 @@ class Robot:
         elif self.lifes == 1:
             # Robot has only one life, so it dies.
             self.lifes -= 1
-            self.death = True
         return True
 
     def rotate(self, where_to):
