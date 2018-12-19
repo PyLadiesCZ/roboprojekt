@@ -17,7 +17,7 @@ class Robot:
         self.lifes = 3
         self.flags = 0
         self.damages = 8
-        self.power_down = False
+        self.death = False
 
     def __repr__(self):
         return "<Robot {} {} {} Lifes: {} Flags: {} Damages: {}>".format(self.direction, self.path, self.coordinates, self.lifes, self.flags, self.damages)
@@ -68,17 +68,13 @@ class Robot:
 
     def die(self):
         self.lifes -= 1
+        self.death = True
         # Check number of robot lifes.
-        if self.lifes > 1:
-            # Robot has 2 or more lifes, so it can ressurect at its starting coordinates.
+        if self.lifes >= 1:
+            # Robot has 1 or more lifes, so it can ressurect at its starting coordinates.
             self.damages = 0
             self.coordinates = self.start_coordinates
             self.direction = Direction.N
-        # else:
-            # odebrat robota ze seznamu
-            # Robot has only one life, so it dies.
-
-        return True
 
     def rotate(self, where_to):
         """
@@ -86,30 +82,6 @@ class Robot:
         """
 
         self.direction = self.direction.get_new_direction(where_to)
-
-    def apply_tile_effects(self, state):
-        tiles = state.get_tiles(self.coordinates)
-        for tile in tiles:
-            # První budou efekty pohybu:
-            # 1) Dvojité šipky udělají jeden krok
-            # 2) Jednoduché šipky + dvojité šipky udělají jeden krok
-            # 3) Aktivují se pushery
-            # 4) Aktivují se geary - otočení robota o 90°
-            tile.move_robot(self, state)  # TO DO!
-            tile.push_robot(self, state)
-            tile.rotate_robot(self)
-            if tile.kill_robot(self):
-                break
-
-            # Aktivace laserů:
-            # 1) Lasery políček
-            # 2) Lasery robotů - # TO DO!
-            if tile.shoot_robot(self, state):
-                # True if robot shoot to death
-                break
-            # Sbírání vlajek a opravy robotů
-            tile.collect_flag(self)
-            tile.repair_robot(self)
 
 
 class State:
@@ -126,7 +98,7 @@ class State:
         if coordinates in self._board:
             return self._board[coordinates]
         else:
-            return [HoleTile(Direction.N, None)]
+            return [HoleTile(Direction.N, None, [])]
 
 
 def get_starting_coordinates(board):
@@ -224,3 +196,48 @@ def get_start_state(map_name):
     robots_start = get_robots_to_start(board)
     state = State(board, robots_start, tile_count)
     return state
+
+
+def tile_effects(state):
+
+    # Activate belts
+        # 1) Dvojité šipky udělají jeden krok
+        # 2) Jednoduché šipky + dvojité šipky udělají jeden krok
+
+    # Activate pusher
+    for robot in state.robots:
+        if not robot.death:
+            tiles = state.get_tiles(robot.coordinates)
+            for tile in tiles:
+                tile.kill_robot(robot)
+                tile.push_robot(robot, state)
+                if robot.death:
+                    break
+    # Activate gear
+    for robot in state.robots:
+        if not robot.death:
+            tiles = state.get_tiles(robot.coordinates)
+            for tile in tiles:
+                tile.rotate_robot(robot)
+    # Activate laser
+    for robot in state.robots:
+        if not robot.death:
+            tiles = state.get_tiles(robot.coordinates)
+            for tile in tiles:
+                tile.shoot_robot(robot, state)
+                if robot.death:
+                    break
+    # Activate robot laser
+
+    # Collect flags, repair robots
+    for robot in state.robots:
+        if not robot.death:
+            tiles = state.get_tiles(robot.coordinates)
+            for tile in tiles:
+                tile.collect_flag(robot)
+                tile.repair_robot(robot)
+
+    # Delete robots with zero lifes
+    state.robots = [robot for robot in state.robots if robot.lifes > 0]
+    for robot in state.robots:
+        robot.death = False

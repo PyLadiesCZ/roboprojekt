@@ -82,11 +82,8 @@ class Tile:
 
         robot: Robot class
         state: State class
-
-        Return a boolean.
-        True - Robot shoot to death.
         """
-        return False
+        return robot
 
 # Flag
     def collect_flag(self, robot):
@@ -159,6 +156,9 @@ class PusherTile(Tile):
         elif state.game_round % 2 == self.game_round:
             # Pusher for odd game rounds.
             robot.move(self.direction.get_new_direction("upside_down"), 1, state)
+        tiles = state.get_tiles(robot.coordinates)
+        for tile in tiles:
+            tile.kill_robot(robot)
 
 
 class GearTile(Tile):
@@ -186,8 +186,8 @@ class LaserTile(Tile):
             (x, y) = robot.coordinates
             # Get coordinates of other robots.
             coordinates = []
-            for robot in state.robots:
-                coordinates.append(robot.coordinates)
+            for robot_state in state.robots:
+                coordinates.append(robot_state.coordinates)
             # Get direction in which it will be checked for other robots or laser start.
             direction_to_start = self.direction.get_new_direction('upside_down')
             # Check if there is another robot in direction of incoming laser.
@@ -221,15 +221,12 @@ class LaserTile(Tile):
         if hit:
             # No robots found in the direction of incoming laser.
             # So do damage to robot.
-            if robot.damages < 9 - self.laser_number:
+            if robot.damages < (9 - self.laser_number):
                 # Laser won't kill robot, but it will damage robot.
                 robot.damages += self.laser_number
-                return False
             else:
                 # Robot is damaged so much, that laser kills it.
-                return robot.die()
-        else:
-            return False
+                robot.die()
 
 
 class FlagTile(Tile):
