@@ -6,38 +6,13 @@ from enum import Enum
 
 
 class Tile:
-    def __init__(self, direction, path):
+    def __init__(self, direction, path, properties):
         self.direction = direction
         self.path = path
 
     def __repr__(self):
         return "<{} {}>".format(type(self).__name__, self.direction)
 
-    def tile_factory(direction, path, type, properties):
-        """
-        Select tile subclass according to its type and create coressponding subclass.
-        """
-        if type == 'wall':
-            return WallTile(direction, path)
-        elif type == 'starting_square':
-            return StartTile(direction, path)
-        elif type == 'hole':
-            return HoleTile(direction, path)
-        elif type == 'laser':
-            return LaserTile(direction, path, properties)
-        elif type == 'gear':
-            return GearTile(direction, path, properties)
-        elif type == 'pusher':
-            return PusherTile(direction, path, properties)
-        elif type == 'belt':
-            return BeltTile(direction, path, properties)
-        elif type == 'flag':
-            return FlagTile(direction, path, properties)
-        elif type == 'repair':
-            return RepairTile(direction, path, properties)
-        else:
-            # Ground tile
-            return Tile(direction, path)
 # Wall
 
     def can_move_from(self, direction):
@@ -161,7 +136,7 @@ class BeltTile(Tile):
         self.crossroads = properties[0]["value"]
         self.belt_direction = properties[1]["value"]
         self.move_count = properties[2]["value"]
-        super().__init__(direction, path)
+        super().__init__(direction, path, properties)
 
     def move_robot(self, state):
         # TO DO!
@@ -171,7 +146,7 @@ class BeltTile(Tile):
 class PusherTile(Tile):
     def __init__(self, direction, path, properties):
         self.game_round = properties[0]["value"]
-        super().__init__(direction, path)
+        super().__init__(direction, path, properties)
 
     def push_robot(self, robot, state):
         # Check game round and activate correct pushers.
@@ -189,7 +164,7 @@ class PusherTile(Tile):
 class GearTile(Tile):
     def __init__(self, direction, path, properties):
         self.move_direction = properties[0]["value"]
-        super().__init__(direction, path)
+        super().__init__(direction, path, properties)
 
     def rotate_robot(self, robot):
         # Rotate robot by 90° according to GearTile property: left or right.
@@ -200,7 +175,7 @@ class LaserTile(Tile):
     def __init__(self, direction, path, properties):
         self.laser_number = properties[0]["value"]
         self.laser_start = properties[1]["value"]
-        super().__init__(direction, path)
+        super().__init__(direction, path, properties)
 
     def shoot_robot(self, robot, state):
         # Robot stands on laser tile.
@@ -260,7 +235,7 @@ class LaserTile(Tile):
 class FlagTile(Tile):
     def __init__(self, direction, path, properties):
         self.flag_number = properties[0]["value"]
-        super().__init__(direction, path)
+        super().__init__(direction, path, properties)
 
     def collect_flag(self, robot):
         # Collect only correct flag.
@@ -274,7 +249,7 @@ class FlagTile(Tile):
 class RepairTile(Tile):
     def __init__(self, direction, path, properties):
         self.new_start = properties[0]["value"]
-        super().__init__(direction, path)
+        super().__init__(direction, path, properties)
 
     def repair_robot(self, robot):
         # Remove one robot damage.
@@ -322,3 +297,16 @@ class Direction(Enum):
             return Direction((self.value + 270) % 360)
         if where_to == "upside_down":
             return Direction((self.value + 180) % 360)
+
+
+def tile_factory(direction, path, type, properties):
+    """
+    Select tile subclass according to its type and create coressponding subclass.
+    """
+    return tile_cls[type](direction, path, properties)
+
+
+tile_cls = {'wall': WallTile, 'starting_square': StartTile, 'hole': HoleTile,
+            'laser': LaserTile, 'gear': GearTile, 'pusher': PusherTile,
+            'belt': BeltTile, 'flag': FlagTile, 'repair': RepairTile,
+            'ground': Tile}
