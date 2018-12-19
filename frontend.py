@@ -10,7 +10,6 @@ import pyglet
 TILE_WIDTH = 64
 TILE_HEIGHT = 64
 
-
 def init_window(state):
     """
     Return a pyglet window for graphic outputself.
@@ -20,7 +19,6 @@ def init_window(state):
     window = pyglet.window.Window(state.sizes[0] * TILE_WIDTH,
                                   state.sizes[1] * TILE_HEIGHT, resizable=True)
     return window
-
 
 def load_tiles(state):
     """
@@ -81,8 +79,20 @@ def draw_board(state):
 
     state: State object containing game board and robots
     """
+    window = pyglet.window.Window(state.sizes[0] * TILE_WIDTH,
+                                  state.sizes[1] * TILE_HEIGHT, resizable=True)
     tile_sprites = load_tiles(state)
     robot_sprites = load_robots(state)
     tile_sprites.extend(robot_sprites)
+
+    pyglet.gl.glPushMatrix()
+    zoom = min(
+        window.height / 200,
+        window.width / 200
+    )
+    pyglet.gl.glScalef(zoom, zoom, 1)
+
     for tile_sprite in tile_sprites:
         tile_sprite.draw()
+
+    pyglet.gl.glPopMatrix()
