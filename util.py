@@ -221,7 +221,7 @@ class LaserTile(Tile):
                 (new_x, new_y) = direction_to_start.coor_delta
                 x = x + new_x
                 y = y + new_y
-                new_tiles = state.board[(x, y)]
+                new_tiles = state.get_tiles((x, y))
                 for tile in new_tiles:
                     # Check if new tiles contain follow-up LaserTile in correct direction.
                     if isinstance(tile, LaserTile) and tile.direction == self.direction:

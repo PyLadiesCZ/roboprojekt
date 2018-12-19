@@ -30,7 +30,7 @@ def load_tiles(state):
     data: a dict created from decoded Tiled 1.2 JSON file
     """
     tile_sprites = []
-    for coordinate, tiles in state.board.items():
+    for coordinate, tiles in state._board.items():
         sprites = sprite(coordinate, tiles)
         tile_sprites.extend(sprites)
     return tile_sprites

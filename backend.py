@@ -3,7 +3,7 @@ Backend file contains functions for the game logic.
 """
 from pathlib import Path
 import random
-from util import Tile, Direction
+from util import Tile, Direction, HoleTile
 from loading import get_board
 
 
@@ -33,7 +33,7 @@ class Robot:
         Move a robot to new coordinates according to direction of the move.
         """
         for step in range(distance):
-            old_tiles = state.board[self.coordinates]
+            old_tiles = state.get_tiles(self.coordinates)
             # On the current tile: Check wall in the direction of next move.
             for tile in old_tiles:
                 move_from = tile.can_move_from(direction)
@@ -46,10 +46,7 @@ class Robot:
                 x = x + new_x
                 y = y + new_y
                 # When the robot leaves the map, robot dies
-                if (x, y) not in state.board:
-                    self.die()
-                    break
-                new_tiles = state.board[(x, y)]
+                new_tiles = state.get_tiles((x, y))
                 # Check wall on the next tile in the direction of the move.
                 for tile in new_tiles:
                     move_to = tile.can_move_to(direction)
@@ -70,16 +67,17 @@ class Robot:
                 break
 
     def die(self):
+        self.lifes -= 1
         # Check number of robot lifes.
         if self.lifes > 1:
             # Robot has 2 or more lifes, so it can ressurect at its starting coordinates.
-            self.lifes -= 1
             self.damages = 0
             self.coordinates = self.start_coordinates
             self.direction = Direction.N
-        elif self.lifes == 1:
+        # else:
+            # odebrat robota ze seznamu
             # Robot has only one life, so it dies.
-            self.lifes -= 1
+
         return True
 
     def rotate(self, where_to):
@@ -90,7 +88,7 @@ class Robot:
         self.direction = self.direction.get_new_direction(where_to)
 
     def apply_tile_effects(self, state):
-        tiles = state.board[(self.coordinates)]
+        tiles = state.get_tiles(self.coordinates)
         for tile in tiles:
             # První budou efekty pohybu:
             # 1) Dvojité šipky udělají jeden krok
@@ -116,13 +114,19 @@ class Robot:
 
 class State:
     def __init__(self, board, robots, sizes):
-        self.board = board
+        self._board = board
         self.robots = robots
         self.sizes = sizes
         self.game_round = 1
 
     def __repr__(self):
-        return "<State {} {}>".format(self.board, self.robots)
+        return "<State {} {}>".format(self._board, self.robots)
+
+    def get_tiles(self, coordinates):
+        if coordinates in self._board:
+            return self._board[coordinates]
+        else:
+            return [HoleTile(Direction.N, None)]
 
 
 def get_starting_coordinates(board):
