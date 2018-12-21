@@ -1,7 +1,7 @@
 from random import shuffle
 from backend import Robot
 from util import Direction
-robot_data = Robot(Direction.N, "./img/robots/png/MintBot_front.png", None)
+robot_data = Robot(Direction.N, "./img/robots/png/mintbot.png", "./img/robots/png/mintbot.png", None)
 
 
 class InterfaceState:
@@ -13,9 +13,9 @@ class InterfaceState:
         self.cursor_index = 0 # 0-4
 
     def __repr__(self):
-        return "<InterfaceState Cards: {}, My Cards: {}, Power Down: {}, Robot: {}>".format(self.deal_cards, self.my_card, self.power_down, self.robot_data)
+        return "<InterfaceState Cards: {}, My Cards: {}, Power Down: {}, Robot: {}>".format(self.deal_cards, self.my_cards, self.power_down, self.robot_data)
 
-# cartds_count, first_number, last_number
+# cards_count, first_number, last_number
 def get_card_pack():
     cards_types = {'u_turn': [6, 50, 99],
                 'back_up': [5, 250, 299],
