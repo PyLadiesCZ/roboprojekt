@@ -25,21 +25,12 @@ state = get_start_state(map_name)
 # Load pyglet graphic window from the frontend module.
 window = init_window(state)
 
-
 @window.event
 def on_draw():
     """
-    Clear the graphic window and draw the game state (board and robots).
+    Draw the game state (board and robots) and react to user's resizing of window by scaling the board.
     """
-    window.clear()
-    draw_board(state)
-
-
-@window.event
-def on_resize(width, height):
-    """
-    React to user's resizing of window by scaling the board.
-    """
+    
     # find out maximal screen size of user
     platform = pyglet.window.get_platform()
     display = platform.get_default_display()
@@ -47,19 +38,28 @@ def on_resize(width, height):
     screen_width = screen.width
     screen_height = screen.height
 
+    window.clear()
+    
     #scaling
     pyglet.gl.glPushMatrix()
+    
     #scaling ratio
     zoom = min(
         window.height / 768,
         window.width / 768
     )
+    
     pyglet.gl.glScalef(zoom, zoom, 1)
+    
     #print info about window and screen for code editation purpose
     #RESULT EXAMPLE:zoom:  1.2239583333333333 screen.width:  1600 screen.height:  1200 window.width:  1015 window.height:  940
     if zoom != 1:
         print ("zoom: ", zoom, "screen.width: ", screen_width, "screen.height: ", screen_height,"window.width: ", window.width, "window.height: ", window.height)
-
+    
+    draw_board(state)
+    
+    pyglet.gl.glPopMatrix()
+    
 
 def move_once(t):
     """
