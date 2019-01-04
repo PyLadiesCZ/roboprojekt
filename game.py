@@ -6,7 +6,7 @@ The game module
 """
 
 from backend import get_start_state
-from frontend import init_window, draw_board
+from frontend import init_window, draw_board, TILE_WIDTH, TILE_HEIGHT
 import pyglet
 import sys
 
@@ -45,8 +45,8 @@ def on_draw():
     
     #scaling ratio
     zoom = min(
-        window.height / 768,
-        window.width / 768
+        window.height / (state.sizes[1] * TILE_HEIGHT),
+        window.width / (state.sizes[0] * TILE_WIDTH)
     )
     
     pyglet.gl.glScalef(zoom, zoom, 1)
@@ -60,7 +60,6 @@ def on_draw():
     
     pyglet.gl.glPopMatrix()
     
-
 def move_once(t):
     """
     Move all robots 2 tiles forward and rotate 180 degrees.
