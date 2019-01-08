@@ -15,7 +15,7 @@ def init_window(state):
     """
     Return a pyglet window for graphic outputself.
 
-    data: a dict created from decoded Tiled 1.2 JSON file
+    state: State object containing game board, robots and map sizes
     """
     window = pyglet.window.Window(state.sizes[0] * TILE_WIDTH,
                                   state.sizes[1] * TILE_HEIGHT)
@@ -26,12 +26,12 @@ def load_tiles(state):
     """
     Return list of sprites of tiles.
 
-    state: State object containing game board and robots
+    state: State object containing game board, robots and map sizes
     data: a dict created from decoded Tiled 1.2 JSON file
     """
     tile_sprites = []
     for coordinate, tiles in state.board.items():
-        sprites = sprite(coordinate, tiles)
+        sprites = create_sprites(coordinate, tiles)
         tile_sprites.extend(sprites)
     return tile_sprites
 
@@ -40,23 +40,22 @@ def load_robots(state):
     """
     Return list of sprites of robots.
 
-    state: State object containing game board and robots
+    state: State object containing game board, robots and map sizes
     data: a dict created from decoded Tiled 1.2 JSON file
     """
     robot_sprites = []
     for robot in state.robots:
-        robot_sprite = sprite(robot.coordinates, [robot])
+        robot_sprite = create_sprites(robot.coordinates, [robot])
         robot_sprites.extend(robot_sprite)
     return robot_sprites
 
 
-def sprite(coordinate, items):
+def create_sprites(coordinate, items):
     """
     Return list of sprites of items.
 
     coordinate: coordinate of tiles or robot
     items: a list of Tile or Robot objects
-    data: a dict created from decoded Tiled 1.2 JSON file
     """
     items_sprites = []
     for item in items:
@@ -79,7 +78,7 @@ def draw_board(state):
     """
     Draw the images of tiles and robots into map.
 
-    state: State object containing game board and robots
+    state: State object containing game board, robots and map sizes
     """
     tile_sprites = load_tiles(state)
     robot_sprites = load_robots(state)
