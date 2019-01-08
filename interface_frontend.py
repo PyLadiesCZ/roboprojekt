@@ -1,6 +1,6 @@
 import pyglet
 from pyglet.window import key
-from interface import get_interface_state
+from interface import get_interface_state, select_card, interface_index_minus, interface_index_plus, return_card, return_cards, switch_power_down
 from enum import Enum
 
 
@@ -11,6 +11,32 @@ cards_table_row_1 = [(47, 384), 5, 144]
 cards_table_row_2 = [(120, 224), 4, 144]
 cards_row = [cards_table_row_1, cards_table_row_2]
 cards_hand = [[(47, 576), 5, 144]]
+
+
+interface_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/interface.png'), x=0, y=0)
+power_down_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/power.png'), x=186, y=854)
+indicator_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/green.png'),  x=688, y=864)
+
+my_robot_sprite = pyglet.sprite.Sprite(pyglet.image.load(interface_state.robot_data.path), x=74, y=888)
+lives_sprite = []
+for i in range(3):
+    x = 354 + i*46
+    y = 864
+    lives_sprite.append(pyglet.sprite.Sprite(pyglet.image.load('interface/png/life.png'), x, y))
+
+flags_sprite = []
+for i in range(8):
+    x = 332 + i*48
+    y = 928
+    flags_sprite.append(pyglet.sprite.Sprite(pyglet.image.load('img/squares/png/flag_{}.png'.format(i+1)), x, y))
+
+tokens_sprite = []
+for i in range(8):
+    x = 676 + i*-70
+    y = 768
+    tokens_sprite.append(pyglet.sprite.Sprite(pyglet.image.load('interface/png/token.png'.format(i+1)), x, y))
+
+
 
 
 img_type_paths = {'u_turn': 'interface/png/u_turn.png',
@@ -25,22 +51,6 @@ img_type_paths = {'u_turn': 'interface/png/u_turn.png',
                     'cursor':'interface/png/card_sl.png'}
 
 
-class InterfaceData(Enum):
-    interface =(0, 0),1, 0,'interface/png/interface.png'
-    lives = (354, 864), 3, 46, 'interface/png/life.png'
-    indicator = (688, 864), 1, 0, 'interface/png/green.png'
-    flags = (332, 928), 8, 48, 'img/squares/png/flag_{}.png'
-    tokens = (676, 768), 10, -70, 'interface/png/token.png'
-    power_down = (186, 854), 1, 0, 'interface/png/power.png'
-    my_robot = (74, 888), 1, 0, interface_state.robot_data.path
-
-    def __init__(self, first_coordinates, elements_count, space, path):
-        self.first_coordinates = first_coordinates
-        self.elements_count = elements_count
-        self.space = space
-        self.path = path
-
-
 def get_cards_coordinates(cards_list):
     cards_coordinates = []
     for row in cards_list:
@@ -53,92 +63,84 @@ def get_cards_coordinates(cards_list):
 
 def create_cards_sprites(cards_type_list, coordinates):
     sprites = []
+
     for i, card_type in enumerate(cards_type_list, 0):
+        if card_type != None:
+            name, value = card_type
+            x, y = coordinates[i]
 
-        name, value = card_type
-        x, y = coordinates[i]
+            #Add a universal card background
+            img = pyglet.image.load(img_type_paths['background'])
+            sprite = pyglet.sprite.Sprite(img, x, y)
+            sprites.append(sprite)
 
-        #Add a universal card background
-        img = pyglet.image.load(img_type_paths['background'])
-        sprite = pyglet.sprite.Sprite(img, x, y)
-        sprites.append(sprite)
+            #Add a card type symbol
+            img = pyglet.image.load(img_type_paths[name])
+            sprite = pyglet.sprite.Sprite(img, x, y)
+            sprites.append(sprite)
 
-        #Add a card type symbol
-        img = pyglet.image.load(img_type_paths[name])
-        sprite = pyglet.sprite.Sprite(img, x, y)
-        sprites.append(sprite)
-
-        #Card value (number on the card)
-        x = x + 70
-        y = y + 118
-        text = pyglet.text.Label(text = str(value), font_size = 14, x = x, y = y, anchor_x = 'right')
-        sprites.append(text)
+            #Card value (number on the card)
+            x = x + 70
+            y = y + 118
+            text = pyglet.text.Label(text = str(value), font_size = 14, x = x, y = y, anchor_x = 'right')
+            sprites.append(text)
     return sprites
 
 
-def create_blocked_card_sprites(type, coordinates):
-    sprites = []
-    for coordinate in coordinates:
-        x, y = coordinate
-        img = pyglet.image.load(img_type_paths[type])
-        sprite = pyglet.sprite.Sprite(img, x, y)
-        sprites.append(sprite)
-    return sprites
-
-
-def create_element_sprites(element):
-    sprites = []
-    for i in range(element.elements_count):
-        x, y = element.first_coordinates
-        x = x + i * element.space
-        img = pyglet.image.load(element.path.format(i+1))
-        sprite = pyglet.sprite.Sprite(img, x, y)
-        sprites.append(sprite)
-    return sprites
+def create_one_sprite(type, coordinate):
+    x, y = coordinate
+    img = pyglet.image.load(img_type_paths[type])
+    sprite = pyglet.sprite.Sprite(img, x, y)
+    return sprite
 
 
 def draw_interface(sprites):
     for tile_sprite in sprites:
         tile_sprite.draw()
 
+@window.event
+def on_draw():
+    window.clear()
 
-def interface():
-
-    #Interface
-    draw_interface(create_element_sprites(InterfaceData.interface))
+    #Interface background
+    interface_sprite.draw()
 
     #Robot
-    draw_interface(create_element_sprites(InterfaceData.my_robot))
+    my_robot_sprite.draw()
 
-    draw_interface(create_element_sprites(InterfaceData.lives)[0:interface_state.robot_data.lifecount])
-    draw_interface(create_element_sprites(InterfaceData.tokens)[0:interface_state.robot_data.damagecount])
-    draw_interface(create_element_sprites(InterfaceData.flags)[0:interface_state.robot_data.flagcount])
+    #Flags
+    for sprite in flags_sprite[0:interface_state.robot_data.flagcount]:
+        sprite.draw()
+
+    #Robot lives
+    for sprite in lives_sprite[0:interface_state.robot_data.lifecount]:
+        sprite.draw()
+
+    #Damage Tokens
+    for sprite in tokens_sprite[0:interface_state.robot_data.damagecount]:
+        sprite.draw()
 
 
     #Cards
     draw_interface(create_cards_sprites(interface_state.deal_cards, cards_table_coordinates))
-    draw_interface(create_cards_sprites(interface_state.my_cards, cards_selected_coordinates))
-
-    draw_interface(create_blocked_card_sprites('select', cards_selected_types))
-    draw_interface(create_blocked_card_sprites('cursor', [cards_hand_coordinates[interface_state.cursor_index]]))
+    draw_interface(create_cards_sprites(interface_state.my_cards, cards_hand_coordinates))
+    print(cards_table_coordinates)
+    for i in interface_state.my_cards:
+        if i != None:
+            create_one_sprite('select', cards_table_coordinates[interface_state.deal_cards.index(i)]).draw()
+    create_one_sprite('cursor', cards_hand_coordinates[interface_state.cursor_index]).draw()
 
     #Power Down
     if interface_state.power_down == True:
-        draw_interface(create_element_sprites(InterfaceData.power_down))
+        power_down_sprite.draw()
 
-
-@window.event
-def on_draw():
-    window.clear()
-    interface()
 
 
 #CARD_KEYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 CARD_KEYS= ["q", "w", "e", "r", "t", "a","s", "d", "f"]
 cards_table_coordinates = get_cards_coordinates(cards_row)
 cards_hand_coordinates = get_cards_coordinates(cards_hand)
-cards_selected_coordinates = []
-cards_selected_types = [] # types of cards
+
 
 
 @window.event
@@ -147,58 +149,30 @@ def on_text(text):
 
     #Put and take a Power Down token
     if text == 'p':
-        if interface_state.power_down == False:
-            interface_state.power_down = True
-        else:
-            interface_state.power_down = False
+        switch_power_down(interface_state)
 
     if text in CARD_KEYS:
         #Select a card and take it in your "hand"
         #Selected card is in "GREEN" cursor
-        index = CARD_KEYS.index(text)
+        deal_card_index = CARD_KEYS.index(text)
 
-        if interface_state.deal_cards[index] not in interface_state.my_cards:
-            if cards_hand_coordinates[interface_state.cursor_index] in cards_selected_coordinates:
-                s = cards_selected_coordinates.index(cards_hand_coordinates[interface_state.cursor_index])
-                cards_selected_coordinates.pop(s)
-                interface_state.my_cards.pop(s)
-                cards_selected_types.pop(s)
+        select_card(deal_card_index, interface_state)
 
-            interface_state.my_cards.append(interface_state.deal_cards[index])
-            cards_selected_coordinates.append(cards_hand_coordinates[interface_state.cursor_index])
-            cards_selected_types.append(cards_table_coordinates[index])
 
-            if interface_state.cursor_index < 4:
-                interface_state.cursor_index += 1
-            print(cards_selected_types)
-
-    # return selected cards back to the "table"
+    # selected cards back to the "table"
     if text == 'o':
-        interface_state.cursor_index = 0
-        cards_selected_types.clear()
-        interface_state.my_cards.clear()
-        cards_selected_coordinates.clear()
-
-    # return one selected card back to the "table"
+        return_cards(interface_state)
+    # one selected card back to the "table"
     if text == 'i':
-        if cards_hand_coordinates[interface_state.cursor_index] in cards_selected_coordinates:
-            s = cards_selected_coordinates.index(cards_hand_coordinates[interface_state.cursor_index])
-            cards_selected_coordinates.pop(s)
-            interface_state.my_cards.pop(s)
-            cards_selected_types.pop(s)
-
+        return_card(interface_state)
 
     #Move  selector cursor to the right
     if text == 'm':
-        print(interface_state.cursor_index)
-        if interface_state.cursor_index < 4:
-            interface_state.cursor_index += 1
+        interface_index_plus(interface_state)
 
     #Move selector cursor to the left
     if text == 'n':
-        print(interface_state.cursor_index)
-        if interface_state.cursor_index > 0:
-            interface_state.cursor_index -= 1
+        interface_index_minus(interface_state)
 
 # def tick(dt):
 #     pass
