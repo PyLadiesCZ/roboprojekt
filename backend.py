@@ -17,7 +17,7 @@ class Robot:
         self.lives = 3
         self.flags = 0
         self.damages = 9
-        self.death = False
+        self.inactive = False
 
     def __repr__(self):
         return "<Robot {} {} {} Lives: {} Flags: {} Damages: {}>".format(self.direction, self.path, self.coordinates, self.lives, self.flags, self.damages)
@@ -69,7 +69,7 @@ class Robot:
     def die(self):
         self.lives -= 1
         # Notification of robot's death during the game round.
-        self.death = True
+        self.inactive = True
         # Check number of robot lives.
         if self.lives >= 1:
             # Robot has 1 or more lives, so it can ressurect at its starting coordinates.
@@ -97,9 +97,11 @@ class State:
 
     def get_tiles(self, coordinates):
         """
-        Get new list of tiles.
+        Get tiles on requested coordinates.
 
         coordinates: tuple of x and y coordinate
+
+        Return a list of tiles or return hole tile if coordinates are out of the board.
         """
         if coordinates in self._board:
             return self._board[coordinates]
@@ -206,7 +208,7 @@ def get_start_state(map_name):
     return state
 
 
-def tile_effects(state):
+def apply_tile_effects(state):
     """
     Apply tile effects according to game rules.
     """
@@ -216,7 +218,7 @@ def tile_effects(state):
 
     # Activate pusher
     for robot in state.robots:
-        if not robot.death:
+        if not robot.inactive:
             tiles = state.get_tiles(robot.coordinates)
             for tile in tiles:
                 # Kill robot if it is standing on hole tile.
@@ -225,29 +227,29 @@ def tile_effects(state):
                 tile.kill_robot(robot)
                 # All set. Start moving.
                 tile.push_robot(robot, state)
-                if robot.death:
+                if robot.inactive:
                     break
 
     # Activate gear
     for robot in state.robots:
-        if not robot.death:
+        if not robot.inactive:
             tiles = state.get_tiles(robot.coordinates)
             for tile in tiles:
                 tile.rotate_robot(robot)
 
     # Activate laser
     for robot in state.robots:
-        if not robot.death:
+        if not robot.inactive:
             tiles = state.get_tiles(robot.coordinates)
             for tile in tiles:
                 tile.shoot_robot(robot, state)
-                if robot.death:
+                if robot.inactive:
                     break
     # Activate robot laser
 
     # Collect flags, repair robots
     for robot in state.robots:
-        if not robot.death:
+        if not robot.inactive:
             tiles = state.get_tiles(robot.coordinates)
             for tile in tiles:
                 tile.collect_flag(robot)
@@ -256,4 +258,4 @@ def tile_effects(state):
     # Delete robots with zero lives
     state.robots = [robot for robot in state.robots if robot.lives > 0]
     for robot in state.robots:
-        robot.death = False
+        robot.inactive = False

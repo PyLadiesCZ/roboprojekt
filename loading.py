@@ -72,7 +72,15 @@ def get_types(data):
 
 def get_properties(data):
     """
+    Get tile properties.
 
+    data: a dict created from decoded Tiled 1.2 JSON file
+
+    Return a dictionary with modified tile ID as a key
+    and properties of tile as a value.
+
+    Except for ground, hole, wall and starting tile. These tiles don't have
+    custom properties, so their properties are empty lists.
     """
     types = get_types(data)
     properties = {}
