@@ -6,7 +6,7 @@ The game module
 """
 
 from backend import get_start_state
-from frontend import init_window, draw_board
+from frontend import init_window, draw_board, TILE_WIDTH, TILE_HEIGHT
 import pyglet
 import sys
 
@@ -25,15 +25,28 @@ state = get_start_state(map_name)
 # Load pyglet graphic window from the frontend module.
 window = init_window(state)
 
-
 @window.event
 def on_draw():
     """
-    Clears the graphic window and draw the game state (board and robots).
+    Draw the game state (board and robots) and react to user's resizing of window by scaling the board.
     """
+
     window.clear()
+
+    #scaling
+    pyglet.gl.glPushMatrix()
+
+    #scaling ratio
+    zoom = min(
+        window.height / (state.sizes[1] * TILE_HEIGHT),
+        window.width / (state.sizes[0] * TILE_WIDTH)
+    )
+
+    pyglet.gl.glScalef(zoom, zoom, 1)
+
     draw_board(state)
 
+    pyglet.gl.glPopMatrix()
 
 def move_once(t):
     """
