@@ -13,8 +13,6 @@ class Tile:
     def __repr__(self):
         return "<{} {}>".format(type(self).__name__, self.direction)
 
-# Wall
-
     def can_move_from(self, direction):
         """
         Verify movement from tile in specific direction.
@@ -40,7 +38,6 @@ class Tile:
         # Because of that the tile is rotate upside down.
         return True
 
-# Hole
     def kill_robot(self, robot):
         """
         Take away one robot life or kill robot.
@@ -49,11 +46,9 @@ class Tile:
         """
         return robot
 
-# Belt - TO DO!
     def move_robot(self, robot, state):
         return robot
 
-# Pusher
     def push_robot(self, robot, state):
         """
         Move robot by one tile in specific game round.
@@ -65,7 +60,6 @@ class Tile:
         """
         return robot
 
-# Gear
     def rotate_robot(self, robot):
         """
         Rotate robot by 90° to the left or right according to tile properties.
@@ -74,7 +68,6 @@ class Tile:
         """
         return robot
 
-# Laser
     def shoot_robot(self, robot, state):
         """
         Shoot robot with tile laser.
@@ -86,7 +79,6 @@ class Tile:
         """
         return robot
 
-# Flag
     def collect_flag(self, robot):
         """
         Collect flag by robot and change robot's start coordinates.
@@ -95,7 +87,6 @@ class Tile:
         """
         return robot
 
-# Repair
     def repair_robot(self, robot):
         """
         Repair robot. Change robot's start coordinates, if possible by tile properties.
@@ -138,6 +129,9 @@ class BeltTile(Tile):
 
     def move_robot(self, state):
         # TO DO!
+
+        # 1) Express belts move 1 space
+        # 2) Express belts and normal belts move 1 space
         pass
 
 
