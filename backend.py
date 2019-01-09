@@ -67,15 +67,14 @@ class Robot:
                 break
 
     def die(self):
+        """
+        Robot lose life and skip rest of game round.
+        Robot is moved out of game board for the rest of the round.
+        """
         self.lives -= 1
         # Notification of robot's death during the game round.
         self.inactive = True
-        # Check number of robot lives.
-        if self.lives >= 1:
-            # Robot has 1 or more lives, so it can ressurect at its starting coordinates.
-            self.damages = 0
-            self.coordinates = self.start_coordinates
-            self.direction = Direction.N
+        self.coordinates = [-1, -1]
 
     def rotate(self, where_to):
         """
@@ -258,4 +257,10 @@ def apply_tile_effects(state):
     # Delete robots with zero lives
     state.robots = [robot for robot in state.robots if robot.lives > 0]
     for robot in state.robots:
-        robot.inactive = False
+        # If robot lost life during game round, it will now ressurect at its
+        # starting coordinates.
+        if robot.inactive:
+            robot.coordinates = robot.start_coordinates
+            robot.damages = 0
+            robot.direction = Direction.N
+            robot.inactive = False
