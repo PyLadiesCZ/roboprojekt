@@ -8,9 +8,10 @@ from loading import get_board
 
 
 class Robot:
-    def __init__(self, direction, path, coordinates):
+    def __init__(self, direction, path, path_front, coordinates):
         self.direction = direction
         self.path = path
+        self.path_front = path_front
         self.coordinates = coordinates
         self.lifecount = 3
         self.flagcount = 0
@@ -111,7 +112,9 @@ def get_robot_paths():
     """
     robot_paths = []
     for robot_path in Path('./img/robots_map/png/').iterdir():  # search image file
-        robot_paths.append(robot_path)
+        name = robot_path.name
+        robot_front_path = './img/robots/png/' + name
+        robot_paths.append((robot_path, robot_front_path))
     return robot_paths
 
 
@@ -137,9 +140,10 @@ def get_robots_to_start(board):
         # Condition to assure no exception in case robot_paths is shorter
         # than coordinate's list
         if robot_paths:
-            path = random.choice(robot_paths)
-            robot_paths.remove(path)
-            robot = Robot(Direction.N, path, coordinate)
+            paths = random.choice(robot_paths)
+            robot_paths.remove(paths)
+            path, path_front = paths
+            robot = Robot(Direction.N, path, path_front, coordinate)
             robots_start.append(robot)
     return robots_start
 
@@ -163,9 +167,9 @@ def get_start_state(map_name):
     """
     Get starting state of game.
 
-    data: a dict created from decoded Tiled 1.2 JSON file
+    map_name: path to map file. Currently works only for .json files from Tiled 1.2
 
-    Create board and robots on starting squares, initialize State object containing both Tile and Robot object.
+    Create board and robots on starting squares, initialize State object containing Tile and Robot object as well as the map size.
     Return State object.
     """
     board = get_board(map_name)

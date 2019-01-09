@@ -8,7 +8,7 @@ import pytest
 
 maps = []
 """
-Create a list of all maps. 
+Create a list of all maps.
 To be used as an argument for the functions which need to go through all maps so they don't need to be added manually.
 """
 for i in Path('maps/').glob('test_*.json'):
@@ -85,8 +85,9 @@ def test_robot_paths():
     Get list of robot paths, assert that instance of the list is Path object. The list will change in time, it is not possible to test length or all the paths.
     """
     robot_paths = get_robot_paths()
+    path, path_front = robot_paths[0]
     assert isinstance(robot_paths, list)
-    assert isinstance(robot_paths[0], Path)
+    assert isinstance(path, Path)
 
 
 @pytest.mark.parametrize(("tile_number", "converted_number"),
@@ -163,7 +164,7 @@ def test_robot_walk(input_coordinates, input_direction, distance, output_coordin
     to correct coordinates.
     """
     state = get_start_state("maps/test_3.json")
-    robot = Robot(input_direction, None, input_coordinates)
+    robot = Robot(input_direction, None, None, input_coordinates)
     robot.walk(distance, state)
     assert robot.coordinates == output_coordinates
 
@@ -181,7 +182,7 @@ def test_robot_move(input_coordinates, input_direction, distance, output_coordin
     was moved to correct coordinates.
     """
     state = get_start_state("maps/test_3.json")
-    robot = Robot(Direction.N, None, input_coordinates)
+    robot = Robot(Direction.N, None, None, input_coordinates)
     robot.move(input_direction, distance, state)
     assert robot.coordinates == output_coordinates
 
@@ -199,10 +200,13 @@ def test_tile_size(map_name):
 
 @pytest.mark.parametrize("map_name", maps)
 def test_map_is_valid(map_name):
-    assert check_squares(map_name) == True
+    """Use validator to check all the valid maps are correctly layered, therefore accepted."""
 
+    assert check_squares(map_name) == True
 
 
 @pytest.mark.parametrize("map_name", ["maps/bad_map.json"])
 def test_map_is_invalid(map_name):
+    """Use validator to check the invalid map is not accepted."""
+
     assert check_squares(map_name) != True
