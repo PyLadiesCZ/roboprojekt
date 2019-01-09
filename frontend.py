@@ -42,7 +42,8 @@ def load_robots(state):
     """
     robot_sprites = []
     for robot in state.robots:
-        if robot.lives > 0:
+        # Only alive and active robots will be drawn.
+        if robot.lives > 0 or not robot.inactive:
             robot_sprite = create_sprites(robot.coordinates, [robot])
             robot_sprites.extend(robot_sprite)
     return robot_sprites
