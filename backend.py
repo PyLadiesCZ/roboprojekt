@@ -195,9 +195,9 @@ def get_start_state(map_name):
     """
     Get starting state of game.
 
-    data: a dict created from decoded Tiled 1.2 JSON file
+    map_name: path to map file. Currently works only for .json files from Tiled 1.2
 
-    Create board and robots on starting squares, initialize State object containing both Tile and Robot object.
+    Create board and robots on starting squares, initialize State object containing Tile and Robot object as well as the map size.
     Return State object.
     """
     board = get_board(map_name)
