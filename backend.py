@@ -3,7 +3,7 @@ Backend file contains functions for the game logic.
 """
 from pathlib import Path
 import random
-from util import Tile, Direction, HoleTile
+from util import Direction, HoleTile
 from loading import get_board
 
 
