@@ -33,13 +33,13 @@
          "name":"test",
          "spacing":0,
          "tilecount":43,
-         "tileheight":65,
+         "tileheight":64,
          "tiles":[
                 {
                  "id":0,
                  "image":"..\/img\/squares\/png\/ground.png",
-                 "imageheight":65,
-                 "imagewidth":65,
+                 "imageheight":64,
+                 "imagewidth":64,
                  "type":"ground"
                 },
                 {
@@ -92,9 +92,9 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"direction",
-                         "type":"int",
-                         "value":1
+                         "name":"rotate",
+                         "type":"string",
+                         "value":"right"
                         }],
                  "type":"gear"
                 },
@@ -105,9 +105,9 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"direction",
-                         "type":"int",
-                         "value":3
+                         "name":"rotate",
+                         "type":"string",
+                         "value":"left"
                         }],
                  "type":"gear"
                 },
@@ -118,9 +118,9 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"move",
+                         "name":"game_round",
                          "type":"int",
-                         "value":-1
+                         "value":1
                         }],
                  "type":"pusher"
                 },
@@ -131,9 +131,9 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"move",
+                         "name":"game_round",
                          "type":"int",
-                         "value":-1
+                         "value":0
                         }],
                  "type":"pusher"
                 },
@@ -603,9 +603,9 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"damage",
-                         "type":"int",
-                         "value":-1
+                         "name":"new_start",
+                         "type":"bool",
+                         "value":false
                         }],
                  "type":"repair"
                 },
@@ -616,9 +616,9 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"damage",
-                         "type":"int",
-                         "value":-1
+                         "name":"new_start",
+                         "type":"bool",
+                         "value":true
                         }],
                  "type":"repair"
                 },
@@ -678,7 +678,7 @@
                  "imagewidth":64,
                  "type":"starting_square"
                 }],
-         "tilewidth":65
+         "tilewidth":64
         }],
  "tilewidth":64,
  "type":"map",
