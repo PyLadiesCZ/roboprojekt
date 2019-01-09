@@ -200,10 +200,13 @@ def test_tile_size(map_name):
 
 @pytest.mark.parametrize("map_name", maps)
 def test_map_is_valid(map_name):
-    assert check_squares(map_name) == True
+    """Use validator to check all the valid maps are correctly layered, therefore accepted."""
 
+    assert check_squares(map_name) == True
 
 
 @pytest.mark.parametrize("map_name", ["maps/bad_map.json"])
 def test_map_is_invalid(map_name):
+    """Use validator to check the invalid map is not accepted."""
+
     assert check_squares(map_name) != True
