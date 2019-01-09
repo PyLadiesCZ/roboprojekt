@@ -30,36 +30,24 @@ def on_draw():
     """
     Draw the game state (board and robots) and react to user's resizing of window by scaling the board.
     """
-    
-    # find out maximal screen size of user
-    platform = pyglet.window.get_platform()
-    display = platform.get_default_display()
-    screen = display.get_default_screen()
-    screen_width = screen.width
-    screen_height = screen.height
 
     window.clear()
-    
+
     #scaling
     pyglet.gl.glPushMatrix()
-    
+
     #scaling ratio
     zoom = min(
         window.height / (state.sizes[1] * TILE_HEIGHT),
         window.width / (state.sizes[0] * TILE_WIDTH)
     )
-    
+
     pyglet.gl.glScalef(zoom, zoom, 1)
-    
-    #print info about window and screen for code editation purpose
-    #RESULT EXAMPLE:zoom:  1.2239583333333333 screen.width:  1600 screen.height:  1200 window.width:  1015 window.height:  940
-    if zoom != 1:
-        print ("zoom: ", zoom, "screen.width: ", screen_width, "screen.height: ", screen_height,"window.width: ", window.width, "window.height: ", window.height)
-    
+
     draw_board(state)
-    
+
     pyglet.gl.glPopMatrix()
-    
+
 def move_once(t):
     """
     Move all robots 2 tiles forward and rotate 180 degrees.
