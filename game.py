@@ -5,7 +5,7 @@ The game module
     - choose standard or other map to be loaded
 """
 
-from backend import get_start_state
+from backend import get_start_state, apply_tile_effects
 from frontend import init_window, draw_board, TILE_WIDTH, TILE_HEIGHT
 import pyglet
 import sys
@@ -55,7 +55,10 @@ def move_once(t):
 
     for robot in state.robots:
         robot.walk(3, state)
-        robot.rotate("upside_down")
+    print(state.robots)
+    apply_tile_effects(state)
+    print(state.robots)
+
 
 pyglet.clock.schedule_once(move_once, 3)
 

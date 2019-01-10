@@ -10,6 +10,7 @@ import pyglet
 TILE_WIDTH = 64
 TILE_HEIGHT = 64
 
+
 def init_window(state):
     """
     Return a pyglet window for graphic outputself.
@@ -19,6 +20,7 @@ def init_window(state):
                                   state.sizes[1] * TILE_HEIGHT, resizable=True)
     return window
 
+
 def load_tiles(state):
     """
     Return list of sprites of tiles.
@@ -27,7 +29,7 @@ def load_tiles(state):
     data: a dict created from decoded Tiled 1.2 JSON file
     """
     tile_sprites = []
-    for coordinate, tiles in state.board.items():
+    for coordinate, tiles in state._board.items():
         sprites = create_sprites(coordinate, tiles)
         tile_sprites.extend(sprites)
     return tile_sprites
@@ -42,8 +44,10 @@ def load_robots(state):
     """
     robot_sprites = []
     for robot in state.robots:
-        robot_sprite = create_sprites(robot.coordinates, [robot])
-        robot_sprites.extend(robot_sprite)
+        # Only alive and active robots will be drawn.
+        if robot.lives > 0 or not robot.inactive:
+            robot_sprite = create_sprites(robot.coordinates, [robot])
+            robot_sprites.extend(robot_sprite)
     return robot_sprites
 
 

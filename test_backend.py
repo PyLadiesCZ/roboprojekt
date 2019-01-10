@@ -148,9 +148,9 @@ def test_starting_state():
     assert isinstance(ss, State)
     assert isinstance(ss.robots, list)
     assert isinstance(ss.robots[0], Robot)
-    assert isinstance(ss.board, dict)
-    assert isinstance(ss.board[0, 0], list)
-    assert isinstance(ss.board[0, 0][0], Tile)
+    assert isinstance(ss._board, dict)
+    assert isinstance(ss._board[0, 0], list)
+    assert isinstance(ss._board[0, 0][0], Tile)
 
 
 @pytest.mark.parametrize(("input_coordinates", "input_direction", "distance", "output_coordinates"),

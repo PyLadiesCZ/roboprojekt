@@ -4,15 +4,15 @@ Util contains classes Tile and Direction, accessed by both loading and backend.
 
 from enum import Enum
 
-
 class Tile:
-    def __init__(self, direction, path, type):
+    def __init__(self, direction, path, properties):
         self.direction = direction
         self.path = path
-        self.type = type
 
     def __repr__(self):
-        return "<Tile {} {}>".format(self.direction, self.type)
+        # type(self).__name__: shows the type of the particular tile
+        # eg. HoleTile, WallTile or just Tile
+        return "<{} {}>".format(type(self).__name__, self.direction)
 
     def can_move_from(self, direction):
         """
@@ -23,12 +23,7 @@ class Tile:
         True - There is not a wall in direction of the move.
         False - There is a wall in direction of the move.
         """
-        # The direction of the wall is the same as the direction in which
-        # robot wants to move from the tile.
-        if (self.type == "wall" and self.direction == direction):
-            return False
-        else:
-            return True
+        return True
 
     def can_move_to(self, direction):
         """
@@ -42,10 +37,221 @@ class Tile:
         # If there is a wall in direction of the robot movement,
         # than the direction of the robot goes against the direction of the wall.
         # Because of that the tile is rotate upside down.
-        if (self.type == "wall" and self.direction.get_new_direction("upside_down") == direction):
-            return False
-        else:
-            return True
+        return True
+
+    def kill_robot(self, robot):
+        """
+        Take away one robot life or kill robot.
+
+        Take and return Robot class.
+        """
+        return robot
+
+    def move_robot(self, robot, state):
+        return robot
+
+    def push_robot(self, robot, state):
+        """
+        Move robot by one tile in specific game round.
+
+        robot: Robot class
+        state: State class containing game round
+
+        Return Robot class.
+        """
+        return robot
+
+    def rotate_robot(self, robot):
+        """
+        Rotate robot by 90° to the left or right according to tile properties.
+
+        Take and return Robot class.
+        """
+        return robot
+
+    def shoot_robot(self, robot, state):
+        """
+        Shoot robot with tile laser.
+
+        robot: Robot class
+        state: State class
+
+        Return Robot class.
+        """
+        return robot
+
+    def collect_flag(self, robot):
+        """
+        Collect flag by robot and change robot's start coordinates.
+
+        Take and return Robot class.
+        """
+        return robot
+
+    def repair_robot(self, robot):
+        """
+        Repair robot. Change robot's start coordinates, if possible by tile properties.
+
+        Take and return Robot class.
+        """
+        return robot
+
+
+class WallTile(Tile):
+    def can_move_from(self, direction):
+        # The direction of the wall is the same as the direction in which
+        # robot wants to move from the tile.
+        return not (self.direction == direction)
+
+    def can_move_to(self, direction):
+        # If there is a wall in direction of the robot movement,
+        # then the direction of the robot goes against the direction of the wall.
+        # Because of that the tile is checked in upside down direction.
+        return not (self.direction.get_new_direction("upside_down") == direction)
+
+
+class StartTile(Tile):
+    # Start tile has no tile effect.
+    pass
+
+
+class HoleTile(Tile):
+    def kill_robot(self, robot):
+        # Call robot's method for dying
+        return robot.die()
+
+
+class BeltTile(Tile):
+    def __init__(self, direction, path, properties):
+        self.crossroads = properties[0]["value"]
+        self.belt_direction = properties[1]["value"]
+        self.move_count = properties[2]["value"]
+        super().__init__(direction, path, properties)
+
+    def move_robot(self, state):
+        # TO DO!
+
+        # 1) Express belts move 1 space
+        # 2) Express belts and normal belts move 1 space
+        pass
+
+
+class PusherTile(Tile):
+    def __init__(self, direction, path, properties):
+        self.game_round = properties[0]["value"]
+        super().__init__(direction, path, properties)
+
+    def push_robot(self, robot, state):
+        # Check game round and activate correct pushers.
+        # PusherTile property game_round:
+        #  0 for even game round number,
+        #  1 for odd game round number.
+        if state.game_round % 2 and self.game_round:
+            # Pusher for even game rounds.
+            robot.move(self.direction.get_new_direction("upside_down"), 1, state)
+        elif state.game_round % 2 == self.game_round:
+            # Pusher for odd game rounds.
+            robot.move(self.direction.get_new_direction("upside_down"), 1, state)
+        # Check hole on the next coordinates.
+        tiles = state.get_tiles(robot.coordinates)
+        for tile in tiles:
+            tile.kill_robot(robot)
+
+
+class GearTile(Tile):
+    def __init__(self, direction, path, properties):
+        self.move_direction = properties[0]["value"]
+        super().__init__(direction, path, properties)
+
+    def rotate_robot(self, robot):
+        # Rotate robot by 90° according to GearTile property: left or right.
+        robot.direction = robot.direction.get_new_direction(self.move_direction)
+
+
+class LaserTile(Tile):
+    def __init__(self, direction, path, properties):
+        self.laser_strength = properties[0]["value"]
+        self.laser_start = properties[1]["value"]
+        super().__init__(direction, path, properties)
+
+    def shoot_robot(self, robot, state):
+        # Robot stands on laser tile.
+        hit = True
+        # If robot isn't standing on the start of the laser, look for other robots.
+        if not self.laser_start:
+            # Get coordinates of current robot.
+            (x, y) = robot.coordinates
+            # Get coordinates of other robots.
+            coordinates = []
+            for robot_state in state.robots:
+                coordinates.append(robot_state.coordinates)
+            # Get direction in which it will be checked for other robots or laser start.
+            direction_to_start = self.direction.get_new_direction('upside_down')
+            # Check if there is another robot in direction of incoming laser.
+            while hit:
+                # Get new coordinates and new tiles.
+                (new_x, new_y) = direction_to_start.coor_delta
+                x = x + new_x
+                y = y + new_y
+                new_tiles = state.get_tiles((x, y))
+                for tile in new_tiles:
+                    # Check if new tiles contain follow-up LaserTile in correct direction.
+                    if isinstance(tile, LaserTile) and tile.direction == self.direction:
+                        # Check for other robots.
+                        if (x, y) in coordinates:
+                            # There is another robot.
+                            # Current robot won't be hit by laser.
+                            hit = False
+                            break
+                        elif tile.laser_start:
+                            # There is no other robot and laser starts here.
+                            # Current robot will be hit by laser.
+                            break
+                        else:
+                            # Laser continues, check another set of tiles.
+                            break
+                if isinstance(tile, LaserTile):
+                    # Check for laser start tile.
+                    if tile.laser_start:
+                        # Don't check other tiles.
+                        break
+        if hit:
+            # No robots found in the direction of incoming laser.
+            # So do damage to robot.
+            if robot.damages < (10 - self.laser_strength):
+                # Laser won't kill robot, but it will damage robot.
+                robot.damages += self.laser_strength
+            else:
+                # Robot is damaged so much that laser kills it.
+                robot.die()
+
+
+class FlagTile(Tile):
+    def __init__(self, direction, path, properties):
+        self.flag_number = properties[0]["value"]
+        super().__init__(direction, path, properties)
+
+    def collect_flag(self, robot):
+        # Collect only correct flag.
+        # Correct flag will have a number that is equal to robot flag number plus one.
+        if (robot.flags + 1) == self.flag_number:
+            # Flag collected and start coordinates changed to flag's coordinates.
+            robot.flags += 1
+            robot.start_coordinates = robot.coordinates
+
+
+class RepairTile(Tile):
+    def __init__(self, direction, path, properties):
+        self.new_start = properties[0]["value"]
+        super().__init__(direction, path, properties)
+
+    def repair_robot(self, robot):
+        # Remove one robot damage.
+        if robot.damages > 0:
+            robot.damages -= 1
+        # Change starting coordinates of robot, if it's a tile property.
+        if self.new_start:
+            robot.start_coordinates = robot.coordinates
 
 
 class Direction(Enum):
@@ -85,3 +291,17 @@ class Direction(Enum):
             return Direction((self.value + 270) % 360)
         if where_to == "upside_down":
             return Direction((self.value + 180) % 360)
+
+
+
+TILE_CLS = {'wall': WallTile, 'starting_square': StartTile, 'hole': HoleTile,
+            'laser': LaserTile, 'gear': GearTile, 'pusher': PusherTile,
+            'belt': BeltTile, 'flag': FlagTile, 'repair': RepairTile,
+            'ground': Tile}
+
+
+def select_tile(direction, path, type, properties):
+    """
+    Select tile subclass according to its type and create coressponding subclass.
+    """
+    return TILE_CLS[type](direction, path, properties)

@@ -3,7 +3,7 @@ Backend file contains functions for the game logic.
 """
 from pathlib import Path
 import random
-from util import Tile, Direction
+from util import Direction, HoleTile
 from loading import get_board
 
 
@@ -13,12 +13,14 @@ class Robot:
         self.path = path
         self.path_front = path_front
         self.coordinates = coordinates
-        self.lifecount = 3
-        self.flagcount = 0
-        self.damagecount = 0
+        self.start_coordinates = coordinates
+        self.lives = 3
+        self.flags = 0
+        self.damages = 9
+        self.inactive = False
 
     def __repr__(self):
-        return "<Robot {} {} {} Lifes: {} Flags: {} Damages: {}>".format(self.direction, self.path, self.coordinates, self.lifecount, self.flagcount, self.damagecount)
+        return "<Robot {} {} {} Lives: {} Flags: {} Damages: {}>".format(self.direction, self.path, self.coordinates, self.lives, self.flags, self.damages)
 
     def walk(self, distance, state):
         """
@@ -31,7 +33,7 @@ class Robot:
         Move a robot to new coordinates according to direction of the move.
         """
         for step in range(distance):
-            old_tiles = state.board[self.coordinates]
+            old_tiles = state.get_tiles(self.coordinates)
             # On the current tile: Check wall in the direction of next move.
             for tile in old_tiles:
                 move_from = tile.can_move_from(direction)
@@ -43,7 +45,8 @@ class Robot:
                 (new_x, new_y) = direction.coor_delta
                 x = x + new_x
                 y = y + new_y
-                new_tiles = state.board[(x, y)]
+                # Get new list of tiles
+                new_tiles = state.get_tiles((x, y))
                 # Check wall on the next tile in the direction of the move.
                 for tile in new_tiles:
                     move_to = tile.can_move_to(direction)
@@ -63,6 +66,16 @@ class Robot:
                 # Break the loop, don't check next tile.
                 break
 
+    def die(self):
+        """
+        Robot lose life and skip rest of game round.
+        Robot is moved out of game board for the rest of the round.
+        """
+        self.lives -= 1
+        # Notification of robot's death during the game round.
+        self.inactive = True
+        self.coordinates = [-1, -1]
+
     def rotate(self, where_to):
         """
         Rotate robot according to a given direction.
@@ -73,13 +86,28 @@ class Robot:
 
 class State:
     def __init__(self, board, robots, sizes):
-        self.board = board
+        self._board = board
         self.robots = robots
         self.sizes = sizes
+        self.game_round = 1
 
     def __repr__(self):
-        return "<State {} {}>".format(self.board, self.robots)
+        return "<State {} {}>".format(self._board, self.robots)
 
+    def get_tiles(self, coordinates):
+        """
+        Get tiles on requested coordinates.
+
+        coordinates: tuple of x and y coordinate
+
+        Return a list of tiles or return hole tile if coordinates are out of the board.
+        """
+        if coordinates in self._board:
+            return self._board[coordinates]
+        else:
+            # Coordinates are out of game board.
+            # Return hole tile.
+            return [HoleTile(Direction.N, None, [])]
 
 
 def get_starting_coordinates(board):
@@ -177,3 +205,62 @@ def get_start_state(map_name):
     robots_start = get_robots_to_start(board)
     state = State(board, robots_start, tile_count)
     return state
+
+
+def apply_tile_effects(state):
+    """
+    Apply tile effects according to game rules.
+    """
+    # Activate belts
+        # 1) Express belts move 1 space
+        # 2) Express belts and normal belts move 1 space
+
+    # Activate pusher
+    for robot in state.robots:
+        if not robot.inactive:
+            tiles = state.get_tiles(robot.coordinates)
+            for tile in tiles:
+                # Kill robot if it is standing on hole tile.
+                # After completed cards play part with integration of robot
+                # dying after card movement. This line can be deleted.
+                tile.kill_robot(robot)
+                # All set. Start moving.
+                tile.push_robot(robot, state)
+                if robot.inactive:
+                    break
+
+    # Activate gear
+    for robot in state.robots:
+        if not robot.inactive:
+            tiles = state.get_tiles(robot.coordinates)
+            for tile in tiles:
+                tile.rotate_robot(robot)
+
+    # Activate laser
+    for robot in state.robots:
+        if not robot.inactive:
+            tiles = state.get_tiles(robot.coordinates)
+            for tile in tiles:
+                tile.shoot_robot(robot, state)
+                if robot.inactive:
+                    break
+    # Activate robot laser
+
+    # Collect flags, repair robots
+    for robot in state.robots:
+        if not robot.inactive:
+            tiles = state.get_tiles(robot.coordinates)
+            for tile in tiles:
+                tile.collect_flag(robot)
+                tile.repair_robot(robot)
+
+    # Delete robots with zero lives
+    state.robots = [robot for robot in state.robots if robot.lives > 0]
+    for robot in state.robots:
+        # If robot lost life during game round, it will now ressurect at its
+        # starting coordinates.
+        if robot.inactive:
+            robot.coordinates = robot.start_coordinates
+            robot.damages = 0
+            robot.direction = Direction.N
+            robot.inactive = False
