@@ -292,7 +292,7 @@ class Direction(Enum):
             return Direction((self.value + 180) % 360)
 
 
-def tile_factory(direction, path, type, properties):
+def select_tile(direction, path, type, properties):
     """
     Select tile subclass according to its type and create coressponding subclass.
     """

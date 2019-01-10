@@ -1,7 +1,7 @@
 """
 Loading module contains functions to load map file exported to json format from Tiled 1.2.
 """
-from util import Tile, Direction, tile_factory
+from util import Direction, select_tile
 import json
 
 
@@ -151,7 +151,7 @@ def get_board(map_name):
             # otherwise add Tile object to the list of objects on the same coordinates
             if id != 0:
                 direction = get_tile_direction(tile_number)
-                tile = tile_factory(direction, paths[id], types[id], properties[id])
+                tile = select_tile(direction, paths[id], types[id], properties[id])
                 tiles.append(tile)
                 board[coordinate] = tiles
     return board

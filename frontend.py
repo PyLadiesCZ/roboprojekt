@@ -10,6 +10,7 @@ import pyglet
 TILE_WIDTH = 64
 TILE_HEIGHT = 64
 
+
 def init_window(state):
     """
     Return a pyglet window for graphic outputself.
@@ -18,6 +19,7 @@ def init_window(state):
     window = pyglet.window.Window(state.sizes[0] * TILE_WIDTH,
                                   state.sizes[1] * TILE_HEIGHT, resizable=True)
     return window
+
 
 def load_tiles(state):
     """
