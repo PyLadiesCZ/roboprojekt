@@ -5,8 +5,6 @@ Open file in directory where you have svg images saved.
 import subprocess
 from pathlib import Path
 
-base = Path(".") #current directory where are svg images
-
 inkscape_paths = [
     "inkscape",
     "C:/Program Files/Inkscape/inkscape",
@@ -40,19 +38,17 @@ def export_svg_png():
     """
     Export img.svg to img.png with Inkscape
     """
-    for img in base.glob("*.svg"):
+    for img in Path("./img").glob("**/*.svg"):
         name = str(img)
         parts = []
-        dir = Path("../png")
-
         for part in img.with_suffix(".png").parts:
             if part == "svg":
                 parts.append("png")
             else:
                 parts.append(part)
             new_name = Path(*parts)
-        dir.mkdir(exist_ok = True, parents = True)
-        subprocess.run([inkscape, name, "--export-png=" + "../png/" + str(new_name), "--export-area-page"], check = True,)
+        Path(*parts).parent.mkdir(exist_ok = True, parents= True)
+        subprocess.run([inkscape, name, "--export-png=" + str(new_name), "--export-area-page"], check = True,)
 
 export_svg_png()
 print("Done")
