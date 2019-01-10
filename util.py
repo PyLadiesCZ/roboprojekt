@@ -4,13 +4,14 @@ Util contains classes Tile and Direction, accessed by both loading and backend.
 
 from enum import Enum
 
-
 class Tile:
     def __init__(self, direction, path, properties):
         self.direction = direction
         self.path = path
 
     def __repr__(self):
+        # type(self).__name__: shows the type of the particular tile
+        # eg. HoleTile, WallTile or just Tile
         return "<{} {}>".format(type(self).__name__, self.direction)
 
     def can_move_from(self, direction):
@@ -104,8 +105,8 @@ class WallTile(Tile):
 
     def can_move_to(self, direction):
         # If there is a wall in direction of the robot movement,
-        # than the direction of the robot goes against the direction of the wall.
-        # Because of that the tile is rotate upside down.
+        # then the direction of the robot goes against the direction of the wall.
+        # Because of that the tile is checked in upside down direction.
         return not (self.direction.get_new_direction("upside_down") == direction)
 
 
@@ -169,7 +170,7 @@ class GearTile(Tile):
 
 class LaserTile(Tile):
     def __init__(self, direction, path, properties):
-        self.laser_number = properties[0]["value"]
+        self.laser_strength = properties[0]["value"]
         self.laser_start = properties[1]["value"]
         super().__init__(direction, path, properties)
 
@@ -217,11 +218,11 @@ class LaserTile(Tile):
         if hit:
             # No robots found in the direction of incoming laser.
             # So do damage to robot.
-            if robot.damages < (10 - self.laser_number):
+            if robot.damages < (10 - self.laser_strength):
                 # Laser won't kill robot, but it will damage robot.
-                robot.damages += self.laser_number
+                robot.damages += self.laser_strength
             else:
-                # Robot is damaged so much, that laser kills it.
+                # Robot is damaged so much that laser kills it.
                 robot.die()
 
 
@@ -292,14 +293,15 @@ class Direction(Enum):
             return Direction((self.value + 180) % 360)
 
 
+
+TILE_CLS = {'wall': WallTile, 'starting_square': StartTile, 'hole': HoleTile,
+            'laser': LaserTile, 'gear': GearTile, 'pusher': PusherTile,
+            'belt': BeltTile, 'flag': FlagTile, 'repair': RepairTile,
+            'ground': Tile}
+
+
 def select_tile(direction, path, type, properties):
     """
     Select tile subclass according to its type and create coressponding subclass.
     """
-    return tile_cls[type](direction, path, properties)
-
-
-tile_cls = {'wall': WallTile, 'starting_square': StartTile, 'hole': HoleTile,
-            'laser': LaserTile, 'gear': GearTile, 'pusher': PusherTile,
-            'belt': BeltTile, 'flag': FlagTile, 'repair': RepairTile,
-            'ground': Tile}
+    return TILE_CLS[type](direction, path, properties)
