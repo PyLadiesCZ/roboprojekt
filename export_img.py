@@ -1,5 +1,5 @@
 """
-Program export images in svg format to png format.
+Program export images in SVG format to PNG format.
 Open file in directory where you have svg images saved.
 """
 import subprocess
