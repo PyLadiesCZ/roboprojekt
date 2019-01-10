@@ -46,8 +46,8 @@ def export_svg_png():
                 parts.append("png")
             else:
                 parts.append(part)
-            new_name = Path(*parts)
-        Path(*parts).parent.mkdir(exist_ok = True, parents= True)
+        new_name = Path(*parts)
+        new_name.parent.mkdir(exist_ok = True, parents= True)
         subprocess.run([inkscape, name, "--export-png=" + str(new_name), "--export-area-page"], check = True,)
 
 export_svg_png()
