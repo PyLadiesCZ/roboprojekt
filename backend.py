@@ -38,25 +38,31 @@ class Robot:
                 robots_in_the_way = []
                 robot_check = True
                 (x, y) = self.coordinates
+                (new_x, new_y) = direction.coor_delta
                 while robot_check:
-                    robots = [robot for robot in state.robots if robot.coordinates != (x2, y2)]
-                    (new_x, new_y) = direction.coor_delta
-                    x2 = x2 + new_x
-                    y2 = y2 + new_y
+                    robots = [robot for robot in state.robots if robot.coordinates != (x, y)]
+                    x = x + new_x
+                    y = y + new_y
                     for robot in robots:
-                        if robot.coordinates == (x2, y2):
-                            robots_in_the_way.append(robot)
-                            robot_check = True
-                            break
-                        else:
+                        if robot.coordinates == (x, y):
                             robot_check = False
-                    if robots_in_the_way:
-                        tiles = state.get_tiles((x2, y2))
-                        for tile in tiles:
-                            move_from = tile.can_move_from(direction)
-                            if move_from is False:
-                                break
+                            wall_check2 = check_wall((x, y), direction, state)
+                            if wall_check2:
+                                robot_check = True
+                                robots_in_the_way.append(robot)
+                            break
 
+                if robots_in_the_way:
+                    x = x + new_x
+                    y = y + new_y
+                    self.coordinates = (x, y)
+                    for robot in robots_in_the_way:
+                        (x2, y2) = robot.coordinates
+                        x2 = x2 + new_x
+                        y2 = y2 + new_y
+                        robot.coordinates = (x2, y2)
+            else:
+                break
 
     def die(self):
         """
