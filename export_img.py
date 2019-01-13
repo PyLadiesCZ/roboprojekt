@@ -1,6 +1,6 @@
 """
 Program export images in SVG format to PNG format.
-Open file in directory where you have svg images saved.
+Inkscape needs to be installed.
 """
 import subprocess
 from pathlib import Path
@@ -13,7 +13,7 @@ inkscape_paths = [
 
 def run_inkscape(path):
     """
-    Check if inscape path run Inscape
+    Check if inkscape is installed and can be run
     """
     try:
         subprocess.run([path, "--version"],
@@ -36,8 +36,9 @@ inkscape = find_inkscape_path()
 
 def export_svg_png():
     """
-    Export img.svg to img.png with Inkscape
+    Export images in SVG format to PNG format with Inkscape
     """
+    # Choose images in directories/subdirectories with SVG suffix
     for img in Path("./img").glob("**/*.svg"):
         name = str(img)
         parts = []
@@ -46,9 +47,13 @@ def export_svg_png():
                 parts.append("png")
             else:
                 parts.append(part)
+        # '*' join parts together in name
         new_name = Path(*parts)
-        new_name.parent.mkdir(exist_ok = True, parents= True)
-        subprocess.run([inkscape, name, "--export-png=" + str(new_name), "--export-area-page"], check = True,)
+        # create parent directory
+        new_name.parent.mkdir(exist_ok=True, parents=True)
+        # Run the command described by arguments - may be a list or a string.
+        # launch Inkscape and export all images to PNG format
+        subprocess.run([inkscape, name, "--export-png=" + str(new_name), "--export-area-page"], check=True)
 
 export_svg_png()
 print("Done")
