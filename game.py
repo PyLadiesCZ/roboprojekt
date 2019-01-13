@@ -28,25 +28,11 @@ window = init_window(state)
 @window.event
 def on_draw():
     """
-    Draw the game state (board and robots) and react to user's resizing of window by scaling the board.
+    Draw the game state (board and robots).
     """
-
+  
     window.clear()
-
-    #scaling
-    pyglet.gl.glPushMatrix()
-
-    #scaling ratio
-    zoom = min(
-        window.height / (state.sizes[1] * TILE_HEIGHT),
-        window.width / (state.sizes[0] * TILE_WIDTH)
-    )
-
-    pyglet.gl.glScalef(zoom, zoom, 1)
-
-    draw_board(state)
-
-    pyglet.gl.glPopMatrix()
+    draw_board(state, window)
 
 def move_once(t):
     """

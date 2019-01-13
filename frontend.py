@@ -14,6 +14,7 @@ TILE_HEIGHT = 64
 def init_window(state):
     """
     Return a pyglet window for graphic outputself.
+
     state: State object containing game board, robots and map sizes
     """
     window = pyglet.window.Window(state.sizes[0] * TILE_WIDTH,
@@ -25,8 +26,7 @@ def load_tiles(state):
     """
     Return list of sprites of tiles.
 
-    state: State object containing game board, robots and map sizes
-    data: a dict created from decoded Tiled 1.2 JSON file
+    state: State object containing game board and robots
     """
     tile_sprites = []
     for coordinate, tiles in state._board.items():
@@ -39,8 +39,7 @@ def load_robots(state):
     """
     Return list of sprites of robots.
 
-    state: State object containing game board, robots and map sizes
-    data: a dict created from decoded Tiled 1.2 JSON file
+    state: State object containing game board and robots
     """
     robot_sprites = []
     for robot in state.robots:
@@ -75,9 +74,9 @@ def create_sprites(coordinate, items):
     return items_sprites
 
 
-def draw_board(state):
+def draw_board(state, window):
     """
-    Draw the images of tiles and robots into map.
+    Draw the images of tiles and robots into map, react to user's resizing of window by scaling the board.
 
     state: State object containing game board, robots and map sizes
     """
@@ -85,5 +84,18 @@ def draw_board(state):
     robot_sprites = load_robots(state)
     tile_sprites.extend(robot_sprites)
 
+    #scaling
+    pyglet.gl.glPushMatrix()
+    
+    #scaling ratio
+    zoom = min(
+        window.height / (state.sizes[1] * TILE_HEIGHT),
+        window.width / (state.sizes[0] * TILE_WIDTH)
+    )
+    
+    pyglet.gl.glScalef(zoom, zoom, 1)
+    
     for tile_sprite in tile_sprites:
         tile_sprite.draw()
+        
+    pyglet.gl.glPopMatrix()
