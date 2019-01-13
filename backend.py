@@ -33,31 +33,26 @@ class Robot:
         Move a robot to new coordinates according to direction of the move.
         """
         for step in range(distance):
+            # Check walls before moving.
             wall_check = check_wall(self.coordinates, direction, state)
             if wall_check:
-                (x, y) = self.coordinates
-                (new_x, new_y) = direction.coor_delta
-                x = x + new_x
-                y = y + new_y
+                # There is no wall. Get new coordinates.
+                next_coordinates = get_next_coordinates(self.coordinates, direction)
+                # Check robots on the next tile.
                 robot_in_the_way = -1
                 for robot in state.robots:
-                    if robot.coordinates == (x, y):
-                        wall_check2 = check_wall((x, y), direction, state)
+                    if robot.coordinates == next_coordinates:
+                        # Save index of robot that is in the way.
                         robot_in_the_way = state.robots.index(robot)
                         break
+                # Move robot in the way.
                 if robot_in_the_way != -1:
                     state.robots[robot_in_the_way].move(direction, 1, state)
-                    if wall_check2:
-                        (x, y) = self.coordinates
-                        x = x + new_x
-                        y = y + new_y
-                        if state.robots[robot_in_the_way].coordinates != (x, y):
-                            self.coordinates = (x, y)
+                    # Check that robot moved.
+                    if state.robots[robot_in_the_way].coordinates != next_coordinates:
+                        self.coordinates = next_coordinates
                 else:
-                    (x, y) = self.coordinates
-                    x = x + new_x
-                    y = y + new_y
-                    self.coordinates = (x, y)
+                    self.coordinates = next_coordinates
             else:
                 break
 
@@ -203,30 +198,50 @@ def get_start_state(map_name):
 
 
 def check_wall(coordinates, direction, state):
+    """
+    Check wall in the direction of the move.
+
+    coordinates: tuple of x and y coordinate
+    direction: object of Direction class
+    state: object of State class
+
+    Return a boolean.
+
+    True - There isn't wall, robot can move.
+    False - There is wall, robot can't move.
+    """
     old_tiles = state.get_tiles(coordinates)
     # On the current tile: Check wall in the direction of next move.
     for tile in old_tiles:
         move_from = tile.can_move_from(direction)
         if move_from is False:
+            # On the current tile: There is a wall in the direction of the move.
             return False
     if move_from:
         # There is no wall, so get new coordinates.
-        (x, y) = coordinates
-        (new_x, new_y) = direction.coor_delta
-        x = x + new_x
-        y = y + new_y
+        next_coordinates = get_next_coordinates(coordinates, direction)
         # Get new list of tiles
-        new_tiles = state.get_tiles((x, y))
+        new_tiles = state.get_tiles(next_coordinates)
         # Check wall on the next tile in the direction of the move.
         for tile in new_tiles:
             move_to = tile.can_move_to(direction)
             if move_to is False:
                 # On the next tile: There is a wall in the direction
                 # of the move.
-                # Coordinates won't be changed.
                 return False
         if move_to:
             return True
+
+
+def get_next_coordinates(coordinates, direction):
+    """
+    Get next coordinates in the given direction from current coordinates.
+    """
+    (x, y) = coordinates
+    (new_x, new_y) = direction.coor_delta
+    x = x + new_x
+    y = y + new_y
+    return (x, y)
 
 
 def apply_tile_effects(state):
