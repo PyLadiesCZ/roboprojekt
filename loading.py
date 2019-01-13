@@ -1,7 +1,7 @@
 """
 Loading module contains functions to load map file exported to json format from Tiled 1.2.
 """
-from util import Tile, Direction
+from util import Direction, select_tile
 import json
 
 
@@ -70,13 +70,37 @@ def get_types(data):
     return types
 
 
+def get_properties(data):
+    """
+    Get tile properties.
+
+    data: a dict created from decoded Tiled 1.2 JSON file
+
+    Return a dictionary with modified tile ID as a key
+    and properties of tile as a value.
+
+    Except for ground, hole, wall and starting tile. These tiles don't have
+    custom properties, so their properties are empty lists.
+    """
+    types = get_types(data)
+    properties = {}
+    no_properties_tiles = {'ground', 'hole', 'wall', 'starting_square'}
+    for json_tile in data['tilesets'][0]['tiles']:
+        id = json_tile['id'] + data['tilesets'][0]['firstgid']
+        if types[id] not in no_properties_tiles:
+            properties[id] = json_tile['properties']
+        else:
+            properties[id] = []
+    return properties
+
+
 def get_tile_id(tile_number):
     """
     Return tile ID.
 
     Transform tile_number to get tile ID that is equal to
-    addiction of 'firstgid' value of tileset and tile ID stored in 'tilesets'
-    part of JSON map format. The same ID that is used as a key in dict 'paths'.
+    addiction of 'firstgid' value of tileset and tile ID stored in 'tilesets' part of JSON map format.
+    The same ID that is used as a key in dict 'paths'.
     """
     return tile_number & 0xFFFFFF
 
@@ -97,7 +121,7 @@ def get_board(map_name):
     """
     Create game board from provided data from JSON file.
 
-    data: a dict created from decoded Tiled 1.2 JSON file
+    map_name: a map of the game board created in Tiled 1.2 and saved as a JSON file
 
     Return dictionary of coordinates containing matching Tile objects.
 
@@ -105,12 +129,14 @@ def get_board(map_name):
     Tile object is created for every matching coordinates.
     For "empty" coordinates (not containing tiles) no objects are created.
     Tile object can appear many times on the same coordinates if the map contains more layers.
-    More about dictionaries: https://naucse.python.cz/2018/pyladies-brno-podzim/beginners/dict/
+    Basic idea about dict comprehension used to create board can be found here:
+    https://www.geeksforgeeks.org/python-dictionary-comprehension/
     """
     data = get_data(map_name)
     paths = get_paths(data)
     coordinates = get_coordinates(data)
     types = get_types(data)
+    properties = get_properties(data)
 
     # create dictionary of coordinates where value is empty list for further transformation
     board = {coordinate: [] for coordinate in coordinates}
@@ -125,7 +151,7 @@ def get_board(map_name):
             # otherwise add Tile object to the list of objects on the same coordinates
             if id != 0:
                 direction = get_tile_direction(tile_number)
-                tile = Tile(direction, paths[id], types[id])
+                tile = select_tile(direction, paths[id], types[id], properties[id])
                 tiles.append(tile)
                 board[coordinate] = tiles
     return board

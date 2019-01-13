@@ -4,43 +4,44 @@ It checks that the maps have correct structure
 Don't call it separately
 """
 
-from loading import get_board, get_data
+from loading import get_board
 
 
 def get_order_squares(text):
     order_squares = {
-    'ground':"A_ground",
-    'hole':"B_hole",
-    'starting_square':"B_starting_square",
-    'repair':"B_repair",
-    'belt':"B_belt",
-    'gear':"B_gear",
-    'flag':"C_flag",
-    'pusher':"D_pusher",
-    'laser':"D_laser",
-    'wall':"D_wall"}
+        'Tile': "A_ground",
+        'HoleTile': "B_hole",
+        'StartTile': "B_starting_square",
+        'RepairTile': "B_repair",
+        'BeltTile': "B_belt",
+        'GearTile': "B_gear",
+        'FlagTile': "C_flag",
+        'PusherTile': "D_pusher",
+        'LaserTile': "D_laser",
+        'WallTile': "D_wall"}
     return order_squares[text]
+
 
 def check_squares(map_name):
     """
-    Change the list of types squares to the letters.
+    Change the list of tile subclasses to the letters.
     A, B and C type can be only once in type list.
     """
     board = get_board(map_name)
 
-    for coordinate, type in board.items():
+    for coordinate, tiles in board.items():
         square_type_letter = []
         square_type_and_direction = []
-        for i in type:
-            square_type_letter.append(get_order_squares(i.type))
+        for tile in tiles:
+            square_type_letter.append(get_order_squares(type(tile).__name__))
 
             """
             Squares with the same type and direction mustn't be in list of types
             """
-            if (i.type, i.direction) in square_type_and_direction:
-                return coordinate, i.type # (8, 9), 'wall'
+            if (type(tile).__name__, tile.direction) in square_type_and_direction:
+                return coordinate, type(tile).__name__ # (8, 9), 'wall'
             else:
-                square_type_and_direction.append((i.type, i.direction))
+                square_type_and_direction.append((type(tile).__name__, tile.direction))
 
         a = 0
         b = 0
@@ -54,7 +55,7 @@ def check_squares(map_name):
             if letter[0] == 'C':
                 c += 1
         if a > 1 or b > 1 or c > 1:
-            return coordinate, a, b, c # ((1, 9), 1, 2, 0)
+            return coordinate, a, b, c  # ((1, 9), 1, 2, 0)
 
         """
         Squares types must be in the correct order.
@@ -64,14 +65,13 @@ def check_squares(map_name):
         letters_count = len(square_type_letter)
         for i in range(letters_count-1):
             if square_type_letter[i][0] > square_type_letter[i+1][0]:
-                return coordinate, square_type_letter[i] # ((7, 9), 'D')
+                return coordinate, square_type_letter[i]  # ((7, 9), 'D')
 
         """
         "Flag" mustn't be over the "Hole" or "Starting square"
         """
         for i in range(len(square_type_letter)-1):
-            if square_type_letter[i] == "B_hole" and  square_type_letter[i+1] == "C_flag" or square_type_letter[i] == "B_starting_square" and  square_type_letter[i+1] == "C_flag":
+            if square_type_letter[i] == "B_hole" and square_type_letter[i+1] == "C_flag" or square_type_letter[i] == "B_starting_square" and square_type_letter[i+1] == "C_flag":
                 return coordinate, square_type_letter[i]
-
 
     return True

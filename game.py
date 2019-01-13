@@ -5,7 +5,7 @@ The game module
     - choose standard or other map to be loaded
 """
 
-from backend import get_start_state
+from backend import get_start_state, apply_tile_effects
 from frontend import init_window, draw_board, TILE_WIDTH, TILE_HEIGHT
 import pyglet
 import sys
@@ -15,7 +15,7 @@ if len(sys.argv) == 1:
     map_name = "maps/test_3.json"
 
 # if other map should be loaded, use extra argument "maps/MAP_NAME.json" when calling game.py by Python
-        # for example: python game.py maps/test_2.json
+# for example: python game.py maps/test_2.json
 else:
     map_name = sys.argv[1]
 
@@ -30,7 +30,7 @@ def on_draw():
     """
     Draw the game state (board and robots).
     """
-    
+  
     window.clear()
     draw_board(state, window)
 
@@ -41,7 +41,10 @@ def move_once(t):
 
     for robot in state.robots:
         robot.walk(3, state)
-        robot.rotate("upside_down")
+    print(state.robots)
+    apply_tile_effects(state)
+    print(state.robots)
+
 
 pyglet.clock.schedule_once(move_once, 3)
 

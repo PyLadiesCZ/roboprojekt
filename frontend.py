@@ -10,16 +10,17 @@ import pyglet
 TILE_WIDTH = 64
 TILE_HEIGHT = 64
 
+
 def init_window(state):
     """
     Return a pyglet window for graphic outputself.
 
-    work for maps 12x12 as well as others
-    state: State object containing game board and robots
+    state: State object containing game board, robots and map sizes
     """
     window = pyglet.window.Window(state.sizes[0] * TILE_WIDTH,
                                   state.sizes[1] * TILE_HEIGHT, resizable=True)
     return window
+
 
 def load_tiles(state):
     """
@@ -28,8 +29,8 @@ def load_tiles(state):
     state: State object containing game board and robots
     """
     tile_sprites = []
-    for coordinate, tiles in state.board.items():
-        sprites = sprite(coordinate, tiles)
+    for coordinate, tiles in state._board.items():
+        sprites = create_sprites(coordinate, tiles)
         tile_sprites.extend(sprites)
     return tile_sprites
 
@@ -42,12 +43,14 @@ def load_robots(state):
     """
     robot_sprites = []
     for robot in state.robots:
-        robot_sprite = sprite(robot.coordinates, [robot])
-        robot_sprites.extend(robot_sprite)
+        # Only alive and active robots will be drawn.
+        if robot.lives > 0 or not robot.inactive:
+            robot_sprite = create_sprites(robot.coordinates, [robot])
+            robot_sprites.extend(robot_sprite)
     return robot_sprites
 
 
-def sprite(coordinate, items):
+def create_sprites(coordinate, items):
     """
     Return list of sprites of items.
 
@@ -75,7 +78,7 @@ def draw_board(state, window):
     """
     Draw the images of tiles and robots into map, react to user's resizing of window by scaling the board.
 
-    state: State object containing game board and robots
+    state: State object containing game board, robots and map sizes
     """
     tile_sprites = load_tiles(state)
     robot_sprites = load_robots(state)
