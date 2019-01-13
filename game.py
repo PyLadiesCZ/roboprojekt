@@ -57,7 +57,7 @@ def move_once(t):
     for robot in state.robots:
         robot.walk(3, state)
     state.robots[3].rotate("right")
-    state.robots[3].walk(1, state)
+    state.robots[3].walk(3, state)
     print(state.robots)
     apply_tile_effects(state)
     print(state.robots)

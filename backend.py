@@ -35,32 +35,29 @@ class Robot:
         for step in range(distance):
             wall_check = check_wall(self.coordinates, direction, state)
             if wall_check:
-                robots_in_the_way = []
-                robot_check = True
                 (x, y) = self.coordinates
                 (new_x, new_y) = direction.coor_delta
-                while robot_check:
-                    robots = [robot for robot in state.robots if robot.coordinates != (x, y)]
-                    x = x + new_x
-                    y = y + new_y
-                    for robot in robots:
-                        if robot.coordinates == (x, y):
-                            robot_check = False
-                            wall_check2 = check_wall((x, y), direction, state)
-                            if wall_check2:
-                                robot_check = True
-                                robots_in_the_way.append(robot)
-                            break
-
-                if robots_in_the_way:
+                x = x + new_x
+                y = y + new_y
+                robot_in_the_way = -1
+                for robot in state.robots:
+                    if robot.coordinates == (x, y):
+                        wall_check2 = check_wall((x, y), direction, state)
+                        robot_in_the_way = state.robots.index(robot)
+                        break
+                if robot_in_the_way != -1:
+                    state.robots[robot_in_the_way].move(direction, 1, state)
+                    if wall_check2:
+                        (x, y) = self.coordinates
+                        x = x + new_x
+                        y = y + new_y
+                        if state.robots[robot_in_the_way].coordinates != (x, y):
+                            self.coordinates = (x, y)
+                else:
+                    (x, y) = self.coordinates
                     x = x + new_x
                     y = y + new_y
                     self.coordinates = (x, y)
-                    for robot in robots_in_the_way:
-                        (x2, y2) = robot.coordinates
-                        x2 = x2 + new_x
-                        y2 = y2 + new_y
-                        robot.coordinates = (x2, y2)
             else:
                 break
 
