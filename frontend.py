@@ -14,8 +14,8 @@ def init_window(state):
     """
     Return a pyglet window for graphic outputself.
 
-    data: a dict created from decoded Tiled 1.2 JSON file
     work for maps 12x12 as well as others
+    state: State object containing game board and robots
     """
     window = pyglet.window.Window(state.sizes[0] * TILE_WIDTH,
                                   state.sizes[1] * TILE_HEIGHT, resizable=True)
@@ -26,7 +26,6 @@ def load_tiles(state):
     Return list of sprites of tiles.
 
     state: State object containing game board and robots
-    data: a dict created from decoded Tiled 1.2 JSON file
     """
     tile_sprites = []
     for coordinate, tiles in state.board.items():
@@ -40,7 +39,6 @@ def load_robots(state):
     Return list of sprites of robots.
 
     state: State object containing game board and robots
-    data: a dict created from decoded Tiled 1.2 JSON file
     """
     robot_sprites = []
     for robot in state.robots:
@@ -55,7 +53,6 @@ def sprite(coordinate, items):
 
     coordinate: coordinate of tiles or robot
     items: a list of Tile or Robot objects
-    data: a dict created from decoded Tiled 1.2 JSON file
     """
     items_sprites = []
     for item in items:
@@ -74,9 +71,9 @@ def sprite(coordinate, items):
     return items_sprites
 
 
-def draw_board(state):
+def draw_board(state, window):
     """
-    Draw the images of tiles and robots into map.
+    Draw the images of tiles and robots into map, react to user's resizing of window by scaling the board.
 
     state: State object containing game board and robots
     """
@@ -84,5 +81,18 @@ def draw_board(state):
     robot_sprites = load_robots(state)
     tile_sprites.extend(robot_sprites)
 
+    #scaling
+    pyglet.gl.glPushMatrix()
+    
+    #scaling ratio
+    zoom = min(
+        window.height / (state.sizes[1] * TILE_HEIGHT),
+        window.width / (state.sizes[0] * TILE_WIDTH)
+    )
+    
+    pyglet.gl.glScalef(zoom, zoom, 1)
+    
     for tile_sprite in tile_sprites:
         tile_sprite.draw()
+        
+    pyglet.gl.glPopMatrix()
