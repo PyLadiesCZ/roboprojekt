@@ -3,7 +3,7 @@ Backend file contains functions for the game logic.
 """
 from pathlib import Path
 import random
-from util import Direction, HoleTile
+from util import Direction, HoleTile, BeltTile
 from loading import get_board
 
 
@@ -28,7 +28,7 @@ class Robot:
         """
         self.move(self.direction, distance, state)
 
-    def move(self, direction, distance, state):
+    def move(self, direction, distance, state, belt=False):
         """
         Move a robot to new coordinates according to direction of the move.
         """
@@ -47,10 +47,11 @@ class Robot:
                         break
                 # Move robot in the way.
                 if robot_in_the_way != -1:
-                    state.robots[robot_in_the_way].move(direction, 1, state)
-                    # Check that robot moved.
-                    if state.robots[robot_in_the_way].coordinates != next_coordinates:
-                        self.coordinates = next_coordinates
+                    if not belt:
+                        state.robots[robot_in_the_way].move(direction, 1, state)
+                        # Check that robot moved.
+                        if state.robots[robot_in_the_way].coordinates != next_coordinates:
+                            self.coordinates = next_coordinates
                 else:
                     self.coordinates = next_coordinates
             else:
