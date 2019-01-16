@@ -1,6 +1,7 @@
 """
-Program export images in SVG format to PNG format.
 Inkscape needs to be installed.
+Run the file from the root directory of the project.
+Program export all images in SVG format to PNG format in directories/subdirectories.
 """
 import subprocess
 from pathlib import Path
@@ -39,6 +40,7 @@ def export_svg_png():
     Export images in SVG format to PNG format with Inkscape
     """
     # Choose images in directories/subdirectories with SVG suffix
+    # https://github.com/pyvec/pyworking-materials/blob/master/180617_Soubory_barvy/pathlib.ipynb
     for img in Path("./img").glob("**/*.svg"):
         name = str(img)
         parts = []
@@ -47,12 +49,13 @@ def export_svg_png():
                 parts.append("png")
             else:
                 parts.append(part)
-        # '*' join parts together in name
+        # variable number of arguments, '*' inserts list elements as function arguments
+        # https://github.com/frenzymadness/Advanced_PyLadies/blob/master/03_functions_arguments/functions_arguments.ipynb
         new_name = Path(*parts)
         # create parent directory
         new_name.parent.mkdir(exist_ok=True, parents=True)
-        # Run the command described by arguments - may be a list or a string.
         # launch Inkscape and export all images to PNG format
+        # https://docs.python.org/3/library/subprocess.html
         subprocess.run([inkscape, name, "--export-png=" + str(new_name), "--export-area-page"], check=True)
 
 export_svg_png()
