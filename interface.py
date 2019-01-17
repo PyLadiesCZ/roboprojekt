@@ -54,17 +54,18 @@ class InterfaceState:
 # cards_count, first_number, last_number
 def create_card_pack():
     cards_types = {'u_turn': [6, 50, 99],
-                'back_up': [5, 250, 299],
+                'back_up': [3, 250, 299],
                 'left': [18, 100, 199],
                 'right': [18, 200, 299],
-                'move1': [17, 300, 399],
+                'move1': [18, 300, 399],
                 'move2': [12, 400, 499],
                 'move3': [6, 500, 599]
                 }
     card_pack = []
     for name, number in cards_types.items():
-        for i in range(number[1], number[2], 5):
-            card_pack.append((name, i)) # [('u_turn', 50), ('u_turn', 55)...]
+        for i in range(number[0]):
+            for i in range(number[1], number[2], 5):
+                card_pack.append((name, i)) # [('u_turn', 50), ('u_turn', 55)...]
     shuffle(card_pack)
     return card_pack
 
@@ -75,7 +76,7 @@ def get_deal_cards(card_pack):
     deal_cards = []
     # maximum number of cards is 9
     # demagecount reduces the number of cards
-    for i in range(9-robot_data.damagecount):
+    for i in range(9-robot_data.damages):
         deal_cards.append((card_pack.pop()))
     return deal_cards
 

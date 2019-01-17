@@ -46,7 +46,7 @@ cards_type_sprites = {
 
 
 cards_table_coordinates = []
-for i in range(5): 
+for i in range(5):
     x, y = 47, 384
     x = x + i* 144 # 144 space between cards
     cards_table_coordinates.append((x, y))
@@ -95,20 +95,20 @@ def on_draw():
     my_robot_sprite.draw()
 
     # Flags
-    for sprite in flags_sprite[0:interface_state.robot_data.flagcount]:
+    for sprite in flags_sprite[0:interface_state.robot_data.flags]:
         sprite.draw()
 
     # Robot lives
-    for sprite in lives_sprite[0:interface_state.robot_data.lifecount]:
+    for sprite in lives_sprite[0:interface_state.robot_data.lives]:
         sprite.draw()
 
     # Damage Tokens
-    for sprite in tokens_sprite[0:interface_state.robot_data.damagecount]:
+    for sprite in tokens_sprite[0:interface_state.robot_data.damages]:
         sprite.draw()
 
     # CARDS
     # Cards table
-    for i in range(0,(9-interface_state.robot_data.damagecount)):
+    for i in range(0,(9-interface_state.robot_data.damages)):
         draw_card(cards_table_coordinates[i], interface_state.deal_cards[i]) # draw_card(coordinate, card_type)
 
     # Cards hand
