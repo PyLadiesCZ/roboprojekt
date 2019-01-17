@@ -54,7 +54,7 @@ class InterfaceState:
 # cards_count, first_number, last_number
 def create_card_pack():
     cards_types = {'u_turn': [6, 50, 99],
-                'back_up': [3, 250, 299],
+                'back_up': [6, 250, 299],
                 'left': [18, 100, 199],
                 'right': [18, 200, 299],
                 'move1': [18, 300, 399],
