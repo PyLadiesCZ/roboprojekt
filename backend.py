@@ -22,15 +22,9 @@ class Robot:
     def __repr__(self):
         return "<Robot {} {} {} Lives: {} Flags: {} Damages: {}>".format(self.direction, self.path, self.coordinates, self.lives, self.flags, self.damages)
 
-    def walk(self, distance, state):
+    def walk(self, direction, distance, state):
         """
         Move a robot to new coordinates based on its direction.
-        """
-        self.move(self.direction, distance, state)
-
-    def move(self, direction, distance, state, belt=False):
-        """
-        Move a robot to new coordinates according to direction of the move.
         """
         for step in range(distance):
             # Check walls before moving.
@@ -47,12 +41,34 @@ class Robot:
                         break
                 # Move robot in the way.
                 if robot_in_the_way != -1:
-                    if not belt:
-                        state.robots[robot_in_the_way].move(direction, 1, state)
+                        state.robots[robot_in_the_way].walk(direction, 1, state)
                         # Check that robot moved.
                         if state.robots[robot_in_the_way].coordinates != next_coordinates:
                             self.coordinates = next_coordinates
                 else:
+                    self.coordinates = next_coordinates
+            else:
+                break
+
+    def move(self, direction, distance, state):
+        """
+        Move a robot to new coordinates according to direction of the move.
+        """
+        for step in range(distance):
+            # Check walls before moving.
+            wall_check = check_wall(self.coordinates, direction, state)
+            if wall_check:
+                # There is no wall. Get new coordinates.
+                next_coordinates = get_next_coordinates(self.coordinates, direction)
+                # Check robots on the next tile before moving.
+                robot_check = True
+                for robot in state.robots:
+                    if robot.coordinates == next_coordinates:
+                        # There is a robot on the next tile.
+                        # Robot can't be moved.
+                        robot_check = False
+                        break
+                if robot_check:
                     self.coordinates = next_coordinates
             else:
                 break
