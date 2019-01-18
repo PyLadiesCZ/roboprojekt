@@ -25,6 +25,8 @@ class Robot:
     def walk(self, direction, distance, state):
         """
         Move a robot to new coordinates based on its direction.
+
+        When robot walks, it can move other robots in the way.
         """
         for step in range(distance):
             # Check walls before moving.
@@ -44,7 +46,9 @@ class Robot:
                         state.robots[robot_in_the_way].walk(direction, 1, state)
                         # Check that robot moved.
                         if state.robots[robot_in_the_way].coordinates != next_coordinates:
+                            # Robot walks to new coordinates.
                             self.coordinates = next_coordinates
+                # There isn't a robot in the way. Robot walks to new coordinates.
                 else:
                     self.coordinates = next_coordinates
             else:
@@ -53,6 +57,10 @@ class Robot:
     def move(self, direction, distance, state):
         """
         Move a robot to new coordinates according to direction of the move.
+
+        When robot is moved by game elements (convoyer belt or pusher),
+        it doesn't have enough power to push other robots. If there is a robot
+        in the way, the movement is stopped.
         """
         for step in range(distance):
             # Check walls before moving.
@@ -68,6 +76,7 @@ class Robot:
                         # Robot can't be moved.
                         robot_check = False
                         break
+                # There isn't a robot on the next tile. Robot will be moved.
                 if robot_check:
                     self.coordinates = next_coordinates
             else:
