@@ -3,7 +3,7 @@ Backend file contains functions for the game logic.
 """
 from pathlib import Path
 import random
-from util import Direction, HoleTile
+from util import Direction, Rotation, HoleTile
 from loading import get_board
 
 
@@ -14,6 +14,7 @@ class Robot:
         self.path_front = path_front
         self.coordinates = coordinates
         self.start_coordinates = coordinates
+        self.program = [MoveCard(100, 2), RotateCard(200, Rotation.LEFT)]
         self.lives = 3
         self.flags = 0
         self.damages = 9
@@ -80,8 +81,40 @@ class Robot:
         """
         Rotate robot according to a given direction.
         """
-
         self.direction = self.direction.get_new_direction(where_to)
+
+
+    def apply_card_effect(self, state):
+        """
+        Get the current card (depending on game round) and perform the card effect.
+        If the card's effect is move - it calls robot's method walk,
+        if it is rotation - robot's method rotate.
+        """
+        # card on an index of a current game round
+        current_card = self.program[state.game_round - 1]
+
+        if isinstance(current_card, MoveCard):
+            self.walk(current_card.distance, state)
+
+        if isinstance(current_card, RotateCard):
+            self.rotate(current_card.rotation)
+
+
+class Card:
+    def __init__(self, priority, value):
+        self.priority = priority  # int - to decide who goes first
+
+
+class MoveCard(Card):
+    def __init__(self, priority, value):
+        self.distance = value
+        super().__init__(priority, value)
+
+
+class RotateCard(Card):
+    def __init__(self, priority, value):
+        self.rotation = value
+        super().__init__(priority, value)
 
 
 class State:

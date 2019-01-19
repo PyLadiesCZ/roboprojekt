@@ -107,7 +107,7 @@ class WallTile(Tile):
         # If there is a wall in direction of the robot movement,
         # then the direction of the robot goes against the direction of the wall.
         # Because of that the tile is checked in upside down direction.
-        return not (self.direction.get_new_direction("upside_down") == direction)
+        return not (self.direction.get_new_direction(Rotation.UP_DOWN) == direction)
 
 
 class StartTile(Tile):
@@ -148,10 +148,10 @@ class PusherTile(Tile):
         #  1 for odd game round number.
         if state.game_round % 2 and self.game_round:
             # Pusher for even game rounds.
-            robot.move(self.direction.get_new_direction("upside_down"), 1, state)
+            robot.move(self.direction.get_new_direction(Rotation.UP_DOWN), 1, state)
         elif state.game_round % 2 == self.game_round:
             # Pusher for odd game rounds.
-            robot.move(self.direction.get_new_direction("upside_down"), 1, state)
+            robot.move(self.direction.get_new_direction(Rotation.UP_DOWN), 1, state)
         # Check hole on the next coordinates.
         tiles = state.get_tiles(robot.coordinates)
         for tile in tiles:
@@ -186,7 +186,7 @@ class LaserTile(Tile):
             for robot_state in state.robots:
                 coordinates.append(robot_state.coordinates)
             # Get direction in which it will be checked for other robots or laser start.
-            direction_to_start = self.direction.get_new_direction('upside_down')
+            direction_to_start = self.direction.get_new_direction(Rotation.UP_DOWN)
             # Check if there is another robot in direction of incoming laser.
             while hit:
                 # Get new coordinates and new tiles.
@@ -255,6 +255,9 @@ class RepairTile(Tile):
 
 
 class Direction(Enum):
+    """
+    Class describing the direction as a feature (value) of an object - tile, robot.
+    """
     N = 0, (0, +1), 0
     E = 90, (+1, 0), 1
     S = 180, (0, -1), 2
@@ -279,19 +282,27 @@ class Direction(Enum):
         obj.map_property = tile_property
         return obj
 
+
+    def __add__(self, other):
+        return Direction((self.value + other.value) % 360)
+
+
     def get_new_direction(self, where_to):
         """
         Get new direction of given object.
 
-        Change attribute direction according to argument where_to, passed from TDB class DirectionOfRotation.
+        Change attribute direction according to argument where_to, passed from class Rotation.
         """
-        if where_to == "right":
-            return Direction((self.value + 90) % 360)
-        if where_to == "left":
-            return Direction((self.value + 270) % 360)
-        if where_to == "upside_down":
-            return Direction((self.value + 180) % 360)
+        return Direction(self + where_to)
 
+
+class Rotation(Enum):
+    """
+    Class describing the direction of the movement of the object-robot (dynamic).
+    """
+    LEFT = -90
+    RIGHT = 90
+    UP_DOWN = 180
 
 
 TILE_CLS = {'wall': WallTile, 'starting_square': StartTile, 'hole': HoleTile,

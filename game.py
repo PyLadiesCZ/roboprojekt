@@ -30,7 +30,7 @@ def on_draw():
     """
     Draw the game state (board and robots).
     """
-  
+
     window.clear()
     draw_board(state, window)
 
@@ -40,7 +40,7 @@ def move_once(t):
     """
 
     for robot in state.robots:
-        robot.walk(3, state)
+        robot.apply_card_effect(state)
     print(state.robots)
     apply_tile_effects(state)
     print(state.robots)
