@@ -14,6 +14,8 @@ class Robot:
         self.path_front = path_front
         self.coordinates = coordinates
         self.start_coordinates = coordinates
+        # program = cards on hand, list.
+        # currently testing's value, to be removed
         self.program = [MoveCard(100, 2), RotateCard(200, Rotation.LEFT)]
         self.lives = 3
         self.flags = 0
@@ -89,6 +91,8 @@ class Robot:
         Get the current card (depending on game round) and perform the card effect.
         If the card's effect is move - it calls robot's method walk,
         if it is rotation - robot's method rotate.
+
+        TODO: resolve card's priority
         """
         # card on an index of a current game round
         current_card = self.program[state.game_round - 1]
