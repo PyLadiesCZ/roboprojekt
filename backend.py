@@ -240,7 +240,7 @@ def check_wall(coordinates, direction, state):
     # On the current tile: Check wall in the direction of next move.
     for tile in old_tiles:
         move_from = tile.can_move_from(direction)
-        if move_from is False:
+        if not move_from:
             # On the current tile: There is a wall in the direction of the move.
             return False
     if move_from:
@@ -251,7 +251,7 @@ def check_wall(coordinates, direction, state):
         # Check wall on the next tile in the direction of the move.
         for tile in new_tiles:
             move_to = tile.can_move_to(direction)
-            if move_to is False:
+            if not move_to:
                 # On the next tile: There is a wall in the direction
                 # of the move.
                 return False
