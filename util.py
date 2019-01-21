@@ -4,6 +4,7 @@ Util contains classes Tile and Direction, accessed by both loading and backend.
 
 from enum import Enum
 
+
 class Tile:
     def __init__(self, direction, path, properties):
         self.direction = direction
@@ -116,6 +117,11 @@ class StartTile(Tile):
 
 
 class HoleTile(Tile):
+    def __init__(self, direction=None, path=None, properties=[]):
+        if direction is None:
+            direction = Direction.N
+        super().__init__(direction, path, properties)
+
     def kill_robot(self, robot):
         # Call robot's method for dying
         return robot.die()
@@ -146,7 +152,7 @@ class PusherTile(Tile):
         # PusherTile property game_round:
         #  0 for even game round number,
         #  1 for odd game round number.
-        if state.game_round % 2 and self.game_round:
+        if state.game_round % 2 == self.game_round:
             # Pusher for even game rounds.
             robot.move(self.direction.get_new_direction("upside_down"), 1, state)
         elif state.game_round % 2 == self.game_round:
@@ -193,28 +199,22 @@ class LaserTile(Tile):
                 (new_x, new_y) = direction_to_start.coor_delta
                 x = x + new_x
                 y = y + new_y
+                # Check for other robots.
+                if (x, y) in coordinates:
+                    # There is another robot.
+                    # Current robot won't be hit by laser.
+                    hit = False
+                    break
                 new_tiles = state.get_tiles((x, y))
                 for tile in new_tiles:
                     # Check if new tiles contain follow-up LaserTile in correct direction.
                     if isinstance(tile, LaserTile) and tile.direction == self.direction:
-                        # Check for other robots.
-                        if (x, y) in coordinates:
-                            # There is another robot.
-                            # Current robot won't be hit by laser.
-                            hit = False
-                            break
-                        elif tile.laser_start:
-                            # There is no other robot and laser starts here.
-                            # Current robot will be hit by laser.
-                            break
-                        else:
-                            # Laser continues, check another set of tiles.
-                            break
-                if isinstance(tile, LaserTile):
-                    # Check for laser start tile.
-                    if tile.laser_start:
-                        # Don't check other tiles.
+                        # Follow-up laser tile found, don't check ohter tiles here.
                         break
+                # Check for laser start tile.
+                if isinstance(tile, LaserTile) and tile.laser_start:
+                    # Don't check new tiles.
+                    break
         if hit:
             # No robots found in the direction of incoming laser.
             # So do damage to robot.
@@ -291,7 +291,6 @@ class Direction(Enum):
             return Direction((self.value + 270) % 360)
         if where_to == "upside_down":
             return Direction((self.value + 180) % 360)
-
 
 
 TILE_CLS = {'wall': WallTile, 'starting_square': StartTile, 'hole': HoleTile,

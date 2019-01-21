@@ -107,7 +107,7 @@ class State:
         else:
             # Coordinates are out of game board.
             # Return hole tile.
-            return [HoleTile(Direction.N, None, [])]
+            return [HoleTile()]
 
 
 def get_starting_coordinates(board):
