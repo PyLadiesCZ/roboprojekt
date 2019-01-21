@@ -5,6 +5,45 @@ Util contains classes Tile and Direction, accessed by both loading and backend.
 from enum import Enum
 
 
+class Direction(Enum):
+    N = 0, (0, +1), 0
+    E = 90, (+1, 0), 1
+    S = 180, (0, -1), 2
+    W = 270, (-1, 0), 3
+
+    def __new__(cls, degrees, coor_delta, tile_property):
+        """
+        Get attributes value and vector of the given Direction class values.
+
+        Override standard enum __new__ method.
+        vector: new coordinates (where the robot goes to)
+        tile_property: map tile property: value (custom - added in Tiled).
+        Makes it possible to change vector and tile_property when the object is rotated.
+        With degrees change (value) there comes the coordinates (vector) change and tile_property.
+
+        More info about enum - official documentation: https://docs.python.org/3/library/enum.html
+        Blog post with the exact __new__() usage: http://xion.io/post/code/python-enums-are-ok.html
+        """
+        obj = object.__new__(cls)
+        obj._value_ = degrees
+        obj.coor_delta = coor_delta
+        obj.map_property = tile_property
+        return obj
+
+    def get_new_direction(self, where_to):
+        """
+        Get new direction of given object.
+
+        Change attribute direction according to argument where_to, passed from TDB class DirectionOfRotation.
+        """
+        if where_to == "right":
+            return Direction((self.value + 90) % 360)
+        if where_to == "left":
+            return Direction((self.value + 270) % 360)
+        if where_to == "upside_down":
+            return Direction((self.value + 180) % 360)
+
+
 class Tile:
     def __init__(self, direction, path, properties):
         self.direction = direction
@@ -117,9 +156,7 @@ class StartTile(Tile):
 
 
 class HoleTile(Tile):
-    def __init__(self, direction=None, path=None, properties=[]):
-        if direction is None:
-            direction = Direction.N
+    def __init__(self, direction=Direction.N, path=None, properties=[]):
         super().__init__(direction, path, properties)
 
     def kill_robot(self, robot):
@@ -153,15 +190,11 @@ class PusherTile(Tile):
         #  0 for even game round number,
         #  1 for odd game round number.
         if state.game_round % 2 == self.game_round:
-            # Pusher for even game rounds.
             robot.move(self.direction.get_new_direction("upside_down"), 1, state)
-        elif state.game_round % 2 == self.game_round:
-            # Pusher for odd game rounds.
-            robot.move(self.direction.get_new_direction("upside_down"), 1, state)
-        # Check hole on the next coordinates.
-        tiles = state.get_tiles(robot.coordinates)
-        for tile in tiles:
-            tile.kill_robot(robot)
+            # Check hole on the next coordinates.
+            tiles = state.get_tiles(robot.coordinates)
+            for tile in tiles:
+                tile.kill_robot(robot)
 
 
 class GearTile(Tile):
@@ -252,45 +285,6 @@ class RepairTile(Tile):
         # Change starting coordinates of robot, if it's a tile property.
         if self.new_start:
             robot.start_coordinates = robot.coordinates
-
-
-class Direction(Enum):
-    N = 0, (0, +1), 0
-    E = 90, (+1, 0), 1
-    S = 180, (0, -1), 2
-    W = 270, (-1, 0), 3
-
-    def __new__(cls, degrees, coor_delta, tile_property):
-        """
-        Get attributes value and vector of the given Direction class values.
-
-        Override standard enum __new__ method.
-        vector: new coordinates (where the robot goes to)
-        tile_property: map tile property: value (custom - added in Tiled).
-        Makes it possible to change vector and tile_property when the object is rotated.
-        With degrees change (value) there comes the coordinates (vector) change and tile_property.
-
-        More info about enum - official documentation: https://docs.python.org/3/library/enum.html
-        Blog post with the exact __new__() usage: http://xion.io/post/code/python-enums-are-ok.html
-        """
-        obj = object.__new__(cls)
-        obj._value_ = degrees
-        obj.coor_delta = coor_delta
-        obj.map_property = tile_property
-        return obj
-
-    def get_new_direction(self, where_to):
-        """
-        Get new direction of given object.
-
-        Change attribute direction according to argument where_to, passed from TDB class DirectionOfRotation.
-        """
-        if where_to == "right":
-            return Direction((self.value + 90) % 360)
-        if where_to == "left":
-            return Direction((self.value + 270) % 360)
-        if where_to == "upside_down":
-            return Direction((self.value + 180) % 360)
 
 
 TILE_CLS = {'wall': WallTile, 'starting_square': StartTile, 'hole': HoleTile,
