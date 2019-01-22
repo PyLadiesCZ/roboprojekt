@@ -1,6 +1,6 @@
 import pyglet
 from pyglet.window import key
-from interface import get_interface_state
+from interface import get_interface_state, max_card_count
 from enum import Enum
 
 
@@ -29,7 +29,7 @@ for i in range(8):
     flags_sprite.append(pyglet.sprite.Sprite(pyglet.image.load('img/squares/png/flag_{}.png'.format(i+1)), x, y))
 
 tokens_sprite = [] # Tokens of damage
-for i in range(9):
+for i in range(max_card_count):
     x = 676 + i*-70
     y = 768
     tokens_sprite.append(pyglet.sprite.Sprite(pyglet.image.load('interface/png/token.png'), x, y))
@@ -108,13 +108,13 @@ def on_draw():
 
     # CARDS
     # Cards table
-    for i in range(0,(9-interface_state.robot_data.damages)):
-        draw_card(cards_table_coordinates[i], interface_state.deal_cards[i]) # draw_card(coordinate, card_type)
+    for coordinate, card in zip(cards_table_coordinates, interface_state.deal_cards):
+        draw_card(coordinate, card) # draw_card(coordinate, card_type)
 
     # Cards hand
-    for i in interface_state.my_cards: # list of selected cards [((move3, 550), ...)]
-        if i != None: # if selected card exist
-            draw_card(cards_hand_coordinates[interface_state.my_cards.index(i)], i) # draw_card(coordinate, card_type)
+    for coordinate, card in zip(cards_hand_coordinates, interface_state.my_cards):
+        if card != None: # if selected card exist
+            draw_card(coordinate, card)
 
     # Selected cards
     # if card is selected, selected card on the table is gray

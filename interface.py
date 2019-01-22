@@ -4,7 +4,7 @@ from util import Direction
 
 
 robot_data = Robot(Direction.N, "./img/robots/png/mintbot.png", "./img/robots/png/mintbot.png", None) # a makeshift fictitious robot
-
+max_card_count = 9
 
 class InterfaceState:
     def __init__(self, deal_cards, robot_data):
@@ -18,7 +18,7 @@ class InterfaceState:
         return "<InterfaceState Cards: {}, My Cards: {}, Power Down: {}, Robot: {}>".format(self.deal_cards, self.my_cards, self.power_down, self.robot_data)
 
     def select_card(self, deal_card_index):
-        if deal_card_index >= (9 - robot_data.damages):
+        if deal_card_index >= len(self.deal_cards):
             return
         if self.deal_cards[deal_card_index] not in self.my_cards:
             self.my_cards[self.cursor_index] = deal_cards[deal_card_index]
@@ -78,7 +78,7 @@ def get_deal_cards(card_pack):
     deal_cards = []
     # maximum number of cards is 9
     # demagecount reduces the number of cards
-    for i in range(9-robot_data.damages):
+    for i in range(max_card_count-robot_data.damages):
         deal_cards.append((card_pack.pop()))
     return deal_cards
 
