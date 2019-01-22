@@ -16,7 +16,7 @@ class Robot:
         self.start_coordinates = coordinates
         # program = cards on hand, list.
         # currently testing's value, to be removed
-        self.program = [MoveCard(100, 2), RotateCard(200, Rotation.LEFT)]
+        self.program = [RotationCard(200, Rotation.LEFT), MovementCard(100, 2)]
         self.lives = 3
         self.flags = 0
         self.damages = 9
@@ -97,28 +97,28 @@ class Robot:
         # card on an index of a current game round
         current_card = self.program[state.game_round - 1]
 
-        if isinstance(current_card, MoveCard):
+        if isinstance(current_card, MovementCard):
             self.walk(current_card.distance, state)
 
-        if isinstance(current_card, RotateCard):
+        if isinstance(current_card, RotationCard):
             self.rotate(current_card.rotation)
 
 
 class Card:
-    def __init__(self, priority, value):
+    def __init__(self, priority):
         self.priority = priority  # int - to decide who goes first
 
 
-class MoveCard(Card):
+class MovementCard(Card):
     def __init__(self, priority, value):
         self.distance = value
-        super().__init__(priority, value)
+        super().__init__(priority)
 
 
-class RotateCard(Card):
+class RotationCard(Card):
     def __init__(self, priority, value):
         self.rotation = value
-        super().__init__(priority, value)
+        super().__init__(priority)
 
 
 class State:

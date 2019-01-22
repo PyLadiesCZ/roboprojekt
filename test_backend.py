@@ -211,7 +211,7 @@ def test_robot_move(input_coordinates, input_direction, distance, output_coordin
 @pytest.mark.parametrize(("current_direction", "towards", "new_direction"),
                         [(Direction.N, Rotation.LEFT, Direction.W),
                          (Direction.S, Rotation.RIGHT, Direction.W),
-                         (Direction.E, Rotation.UP_DOWN, Direction.W)])
+                         (Direction.E, Rotation.U_TURN, Direction.W)])
 def test_robot_change_direction(current_direction, towards, new_direction):
     """
     Assert that robot rotates correctly according to given rotation.

@@ -107,7 +107,7 @@ class WallTile(Tile):
         # If there is a wall in direction of the robot movement,
         # then the direction of the robot goes against the direction of the wall.
         # Because of that the tile is checked in upside down direction.
-        return not (self.direction.get_new_direction(Rotation.UP_DOWN) == direction)
+        return not (self.direction.get_new_direction(Rotation.U_TURN) == direction)
 
 
 class StartTile(Tile):
@@ -148,10 +148,10 @@ class PusherTile(Tile):
         #  1 for odd game round number.
         if state.game_round % 2 and self.game_round:
             # Pusher for even game rounds.
-            robot.move(self.direction.get_new_direction(Rotation.UP_DOWN), 1, state)
+            robot.move(self.direction.get_new_direction(Rotation.U_TURN), 1, state)
         elif state.game_round % 2 == self.game_round:
             # Pusher for odd game rounds.
-            robot.move(self.direction.get_new_direction(Rotation.UP_DOWN), 1, state)
+            robot.move(self.direction.get_new_direction(Rotation.U_TURN), 1, state)
         # Check hole on the next coordinates.
         tiles = state.get_tiles(robot.coordinates)
         for tile in tiles:
@@ -186,7 +186,7 @@ class LaserTile(Tile):
             for robot_state in state.robots:
                 coordinates.append(robot_state.coordinates)
             # Get direction in which it will be checked for other robots or laser start.
-            direction_to_start = self.direction.get_new_direction(Rotation.UP_DOWN)
+            direction_to_start = self.direction.get_new_direction(Rotation.U_TURN)
             # Check if there is another robot in direction of incoming laser.
             while hit:
                 # Get new coordinates and new tiles.
@@ -302,7 +302,7 @@ class Rotation(Enum):
     """
     LEFT = -90
     RIGHT = 90
-    UP_DOWN = 180
+    U_TURN = 180
 
 
 TILE_CLS = {'wall': WallTile, 'starting_square': StartTile, 'hole': HoleTile,

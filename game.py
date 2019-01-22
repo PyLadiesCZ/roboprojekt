@@ -36,7 +36,7 @@ def on_draw():
 
 def move_once(t):
     """
-    Move all robots 2 tiles forward and rotate 180 degrees.
+    Move all robots according to mock cards on hand and perform tile effects.
     """
 
     for robot in state.robots:
