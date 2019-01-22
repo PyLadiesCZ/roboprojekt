@@ -29,10 +29,10 @@ for i in range(8):
     flags_sprite.append(pyglet.sprite.Sprite(pyglet.image.load('img/squares/png/flag_{}.png'.format(i+1)), x, y))
 
 tokens_sprite = [] # Tokens of damage
-for i in range(8):
+for i in range(9):
     x = 676 + i*-70
     y = 768
-    tokens_sprite.append(pyglet.sprite.Sprite(pyglet.image.load('interface/png/token.png'.format(i+1)), x, y))
+    tokens_sprite.append(pyglet.sprite.Sprite(pyglet.image.load('interface/png/token.png'), x, y))
 
 # Cards Sprites
 cards_type_sprites = {

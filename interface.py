@@ -18,6 +18,8 @@ class InterfaceState:
         return "<InterfaceState Cards: {}, My Cards: {}, Power Down: {}, Robot: {}>".format(self.deal_cards, self.my_cards, self.power_down, self.robot_data)
 
     def select_card(self, deal_card_index):
+        if deal_card_index >= (9 - robot_data.damages):
+            return
         if self.deal_cards[deal_card_index] not in self.my_cards:
             self.my_cards[self.cursor_index] = deal_cards[deal_card_index]
             self.cursor_index_plus() # After select a card Move with cursor to right

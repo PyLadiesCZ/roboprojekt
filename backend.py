@@ -16,7 +16,7 @@ class Robot:
         self.start_coordinates = coordinates
         self.lives = 3
         self.flags = 0
-        self.damages = 9
+        self.damages = 4
         self.inactive = False
 
     def __repr__(self):
