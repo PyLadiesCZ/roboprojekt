@@ -1,5 +1,5 @@
 from backend import  get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State
-from util import Tile, HoleTile, WallTile, GearTile, PusherTile, LaserTile, StartTile, Direction
+from util import Tile, HoleTile, WallTile, GearTile, PusherTile, LaserTile, StartTile, Direction, Rotation
 from loading import get_data, get_tile_id, get_tile_direction, get_board
 from pathlib import Path
 from validator import check_squares
@@ -196,9 +196,9 @@ def test_robot_move(input_coordinates, input_direction, distance, output_coordin
 
 
 @pytest.mark.parametrize(("current_direction", "towards", "new_direction"),
-                        [(Direction.N, "left", Direction.W),
-                         (Direction.S, "right", Direction.W),
-                         (Direction.E, "upside_down", Direction.W)])
+                        [(Direction.N, Rotation.LEFT, Direction.W),
+                         (Direction.S, Rotation.RIGHT, Direction.W),
+                         (Direction.E, Rotation.U_TURN, Direction.W)])
 def test_robot_change_direction(current_direction, towards, new_direction):
     """
     Assert that robot rotates correctly according to given rotation.
