@@ -1,6 +1,6 @@
 from backend import  get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State
 from util import Tile, HoleTile, WallTile, GearTile, PusherTile, LaserTile, StartTile, Direction
-from loading import get_coordinates, get_data, get_tile_id, get_tile_direction, get_board, get_paths
+from loading import get_data, get_tile_id, get_tile_direction, get_board
 from pathlib import Path
 from validator import check_squares
 import pytest
@@ -138,19 +138,6 @@ def test_convert_tile_direction(tile_number, converted_number):
     assert get_tile_direction(tile_number) == converted_number
 
 
-def test_dict_paths_is_correct():
-    """
-    Assert that the result of get_paths() is a dictionary.
-    Assert that the paths structure is valid: integer is tile ID, string is path to the picture.
-    """
-    data = get_data("maps/test_3.json")
-    paths = get_paths(data)
-    for key, value in paths.items():
-        assert isinstance(key, int)
-        assert isinstance(value, str)
-    assert isinstance(paths, dict)
-
-
 def test_robots_on_starting_coordinates():
     """
     Assert that the result of get_robots_to_start is a list which contains Robot objects with correct attribute coordinates.
@@ -178,7 +165,8 @@ def test_starting_state():
                          [((3, 3), Direction.N, 2, (3, 5)),
                           ((3, 3), Direction.E, 2, (3, 3)),
                           ((3, 3), Direction.S, 2, (3, 2)),
-                          ((3, 3), Direction.W, 2, (2, 3))])
+                          ((3, 3), Direction.W, 2, (2, 3)),
+                          ((5, 1), Direction.E, 2, (7, 1))])
 def test_robot_walk(input_coordinates, input_direction, distance, output_coordinates):
     """
     Take robot's coordinates, direction and distance and assert robot walked
@@ -186,7 +174,7 @@ def test_robot_walk(input_coordinates, input_direction, distance, output_coordin
     """
     state = get_start_state("maps/test_3.json")
     robot = Robot(input_direction, None, None, input_coordinates)
-    robot.walk(distance, state)
+    robot.walk(distance, state, input_direction)
     assert robot.coordinates == output_coordinates
 
 
@@ -196,7 +184,8 @@ def test_robot_walk(input_coordinates, input_direction, distance, output_coordin
                           ((10, 1), Direction.N, 3, (10, 2)),
                           ((3, 3), Direction.E, 2, (3, 3)),
                           ((3, 3), Direction.S, 2, (3, 2)),
-                          ((3, 3), Direction.W, 2, (2, 3))])
+                          ((3, 3), Direction.W, 2, (2, 3)),
+                          ((5, 1), Direction.E, 2, (5, 1))])
 def test_robot_move(input_coordinates, input_direction, distance, output_coordinates):
     """
     Take robot's coordinates, move's direction and distance and assert robot
