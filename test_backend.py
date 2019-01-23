@@ -166,7 +166,7 @@ def test_robot_walk(input_coordinates, input_direction, distance, output_coordin
     """
     state = get_start_state("maps/test_3.json")
     robot = Robot(input_direction, None, None, input_coordinates)
-    robot.walk(input_direction, distance, state)
+    robot.walk(distance, state, input_direction)
     assert robot.coordinates == output_coordinates
 
 
