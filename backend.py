@@ -3,7 +3,7 @@ Backend file contains functions for the game logic.
 """
 from pathlib import Path
 import random
-from util import Direction, HoleTile
+from util import Direction, HoleTile, get_next_coordinates
 from loading import get_board
 
 
@@ -261,17 +261,6 @@ def check_wall(coordinates, direction, state):
                 return False
         if move_to:
             return True
-
-
-def get_next_coordinates(coordinates, direction):
-    """
-    Get next coordinates in the given direction from current coordinates.
-    """
-    (x, y) = coordinates
-    (new_x, new_y) = direction.coor_delta
-    x = x + new_x
-    y = y + new_y
-    return (x, y)
 
 
 def apply_tile_effects(state):

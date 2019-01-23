@@ -228,16 +228,15 @@ class LaserTile(Tile):
             direction_to_start = self.direction.get_new_direction('upside_down')
             # Check if there is another robot in direction of incoming laser.
             while hit:
-                # Get new coordinates and new tiles.
-                (new_x, new_y) = direction_to_start.coor_delta
-                x = x + new_x
-                y = y + new_y
+                # Get new coordinates.
+                (x, y) = get_next_coordinates((x, y), direction_to_start)
                 # Check for other robots.
                 if (x, y) in coordinates:
                     # There is another robot.
                     # Current robot won't be hit by laser.
                     hit = False
                     break
+                # Get new tiles.
                 new_tiles = state.get_tiles((x, y))
                 for tile in new_tiles:
                     # Check if new tiles contain follow-up LaserTile in correct direction.
@@ -298,3 +297,13 @@ def select_tile(direction, path, type, properties):
     Select tile subclass according to its type and create coressponding subclass.
     """
     return TILE_CLS[type](direction, path, properties)
+
+def get_next_coordinates(coordinates, direction):
+    """
+    Get next coordinates in the given direction from current coordinates.
+    """
+    (x, y) = coordinates
+    (new_x, new_y) = direction.coor_delta
+    x = x + new_x
+    y = y + new_y
+    return (x, y)
