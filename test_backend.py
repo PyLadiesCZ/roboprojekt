@@ -1,6 +1,6 @@
 from backend import  get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State
 from util import Tile, HoleTile, WallTile, GearTile, PusherTile, LaserTile, StartTile, Direction
-from loading import get_coordinates, get_data, get_tile_id, get_tile_direction, get_board, get_data_properties
+from loading import get_data, get_tile_id, get_tile_direction, get_board
 from pathlib import Path
 from validator import check_squares
 import pytest
