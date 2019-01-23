@@ -22,12 +22,16 @@ class Robot:
     def __repr__(self):
         return "<Robot {} {} {} Lives: {} Flags: {} Damages: {}>".format(self.direction, self.path, self.coordinates, self.lives, self.flags, self.damages)
 
-    def walk(self, direction, distance, state):
+    def walk(self, distance, state, direction=None):
         """
         Move a robot to new coordinates based on its direction.
+        Optional argument:
+            direction - Default value is set to robot's direction.
 
         When robot walks, it can move other robots in the way.
         """
+        if direction is None:
+            direction = self.direction
         for step in range(distance):
             # Check walls before moving.
             wall_check = check_wall(self.coordinates, direction, state)
@@ -35,15 +39,15 @@ class Robot:
                 # There is no wall. Get new coordinates.
                 next_coordinates = get_next_coordinates(self.coordinates, direction)
                 # Check robots on the next tile.
-                robot_in_the_way = -1
+                robot_in_the_way = None
                 for robot in state.robots:
                     if robot.coordinates == next_coordinates:
                         # Save index of robot that is in the way.
                         robot_in_the_way = state.robots.index(robot)
                         break
                 # Move robot in the way.
-                if robot_in_the_way != -1:
-                        state.robots[robot_in_the_way].walk(direction, 1, state)
+                if robot_in_the_way is not None:
+                        state.robots[robot_in_the_way].walk(1, state, direction)
                         # Check that robot moved.
                         if state.robots[robot_in_the_way].coordinates != next_coordinates:
                             # Robot walks to new coordinates.
