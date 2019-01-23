@@ -204,7 +204,7 @@ class GearTile(Tile):
 
     def rotate_robot(self, robot):
         # Rotate robot by 90° according to GearTile property: left or right.
-        robot.direction = robot.direction.get_new_direction(self.move_direction)
+        robot.rotate(self.move_direction)
 
 
 class LaserTile(Tile):
