@@ -38,8 +38,9 @@ def get_data_properties(data):
     """
     Get significant data from JSON file fields.
 
-    Take data - raw JSON input and get tile types, paths to images
-    and tile's custom properties.
+    Take data - a dict created from decoded Tiled 1.2 JSON file
+    and return a tuple: tile types dict, tile's custom properties dict
+    and paths to images dict.
     """
     no_properties_tiles = {'ground', 'hole', 'wall', 'starting_square'}
     types = {}
