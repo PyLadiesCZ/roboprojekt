@@ -165,7 +165,8 @@ def test_starting_state():
                          [((3, 3), Direction.N, 2, (3, 5)),
                           ((3, 3), Direction.E, 2, (3, 3)),
                           ((3, 3), Direction.S, 2, (3, 2)),
-                          ((3, 3), Direction.W, 2, (2, 3))])
+                          ((3, 3), Direction.W, 2, (2, 3)),
+                          ((5, 1), Direction.E, 2, (7, 1))])
 def test_robot_walk(input_coordinates, input_direction, distance, output_coordinates):
     """
     Take robot's coordinates, direction and distance and assert robot walked
@@ -173,7 +174,7 @@ def test_robot_walk(input_coordinates, input_direction, distance, output_coordin
     """
     state = get_start_state("maps/test_3.json")
     robot = Robot(input_direction, None, None, input_coordinates)
-    robot.walk(distance, state)
+    robot.walk(distance, state, input_direction)
     assert robot.coordinates == output_coordinates
 
 
@@ -183,7 +184,8 @@ def test_robot_walk(input_coordinates, input_direction, distance, output_coordin
                           ((10, 1), Direction.N, 3, (10, 2)),
                           ((3, 3), Direction.E, 2, (3, 3)),
                           ((3, 3), Direction.S, 2, (3, 2)),
-                          ((3, 3), Direction.W, 2, (2, 3))])
+                          ((3, 3), Direction.W, 2, (2, 3)),
+                          ((5, 1), Direction.E, 2, (5, 1))])
 def test_robot_move(input_coordinates, input_direction, distance, output_coordinates):
     """
     Take robot's coordinates, move's direction and distance and assert robot

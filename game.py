@@ -10,6 +10,10 @@ from frontend import init_window, draw_board, TILE_WIDTH, TILE_HEIGHT
 import pyglet
 import sys
 
+# This line is temporary, just for the development purposes
+from util import Rotation
+
+
 # load JSON map data from the backend module
 if len(sys.argv) == 1:
     map_name = "maps/test_3.json"
@@ -34,6 +38,7 @@ def on_draw():
     window.clear()
     draw_board(state, window)
 
+
 def move_once(t):
     """
     Move all robots according to mock cards on hand and perform tile effects.
@@ -41,6 +46,8 @@ def move_once(t):
 
     for robot in state.robots:
         robot.apply_card_effect(state)
+    state.robots[3].rotate(Rotation.U_TURN)
+    state.robots[3].walk(4, state)
     print(state.robots)
     apply_tile_effects(state)
     print(state.robots)
