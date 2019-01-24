@@ -152,10 +152,6 @@ class PusherTile(Tile):
         elif state.game_round % 2 == self.game_round:
             # Pusher for odd game rounds.
             robot.move(self.direction.get_new_direction("upside_down"), 1, state)
-        # Check hole on the next coordinates.
-        tiles = state.get_tiles(robot.coordinates)
-        for tile in tiles:
-            tile.kill_robot(robot)
 
 
 class GearTile(Tile):
