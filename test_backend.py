@@ -1,4 +1,4 @@
-from backend import  get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State
+from backend import  get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, MovementCard, RotationCard
 from util import Tile, HoleTile, WallTile, GearTile, PusherTile, LaserTile, StartTile, Direction, Rotation
 from loading import get_data, get_tile_id, get_tile_direction, get_board
 from pathlib import Path
@@ -234,3 +234,16 @@ def test_map_is_invalid(map_name):
     """Use validator to check the invalid map is not accepted."""
 
     assert check_squares(map_name) != True
+
+@pytest.mark.parametrize(("card", "new_coordinates"),
+                        [(MovementCard(100, 1), (5, 6)),
+                         (MovementCard(100, 2), (5, 7)),
+                         (MovementCard(100, 3), (5, 8)),
+                         (MovementCard(100, -1), (5, 4)),
+                         ])
+def test_move_cards(card, new_coordinates):
+    robot = Robot(Direction.N, None, None, (5, 5))
+    robot.program = [card]
+    state = get_start_state("maps/test_3.json")
+    robot.apply_card_effect(state)
+    assert robot.coordinates == new_coordinates
