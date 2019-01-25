@@ -30,7 +30,7 @@ def on_draw():
     """
     Draw the game state (board and robots).
     """
-  
+
     window.clear()
     draw_board(state, window)
 
