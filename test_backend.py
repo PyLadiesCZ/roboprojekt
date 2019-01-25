@@ -235,6 +235,7 @@ def test_map_is_invalid(map_name):
 
     assert check_squares(map_name) != True
 
+
 @pytest.mark.parametrize(("card", "new_coordinates"),
                         [(MovementCard(100, 1), (5, 6)),
                          (MovementCard(100, 2), (5, 7)),
@@ -242,8 +243,27 @@ def test_map_is_invalid(map_name):
                          (MovementCard(100, -1), (5, 4)),
                          ])
 def test_move_cards(card, new_coordinates):
+    """
+    Give mock robot the MovementCard and check if he moved to the expected coordinates.
+    """
     robot = Robot(Direction.N, None, None, (5, 5))
     robot.program = [card]
     state = get_start_state("maps/test_3.json")
     robot.apply_card_effect(state)
     assert robot.coordinates == new_coordinates
+
+
+@pytest.mark.parametrize(("card", "new_direction"),
+                        [(RotationCard(100, Rotation.LEFT), Direction.W),
+                         (RotationCard(100, Rotation.RIGHT), Direction.E),
+                         (RotationCard(100, Rotation.U_TURN), Direction.S),
+                         ])
+def test_rotate_cards(card, new_direction):
+    """
+    Give mock robot the RotationCard and check if he's heading to the expected direction. 
+    """
+    robot = Robot(Direction.N, None, None, None)
+    robot.program = [card]
+    state = get_start_state("maps/test_3.json")
+    robot.apply_card_effect(state)
+    assert robot.direction == new_direction
