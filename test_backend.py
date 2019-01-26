@@ -1,5 +1,5 @@
-from backend import get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, apply_tile_effects
-from util import Direction, Tile, RepairTile
+from backend import get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects
+from util import Tile, HoleTile, WallTile, GearTile, PusherTile, LaserTile, StartTile, RepairTile, Direction, Rotation
 from loading import get_board
 from pathlib import Path
 import pytest
@@ -85,9 +85,9 @@ def test_robot_move(input_coordinates, input_direction, distance, output_coordin
 
 
 @pytest.mark.parametrize(("current_direction", "towards", "new_direction"),
-                        [(Direction.N, "left", Direction.W),
-                         (Direction.S, "right", Direction.W),
-                         (Direction.E, "upside_down", Direction.W)])
+                        [(Direction.N, Rotation.LEFT, Direction.W),
+                         (Direction.S, Rotation.RIGHT, Direction.W),
+                         (Direction.E, Rotation.U_TURN, Direction.W)])
 def test_robot_change_direction(current_direction, towards, new_direction):
     """
     Assert that robot rotates correctly according to given rotation.
@@ -122,3 +122,36 @@ def test_robot_changed_start_coordinates(tile, coordinates_after):
     robot.start_coordinates = (1, 1)
     apply_tile_effects(state)
     assert robot.start_coordinates == coordinates_after
+
+
+@pytest.mark.parametrize(("card", "new_coordinates"),
+                        [(MovementCard(100, 1), (5, 6)),
+                         (MovementCard(100, 2), (5, 7)),
+                         (MovementCard(100, 3), (5, 8)),
+                         (MovementCard(100, -1), (5, 4)),
+                         ])
+def test_move_cards(card, new_coordinates):
+    """
+    Give mock robot the MovementCard and check if he moved to the expected coordinates.
+    """
+    robot = Robot(Direction.N, None, None, (5, 5))
+    robot.program = [card]
+    state = get_start_state("maps/test_3.json")
+    robot.apply_card_effect(state)
+    assert robot.coordinates == new_coordinates
+
+
+@pytest.mark.parametrize(("card", "new_direction"),
+                        [(RotationCard(100, Rotation.LEFT), Direction.W),
+                         (RotationCard(100, Rotation.RIGHT), Direction.E),
+                         (RotationCard(100, Rotation.U_TURN), Direction.S),
+                         ])
+def test_rotate_cards(card, new_direction):
+    """
+    Give mock robot the RotationCard and check if he's heading to the expected direction.
+    """
+    robot = Robot(Direction.N, None, None, None)
+    robot.program = [card]
+    state = get_start_state("maps/test_3.json")
+    robot.apply_card_effect(state)
+    assert robot.direction == new_direction

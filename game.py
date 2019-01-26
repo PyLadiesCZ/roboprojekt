@@ -10,9 +10,13 @@ from frontend import init_window, draw_board, TILE_WIDTH, TILE_HEIGHT
 import pyglet
 import sys
 
+# This line is temporary, just for the development purposes
+from util import Rotation
+
+
 # load JSON map data from the backend module
 if len(sys.argv) == 1:
-    map_name = "maps/test_3.json"
+    map_name = "maps/test_effects.json"
 
 # if other map should be loaded, use extra argument "maps/MAP_NAME.json" when calling game.py by Python
 # for example: python game.py maps/test_2.json
@@ -37,13 +41,13 @@ def on_draw():
 
 def move_once(t):
     """
-    Move all robots 2 tiles forward and rotate 180 degrees.
+    Move all robots according to mock cards on hand and perform tile effects.
     """
 
     for robot in state.robots:
+        #robot.apply_card_effect(state)
         robot.walk(3, state)
-    state.robots[3].rotate("right")
-    state.robots[3].walk(3, state)
+    #state.robots[3].walk(-1, state)
     print(state.robots)
     apply_tile_effects(state)
     print(state.robots)
