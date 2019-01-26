@@ -1,6 +1,5 @@
-<<<<<<< HEAD
 from backend import get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects
-from util import Tile, HoleTile, WallTile, GearTile, PusherTile, LaserTile, StartTile, Direction, Rotation
+from util import Tile, HoleTile, WallTile, GearTile, PusherTile, LaserTile, StartTile, RepairTile, Direction, Rotation
 from loading import get_board
 from pathlib import Path
 import pytest
