@@ -97,6 +97,8 @@ def test_robot_change_direction(current_direction, towards, new_direction):
     assert robot.direction == new_direction
 
 
+# RepairTile
+
 @pytest.mark.parametrize(("damages_before", "tile", "damages_after"),
                         [(0, RepairTile(None, None, [{'value': True}]), 0),
                          (9, RepairTile(None, None, [{'value': True}]), 8),
@@ -122,3 +124,6 @@ def test_robot_changed_start_coordinates(tile, coordinates_after):
     robot.start_coordinates = (1, 1)
     apply_tile_effects(state)
     assert robot.start_coordinates == coordinates_after
+
+
+# GearTile    
