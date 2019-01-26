@@ -1,6 +1,6 @@
 import pyglet
 from pyglet.window import key
-from interface import get_interface_state, max_card_count
+from interface import get_interface_state, MAX_CARD_COUNT
 from enum import Enum
 
 
@@ -29,7 +29,7 @@ for i in range(8):
     flags_sprite.append(pyglet.sprite.Sprite(pyglet.image.load('img/squares/png/flag_{}.png'.format(i+1)), x, y))
 
 tokens_sprite = [] # Tokens of damage
-for i in range(max_card_count):
+for i in range(MAX_CARD_COUNT):
     x = 676 + i*-70
     y = 768
     tokens_sprite.append(pyglet.sprite.Sprite(pyglet.image.load('interface/png/token.png'), x, y))

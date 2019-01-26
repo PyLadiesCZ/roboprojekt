@@ -4,7 +4,7 @@ from util import Direction
 
 
 robot_data = Robot(Direction.N, "./img/robots/png/mintbot.png", "./img/robots/png/mintbot.png", None) # a makeshift fictitious robot
-max_card_count = 9
+MAX_CARD_COUNT = 9
 
 class InterfaceState:
     def __init__(self, deal_cards, robot_data):
@@ -78,7 +78,7 @@ def get_deal_cards(card_pack):
     deal_cards = []
     # maximum number of cards is 9
     # demagecount reduces the number of cards
-    for i in range(max_card_count-robot_data.damages):
+    for i in range(MAX_CARD_COUNT-robot_data.damages):
         deal_cards.append((card_pack.pop()))
     return deal_cards
 
