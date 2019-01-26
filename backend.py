@@ -3,7 +3,7 @@ Backend file contains functions for the game logic.
 """
 from pathlib import Path
 import random
-from util import Direction, HoleTile
+from util import Direction, Rotation, HoleTile
 from loading import get_board
 
 
@@ -14,9 +14,12 @@ class Robot:
         self.path_front = path_front
         self.coordinates = coordinates
         self.start_coordinates = coordinates
+        # program = cards on hand, list.
+        # currently testing's value, to be removed
+        self.program = [RotationCard(200, Rotation.LEFT), MovementCard(100, 2)]
         self.lives = 3
         self.flags = 0
-        self.damages = 9
+        self.damages = 4
         self.inactive = False
 
     def __repr__(self):
@@ -32,31 +35,40 @@ class Robot:
         """
         if direction is None:
             direction = self.direction
+
+        # Robot can go backwards - then his distance is -1.
+        # In this case we want to rotate him, make him walk 1 step and rotate back.
+        # He still can move the other robots on the way.
+        if distance < 0:
+            self.rotate(Rotation.U_TURN)
+            self.walk((-distance), state)
+            self.rotate(Rotation.U_TURN)
+
         for step in range(distance):
             # Check walls before moving.
-            wall_check = check_wall(self.coordinates, direction, state)
-            if wall_check:
-                # There is no wall. Get new coordinates.
-                next_coordinates = get_next_coordinates(self.coordinates, direction)
-                # Check robots on the next tile.
-                robot_in_the_way = None
-                for robot in state.robots:
-                    if robot.coordinates == next_coordinates:
-                        # Save index of robot that is in the way.
-                        robot_in_the_way = state.robots.index(robot)
-                        break
-                # Move robot in the way.
-                if robot_in_the_way is not None:
-                        state.robots[robot_in_the_way].walk(1, state, direction)
-                        # Check that robot moved.
-                        if state.robots[robot_in_the_way].coordinates != next_coordinates:
-                            # Robot walks to new coordinates.
-                            self.coordinates = next_coordinates
-                # There isn't a robot in the way. Robot walks to new coordinates.
-                else:
-                    self.coordinates = next_coordinates
-            else:
+            if not check_wall(self.coordinates, direction, state):
                 break
+
+            # There is no wall. Get new coordinates.
+            next_coordinates = get_next_coordinates(self.coordinates, direction)
+            # Check robots on the next tile.
+            robot_in_the_way = None
+            for robot in state.robots:
+                if robot.coordinates == next_coordinates:
+                    # Save index of robot that is in the way.
+                    robot_in_the_way = state.robots.index(robot)
+                    break
+            # Move robot in the way.
+            if robot_in_the_way is not None:
+                    state.robots[robot_in_the_way].walk(1, state, direction)
+                    # Check that robot moved.
+                    if state.robots[robot_in_the_way].coordinates != next_coordinates:
+                        # Robot walks to new coordinates.
+                        self.coordinates = next_coordinates
+            # There isn't a robot in the way. Robot walks to new coordinates.
+            else:
+                self.coordinates = next_coordinates
+
 
     def move(self, direction, distance, state):
         """
@@ -68,23 +80,22 @@ class Robot:
         """
         for step in range(distance):
             # Check walls before moving.
-            wall_check = check_wall(self.coordinates, direction, state)
-            if wall_check:
-                # There is no wall. Get new coordinates.
-                next_coordinates = get_next_coordinates(self.coordinates, direction)
-                # Check robots on the next tile before moving.
-                robot_check = True
-                for robot in state.robots:
-                    if robot.coordinates == next_coordinates:
-                        # There is a robot on the next tile.
-                        # Robot can't be moved.
-                        robot_check = False
-                        break
-                # There isn't a robot on the next tile. Robot will be moved.
-                if robot_check:
-                    self.coordinates = next_coordinates
-            else:
+            if not check_wall(self.coordinates, direction, state):
                 break
+            # There is no wall. Get new coordinates.
+            next_coordinates = get_next_coordinates(self.coordinates, direction)
+            # Check robots on the next tile before moving.
+            robot_check = True
+            for robot in state.robots:
+                if robot.coordinates == next_coordinates:
+                    # There is a robot on the next tile.
+                    # Robot can't be moved.
+                    robot_check = False
+                    break
+            # There isn't a robot on the next tile. Robot will be moved.
+            if robot_check:
+                self.coordinates = next_coordinates
+
 
     def die(self):
         """
@@ -100,8 +111,42 @@ class Robot:
         """
         Rotate robot according to a given direction.
         """
-
         self.direction = self.direction.get_new_direction(where_to)
+
+
+    def apply_card_effect(self, state):
+        """
+        Get the current card (depending on game round) and perform the card effect.
+        If the card's effect is move - it calls robot's method walk,
+        if it is rotation - robot's method rotate.
+
+        TODO: resolve card's priority
+        """
+        # card on an index of a current game round
+        current_card = self.program[state.game_round - 1]
+
+        if isinstance(current_card, MovementCard):
+            self.walk(current_card.distance, state)
+
+        if isinstance(current_card, RotationCard):
+            self.rotate(current_card.rotation)
+
+
+class Card:
+    def __init__(self, priority):
+        self.priority = priority  # int - to decide who goes first
+
+
+class MovementCard(Card):
+    def __init__(self, priority, value):
+        self.distance = value
+        super().__init__(priority)
+
+
+class RotationCard(Card):
+    def __init__(self, priority, value):
+        self.rotation = value
+        super().__init__(priority)
 
 
 class State:
