@@ -13,7 +13,7 @@ TILE_HEIGHT = 64
 
 def init_window(state):
     """
-    Return a pyglet window for graphic outputself.
+    Return a pyglet window for graphic output.
 
     state: State object containing game board, robots and map sizes
     """
@@ -86,16 +86,16 @@ def draw_board(state, window):
 
     #scaling
     pyglet.gl.glPushMatrix()
-    
+
     #scaling ratio
     zoom = min(
         window.height / (state.sizes[1] * TILE_HEIGHT),
         window.width / (state.sizes[0] * TILE_WIDTH)
     )
-    
+
     pyglet.gl.glScalef(zoom, zoom, 1)
-    
+
     for tile_sprite in tile_sprites:
         tile_sprite.draw()
-        
+
     pyglet.gl.glPopMatrix()
