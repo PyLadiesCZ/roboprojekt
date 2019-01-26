@@ -140,6 +140,23 @@ def test_robot_changed_direction(direction_before, tile, direction_after):
     assert robot.direction == direction_after
 
 
+# HoleTile
+
+
+@pytest.mark.parametrize(("lives_before", "tile", "lives_after", "active", "coordinates"),
+                        [(3, HoleTile(None, None, None),  2, False, (0, 0)),
+                         (2, HoleTile(None, None, None),  1, False, (0, 0)),
+                         (1, HoleTile(None, None, None),  0, True, (-1, -1)),
+                        ])
+def test_robot_died(lives_before, tile, lives_after, active, coordinates):
+    robot = Robot(None, None, None, (0, 0))
+    state = State({(0, 0): [tile]}, [robot], 1)
+    robot.lives = lives_before
+    apply_tile_effects(state)
+    assert robot.lives == lives_after
+    assert robot.inactive == active
+    assert robot.coordinates == coordinates
+
 
 
 @pytest.mark.parametrize(("card", "new_coordinates"),

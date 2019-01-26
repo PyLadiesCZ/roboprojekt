@@ -105,7 +105,7 @@ class Robot:
         self.lives -= 1
         # Notification of robot's death during the game round.
         self.inactive = True
-        self.coordinates = [-1, -1]
+        self.coordinates = (-1, -1)
 
     def rotate(self, where_to):
         """
