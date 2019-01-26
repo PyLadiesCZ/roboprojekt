@@ -7,7 +7,7 @@ interface_state = get_interface_state()
 
 def init_window():
     """
-    Return a pyglet window for graphic outputself.
+    Return a pyglet window for graphic output.
 
     state: State object containing game board, robots and map sizes
     """
