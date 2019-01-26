@@ -34,6 +34,7 @@ def on_draw():
     window.clear()
     draw_board(state, window)
 
+
 def move_once(t):
     """
     Move all robots according to mock cards on hand and perform tile effects.

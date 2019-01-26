@@ -34,64 +34,37 @@ def get_coordinates(data):
     return coordinates
 
 
-def get_paths(data):
+def get_data_properties(data):
     """
-    Get paths to tiles images.
+    Get significant data from JSON file fields.
 
-    data: a dict created from decoded Tiled 1.2 JSON file
-
-    Return a dictionary with modified tile ID as a key and path to file
-    of the image as a value.
-
-    Create a dictionary where tile ID is modified with the number of the
-    tileset used in Tiled 1.2, so it matches the tile number in the tilelist.
+    Take data - a dict created from decoded Tiled 1.2 JSON file
+    and return a tuple: tile types dict, tile's custom properties dict
+    and paths to images dict.
     """
-    paths = {}
-    for json_tile in data['tilesets'][0]['tiles']:
-        id = json_tile['id'] + data['tilesets'][0]['firstgid']
-        path = json_tile['image']
-        path = path[1:]  # unelegant way of removing ../ at the beginning of the path
-        paths[id] = path
-    return paths
-
-
-def get_types(data):
-    """
-    Get tile types.
-
-    data: a dict created from decoded Tiled 1.2 JSON file
-
-    Return a dictionary with modified tile ID as a key and type of tile as a value.
-    """
-    types = {}
-    for json_tile in data['tilesets'][0]['tiles']:
-        id = json_tile['id'] + data['tilesets'][0]['firstgid']
-        types[id] = json_tile['type']
-    return types
-
-
-def get_properties(data):
-    """
-    Get tile properties.
-
-    data: a dict created from decoded Tiled 1.2 JSON file
-
-    Return a dictionary with modified tile ID as a key
-    and properties of tile as a value.
-
-    Except for ground, hole, wall and starting tile. These tiles don't have
-    custom properties, so their properties are empty lists.
-    """
-    types = get_types(data)
-    properties = {}
     no_properties_tiles = {'ground', 'hole', 'wall', 'starting_square'}
+    types = {}
+    properties = {}
+    paths = {}
+
     for json_tile in data['tilesets'][0]['tiles']:
         id = json_tile['id'] + data['tilesets'][0]['firstgid']
+
+        #types as 'hole', 'pusher'
+        types[id] = json_tile['type']
+
+        #custom properties
         if types[id] not in no_properties_tiles:
             properties[id] = json_tile['properties']
         else:
             properties[id] = []
-    return properties
+
+        #paths to tile image
+        path = json_tile['image']
+        path = path[1:]  # unelegant way of removing ../ at the beginning of the path
+        paths[id] = path
+
+    return types, properties, paths
 
 
 def get_tile_id(tile_number):
@@ -133,10 +106,8 @@ def get_board(map_name):
     https://www.geeksforgeeks.org/python-dictionary-comprehension/
     """
     data = get_data(map_name)
-    paths = get_paths(data)
+    types, properties, paths = get_data_properties(data)
     coordinates = get_coordinates(data)
-    types = get_types(data)
-    properties = get_properties(data)
 
     # create dictionary of coordinates where value is empty list for further transformation
     board = {coordinate: [] for coordinate in coordinates}

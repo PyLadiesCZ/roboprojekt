@@ -1,94 +1,8 @@
-from backend import  get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State
-from util import Tile, HoleTile, WallTile, GearTile, PusherTile, LaserTile, StartTile, Direction, Rotation
-from loading import get_coordinates, get_data, get_tile_id, get_tile_direction, get_board, get_paths
+from backend import get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, apply_tile_effects
+from util import Direction, Tile, RepairTile, Rotation
+from loading import get_board
 from pathlib import Path
-from validator import check_squares
 import pytest
-
-
-maps = []
-"""
-Create a list of all maps.
-To be used as an argument for the functions which need to go through all maps so they don't need to be added manually.
-"""
-for i in Path('maps/').glob('test_*.json'):
-    maps.append(str(i))
-
-
-# Set of tests checking the structure of read JSON file (supposed to come from Tiled 1.2)
-@pytest.mark.parametrize(("coordinates", "layer", "type"),
-                         [((5, 5), 0, HoleTile),
-                          ((0, 0), 0, HoleTile),
-                          ((11, 11), 0, HoleTile),
-                          ((2, 1), 0, Tile),
-                          ((11, 10), 0, Tile)])
-def test_map_1_contains_correct_fields(coordinates, layer, type):
-    """
-    Take JSON file with test_1 map and assert the correct field types.
-    If the test_1.json map is changed or removed, the test needs to be updated.
-    """
-    board = get_board("maps/test_1.json")
-    assert isinstance(board[coordinates][layer], type)
-
-
-@pytest.mark.parametrize(("coordinates", "layer", "type"),
-                         [((5, 5), 0, WallTile),
-                          ((0, 0), 0, LaserTile),
-                          ((11, 11), 0, GearTile),
-                          ((2, 1), 0, StartTile),
-                          ((11, 10), 0, PusherTile)])
-def test_map_1_does_not_contain_incorrect_fields(coordinates, layer, type):
-    """
-    Take JSON file with test_1 map and assert it doesn't contain the incorrect field types (inheritance of Tile class is OK).
-    If the test_1.json map is changed or removed, the test needs to be updated.
-    """
-    board = get_board("maps/test_1.json")
-    assert not isinstance(board[coordinates][layer], type)
-
-
-@pytest.mark.parametrize(("index_number", "expected_value"),
-                         [(0, 0),
-                          (2, 2),
-                          (4, 6),
-                          (6, 9),
-                          (13, 17), ])
-def test_map_returns_correct_image_ID(index_number, expected_value):
-    """
-    Take JSON file with test_1 map and assert correct image ID.
-    index_number: tiles list instance index
-    expected value: "id" stored in tiles list
-    If the test_1.json map is changed or removed, the test needs to be updated.
-    """
-    data = get_data("maps/test_1.json")
-    assert data["tilesets"][0]["tiles"][index_number]["id"] == expected_value
-
-
-@pytest.mark.parametrize(("index_number", "expected_value"),
-                         [(0, "../img/squares/png/ground.png"),
-                          (2, "../img/squares/png/laser_1_base.png"),
-                          (4, "../img/squares/png/gear_r.png"),
-                          (6, "../img/squares/png/pusher_1_3_5.png"),
-                          (13, "../img/squares/png/conveyor_belt_1.png"), ])
-def test_map_returns_correct_image_path(index_number, expected_value):
-    """
-    Take JSON file with test_1 map and assert correct image path.
-    index_number: tiles list instance index
-    expected value: "image" stored in tiles list
-    If the test_1.json map is changed or removed, the test needs to be updated.
-    """
-    data = get_data("maps/test_1.json")
-    assert data["tilesets"][0]["tiles"][index_number]["image"] == expected_value
-
-
-def test_board_structure():
-    """
-    Take board (based on JSON test_3 map) and assert correct board structure is returned.
-    If the test_3.json map is changed or removed, the test needs to be updated.
-    """
-    board = get_board("maps/test_3.json")
-    example_tile = board[0, 0]
-    assert example_tile[0].path == "./img/squares/png/ground.png"
-    assert example_tile[0].direction == Direction.N
 
 
 def test_starting_coordinates():
@@ -109,46 +23,6 @@ def test_robot_paths():
     path, path_front = robot_paths[0]
     assert isinstance(robot_paths, list)
     assert isinstance(path, Path)
-
-
-@pytest.mark.parametrize(("tile_number", "converted_number"),
-                         [(1, 1),
-                         (2684354573, 13),
-                         (2684354584, 24),
-                         (1610612749, 13)])
-def test_convert_tile_id(tile_number, converted_number):
-    """
-    Take number from layer's data (JSON file) and assert it was correctly
-    transformed to valid tile ID.
-    """
-    assert get_tile_id(tile_number) == converted_number
-
-
-@pytest.mark.parametrize(("tile_number", "converted_number"),
-                         [(1, Direction.N),
-                         (2684354573, Direction.E),
-                         (2684354584, Direction.E),
-                         (1610612749, Direction.W),
-                         (3221225497, Direction.S)])
-def test_convert_tile_direction(tile_number, converted_number):
-    """
-    Take number from layer's data (JSON file) and assert it was correctly
-    transformed to valid direction in degrees.
-    """
-    assert get_tile_direction(tile_number) == converted_number
-
-
-def test_dict_paths_is_correct():
-    """
-    Assert that the result of get_paths() is a dictionary.
-    Assert that the paths structure is valid: integer is tile ID, string is path to the picture.
-    """
-    data = get_data("maps/test_3.json")
-    paths = get_paths(data)
-    for key, value in paths.items():
-        assert isinstance(key, int)
-        assert isinstance(value, str)
-    assert isinstance(paths, dict)
 
 
 def test_robots_on_starting_coordinates():
@@ -178,7 +52,8 @@ def test_starting_state():
                          [((3, 3), Direction.N, 2, (3, 5)),
                           ((3, 3), Direction.E, 2, (3, 3)),
                           ((3, 3), Direction.S, 2, (3, 2)),
-                          ((3, 3), Direction.W, 2, (2, 3))])
+                          ((3, 3), Direction.W, 2, (2, 3)),
+                          ((5, 1), Direction.E, 2, (7, 1))])
 def test_robot_walk(input_coordinates, input_direction, distance, output_coordinates):
     """
     Take robot's coordinates, direction and distance and assert robot walked
@@ -186,7 +61,7 @@ def test_robot_walk(input_coordinates, input_direction, distance, output_coordin
     """
     state = get_start_state("maps/test_3.json")
     robot = Robot(input_direction, None, None, input_coordinates)
-    robot.walk(distance, state)
+    robot.walk(distance, state, input_direction)
     assert robot.coordinates == output_coordinates
 
 
@@ -196,7 +71,8 @@ def test_robot_walk(input_coordinates, input_direction, distance, output_coordin
                           ((10, 1), Direction.N, 3, (10, 2)),
                           ((3, 3), Direction.E, 2, (3, 3)),
                           ((3, 3), Direction.S, 2, (3, 2)),
-                          ((3, 3), Direction.W, 2, (2, 3))])
+                          ((3, 3), Direction.W, 2, (2, 3)),
+                          ((5, 1), Direction.E, 2, (5, 1))])
 def test_robot_move(input_coordinates, input_direction, distance, output_coordinates):
     """
     Take robot's coordinates, move's direction and distance and assert robot
@@ -221,27 +97,28 @@ def test_robot_change_direction(current_direction, towards, new_direction):
     assert robot.direction == new_direction
 
 
-@pytest.mark.parametrize("map_name", maps)
-def test_tile_size(map_name):
-    """
-    Take size of tiles used in JSON files and assert correct tile size.
-    This test has to be removed, when width and height of tile image are
-    no longer constants used for tile drawing.
-    """
-    data = get_data(map_name)
-    assert data["tilewidth"] == 64
-    assert data["tileheight"] == 64
+@pytest.mark.parametrize(("damages_before", "tile", "damages_after"),
+                        [(0, RepairTile(None, None, [{'value': True}]), 0),
+                         (9, RepairTile(None, None, [{'value': True}]), 8),
+                         (3, RepairTile(None, None, [{'value': True}]), 2),
+                        ])
+def test_robot_is_repaired(damages_before, tile, damages_after):
+    robot = Robot(None, None, None, (0, 0))
+    state = State({(0, 0): [tile]}, [robot], 1)
+    robot.damages = damages_before
+    apply_tile_effects(state)
+    assert robot.damages == damages_after
 
 
-@pytest.mark.parametrize("map_name", maps)
-def test_map_is_valid(map_name):
-    """Use validator to check all the valid maps are correctly layered, therefore accepted."""
-
-    assert check_squares(map_name) == True
-
-
-@pytest.mark.parametrize("map_name", ["maps/bad_map.json"])
-def test_map_is_invalid(map_name):
-    """Use validator to check the invalid map is not accepted."""
-
-    assert check_squares(map_name) != True
+@pytest.mark.parametrize(("tile", "coordinates_after"),
+                        [(RepairTile(None, None, [{'value': True}]),  (0, 0)),
+                         (RepairTile(None, None, [{'value': False}]), (1, 1)),
+                         (RepairTile(None, None, [{'value': True}]), (0, 0)),
+                         (RepairTile(None, None, [{'value': False}]), (1, 1)),
+                        ])
+def test_robot_changed_start_coordinates(tile, coordinates_after):
+    robot = Robot(None, None, None, (0, 0))
+    state = State({(0, 0): [tile]}, [robot], 1)
+    robot.start_coordinates = (1, 1)
+    apply_tile_effects(state)
+    assert robot.start_coordinates == coordinates_after
