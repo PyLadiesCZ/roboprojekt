@@ -35,31 +35,40 @@ class Robot:
         """
         if direction is None:
             direction = self.direction
+
+        # Robot can go backwards - then his distance is -1.
+        # In this case we want to rotate him, make him walk 1 step and rotate back.
+        # He still can move the other robots on the way.
+        if distance < 0:
+            self.rotate(Rotation.U_TURN)
+            self.walk((-distance), state)
+            self.rotate(Rotation.U_TURN)
+
         for step in range(distance):
             # Check walls before moving.
-            wall_check = check_wall(self.coordinates, direction, state)
-            if wall_check:
-                # There is no wall. Get new coordinates.
-                next_coordinates = get_next_coordinates(self.coordinates, direction)
-                # Check robots on the next tile.
-                robot_in_the_way = None
-                for robot in state.robots:
-                    if robot.coordinates == next_coordinates:
-                        # Save index of robot that is in the way.
-                        robot_in_the_way = state.robots.index(robot)
-                        break
-                # Move robot in the way.
-                if robot_in_the_way is not None:
-                        state.robots[robot_in_the_way].walk(1, state, direction)
-                        # Check that robot moved.
-                        if state.robots[robot_in_the_way].coordinates != next_coordinates:
-                            # Robot walks to new coordinates.
-                            self.coordinates = next_coordinates
-                # There isn't a robot in the way. Robot walks to new coordinates.
-                else:
-                    self.coordinates = next_coordinates
-            else:
+            if not check_wall(self.coordinates, direction, state):
                 break
+
+            # There is no wall. Get new coordinates.
+            next_coordinates = get_next_coordinates(self.coordinates, direction)
+            # Check robots on the next tile.
+            robot_in_the_way = None
+            for robot in state.robots:
+                if robot.coordinates == next_coordinates:
+                    # Save index of robot that is in the way.
+                    robot_in_the_way = state.robots.index(robot)
+                    break
+            # Move robot in the way.
+            if robot_in_the_way is not None:
+                    state.robots[robot_in_the_way].walk(1, state, direction)
+                    # Check that robot moved.
+                    if state.robots[robot_in_the_way].coordinates != next_coordinates:
+                        # Robot walks to new coordinates.
+                        self.coordinates = next_coordinates
+            # There isn't a robot in the way. Robot walks to new coordinates.
+            else:
+                self.coordinates = next_coordinates
+
 
     def move(self, direction, distance, state):
         """
@@ -71,23 +80,22 @@ class Robot:
         """
         for step in range(distance):
             # Check walls before moving.
-            wall_check = check_wall(self.coordinates, direction, state)
-            if wall_check:
-                # There is no wall. Get new coordinates.
-                next_coordinates = get_next_coordinates(self.coordinates, direction)
-                # Check robots on the next tile before moving.
-                robot_check = True
-                for robot in state.robots:
-                    if robot.coordinates == next_coordinates:
-                        # There is a robot on the next tile.
-                        # Robot can't be moved.
-                        robot_check = False
-                        break
-                # There isn't a robot on the next tile. Robot will be moved.
-                if robot_check:
-                    self.coordinates = next_coordinates
-            else:
+            if not check_wall(self.coordinates, direction, state):
                 break
+            # There is no wall. Get new coordinates.
+            next_coordinates = get_next_coordinates(self.coordinates, direction)
+            # Check robots on the next tile before moving.
+            robot_check = True
+            for robot in state.robots:
+                if robot.coordinates == next_coordinates:
+                    # There is a robot on the next tile.
+                    # Robot can't be moved.
+                    robot_check = False
+                    break
+            # There isn't a robot on the next tile. Robot will be moved.
+            if robot_check:
+                self.coordinates = next_coordinates
+
 
     def die(self):
         """
