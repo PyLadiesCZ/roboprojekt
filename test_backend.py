@@ -217,6 +217,34 @@ def test_robot_is_stopped_by_wall(input_coordinates, output_coordinates):
     assert robot.coordinates == output_coordinates
 
 
+# LaserTile
+@pytest.mark.parametrize(("input_coordinates", "output_damages"),
+                        [((1, 2), 4),
+                         ((3, 1), 4),
+                         ((2, 1), 4),
+                         ((0, 1), 6),
+                         ((3, 3), 8),
+                         ((2, 3), 7),
+                         ])
+def test_robot_is_damaged_by_laser(input_coordinates, output_damages):
+    """
+    When robot stands on laser tile, he is damaged according to the laser strength, but only if there is no obstacle in the way.
+    If there are obstacles, damage count changes accordingly.
+
+    TODO: currently in backend.py robot is initialized with 4 damages.
+    When it is changed back to 0 damages, the values must be changed in the test as well.
+    """
+    board = get_board("maps/test_laser.json")
+    robot_obstacle1 = Robot(Direction.N, None, None, (1, 1))
+    robot_obstacle2 = Robot(Direction.N, None, None, (3, 2))
+    robot = Robot(Direction.E, None, None, input_coordinates)
+    state = State(board, [robot_obstacle1, robot_obstacle2, robot], 16)
+    apply_tile_effects(state)
+    assert robot.damages == output_damages
+
+
+
+
 
 @pytest.mark.parametrize(("card", "new_coordinates"),
                         [(MovementCard(100, 1), (5, 6)),
