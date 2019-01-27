@@ -31,10 +31,10 @@ Each player has one robot which can be programmed by cards. The goal is to colle
 At the beginning of each round you get a random set of cards and by choosing cards for robot's slots you will set his moves for the round.
 There is a time limit for choosing the cards. During the "choosing cards" part you can also put your robot to `Power Down` mode which means they won't make any actions by their own but they can be affected by other robots' actions. 
 Once the "choosing cards" phase ends, the following steps will repeat 5 times:
-1. The robots' card actions are resolved in order of priority
-2. The effects of tiles robots stand on are resolved
+1. The robots' card actions are performed in order of priority
+2. The effects of tiles robots stand on are performed
 3. Robots are shooting
-4. If robot stands on the flag tile, the flag is collected
+4. If robot stands on the right flag tile, the flag is collected
 5. If robot stands on the repair tile, the start position changes
 
 After this phase is complete, the robots standing on the repair tile or in Power Down mode repair themselves and the next round begins.
