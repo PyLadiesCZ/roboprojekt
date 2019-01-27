@@ -1,5 +1,5 @@
 from backend import get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects
-from util import Tile, HoleTile, WallTile, GearTile, PusherTile, LaserTile, StartTile, RepairTile, Direction, Rotation
+from util import Tile, HoleTile, WallTile, GearTile, PusherTile, LaserTile, StartTile, RepairTile, FlagTile, Direction, Rotation
 from loading import get_board
 from pathlib import Path
 import pytest
@@ -105,6 +105,10 @@ def test_robot_change_direction(current_direction, towards, new_direction):
                          (3, RepairTile(None, None, [{'value': True}]), 2),
                         ])
 def test_robot_is_repaired(damages_before, tile, damages_after):
+    """
+    When robot is on RepairTile he is supposed to be repaired.
+    If he doesn't have any damages, the count remains the same as previous.
+    """
     robot = Robot(None, None, None, (0, 0))
     state = State({(0, 0): [tile]}, [robot], 1)
     robot.damages = damages_before
@@ -119,6 +123,10 @@ def test_robot_is_repaired(damages_before, tile, damages_after):
                          (RepairTile(None, None, [{'value': False}]), (1, 1)),
                         ])
 def test_robot_changed_start_coordinates(tile, coordinates_after):
+    """
+    When robot is on RepairTile with special property, he changes it starting coordinates to the tile coordinates.
+    On a normal RepairTile he doesn't change the starting tile.
+    """
     robot = Robot(None, None, None, (0, 0))
     state = State({(0, 0): [tile]}, [robot], 1)
     robot.start_coordinates = (1, 1)
@@ -135,6 +143,10 @@ def test_robot_changed_start_coordinates(tile, coordinates_after):
                          (Direction.S, GearTile(None, None, [{'value': "right"}]), Direction.W),
                         ])
 def test_robot_changed_direction(direction_before, tile, direction_after):
+    """
+    When robot is on GearTile, he should be rotated according to the direction of the tile.
+    Check that his direction changed after applying tile effect.
+    """
     robot = Robot(direction_before, None, None, (0, 0))
     state = State({(0, 0): [tile]}, [robot], 1)
     apply_tile_effects(state)
@@ -149,6 +161,11 @@ def test_robot_changed_direction(direction_before, tile, direction_after):
                          (1, HoleTile(None, None, None),  0, True, (-1, -1)),
                         ])
 def test_robot_died(lives_before, tile, lives_after, active, coordinates):
+    """
+    When robot stands on a HoleTile (or is out of the game board),
+    he gets killed.
+    Check that his lives were lowered, he got inactive till the next game round and his coordinates changed to the (-1, -1).
+    """
     robot = Robot(None, None, None, (0, 0))
     state = State({(0, 0): [tile]}, [robot], 1)
     robot.lives = lives_before
@@ -160,7 +177,24 @@ def test_robot_died(lives_before, tile, lives_after, active, coordinates):
 
 # FlagTile
 
-
+@pytest.mark.parametrize(("flags_before", "tile", "flags_after", "start_coordinates_after"),
+                        [(3, FlagTile(None, None, [{'value': 1}]),  3,  (1, 1)),
+                         (3, FlagTile(None, None, [{'value': 4}]),  4, (0, 0)),
+                         (3, FlagTile(None, None, [{'value': 5}]),  3, (1, 1)),
+                        ])
+def test_robot_collected_flags(flags_before, tile, flags_after, start_coordinates_after):
+    """
+    When a robot stands on FlagTile with appropriate number (+1 to his current flag count), he collects it.
+    He doesn't collect the flags with the other number than defined.    They don't have any effect on him.
+    With the flag collected the starting coordinates change to the tile's coordinates.
+    """
+    robot = Robot(None, None, None, (0, 0))
+    state = State({(0, 0): [tile]}, [robot], 1)
+    robot.flags = flags_before
+    robot.start_coordinates = (1, 1)
+    apply_tile_effects(state)
+    assert robot.flags == flags_after
+    assert robot.start_coordinates == start_coordinates_after
 
 
 @pytest.mark.parametrize(("card", "new_coordinates"),
