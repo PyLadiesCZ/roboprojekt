@@ -127,6 +127,7 @@ def test_robot_changed_start_coordinates(tile, coordinates_after):
 
 
 # GearTile
+
 @pytest.mark.parametrize(("direction_before", "tile", "direction_after"),
                         [(Direction.E, GearTile(None, None, [{'value': "left"}]),  Direction.N),
                          (Direction.E, GearTile(None, None, [{'value': "right"}]), Direction.S),
@@ -142,7 +143,6 @@ def test_robot_changed_direction(direction_before, tile, direction_after):
 
 # HoleTile
 
-
 @pytest.mark.parametrize(("lives_before", "tile", "lives_after", "active", "coordinates"),
                         [(3, HoleTile(None, None, None),  2, False, (0, 0)),
                          (2, HoleTile(None, None, None),  1, False, (0, 0)),
@@ -156,6 +156,10 @@ def test_robot_died(lives_before, tile, lives_after, active, coordinates):
     assert robot.lives == lives_after
     assert robot.inactive == active
     assert robot.coordinates == coordinates
+
+
+# FlagTile
+
 
 
 
