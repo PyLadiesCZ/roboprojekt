@@ -197,6 +197,27 @@ def test_robot_collected_flags(flags_before, tile, flags_after, start_coordinate
     assert robot.start_coordinates == start_coordinates_after
 
 
+# WallTile
+
+@pytest.mark.parametrize(("input_coordinates", "output_coordinates"),
+                        [((0, 0), (0, 0)),
+                         ((1, 0), (1, 0)),
+                         ((2, 0), (2, 1)),
+                         ((3, 0), (3, 1)),
+                         ])
+def test_robot_is_stopped_by_wall(input_coordinates, output_coordinates):
+    """
+    Take robot's coordinates, move's direction and distance and assert robot
+    was moved to correct coordinates.
+    """
+    board = get_board("maps/test_walls.json")
+    robot = Robot(None, None, None, input_coordinates)
+    state = State(board, [robot], 25)
+    robot.move(Direction.N, 2, state)
+    assert robot.coordinates == output_coordinates
+
+
+
 @pytest.mark.parametrize(("card", "new_coordinates"),
                         [(MovementCard(100, 1), (5, 6)),
                          (MovementCard(100, 2), (5, 7)),
