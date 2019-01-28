@@ -11,7 +11,7 @@ import pyglet
 import sys
 
 # This line is temporary, just for the development purposes
-from util import Rotation, Direction
+from util import Rotation
 
 
 # load JSON map data from the backend module
