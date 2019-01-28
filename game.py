@@ -6,12 +6,12 @@ The game module
 """
 
 from backend import get_start_state, apply_tile_effects
-from frontend import init_window, draw_board, TILE_WIDTH, TILE_HEIGHT
+from frontend import init_window, draw_board
 import pyglet
 import sys
 
 # This line is temporary, just for the development purposes
-from util import Rotation
+from util import Rotation, Direction
 
 
 # load JSON map data from the backend module
@@ -50,7 +50,9 @@ def move_once(t):
         robot.walk(3, state)
         print(robot)
     #state.robots[3].walk(-1, state)
-    
+    #state.robots[3].rotate(Rotation.RIGHT)
+    #state.robots[3].walk(2, state)
+
     apply_tile_effects(state)
     print("After tile effects:")
     for robot in state.robots:

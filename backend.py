@@ -23,6 +23,16 @@ class Robot:
 
     @property
     def inactive(self):
+        """
+        Create read-only attribute. Evaluate robot's coordinates and return
+        a boolean.
+
+        All inactive robots are moved to coordinates -1, -1.
+        Return True if robot is on these coordinates.
+
+        More info about @property decorator - official documentation:
+        https://docs.python.org/3/library/functions.html#property
+        """
         return self.coordinates == (-1, -1)
 
     def __repr__(self):
@@ -70,6 +80,7 @@ class Robot:
                     if state.robots[robot_in_the_way].coordinates != next_coordinates:
                         # Robot walks to new coordinates.
                         self.coordinates = next_coordinates
+                        # Check hole on new coordinates
                         for tile in state.get_tiles(self.coordinates):
                             tile.kill_robot(self)
                             if self.inactive:
@@ -77,6 +88,7 @@ class Robot:
             # There isn't a robot in the way. Robot walks to new coordinates.
             else:
                 self.coordinates = next_coordinates
+                # Check hole on new coordinates
                 for tile in state.get_tiles(self.coordinates):
                     tile.kill_robot(self)
                     if self.inactive:
@@ -107,6 +119,7 @@ class Robot:
             # There isn't a robot on the next tile. Robot will be moved.
             if robot_check:
                 self.coordinates = next_coordinates
+                # Check hole on new coordinates
                 for tile in state.get_tiles(self.coordinates):
                     tile.kill_robot(self)
                     if self.inactive:
