@@ -4,6 +4,7 @@ Util contains classes Tile and Direction, accessed by both loading and backend.
 
 from enum import Enum
 
+
 class Tile:
     def __init__(self, direction, path, properties):
         self.direction = direction
@@ -287,10 +288,8 @@ class Direction(Enum):
         obj.map_property = tile_property
         return obj
 
-
     def __add__(self, other):
         return Direction((self.value + other.value) % 360)
-
 
     def get_new_direction(self, where_to):
         """

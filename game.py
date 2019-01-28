@@ -29,6 +29,7 @@ state = get_start_state(map_name)
 # Load pyglet graphic window from the frontend module.
 window = init_window(state)
 
+
 @window.event
 def on_draw():
     """
@@ -47,10 +48,13 @@ def move_once(t):
     for robot in state.robots:
         #robot.apply_card_effect(state)
         robot.walk(3, state)
+        print(robot)
     #state.robots[3].walk(-1, state)
-    print(state.robots)
+    
     apply_tile_effects(state)
-    print(state.robots)
+    print("After tile effects:")
+    for robot in state.robots:
+        print(robot)
 
 
 pyglet.clock.schedule_once(move_once, 3)

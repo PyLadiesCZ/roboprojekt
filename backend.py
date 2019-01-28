@@ -20,10 +20,15 @@ class Robot:
         self.lives = 3
         self.flags = 0
         self.damages = 4
-        self.inactive = False
+
+    @property
+    def inactive(self):
+        return self.coordinates == (-1, -1)
 
     def __repr__(self):
-        return "<Robot {} {} {} Lives: {} Flags: {} Damages: {}>".format(self.direction, self.path, self.coordinates, self.lives, self.flags, self.damages)
+        return "<Robot {} {} {} Lives: {} Flags: {} Damages: {}, Inactive: {}>".format(
+            self.direction, self.path, self.coordinates, self.lives, self.flags,
+            self.damages, self.inactive)
 
     def walk(self, distance, state, direction=None):
         """
@@ -65,10 +70,17 @@ class Robot:
                     if state.robots[robot_in_the_way].coordinates != next_coordinates:
                         # Robot walks to new coordinates.
                         self.coordinates = next_coordinates
+                        for tile in state.get_tiles(self.coordinates):
+                            tile.kill_robot(self)
+                            if self.inactive:
+                                break
             # There isn't a robot in the way. Robot walks to new coordinates.
             else:
                 self.coordinates = next_coordinates
-
+                for tile in state.get_tiles(self.coordinates):
+                    tile.kill_robot(self)
+                    if self.inactive:
+                        break
 
     def move(self, direction, distance, state):
         """
@@ -95,7 +107,10 @@ class Robot:
             # There isn't a robot on the next tile. Robot will be moved.
             if robot_check:
                 self.coordinates = next_coordinates
-
+                for tile in state.get_tiles(self.coordinates):
+                    tile.kill_robot(self)
+                    if self.inactive:
+                        break
 
     def die(self):
         """
@@ -103,16 +118,13 @@ class Robot:
         Robot is moved out of game board for the rest of the round.
         """
         self.lives -= 1
-        # Notification of robot's death during the game round.
-        self.inactive = True
-        self.coordinates = [-1, -1]
+        self.coordinates = (-1, -1)
 
     def rotate(self, where_to):
         """
         Rotate robot according to a given direction.
         """
         self.direction = self.direction.get_new_direction(where_to)
-
 
     def apply_card_effect(self, state):
         """
@@ -375,4 +387,3 @@ def apply_tile_effects(state):
             robot.coordinates = robot.start_coordinates
             robot.damages = 0
             robot.direction = Direction.N
-            robot.inactive = False
