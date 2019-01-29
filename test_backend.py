@@ -155,12 +155,12 @@ def test_robot_changed_direction(direction_before, tile, direction_after):
 
 # HoleTile hidden in walk method
 
-@pytest.mark.parametrize(("lives_before", "tile", "lives_after", "active", "coordinates"),
-                        [(3, HoleTile(None, None, None),  2, True, (-1, -1)),
-                         (2, HoleTile(None, None, None),  1, True, (-1, -1)),
-                         (1, HoleTile(None, None, None),  0, True, (-1, -1)),
+@pytest.mark.parametrize(("lives_before", "lives_after"),
+                        [(3, 2),
+                         (2, 1),
+                         (1, 0),
                         ])
-def test_robot_died(lives_before, tile, lives_after, active, coordinates):
+def test_robot_died(lives_before, lives_after):
     """
     When robot comes to a HoleTile (or goes / is pushed out of the game board),
     he gets killed.
@@ -168,12 +168,12 @@ def test_robot_died(lives_before, tile, lives_after, active, coordinates):
     and his coordinates changed to the (-1, -1).
     """
     robot = Robot(Direction.N, None, None, (0, 0))
-    state = State({(0, 1): [tile]}, [robot], 1)
+    state = State({(0, 1): [HoleTile(None, None, None)]}, [robot], 1)
     robot.lives = lives_before
     robot.walk(1, state)
     assert robot.lives == lives_after
-    assert robot.inactive == active
-    assert robot.coordinates == coordinates
+    assert robot.inactive == True
+    assert robot.coordinates == (-1, -1)
 
 
 # FlagTile
