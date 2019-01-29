@@ -153,23 +153,25 @@ def test_robot_changed_direction(direction_before, tile, direction_after):
     assert robot.direction == direction_after
 
 
-# HoleTile
+# HoleTile hidden in walk method
 
 @pytest.mark.parametrize(("lives_before", "tile", "lives_after", "active", "coordinates"),
-                        [(3, HoleTile(None, None, None),  2, False, (0, 0)),
-                         (2, HoleTile(None, None, None),  1, False, (0, 0)),
+                        [(3, HoleTile(None, None, None),  2, True, (-1, -1)),
+                         (2, HoleTile(None, None, None),  1, True, (-1, -1)),
                          (1, HoleTile(None, None, None),  0, True, (-1, -1)),
                         ])
 def test_robot_died(lives_before, tile, lives_after, active, coordinates):
     """
-    When robot stands on a HoleTile (or is out of the game board),
+    When robot comes to a HoleTile (or goes / is pushed out of the game board),
     he gets killed.
-    Check that his lives were lowered, he got inactive till the next game round and his coordinates changed to the (-1, -1).
+    Check that his lives were lowered, he got inactive till the next game round
+    and his coordinates changed to the (-1, -1).
     """
-    robot = Robot(None, None, None, (0, 0))
-    state = State({(0, 0): [tile]}, [robot], 1)
+    robot = Robot(Direction.N, None, None, (0, 0))
+    state = State({(0, 1): [tile]}, [robot], 1)
     robot.lives = lives_before
-    apply_tile_effects(state)
+    robot.walk(1, state)
+    #apply_tile_effects(state)
     assert robot.lives == lives_after
     assert robot.inactive == active
     assert robot.coordinates == coordinates
