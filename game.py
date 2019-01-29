@@ -6,7 +6,7 @@ The game module
 """
 
 from backend import get_start_state, apply_tile_effects
-from frontend import init_window, draw_board, TILE_WIDTH, TILE_HEIGHT
+from frontend import init_window, draw_board
 import pyglet
 import sys
 
@@ -29,6 +29,7 @@ state = get_start_state(map_name)
 # Load pyglet graphic window from the frontend module.
 window = init_window(state)
 
+
 @window.event
 def on_draw():
     """
@@ -47,10 +48,15 @@ def move_once(t):
     for robot in state.robots:
         #robot.apply_card_effect(state)
         robot.walk(3, state)
+        print(robot)
     #state.robots[3].walk(-1, state)
-    print(state.robots)
+    #state.robots[3].rotate(Rotation.RIGHT)
+    #state.robots[3].walk(2, state)
+
     apply_tile_effects(state)
-    print(state.robots)
+    print("After tile effects:")
+    for robot in state.robots:
+        print(robot)
 
 
 pyglet.clock.schedule_once(move_once, 3)
