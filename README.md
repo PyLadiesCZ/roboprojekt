@@ -43,6 +43,9 @@ After this phase is complete, the robots standing on the repair tile or in Power
 
 Currently, the tests are divided into two separate files, `test_backend.py` and `test_loading.py`, covering respective modules. The second file also contains map validator (see map details below).
 
+To run the tests, write the following command into the command line: `python -m pytest -v` 
+If you want to run only one of the testing files, add the name of the file after the command above. 
+
 ### Create your own map
 
 Current maps were created in [Tiled](https://www.mapeditor.org/) map editor. 
