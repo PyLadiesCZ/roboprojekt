@@ -171,7 +171,6 @@ def test_robot_died(lives_before, tile, lives_after, active, coordinates):
     state = State({(0, 1): [tile]}, [robot], 1)
     robot.lives = lives_before
     robot.walk(1, state)
-    #apply_tile_effects(state)
     assert robot.lives == lives_after
     assert robot.inactive == active
     assert robot.coordinates == coordinates
