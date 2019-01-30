@@ -219,29 +219,37 @@ def test_robot_is_stopped_by_wall(input_coordinates, output_coordinates):
 
 
 # LaserTile
-@pytest.mark.parametrize(("input_coordinates", "output_damages"),
-                        [((1, 2), 4),
-                         ((3, 1), 4),
-                         ((2, 1), 4),
-                         ((0, 1), 6),
-                         ((3, 3), 8),
-                         ((2, 3), 7),
+@pytest.mark.parametrize(("input_coordinates", "add_damages"),
+                        [((1, 2), 0),
+                         ((3, 1), 0),
+                         ((2, 1), 0),
+                         ((0, 1), 2),
+                         ((3, 3), 4),
+                         ((2, 3), 3),
                          ])
-def test_robot_is_damaged_by_laser(input_coordinates, output_damages):
+def test_robot_is_damaged_by_laser(input_coordinates, add_damages):
     """
     When robot stands on laser tile, he is damaged according to the laser strength, but only if there is no obstacle in the way.
     If there are obstacles, damage count changes accordingly.
 
-    TODO: currently in backend.py robot is initialized with 4 damages.
-    When it is changed back to 0 damages, the values must be changed in the test as well.
+
     """
     board = get_board("maps/test_laser.json")
     robot_obstacle1 = Robot(Direction.N, None, None, (1, 1))
     robot_obstacle2 = Robot(Direction.N, None, None, (3, 2))
     robot = Robot(Direction.E, None, None, input_coordinates)
+
+    # Get count of current robot's damage (as we change it in backend for
+    # development purposes). When game is finished,
+    # the math behind counting final damages can be removed.
+    damages_before = robot.damages
     state = State(board, [robot_obstacle1, robot_obstacle2, robot], 16)
     apply_tile_effects(state)
-    assert robot.damages == output_damages
+
+    # Assertion that the sum of initial damages and added damages is as expected
+    # We cannot determine the precise number at this point as our robots
+    # are initialized with diferent count of damages (for devel purposes).
+    assert robot.damages == damages_before + add_damages
 
 
 
