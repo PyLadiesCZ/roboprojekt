@@ -256,18 +256,44 @@ def test_robot_is_damaged_by_laser(input_coordinates, add_damages):
 # PusherTile
 
 @pytest.mark.parametrize(("game_round", "tile", "output_coordinates"),
-                        [(1, PusherTile(Direction.N, None, [{'value': 1}]), (0, 1)),
+                        [(1, PusherTile(Direction.N, None, [{'value': 1}]), (1, 0)),
                          (2, PusherTile(Direction.N, None, [{'value': 1}]), (1, 1)),
                          (3, PusherTile(Direction.N, None, [{'value': 0}]), (1, 1)),
-                         (4, PusherTile(Direction.N, None, [{'value': 0}]), (0, 1)),
-                         (5, PusherTile(Direction.N, None, [{'value': 1}]), (0, 1)),
+                         (4, PusherTile(Direction.N, None, [{'value': 0}]), (1, 0)),
+                         (5, PusherTile(Direction.N, None, [{'value': 1}]), (1, 0)),
                          ])
 def test_robot_is_pushed_at_the_correct_round(game_round, tile, output_coordinates):
+    """
+    When robot is standing on a PusherTile, he should be pushed against it.
+    Robot's direction doesn't change, just the coordinates.
+    The push is performed only at the certain game round (1-3-5 or 2-4) according
+    to the value on the tile.
+    """
     robot = Robot(Direction.W, None, None, (1, 1))
-    state = State({(1, 1): [tile]}, [robot], 1)
+    state = State({(1, 0): [Tile(None, None, None)], (1, 1): [tile]}, [robot], 2)
     state.game_round = game_round
     apply_tile_effects(state)
     assert robot.direction == Direction.W
+    assert robot.coordinates == output_coordinates
+
+
+@pytest.mark.parametrize(("tile", "output_coordinates"),
+                        [(PusherTile(Direction.N, None, [{'value': 1}]), (1, 0)),
+                         (PusherTile(Direction.S, None, [{'value': 1}]), (1, 2)),
+                         (PusherTile(Direction.E, None, [{'value': 1}]), (0, 1)),
+                         (PusherTile(Direction.W, None, [{'value': 1}]), (2, 1)),
+                         ])
+def test_robot_is_pushed_to_the_correct_direction(tile, output_coordinates):
+    """
+    When robot is standing on a PusherTile, he should be pushed against it.
+    Robot's direction doesn't change, just the coordinates.
+    The test asserts the coordinates change to a correct ones (in a correct direction).
+    """
+    robot = Robot(Direction.S, None, None, (1, 1))
+    state = State({(1, 0): [Tile(None, None, None)], (0, 1): [Tile(None, None, None)], (2, 1): [Tile(None, None, None)], (1, 2): [Tile(None, None, None)], (1, 1): [tile]}, [robot], 5)
+    state.game_round = 1
+    apply_tile_effects(state)
+    assert robot.direction == Direction.S
     assert robot.coordinates == output_coordinates
 
 
