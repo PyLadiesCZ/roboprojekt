@@ -297,6 +297,27 @@ def test_robot_is_pushed_to_the_correct_direction(tile, output_coordinates):
     assert robot.coordinates == output_coordinates
 
 
+@pytest.mark.parametrize(("tile"),
+                        [(PusherTile(Direction.N, None, [{'value': 1}])),
+                         (PusherTile(Direction.S, None, [{'value': 1}])),
+                         (PusherTile(Direction.E, None, [{'value': 1}])),
+                         (PusherTile(Direction.W, None, [{'value': 1}])),
+                         ])
+def test_robot_is_pushed_out_of_the_board(tile):
+    """
+    When robot is standing on a PusherTile, he should be pushed against it.
+    If he is pushed out of a board game, he should be killed.
+    The test asserts the attributes: coordinates, lives and inactive change.
+    """
+    robot = Robot(Direction.S, None, None, (0, 0))
+    state = State({(0, 0): [tile]}, [robot], 1)
+    state.game_round = 1
+    apply_tile_effects(state)
+    assert robot.lives == 2
+    assert robot.inactive == True
+    assert robot.coordinates == (-1, -1)
+
+
 @pytest.mark.parametrize(("card", "new_coordinates"),
                         [(MovementCard(100, 1), (5, 6)),
                          (MovementCard(100, 2), (5, 7)),

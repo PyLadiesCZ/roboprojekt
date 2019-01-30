@@ -390,10 +390,12 @@ def apply_tile_effects(state):
 
     # Delete robots with zero lives
     state.robots = [robot for robot in state.robots if robot.lives > 0]
-    for robot in state.robots:
-        # If robot lost life during game round, it will now ressurect at its
-        # starting coordinates.
-        if robot.inactive:
-            robot.coordinates = robot.start_coordinates
-            robot.damages = 0
-            robot.direction = Direction.N
+
+    # If robot lost life during game round, it will now ressurect at its
+    # starting coordinates.
+    if state.game_round == 5:
+        for robot in state.robots:
+            if robot.inactive:
+                robot.coordinates = robot.start_coordinates
+                robot.damages = 0
+                robot.direction = Direction.N
