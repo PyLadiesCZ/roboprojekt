@@ -210,6 +210,7 @@ def test_robot_is_stopped_by_wall(input_coordinates, output_coordinates):
     """
     Take robot's coordinates, move's direction and distance and assert robot
     was moved to correct coordinates.
+    A special map test_walls was created in order to test this feature.
     """
     board = get_board("maps/test_walls.json")
     robot = Robot(None, None, None, input_coordinates)
@@ -219,6 +220,7 @@ def test_robot_is_stopped_by_wall(input_coordinates, output_coordinates):
 
 
 # LaserTile
+
 @pytest.mark.parametrize(("input_coordinates", "add_damages"),
                         [((1, 2), 0),
                          ((3, 1), 0),
@@ -231,8 +233,7 @@ def test_robot_is_damaged_by_laser(input_coordinates, add_damages):
     """
     When robot stands on laser tile, he is damaged according to the laser strength, but only if there is no obstacle in the way.
     If there are obstacles, damage count changes accordingly.
-
-
+    A special map test_laser was created in order to test this feature.
     """
     board = get_board("maps/test_laser.json")
     robot_obstacle1 = Robot(Direction.N, None, None, (1, 1))
@@ -252,7 +253,22 @@ def test_robot_is_damaged_by_laser(input_coordinates, add_damages):
     assert robot.damages == damages_before + add_damages
 
 
+# PusherTile
 
+@pytest.mark.parametrize(("game_round", "tile", "output_coordinates"),
+                        [(1, PusherTile(Direction.N, None, [{'value': 1}]), (0, 1)),
+                         (2, PusherTile(Direction.N, None, [{'value': 1}]), (1, 1)),
+                         (3, PusherTile(Direction.N, None, [{'value': 0}]), (1, 1)),
+                         (4, PusherTile(Direction.N, None, [{'value': 0}]), (0, 1)),
+                         (5, PusherTile(Direction.N, None, [{'value': 1}]), (0, 1)),
+                         ])
+def test_robot_is_pushed_at_the_correct_round(game_round, tile, output_coordinates):
+    robot = Robot(Direction.W, None, None, (1, 1))
+    state = State({(1, 1): [tile]}, [robot], 1)
+    state.game_round = game_round
+    apply_tile_effects(state)
+    assert robot.direction == Direction.W
+    assert robot.coordinates == output_coordinates
 
 
 @pytest.mark.parametrize(("card", "new_coordinates"),
