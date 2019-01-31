@@ -37,6 +37,7 @@ class Robot:
             self.direction, self.path, self.coordinates, self.lives, self.flags,
             self.damages, self.inactive)
 
+
     def walk(self, distance, state, direction=None):
         """
         Move a robot to new coordinates based on its direction.
@@ -61,15 +62,9 @@ class Robot:
             if not check_wall(self.coordinates, direction, state):
                 break
 
-            # There is no wall. Get new coordinates.
             next_coordinates = get_next_coordinates(self.coordinates, direction)
-            # Check robots on the next tile.
-            robot_in_the_way = None
-            for robot in state.robots:
-                if robot.coordinates == next_coordinates:
-                    # Save index of robot that is in the way.
-                    robot_in_the_way = state.robots.index(robot)
-                    break
+            robot_in_the_way = check_robots_in_the_way(self, state, next_coordinates)
+
             # Move robot in the way.
             if robot_in_the_way is not None:
                     state.robots[robot_in_the_way].walk(1, state, direction)
@@ -144,6 +139,7 @@ class Robot:
         if isinstance(current_card, RotationCard):
             self.rotate(current_card.rotation)
 
+
     def check_hole(self, state):
         """
         Check tiles on robot's coordinates for HoleTile and apply its effect.
@@ -152,6 +148,41 @@ class Robot:
             tile.kill_robot(self)
             if self.inactive:
                 break
+
+
+    def shoot(self, state):
+        # Check next coordinates in your direction
+
+        distance_till_end = get_distance_to_board_end(self, state)
+        next_coordinates = get_next_coordinates(self.coordinates, self.direction)
+
+        for step in range(distance_till_end):
+            # There is a wall, end of shot
+            if not check_wall(self.coordinates, self.direction, state):
+                break
+
+            robots_in_the_way = check_robots_in_the_way(self, state, next_coordinates)
+
+            if robots_in_the_way is not None:
+                do_damage(state.robots[robots_in_the_way])
+                break
+
+            else:
+                next_coordinates = get_next_coordinates(next_coordinates, self.direction)
+
+
+def get_distance_to_board_end(robot, state):
+    # Find your distance to the end of board:
+
+    if robot.direction == Direction.N:
+        return state.sizes[1] - robot.coordinates[1]
+    if robot.direction == Direction.S:
+        return robot.coordinates[1]
+    if robot.direction == Direction.E:
+        return state.sizes[0] - robot.coordinates[0]
+    if robot.direction == Direction.W:
+        return robot.coordinates[0]
+
 
 
 class Card:
@@ -341,6 +372,26 @@ def get_next_coordinates(coordinates, direction):
     return (x, y)
 
 
+def check_robots_in_the_way(robot, state, next_coordinates):
+    # Check robots on the next tile.
+    #robot_in_the_way = None
+    for robot in state.robots:
+        if robot.coordinates == next_coordinates:
+            # Return index of robot that is in the way.
+            #robot_in_the_way = state.robots.index(robot)
+            return state.robots.index(robot)
+        #else:
+            #return None
+
+def do_damage(robot, strength=1):
+    if robot.damages < (10 - strength):
+        # Laser won't kill robot, but it will damage robot.
+        robot.damages += strength
+    else:
+        # Robot is damaged so much that laser kills it.
+        robot.die()
+
+
 def apply_tile_effects(state):
     """
     Apply tile effects according to game rules.
@@ -379,6 +430,9 @@ def apply_tile_effects(state):
                 if robot.inactive:
                     break
     # Activate robot laser
+    for robot in state.robots:
+        if not robot.inactive:
+            robot.shoot(state)
 
     # Collect flags, repair robots
     for robot in state.robots:

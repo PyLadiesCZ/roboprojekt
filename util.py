@@ -222,14 +222,7 @@ class LaserTile(Tile):
                         # Don't check other tiles.
                         break
         if hit:
-            # No robots found in the direction of incoming laser.
-            # So do damage to robot.
-            if robot.damages < (10 - self.laser_strength):
-                # Laser won't kill robot, but it will damage robot.
-                robot.damages += self.laser_strength
-            else:
-                # Robot is damaged so much that laser kills it.
-                robot.die()
+            do_damage(robot, self.laser_strength)
 
 
 class FlagTile(Tile):
