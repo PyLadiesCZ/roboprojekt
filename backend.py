@@ -3,7 +3,7 @@ Backend file contains functions for the game logic.
 """
 from pathlib import Path
 import random
-from util import Direction, Rotation, HoleTile
+from util import Direction, Rotation, HoleTile, do_damage
 from loading import get_board
 
 
@@ -63,7 +63,7 @@ class Robot:
                 break
 
             next_coordinates = get_next_coordinates(self.coordinates, direction)
-            robot_in_the_way = check_robots_in_the_way(self, state, next_coordinates)
+            robot_in_the_way = check_robots_in_the_way(state, next_coordinates)
 
             # Move robot in the way.
             if robot_in_the_way is not None:
@@ -161,7 +161,7 @@ class Robot:
             if not check_wall(self.coordinates, self.direction, state):
                 break
 
-            robots_in_the_way = check_robots_in_the_way(self, state, next_coordinates)
+            robots_in_the_way = check_robots_in_the_way(state, next_coordinates)
 
             if robots_in_the_way is not None:
                 do_damage(state.robots[robots_in_the_way])
@@ -172,7 +172,11 @@ class Robot:
 
 
 def get_distance_to_board_end(robot, state):
-    # Find your distance to the end of board:
+    """
+    Side function to check how far it is to the end of the board.
+    Take robot and game state, return integer - subtraction of distance from
+    the end of the board to the robot.
+    """
 
     if robot.direction == Direction.N:
         return state.sizes[1] - robot.coordinates[1]
@@ -372,24 +376,18 @@ def get_next_coordinates(coordinates, direction):
     return (x, y)
 
 
-def check_robots_in_the_way(robot, state, next_coordinates):
+def check_robots_in_the_way(state, next_coordinates):
+    """
+    Check if there are robots on the next coordinates.
+    Return index of the first robot on the way from given point.
+    """
     # Check robots on the next tile.
-    #robot_in_the_way = None
     for robot in state.robots:
         if robot.coordinates == next_coordinates:
             # Return index of robot that is in the way.
             #robot_in_the_way = state.robots.index(robot)
             return state.robots.index(robot)
-        #else:
-            #return None
 
-def do_damage(robot, strength=1):
-    if robot.damages < (10 - strength):
-        # Laser won't kill robot, but it will damage robot.
-        robot.damages += strength
-    else:
-        # Robot is damaged so much that laser kills it.
-        robot.die()
 
 
 def apply_tile_effects(state):
