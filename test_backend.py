@@ -1,5 +1,5 @@
 from backend import get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects
-from util import Tile, HoleTile, WallTile, GearTile, PusherTile, LaserTile, StartTile, RepairTile, FlagTile, Direction, Rotation
+from util import Tile, HoleTile, GearTile, PusherTile, RepairTile, FlagTile, Direction, Rotation
 from loading import get_board
 from pathlib import Path
 import pytest
@@ -104,27 +104,45 @@ def test_robot_change_direction(current_direction, towards, new_direction):
                          (9, RepairTile(None, None, [{'value': True}]), 8),
                          (3, RepairTile(None, None, [{'value': True}]), 2),
                         ])
-def test_robot_is_repaired(damages_before, tile, damages_after):
+def test_robot_is_repaired_after_5th_round(damages_before, tile, damages_after):
     """
-    When robot is on RepairTile he is supposed to be repaired.
+    When robot is on RepairTile he is supposed to be repaired after the 5th game round.
     If he doesn't have any damages, the count remains the same as previous.
     """
     robot = Robot(None, None, None, (0, 0))
     state = State({(0, 0): [tile]}, [robot], 1)
     robot.damages = damages_before
+    state.game_round = 5
     apply_tile_effects(state)
     assert robot.damages == damages_after
+
+
+@pytest.mark.xfail
+@pytest.mark.parametrize(("damages", "tile", "current_game_round"),
+                        [(0, RepairTile(None, None, [{'value': True}]), 1),
+                         (9, RepairTile(None, None, [{'value': True}]), 2),
+                         (3, RepairTile(None, None, [{'value': True}]), 3),
+                         (5, RepairTile(None, None, [{'value': True}]), 4),
+                        ])
+def test_robot_is_not_repaired(damages, tile, current_game_round):
+    """
+    When robot is on RepairTile but the game round is not 5, he is not yet repaired. His damage count doesn't change.
+    """
+    robot = Robot(None, None, None, (0, 0))
+    state = State({(0, 0): [tile]}, [robot], 1)
+    robot.damages = damages
+    state.game_round = current_game_round
+    apply_tile_effects(state)
+    assert robot.damages == damages
 
 
 @pytest.mark.parametrize(("tile", "coordinates_after"),
                         [(RepairTile(None, None, [{'value': True}]),  (0, 0)),
                          (RepairTile(None, None, [{'value': False}]), (1, 1)),
-                         (RepairTile(None, None, [{'value': True}]), (0, 0)),
-                         (RepairTile(None, None, [{'value': False}]), (1, 1)),
                         ])
 def test_robot_changed_start_coordinates(tile, coordinates_after):
     """
-    When robot is on RepairTile with special property, he changes it starting coordinates to the tile coordinates.
+    When robot is on RepairTile with special property, he changes his starting coordinates to the tile coordinates.
     On a normal RepairTile he doesn't change the starting tile.
     """
     robot = Robot(None, None, None, (0, 0))
@@ -172,30 +190,44 @@ def test_robot_died(lives_before, lives_after):
     robot.lives = lives_before
     robot.walk(1, state)
     assert robot.lives == lives_after
-    assert robot.inactive == True
+    assert robot.inactive is True
     assert robot.coordinates == (-1, -1)
 
 
 # FlagTile
 
-@pytest.mark.parametrize(("flags_before", "tile", "flags_after", "start_coordinates_after"),
-                        [(3, FlagTile(None, None, [{'value': 1}]),  3,  (1, 1)),
-                         (3, FlagTile(None, None, [{'value': 4}]),  4, (0, 0)),
-                         (3, FlagTile(None, None, [{'value': 5}]),  3, (1, 1)),
+@pytest.mark.parametrize(("flags_before", "tile", "flags_after"),
+                        [(3, FlagTile(None, None, [{'value': 1}]),  3),
+                         (3, FlagTile(None, None, [{'value': 4}]),  4),
+                         (3, FlagTile(None, None, [{'value': 5}]),  3),
                         ])
-def test_robot_collected_flags(flags_before, tile, flags_after, start_coordinates_after):
+def test_robot_collected_flags(flags_before, tile, flags_after):
     """
     When a robot stands on FlagTile with appropriate number (+1 to his current flag count), he collects it.
-    He doesn't collect the flags with the other number than defined.    They don't have any effect on him.
-    With the flag collected the starting coordinates change to the tile's coordinates.
+    He doesn't collect the flags with the other number than defined. They don't have any effect on him.
     """
     robot = Robot(None, None, None, (0, 0))
     state = State({(0, 0): [tile]}, [robot], 1)
     robot.flags = flags_before
-    robot.start_coordinates = (1, 1)
     apply_tile_effects(state)
     assert robot.flags == flags_after
-    assert robot.start_coordinates == start_coordinates_after
+
+
+@pytest.mark.xfail
+@pytest.mark.parametrize(("tile"),
+                        [(FlagTile(None, None, [{'value': 1}])),
+                         (FlagTile(None, None, [{'value': 4}])),
+                         (FlagTile(None, None, [{'value': 5}])),
+                        ])
+def test_robot_changed_coordinates(tile):
+    """
+    When a robot stands on FlagTile the starting coordinates change to the tile's coordinates.
+    """
+    robot = Robot(None, None, None, (0, 0))
+    state = State({(0, 0): [tile]}, [robot], 1)
+    robot.start_coordinates = (1, 1)
+    apply_tile_effects(state)
+    assert robot.start_coordinates == (0, 0)
 
 
 # WallTile
@@ -221,7 +253,7 @@ def test_robot_is_stopped_by_wall(input_coordinates, output_coordinates):
 
 # LaserTile
 
-@pytest.mark.parametrize(("input_coordinates", "add_damages"),
+@pytest.mark.parametrize(("input_coordinates", "damages_after"),
                         [((1, 2), 0),
                          ((3, 1), 0),
                          ((2, 1), 0),
@@ -229,7 +261,7 @@ def test_robot_is_stopped_by_wall(input_coordinates, output_coordinates):
                          ((3, 3), 4),
                          ((2, 3), 3),
                          ])
-def test_robot_is_damaged_by_laser(input_coordinates, add_damages):
+def test_robot_is_damaged_by_laser(input_coordinates, damages_after):
     """
     When robot stands on laser tile, he is damaged according to the laser strength, but only if there is no obstacle in the way.
     If there are obstacles, damage count changes accordingly.
@@ -239,18 +271,10 @@ def test_robot_is_damaged_by_laser(input_coordinates, add_damages):
     robot_obstacle1 = Robot(Direction.N, None, None, (1, 1))
     robot_obstacle2 = Robot(Direction.N, None, None, (3, 2))
     robot = Robot(Direction.E, None, None, input_coordinates)
-
-    # Get count of current robot's damage (as we change it in backend for
-    # development purposes). When game is finished,
-    # the math behind counting final damages can be removed.
-    damages_before = robot.damages
+    robot.damages = 0
     state = State(board, [robot_obstacle1, robot_obstacle2, robot], 16)
     apply_tile_effects(state)
-
-    # Assertion that the sum of initial damages and added damages is as expected
-    # We cannot determine the precise number at this point as our robots
-    # are initialized with diferent count of damages (for devel purposes).
-    assert robot.damages == damages_before + add_damages
+    assert robot.damages == damages_after
 
 
 # PusherTile
@@ -314,7 +338,7 @@ def test_robot_is_pushed_out_of_the_board(tile):
     state.game_round = 1
     apply_tile_effects(state)
     assert robot.lives == 2
-    assert robot.inactive == True
+    assert robot.inactive is True
     assert robot.coordinates == (-1, -1)
 
 
