@@ -339,43 +339,30 @@ def apply_tile_effects(state):
         # 2) Express belts and normal belts move 1 space
 
     # Activate pusher
-    for robot in state.robots:
-        if not robot.inactive:
-            tiles = state.get_tiles(robot.coordinates)
-            for tile in tiles:
-                # Kill robot if it is standing on hole tile.
-                # After completed cards play part with integration of robot
-                # dying after card movement. This line can be deleted.
-                tile.kill_robot(robot)
-                # All set. Start moving.
-                tile.push_robot(robot, state)
-                if robot.inactive:
-                    break
+    for robot in [robot for robot in state.robots if not robot.inactive]:
+        for tile in state.get_tiles(robot.coordinates):
+            tile.push_robot(robot, state)
+            if robot.inactive:
+                break
 
     # Activate gear
-    for robot in state.robots:
-        if not robot.inactive:
-            tiles = state.get_tiles(robot.coordinates)
-            for tile in tiles:
-                tile.rotate_robot(robot)
+    for robot in [robot for robot in state.robots if not robot.inactive]:
+        for tile in state.get_tiles(robot.coordinates):
+            tile.rotate_robot(robot)
 
     # Activate laser
-    for robot in state.robots:
-        if not robot.inactive:
-            tiles = state.get_tiles(robot.coordinates)
-            for tile in tiles:
-                tile.shoot_robot(robot, state)
-                if robot.inactive:
-                    break
+    for robot in [robot for robot in state.robots if not robot.inactive]:
+        for tile in state.get_tiles(robot.coordinates):
+            tile.shoot_robot(robot, state)
+            if robot.inactive:
+                break
     # Activate robot laser
 
     # Collect flags, repair robots
-    for robot in state.robots:
-        if not robot.inactive:
-            tiles = state.get_tiles(robot.coordinates)
-            for tile in tiles:
-                tile.collect_flag(robot)
-                tile.repair_robot(robot, state)
+    for robot in [robot for robot in state.robots if not robot.inactive]:
+        for tile in state.get_tiles(robot.coordinates):
+            tile.collect_flag(robot)
+            tile.repair_robot(robot, state)
 
     # Delete robots with zero lives
     state.robots = [robot for robot in state.robots if robot.lives > 0]
