@@ -275,12 +275,13 @@ class FlagTile(Tile):
         super().__init__(direction, path, properties)
 
     def collect_flag(self, robot):
+        # Robot always change its starting coordinates, when he is on a flag.
+        # Flag number doesn't play a role.
+        robot.start_coordinates = robot.coordinates
         # Collect only correct flag.
         # Correct flag will have a number that is equal to robot flag number plus one.
         if (robot.flags + 1) == self.flag_number:
-            # Flag collected and start coordinates changed to flag's coordinates.
             robot.flags += 1
-            robot.start_coordinates = robot.coordinates
 
 
 class RepairTile(Tile):
