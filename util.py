@@ -134,7 +134,7 @@ class Tile:
         """
         return robot
 
-    def repair_robot(self, robot):
+    def repair_robot(self, robot, state):
         """
         Repair robot. Change robot's start coordinates, if possible by tile properties.
 
