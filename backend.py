@@ -375,7 +375,7 @@ def apply_tile_effects(state):
             tiles = state.get_tiles(robot.coordinates)
             for tile in tiles:
                 tile.collect_flag(robot)
-                tile.repair_robot(robot)
+                tile.repair_robot(robot, state)
 
     # Delete robots with zero lives
     state.robots = [robot for robot in state.robots if robot.lives > 0]

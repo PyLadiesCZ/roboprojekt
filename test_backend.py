@@ -97,28 +97,32 @@ def test_robot_change_direction(current_direction, towards, new_direction):
     assert robot.direction == new_direction
 
 
-@pytest.mark.parametrize(("damages_before", "tile", "damages_after"),
-                        [(0, RepairTile(None, None, [{'value': True}]), 0),
-                         (9, RepairTile(None, None, [{'value': True}]), 8),
-                         (3, RepairTile(None, None, [{'value': True}]), 2),
-                        ])
-def test_robot_is_repaired(damages_before, tile, damages_after):
+@pytest.mark.parametrize(("damages_before", "tile", "damages_after", "game_round"),
+                         [(0, RepairTile(None, None, [{'value': True}]), 0, 5),
+                         (9, RepairTile(None, None, [{'value': True}]), 8, 5),
+                         (3, RepairTile(None, None, [{'value': True}]), 2, 5),
+                         (7, RepairTile(None, None, [{'value': True}]), 7, 1),
+                         (3, RepairTile(None, None, [{'value': True}]), 3, 2),
+                          ])
+def test_robot_is_repaired(damages_before, tile, damages_after, game_round):
     robot = Robot(None, None, None, (0, 0))
     state = State({(0, 0): [tile]}, [robot], 1)
+    state.game_round = game_round
     robot.damages = damages_before
     apply_tile_effects(state)
     assert robot.damages == damages_after
 
 
-@pytest.mark.parametrize(("tile", "coordinates_after"),
-                        [(RepairTile(None, None, [{'value': True}]),  (0, 0)),
-                         (RepairTile(None, None, [{'value': False}]), (1, 1)),
-                         (RepairTile(None, None, [{'value': True}]), (0, 0)),
-                         (RepairTile(None, None, [{'value': False}]), (1, 1)),
-                        ])
-def test_robot_changed_start_coordinates(tile, coordinates_after):
+@pytest.mark.parametrize(("tile", "coordinates_after", "game_round"),
+                         [(RepairTile(None, None, [{'value': True}]), (0, 0), 1),
+                         (RepairTile(None, None, [{'value': False}]), (1, 1), 2),
+                         (RepairTile(None, None, [{'value': True}]), (0, 0), 3),
+                         (RepairTile(None, None, [{'value': False}]), (1, 1), 4),
+                          ])
+def test_robot_changed_start_coordinates(tile, coordinates_after, game_round):
     robot = Robot(None, None, None, (0, 0))
     state = State({(0, 0): [tile]}, [robot], 1)
+    state.game_round = game_round
     robot.start_coordinates = (1, 1)
     apply_tile_effects(state)
     assert robot.start_coordinates == coordinates_after
