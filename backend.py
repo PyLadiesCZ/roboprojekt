@@ -3,7 +3,7 @@ Backend file contains functions for the game logic.
 """
 from pathlib import Path
 import random
-from util import Direction, HoleTile
+from util import Direction, HoleTile, get_next_coordinates
 from loading import get_board
 
 
@@ -22,48 +22,68 @@ class Robot:
     def __repr__(self):
         return "<Robot {} {} {} Lives: {} Flags: {} Damages: {}>".format(self.direction, self.path, self.coordinates, self.lives, self.flags, self.damages)
 
-    def walk(self, distance, state):
+    def walk(self, distance, state, direction=None):
         """
         Move a robot to new coordinates based on its direction.
+        Optional argument:
+            direction - Default value is set to robot's direction.
+
+        When robot walks, it can move other robots in the way.
         """
-        self.move(self.direction, distance, state)
+        if direction is None:
+            direction = self.direction
+        for step in range(distance):
+            # Check walls before moving.
+            wall_check = check_wall(self.coordinates, direction, state)
+            if wall_check:
+                # There is no wall. Get new coordinates.
+                next_coordinates = get_next_coordinates(self.coordinates, direction)
+                # Check robots on the next tile.
+                robot_in_the_way = None
+                for robot in state.robots:
+                    if robot.coordinates == next_coordinates:
+                        # Save index of robot that is in the way.
+                        robot_in_the_way = state.robots.index(robot)
+                        break
+                # Move robot in the way.
+                if robot_in_the_way is not None:
+                        state.robots[robot_in_the_way].walk(1, state, direction)
+                        # Check that robot moved.
+                        if state.robots[robot_in_the_way].coordinates != next_coordinates:
+                            # Robot walks to new coordinates.
+                            self.coordinates = next_coordinates
+                # There isn't a robot in the way. Robot walks to new coordinates.
+                else:
+                    self.coordinates = next_coordinates
+            else:
+                break
 
     def move(self, direction, distance, state):
         """
         Move a robot to new coordinates according to direction of the move.
+
+        When robot is moved by game elements (convoyer belt or pusher),
+        it doesn't have enough power to push other robots. If there is a robot
+        in the way, the movement is stopped.
         """
         for step in range(distance):
-            old_tiles = state.get_tiles(self.coordinates)
-            # On the current tile: Check wall in the direction of next move.
-            for tile in old_tiles:
-                move_from = tile.can_move_from(direction)
-                if move_from is False:
-                    break
-            if move_from:
-                # There is no wall, so get new coordinates.
-                (x, y) = self.coordinates
-                (new_x, new_y) = direction.coor_delta
-                x = x + new_x
-                y = y + new_y
-                # Get new list of tiles
-                new_tiles = state.get_tiles((x, y))
-                # Check wall on the next tile in the direction of the move.
-                for tile in new_tiles:
-                    move_to = tile.can_move_to(direction)
-                    if move_to is False:
+            # Check walls before moving.
+            wall_check = check_wall(self.coordinates, direction, state)
+            if wall_check:
+                # There is no wall. Get new coordinates.
+                next_coordinates = get_next_coordinates(self.coordinates, direction)
+                # Check robots on the next tile before moving.
+                robot_check = True
+                for robot in state.robots:
+                    if robot.coordinates == next_coordinates:
+                        # There is a robot on the next tile.
+                        # Robot can't be moved.
+                        robot_check = False
                         break
-                if move_to:
-                    self.coordinates = (x, y)
-                else:
-                    # On the next tile: There is a wall in the direction
-                    # of the move.
-                    # Coordinates won't be changed. Break the loop, don't check
-                    # these tiles again.
-                    break
+                # There isn't a robot on the next tile. Robot will be moved.
+                if robot_check:
+                    self.coordinates = next_coordinates
             else:
-                # On the current tile: There is a wall in the direction
-                # of the move.
-                # Break the loop, don't check next tile.
                 break
 
     def die(self):
@@ -205,6 +225,42 @@ def get_start_state(map_name):
     robots_start = get_robots_to_start(board)
     state = State(board, robots_start, tile_count)
     return state
+
+
+def check_wall(coordinates, direction, state):
+    """
+    Check wall in the direction of the move.
+
+    coordinates: tuple of x and y coordinate
+    direction: object of Direction class
+    state: object of State class
+
+    Return a boolean.
+
+    True - There isn't wall, robot can move.
+    False - There is wall, robot can't move.
+    """
+    old_tiles = state.get_tiles(coordinates)
+    # On the current tile: Check wall in the direction of next move.
+    for tile in old_tiles:
+        move_from = tile.can_move_from(direction)
+        if not move_from:
+            # On the current tile: There is a wall in the direction of the move.
+            return False
+    if move_from:
+        # There is no wall, so get new coordinates.
+        next_coordinates = get_next_coordinates(coordinates, direction)
+        # Get new list of tiles
+        new_tiles = state.get_tiles(next_coordinates)
+        # Check wall on the next tile in the direction of the move.
+        for tile in new_tiles:
+            move_to = tile.can_move_to(direction)
+            if not move_to:
+                # On the next tile: There is a wall in the direction
+                # of the move.
+                return False
+        if move_to:
+            return True
 
 
 def apply_tile_effects(state):
