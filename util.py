@@ -288,10 +288,11 @@ class RepairTile(Tile):
         self.new_start = properties[0]["value"]
         super().__init__(direction, path, properties)
 
-    def repair_robot(self, robot):
-        # Remove one robot damage.
-        if robot.damages > 0:
-            robot.damages -= 1
+    def repair_robot(self, robot, state):
+        if state.game_round == 5:
+            # Remove one robot damage.
+            if robot.damages > 0:
+                robot.damages -= 1
         # Change starting coordinates of robot, if it's a tile property.
         if self.new_start:
             robot.start_coordinates = robot.coordinates
