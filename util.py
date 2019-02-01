@@ -30,18 +30,24 @@ class Direction(Enum):
         obj.map_property = tile_property
         return obj
 
+    def __add__(self, other):
+        return Direction((self.value + other.value) % 360)
+
     def get_new_direction(self, where_to):
         """
         Get new direction of given object.
-
-        Change attribute direction according to argument where_to, passed from TDB class DirectionOfRotation.
+        Change attribute direction according to argument where_to, passed from class Rotation.
         """
-        if where_to == "right":
-            return Direction((self.value + 90) % 360)
-        if where_to == "left":
-            return Direction((self.value + 270) % 360)
-        if where_to == "upside_down":
-            return Direction((self.value + 180) % 360)
+        return Direction(self + where_to)
+
+
+class Rotation(Enum):
+    """
+    Class describing the direction of the movement of the object-robot (dynamic).
+    """
+    LEFT = -90
+    RIGHT = 90
+    U_TURN = 180
 
 
 class Tile:
@@ -147,7 +153,7 @@ class WallTile(Tile):
         # If there is a wall in direction of the robot movement,
         # then the direction of the robot goes against the direction of the wall.
         # Because of that the tile is checked in upside down direction.
-        return not (self.direction.get_new_direction("upside_down") == direction)
+        return not (self.direction.get_new_direction(Rotation.U_TURN) == direction)
 
 
 class StartTile(Tile):
@@ -190,17 +196,22 @@ class PusherTile(Tile):
         #  0 for even game round number,
         #  1 for odd game round number.
         if state.game_round % 2 == self.game_round:
-            robot.move(self.direction.get_new_direction("upside_down"), 1, state)
-            # Check hole on the next coordinates.
-            tiles = state.get_tiles(robot.coordinates)
-            for tile in tiles:
-                tile.kill_robot(robot)
+            robot.move(self.direction.get_new_direction(Rotation.U_TURN), 1, state)
 
 
 class GearTile(Tile):
     def __init__(self, direction, path, properties):
-        self.move_direction = properties[0]["value"]
+        self.move_direction = self.transform_direction(properties[0]["value"])
         super().__init__(direction, path, properties)
+
+    def transform_direction(self, direction_string):
+        """
+        Method to transform the string taken from json properties to valid Rotation class instance for later processing.
+        """
+        if direction_string == "left":
+            return Rotation.LEFT
+        if direction_string == "right":
+            return Rotation.RIGHT
 
     def rotate_robot(self, robot):
         # Rotate robot by 90° according to GearTile property: left or right.
@@ -225,7 +236,7 @@ class LaserTile(Tile):
             for robot_state in state.robots:
                 coordinates.append(robot_state.coordinates)
             # Get direction in which it will be checked for other robots or laser start.
-            direction_to_start = self.direction.get_new_direction('upside_down')
+            direction_to_start = self.direction.get_new_direction(Rotation.U_TURN)
             # Check if there is another robot in direction of incoming laser.
             while hit:
                 # Get new coordinates.
@@ -297,6 +308,7 @@ def select_tile(direction, path, type, properties):
     Select tile subclass according to its type and create coressponding subclass.
     """
     return TILE_CLS[type](direction, path, properties)
+
 
 def get_next_coordinates(coordinates, direction):
     """
