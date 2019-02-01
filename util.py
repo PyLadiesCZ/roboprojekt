@@ -80,14 +80,12 @@ class Tile:
         True - There is not a wall in direction of the move.
         False - There is a wall in direction of the move.
         """
-        # If there is a wall in direction of the robot movement,
-        # than the direction of the robot goes against the direction of the wall.
-        # Because of that the tile is rotate upside down.
         return True
 
     def kill_robot(self, robot):
         """
-        Take away one robot life or kill robot.
+        Take away one robot life, set him to inactive mode and move him
+        to coordinates for inactive robots (-1, -1).
 
         Take and return Robot class.
         """
@@ -136,9 +134,12 @@ class Tile:
 
     def repair_robot(self, robot, state):
         """
-        Repair robot. Change robot's start coordinates, if possible by tile properties.
+        Repair one robot's damage. Change robot's start coordinates, if possible by tile properties.
 
-        Take and return Robot class.
+        robot: Robot class
+        state: State class
+
+        Return Robot class.
         """
         return robot
 
@@ -166,7 +167,7 @@ class HoleTile(Tile):
         super().__init__(direction, path, properties)
 
     def kill_robot(self, robot):
-        # Call robot's method for dying
+        # Call robot's method for dying.
         return robot.die()
 
 
@@ -265,7 +266,7 @@ class LaserTile(Tile):
                 # Laser won't kill robot, but it will damage robot.
                 robot.damages += self.laser_strength
             else:
-                # Robot is damaged so much that laser kills it.
+                # Robot is damaged so much that laser kills him.
                 robot.die()
 
 
@@ -275,11 +276,11 @@ class FlagTile(Tile):
         super().__init__(direction, path, properties)
 
     def collect_flag(self, robot):
-        # Robot always change its starting coordinates, when he is on a flag.
+        # Robot always change his starting coordinates, when he is on a flag.
         # Flag number doesn't play a role.
         robot.start_coordinates = robot.coordinates
         # Collect only correct flag.
-        # Correct flag will have a number that is equal to robot flag number plus one.
+        # Correct flag will have a number that is equal to robot's flag number plus one.
         if (robot.flags + 1) == self.flag_number:
             robot.flags += 1
 
