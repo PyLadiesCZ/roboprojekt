@@ -310,7 +310,8 @@ def test_robot_is_pushed_at_the_correct_round(game_round, tile, output_coordinat
                          ])
 def test_robot_is_pushed_to_the_correct_direction(tile, output_coordinates):
     """
-    When robot is standing on a PusherTile, he should be pushed against it.
+    When robot is standing on a PusherTile, he should be pushed in the direction of pusher's force.
+    Eg. pusher on the North tile side forces the robot's movement to the South.
     Robot's direction doesn't change, just the coordinates.
     The test asserts the coordinates change to a correct ones (in a correct direction).
     """
@@ -330,7 +331,8 @@ def test_robot_is_pushed_to_the_correct_direction(tile, output_coordinates):
                          ])
 def test_robot_is_pushed_out_of_the_board(tile):
     """
-    When robot is standing on a PusherTile, he should be pushed against it.
+    When robot is standing on a PusherTile, he should be pushed in the direction of pusher's force.
+    Eg. pusher on the North tile side forces the robot's movement to the South.
     If he is pushed out of a board game, he should be killed.
     The test asserts the attributes: coordinates, lives and inactive change.
     """
