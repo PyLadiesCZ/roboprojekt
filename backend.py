@@ -3,7 +3,7 @@ Backend file contains functions for the game logic.
 """
 from pathlib import Path
 import random
-from util import Direction, Rotation, HoleTile
+from util import Direction, Rotation, HoleTile, get_next_coordinates
 from loading import get_board
 
 
@@ -39,11 +39,11 @@ class Robot:
 
     def walk(self, distance, state, direction=None):
         """
-        Move a robot to new coordinates based on its direction.
+        Move a robot to new coordinates based on his direction.
         Optional argument:
             direction - Default value is set to robot's direction.
 
-        When robot walks, it can move other robots in the way.
+        When robot walks, he can move other robots in the way.
         """
         if direction is None:
             direction = self.direction
@@ -77,12 +77,12 @@ class Robot:
                     if state.robots[robot_in_the_way].coordinates != next_coordinates:
                         # Robot walks to new coordinates.
                         self.coordinates = next_coordinates
-                        # Check hole on new coordinates
+                        # Check hole on new coordinates.
                         self.check_hole(state)
             # There isn't a robot in the way. Robot walks to new coordinates.
             else:
                 self.coordinates = next_coordinates
-                # Check hole on new coordinates
+                # Check hole on new coordinates.
                 self.check_hole(state)
 
     def move(self, direction, distance, state):
@@ -90,7 +90,7 @@ class Robot:
         Move a robot to new coordinates according to direction of the move.
 
         When robot is moved by game elements (convoyer belt or pusher),
-        it doesn't have enough power to push other robots. If there is a robot
+        he doesn't have enough power to push other robots. If there is a robot
         in the way, the movement is stopped.
         """
         for step in range(distance):
@@ -110,7 +110,7 @@ class Robot:
             # There isn't a robot on the next tile. Robot will be moved.
             if robot_check:
                 self.coordinates = next_coordinates
-                # Check hole on new coordinates
+                # Check hole on new coordinates.
                 self.check_hole(state)
 
     def die(self):
@@ -194,7 +194,7 @@ class State:
         else:
             # Coordinates are out of game board.
             # Return hole tile.
-            return [HoleTile(Direction.N, None, [])]
+            return [HoleTile()]
 
 
 def get_starting_coordinates(board):
@@ -243,17 +243,16 @@ def get_robots_to_start(board):
 
     Initialize Robot objects on the starting tiles coordinates with random
     choice of robot's avatar on particular tile.
-    Once the robot is randomly chosen, it is removed from the list
-    (it cannot appear twice on the board).
+    Once the robot is randomly chosen, he is removed from the list
+    (he cannot appear twice on the board).
     On the beginning all the Robot objects have implicit 0 degree direction.
     """
     starting_coordinates = get_starting_coordinates(board)
     robot_paths = get_robot_paths()
     robots_start = []
     for coordinate in starting_coordinates:
-
         # Condition to assure no exception in case robot_paths is shorter
-        # than coordinate's list
+        # than coordinate's list.
         if robot_paths:
             paths = random.choice(robot_paths)
             robot_paths.remove(paths)
@@ -284,7 +283,9 @@ def get_start_state(map_name):
 
     map_name: path to map file. Currently works only for .json files from Tiled 1.2
 
-    Create board and robots on starting squares, initialize State object containing Tile and Robot object as well as the map size.
+    Create board and robots on starting squares, initialize State object
+    containing Tile and Robot object as well as the map size.
+
     Return State object.
     """
     board = get_board(map_name)
@@ -308,37 +309,25 @@ def check_wall(coordinates, direction, state):
     False - There is wall, robot can't move.
     """
     old_tiles = state.get_tiles(coordinates)
-    # On the current tile: Check wall in the direction of next move.
+    # Current tile: Check wall in the direction of next move.
     for tile in old_tiles:
         move_from = tile.can_move_from(direction)
         if not move_from:
-            # On the current tile: There is a wall in the direction of the move.
+            # Current tile: There is a wall in the direction of the move.
             return False
     if move_from:
         # There is no wall, so get new coordinates.
         next_coordinates = get_next_coordinates(coordinates, direction)
-        # Get new list of tiles
+        # Get new list of tiles.
         new_tiles = state.get_tiles(next_coordinates)
         # Check wall on the next tile in the direction of the move.
         for tile in new_tiles:
             move_to = tile.can_move_to(direction)
             if not move_to:
-                # On the next tile: There is a wall in the direction
-                # of the move.
+                # Next tile: There is a wall in the direction of the move.
                 return False
         if move_to:
             return True
-
-
-def get_next_coordinates(coordinates, direction):
-    """
-    Get next coordinates in the given direction from current coordinates.
-    """
-    (x, y) = coordinates
-    (new_x, new_y) = direction.coor_delta
-    x = x + new_x
-    y = y + new_y
-    return (x, y)
 
 
 def apply_tile_effects(state):
@@ -350,43 +339,30 @@ def apply_tile_effects(state):
         # 2) Express belts and normal belts move 1 space
 
     # Activate pusher
-    for robot in state.robots:
-        if not robot.inactive:
-            tiles = state.get_tiles(robot.coordinates)
-            for tile in tiles:
-                # Kill robot if it is standing on hole tile.
-                # After completed cards play part with integration of robot
-                # dying after card movement. This line can be deleted.
-                tile.kill_robot(robot)
-                # All set. Start moving.
-                tile.push_robot(robot, state)
-                if robot.inactive:
-                    break
+    for robot in [robot for robot in state.robots if not robot.inactive]:
+        for tile in state.get_tiles(robot.coordinates):
+            tile.push_robot(robot, state)
+            if robot.inactive:
+                break
 
     # Activate gear
-    for robot in state.robots:
-        if not robot.inactive:
-            tiles = state.get_tiles(robot.coordinates)
-            for tile in tiles:
-                tile.rotate_robot(robot)
+    for robot in [robot for robot in state.robots if not robot.inactive]:
+        for tile in state.get_tiles(robot.coordinates):
+            tile.rotate_robot(robot)
 
     # Activate laser
-    for robot in state.robots:
-        if not robot.inactive:
-            tiles = state.get_tiles(robot.coordinates)
-            for tile in tiles:
-                tile.shoot_robot(robot, state)
-                if robot.inactive:
-                    break
+    for robot in [robot for robot in state.robots if not robot.inactive]:
+        for tile in state.get_tiles(robot.coordinates):
+            tile.shoot_robot(robot, state)
+            if robot.inactive:
+                break
     # Activate robot laser
 
     # Collect flags, repair robots
-    for robot in state.robots:
-        if not robot.inactive:
-            tiles = state.get_tiles(robot.coordinates)
-            for tile in tiles:
-                tile.collect_flag(robot)
-                tile.repair_robot(robot)
+    for robot in [robot for robot in state.robots if not robot.inactive]:
+        for tile in state.get_tiles(robot.coordinates):
+            tile.collect_flag(robot)
+            tile.repair_robot(robot, state)
 
     # after 5th game round the inactive robots are back to the start
     if state.game_round == 5:
@@ -404,7 +380,7 @@ def set_robots_for_new_turn(state):
     # Delete robots with zero lives
     state.robots = [robot for robot in state.robots if robot.lives > 0]
     for robot in state.robots:
-        # If robot lost life during game round, it will now ressurect at its
+        # If robot lost life during game round, he will now ressurect at his
         # starting coordinates.
         if robot.inactive:
             robot.coordinates = robot.start_coordinates

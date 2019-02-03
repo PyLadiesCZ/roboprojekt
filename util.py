@@ -5,6 +5,51 @@ Util contains classes Tile and Direction, accessed by both loading and backend.
 from enum import Enum
 
 
+class Direction(Enum):
+    N = 0, (0, +1), 0
+    E = 90, (+1, 0), 1
+    S = 180, (0, -1), 2
+    W = 270, (-1, 0), 3
+
+    def __new__(cls, degrees, coor_delta, tile_property):
+        """
+        Get attributes value and vector of the given Direction class values.
+
+        Override standard enum __new__ method.
+        vector: new coordinates (where the robot goes to)
+        tile_property: map tile property: value (custom - added in Tiled).
+        Makes it possible to change vector and tile_property when the object is rotated.
+        With degrees change (value) there comes the coordinates (vector) change and tile_property.
+
+        More info about enum - official documentation: https://docs.python.org/3/library/enum.html
+        Blog post with the exact __new__() usage: http://xion.io/post/code/python-enums-are-ok.html
+        """
+        obj = object.__new__(cls)
+        obj._value_ = degrees
+        obj.coor_delta = coor_delta
+        obj.map_property = tile_property
+        return obj
+
+    def __add__(self, other):
+        return Direction((self.value + other.value) % 360)
+
+    def get_new_direction(self, where_to):
+        """
+        Get new direction of given object.
+        Change attribute direction according to argument where_to, passed from class Rotation.
+        """
+        return Direction(self + where_to)
+
+
+class Rotation(Enum):
+    """
+    Class describing the direction of the movement of the object-robot (dynamic).
+    """
+    LEFT = -90
+    RIGHT = 90
+    U_TURN = 180
+
+
 class Tile:
     def __init__(self, direction, path, properties):
         self.direction = direction
@@ -35,14 +80,12 @@ class Tile:
         True - There is not a wall in direction of the move.
         False - There is a wall in direction of the move.
         """
-        # If there is a wall in direction of the robot movement,
-        # than the direction of the robot goes against the direction of the wall.
-        # Because of that the tile is rotate upside down.
         return True
 
     def kill_robot(self, robot):
         """
-        Take away one robot life or kill robot.
+        Take away one robot life, set him to inactive mode and move him
+        to coordinates for inactive robots (-1, -1).
 
         Take and return Robot class.
         """
@@ -89,11 +132,14 @@ class Tile:
         """
         return robot
 
-    def repair_robot(self, robot):
+    def repair_robot(self, robot, state):
         """
-        Repair robot. Change robot's start coordinates, if possible by tile properties.
+        Repair one robot's damage. Change robot's start coordinates, if possible by tile properties.
 
-        Take and return Robot class.
+        robot: Robot class
+        state: State class
+
+        Return Robot class.
         """
         return robot
 
@@ -117,8 +163,11 @@ class StartTile(Tile):
 
 
 class HoleTile(Tile):
+    def __init__(self, direction=Direction.N, path=None, properties=[]):
+        super().__init__(direction, path, properties)
+
     def kill_robot(self, robot):
-        # Call robot's method for dying
+        # Call robot's method for dying.
         return robot.die()
 
 
@@ -147,11 +196,7 @@ class PusherTile(Tile):
         # PusherTile property game_round:
         #  0 for even game round number,
         #  1 for odd game round number.
-        if state.game_round % 2 and self.game_round:
-            # Pusher for even game rounds.
-            robot.move(self.direction.get_new_direction(Rotation.U_TURN), 1, state)
-        elif state.game_round % 2 == self.game_round:
-            # Pusher for odd game rounds.
+        if state.game_round % 2 == self.game_round:
             robot.move(self.direction.get_new_direction(Rotation.U_TURN), 1, state)
 
 
@@ -171,7 +216,7 @@ class GearTile(Tile):
 
     def rotate_robot(self, robot):
         # Rotate robot by 90° according to GearTile property: left or right.
-        robot.direction = robot.direction.get_new_direction(self.move_direction)
+        robot.rotate(self.move_direction)
 
 
 class LaserTile(Tile):
@@ -195,32 +240,25 @@ class LaserTile(Tile):
             direction_to_start = self.direction.get_new_direction(Rotation.U_TURN)
             # Check if there is another robot in direction of incoming laser.
             while hit:
-                # Get new coordinates and new tiles.
-                (new_x, new_y) = direction_to_start.coor_delta
-                x = x + new_x
-                y = y + new_y
+                # Get new coordinates.
+                (x, y) = get_next_coordinates((x, y), direction_to_start)
+                # Check for other robots.
+                if (x, y) in coordinates:
+                    # There is another robot.
+                    # Current robot won't be hit by laser.
+                    hit = False
+                    break
+                # Get new tiles.
                 new_tiles = state.get_tiles((x, y))
                 for tile in new_tiles:
                     # Check if new tiles contain follow-up LaserTile in correct direction.
                     if isinstance(tile, LaserTile) and tile.direction == self.direction:
-                        # Check for other robots.
-                        if (x, y) in coordinates:
-                            # There is another robot.
-                            # Current robot won't be hit by laser.
-                            hit = False
-                            break
-                        elif tile.laser_start:
-                            # There is no other robot and laser starts here.
-                            # Current robot will be hit by laser.
-                            break
-                        else:
-                            # Laser continues, check another set of tiles.
-                            break
-                if isinstance(tile, LaserTile):
-                    # Check for laser start tile.
-                    if tile.laser_start:
-                        # Don't check other tiles.
+                        # Follow-up laser tile found, don't check ohter tiles here.
                         break
+                # Check for laser start tile.
+                if isinstance(tile, LaserTile) and tile.laser_start:
+                    # Don't check new tiles.
+                    break
         if hit:
             # No robots found in the direction of incoming laser.
             # So do damage to robot.
@@ -228,7 +266,7 @@ class LaserTile(Tile):
                 # Laser won't kill robot, but it will damage robot.
                 robot.damages += self.laser_strength
             else:
-                # Robot is damaged so much that laser kills it.
+                # Robot is damaged so much that laser kills him.
                 robot.die()
 
 
@@ -238,12 +276,13 @@ class FlagTile(Tile):
         super().__init__(direction, path, properties)
 
     def collect_flag(self, robot):
+        # Robot always change his starting coordinates, when he is on a flag.
+        # Flag number doesn't play a role.
+        robot.start_coordinates = robot.coordinates
         # Collect only correct flag.
-        # Correct flag will have a number that is equal to robot flag number plus one.
+        # Correct flag will have a number that is equal to robot's flag number plus one.
         if (robot.flags + 1) == self.flag_number:
-            # Flag collected and start coordinates changed to flag's coordinates.
             robot.flags += 1
-            robot.start_coordinates = robot.coordinates
 
 
 class RepairTile(Tile):
@@ -251,62 +290,14 @@ class RepairTile(Tile):
         self.new_start = properties[0]["value"]
         super().__init__(direction, path, properties)
 
-    def repair_robot(self, robot):
-        # Remove one robot damage.
-        if robot.damages > 0:
-            robot.damages -= 1
+    def repair_robot(self, robot, state):
+        if state.game_round == 5:
+            # Remove one robot damage.
+            if robot.damages > 0:
+                robot.damages -= 1
         # Change starting coordinates of robot, if it's a tile property.
         if self.new_start:
             robot.start_coordinates = robot.coordinates
-
-
-class Direction(Enum):
-    """
-    Class describing the direction as a feature (value) of an object - tile, robot.
-    """
-    N = 0, (0, +1), 0
-    E = 90, (+1, 0), 1
-    S = 180, (0, -1), 2
-    W = 270, (-1, 0), 3
-
-    def __new__(cls, degrees, coor_delta, tile_property):
-        """
-        Get attributes value and vector of the given Direction class values.
-
-        Override standard enum __new__ method.
-        vector: new coordinates (where the robot goes to)
-        tile_property: map tile property: value (custom - added in Tiled).
-        Makes it possible to change vector and tile_property when the object is rotated.
-        With degrees change (value) there comes the coordinates (vector) change and tile_property.
-
-        More info about enum - official documentation: https://docs.python.org/3/library/enum.html
-        Blog post with the exact __new__() usage: http://xion.io/post/code/python-enums-are-ok.html
-        """
-        obj = object.__new__(cls)
-        obj._value_ = degrees
-        obj.coor_delta = coor_delta
-        obj.map_property = tile_property
-        return obj
-
-    def __add__(self, other):
-        return Direction((self.value + other.value) % 360)
-
-    def get_new_direction(self, where_to):
-        """
-        Get new direction of given object.
-
-        Change attribute direction according to argument where_to, passed from class Rotation.
-        """
-        return Direction(self + where_to)
-
-
-class Rotation(Enum):
-    """
-    Class describing the direction of the movement of the object-robot (dynamic).
-    """
-    LEFT = -90
-    RIGHT = 90
-    U_TURN = 180
 
 
 TILE_CLS = {'wall': WallTile, 'starting_square': StartTile, 'hole': HoleTile,
@@ -320,3 +311,14 @@ def select_tile(direction, path, type, properties):
     Select tile subclass according to its type and create coressponding subclass.
     """
     return TILE_CLS[type](direction, path, properties)
+
+
+def get_next_coordinates(coordinates, direction):
+    """
+    Get next coordinates in the given direction from current coordinates.
+    """
+    (x, y) = coordinates
+    (new_x, new_y) = direction.coor_delta
+    x = x + new_x
+    y = y + new_y
+    return (x, y)
