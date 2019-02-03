@@ -264,7 +264,8 @@ def test_robot_is_damaged_by_laser(input_coordinates, add_damages):
                          ])
 def test_robot_is_pushed_at_the_correct_round(game_round, tile, output_coordinates):
     """
-    When robot is standing on a PusherTile, he should be pushed against it.
+    When robot is standing on a PusherTile, he should be pushed in the direction of pusher's force.
+    Eg. pusher on the North tile side forces the robot's movement to the South.
     Robot's direction doesn't change, just the coordinates.
     The push is performed only at the certain game round (1-3-5 or 2-4) according
     to the value on the tile.
