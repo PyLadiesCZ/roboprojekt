@@ -388,15 +388,21 @@ def apply_tile_effects(state):
                 tile.collect_flag(robot)
                 tile.repair_robot(robot)
 
-    # Delete robots with zero lives
-    state.robots = [robot for robot in state.robots if robot.lives > 0]
-
     # after 5th game round the inactive robots are back to the start
     if state.game_round == 5:
         set_robots_for_new_turn(state)
 
 
 def set_robots_for_new_turn(state):
+    """
+    After 5th game round there comes evaluation of the robots' state.
+    "Dead" robots who don't have any lives left, are deleted from the robot's lists.
+
+    "Inactive" robots who have lost one life during the round, will reboot on starting coordinates.
+    """
+
+    # Delete robots with zero lives
+    state.robots = [robot for robot in state.robots if robot.lives > 0]
     for robot in state.robots:
         # If robot lost life during game round, it will now ressurect at its
         # starting coordinates.
