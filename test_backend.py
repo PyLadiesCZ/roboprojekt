@@ -1,5 +1,5 @@
 from backend import get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects
-from util import Tile, RepairTile, Direction, Rotation
+from util import Tile, HoleTile, GearTile, PusherTile, RepairTile, FlagTile, Direction, Rotation
 from loading import get_board
 from pathlib import Path
 import pytest
@@ -100,20 +100,42 @@ def test_robot_change_direction(current_direction, towards, new_direction):
     assert robot.direction == new_direction
 
 
-@pytest.mark.parametrize(("damages_before", "tile", "damages_after", "game_round"),
-                         [(0, RepairTile(None, None, [{'value': True}]), 0, 5),
-                         (9, RepairTile(None, None, [{'value': True}]), 8, 5),
-                         (3, RepairTile(None, None, [{'value': True}]), 2, 5),
-                         (7, RepairTile(None, None, [{'value': True}]), 7, 1),
-                         (3, RepairTile(None, None, [{'value': True}]), 3, 2),
+# RepairTile
+
+@pytest.mark.parametrize(("damages_before", "tile", "damages_after"),
+                         [(0, RepairTile(None, None, [{'value': True}]), 0),
+                         (9, RepairTile(None, None, [{'value': True}]), 8),
+                         (3, RepairTile(None, None, [{'value': True}]), 2),
                           ])
-def test_robot_is_repaired(damages_before, tile, damages_after, game_round):
+def test_robot_is_repaired_after_5th_round(damages_before, tile, damages_after):
+    """
+    When robot is on RepairTile he is supposed to be repaired after the 5th game round.
+    If he doesn't have any damages, the count remains the same as previous.
+    """
     robot = Robot(None, None, None, (0, 0))
     state = State({(0, 0): [tile]}, [robot], 1)
-    state.game_round = game_round
     robot.damages = damages_before
+    state.game_round = 5
     apply_tile_effects(state)
     assert robot.damages == damages_after
+
+
+@pytest.mark.parametrize(("damages", "tile", "current_game_round"),
+                         [(0, RepairTile(None, None, [{'value': True}]), 1),
+                         (9, RepairTile(None, None, [{'value': True}]), 2),
+                         (3, RepairTile(None, None, [{'value': True}]), 3),
+                         (5, RepairTile(None, None, [{'value': True}]), 4),
+                          ])
+def test_robot_is_not_repaired(damages, tile, current_game_round):
+    """
+    When robot is on RepairTile but the game round is not 5, he is not yet repaired. His damage count doesn't change.
+    """
+    robot = Robot(None, None, None, (0, 0))
+    state = State({(0, 0): [tile]}, [robot], 1)
+    robot.damages = damages
+    state.game_round = current_game_round
+    apply_tile_effects(state)
+    assert robot.damages == damages
 
 
 @pytest.mark.parametrize(("tile", "coordinates_after"),
@@ -121,11 +143,207 @@ def test_robot_is_repaired(damages_before, tile, damages_after, game_round):
                          (RepairTile(None, None, [{'value': False}]), (1, 1)),
                           ])
 def test_robot_changed_start_coordinates(tile, coordinates_after):
+    """
+    When robot is on RepairTile with special property, he changes his starting coordinates to the tile coordinates.
+    On a normal RepairTile he doesn't change the starting tile.
+    """
     robot = Robot(None, None, None, (0, 0))
     state = State({(0, 0): [tile]}, [robot], 1)
     robot.start_coordinates = (1, 1)
     apply_tile_effects(state)
     assert robot.start_coordinates == coordinates_after
+
+
+# GearTile
+
+@pytest.mark.parametrize(("direction_before", "tile", "direction_after"),
+                         [(Direction.E, GearTile(None, None, [{'value': "left"}]),  Direction.N),
+                         (Direction.E, GearTile(None, None, [{'value': "right"}]), Direction.S),
+                         (Direction.S, GearTile(None, None, [{'value': "left"}]), Direction.E),
+                         (Direction.S, GearTile(None, None, [{'value': "right"}]), Direction.W),
+                          ])
+def test_robot_changed_direction(direction_before, tile, direction_after):
+    """
+    When robot is on GearTile, he should be rotated according to the direction of the tile.
+    Check that his direction changed after applying tile effect.
+    """
+    robot = Robot(direction_before, None, None, (0, 0))
+    state = State({(0, 0): [tile]}, [robot], 1)
+    apply_tile_effects(state)
+    assert robot.direction == direction_after
+
+
+# HoleTile hidden in walk method
+
+@pytest.mark.parametrize(("lives_before", "lives_after"),
+                         [(3, 2),
+                         (2, 1),
+                         (1, 0),
+                          ])
+def test_robot_died(lives_before, lives_after):
+    """
+    When robot comes to a HoleTile (or goes / is pushed out of the game board),
+    he gets killed.
+    Check that his lives were lowered, he got inactive till the next game round
+    and his coordinates changed to the (-1, -1).
+    """
+    robot = Robot(Direction.N, None, None, (0, 0))
+    state = State({(0, 1): [HoleTile(None, None, None)]}, [robot], 1)
+    robot.lives = lives_before
+    robot.walk(1, state)
+    assert robot.lives == lives_after
+    assert robot.inactive is True
+    assert robot.coordinates == (-1, -1)
+
+
+# FlagTile
+
+@pytest.mark.parametrize(("flags_before", "tile", "flags_after"),
+                         [(3, FlagTile(None, None, [{'value': 1}]),  3),
+                         (3, FlagTile(None, None, [{'value': 4}]),  4),
+                         (3, FlagTile(None, None, [{'value': 5}]),  3),
+                          ])
+def test_robot_collected_flags(flags_before, tile, flags_after):
+    """
+    When a robot stands on FlagTile with appropriate number (+1 to his current flag count), he collects it.
+    He doesn't collect the flags with the other number than defined. They don't have any effect on him.
+    """
+    robot = Robot(None, None, None, (0, 0))
+    state = State({(0, 0): [tile]}, [robot], 1)
+    robot.flags = flags_before
+    apply_tile_effects(state)
+    assert robot.flags == flags_after
+
+
+@pytest.mark.parametrize(("tile"),
+                         [(FlagTile(None, None, [{'value': 1}])),
+                         (FlagTile(None, None, [{'value': 4}])),
+                         (FlagTile(None, None, [{'value': 5}])),
+                          ])
+def test_robot_changed_coordinates(tile):
+    """
+    When a robot stands on FlagTile the starting coordinates change to the tile's coordinates.
+    """
+    robot = Robot(None, None, None, (0, 0))
+    state = State({(0, 0): [tile]}, [robot], 1)
+    robot.start_coordinates = (1, 1)
+    apply_tile_effects(state)
+    assert robot.start_coordinates == (0, 0)
+
+
+# WallTile
+
+@pytest.mark.parametrize(("input_coordinates", "output_coordinates"),
+                         [((0, 0), (0, 0)),
+                         ((1, 0), (1, 0)),
+                         ((2, 0), (2, 1)),
+                         ((3, 0), (3, 1)),
+                          ])
+def test_robot_is_stopped_by_wall(input_coordinates, output_coordinates):
+    """
+    Take robot's coordinates, move's direction and distance and assert robot
+    was moved to correct coordinates.
+    A special map test_walls was created in order to test this feature.
+    """
+    board = get_board("maps/test_walls.json")
+    robot = Robot(None, None, None, input_coordinates)
+    state = State(board, [robot], 25)
+    robot.move(Direction.N, 2, state)
+    assert robot.coordinates == output_coordinates
+
+
+# LaserTile
+
+@pytest.mark.parametrize(("input_coordinates", "damages_after"),
+                         [((1, 2), 0),
+                         ((3, 1), 0),
+                         ((2, 1), 0),
+                         ((0, 1), 2),
+                         ((3, 3), 4),
+                         ((2, 3), 3),
+                          ])
+def test_robot_is_damaged_by_laser(input_coordinates, damages_after):
+    """
+    When robot stands on laser tile, he is damaged according to the laser strength, but only if there is no obstacle in the way.
+    If there are obstacles, damage count changes accordingly.
+    A special map test_laser was created in order to test this feature.
+    """
+    board = get_board("maps/test_laser.json")
+    robot_obstacle1 = Robot(Direction.N, None, None, (1, 1))
+    robot_obstacle2 = Robot(Direction.N, None, None, (3, 2))
+    robot = Robot(Direction.E, None, None, input_coordinates)
+    robot.damages = 0
+    state = State(board, [robot_obstacle1, robot_obstacle2, robot], 16)
+    apply_tile_effects(state)
+    assert robot.damages == damages_after
+
+
+# PusherTile
+
+@pytest.mark.parametrize(("game_round", "tile", "output_coordinates"),
+                         [(1, PusherTile(Direction.N, None, [{'value': 1}]), (1, 0)),
+                         (2, PusherTile(Direction.N, None, [{'value': 1}]), (1, 1)),
+                         (3, PusherTile(Direction.N, None, [{'value': 0}]), (1, 1)),
+                         (4, PusherTile(Direction.N, None, [{'value': 0}]), (1, 0)),
+                         (5, PusherTile(Direction.N, None, [{'value': 1}]), (1, 0)),
+                          ])
+def test_robot_is_pushed_at_the_correct_round(game_round, tile, output_coordinates):
+    """
+    When robot is standing on a PusherTile, he should be pushed in the direction of pusher's force.
+    Eg. pusher on the North tile side forces the robot's movement to the South.
+    Robot's direction doesn't change, just the coordinates.
+    The push is performed only at the certain game round (1-3-5 or 2-4) according
+    to the value on the tile.
+    """
+    robot = Robot(Direction.W, None, None, (1, 1))
+    state = State({(1, 0): [Tile(None, None, None)], (1, 1): [tile]}, [robot], 2)
+    state.game_round = game_round
+    apply_tile_effects(state)
+    assert robot.direction == Direction.W
+    assert robot.coordinates == output_coordinates
+
+
+@pytest.mark.parametrize(("tile", "output_coordinates"),
+                         [(PusherTile(Direction.N, None, [{'value': 1}]), (1, 0)),
+                         (PusherTile(Direction.S, None, [{'value': 1}]), (1, 2)),
+                         (PusherTile(Direction.E, None, [{'value': 1}]), (0, 1)),
+                         (PusherTile(Direction.W, None, [{'value': 1}]), (2, 1)),
+                          ])
+def test_robot_is_pushed_to_the_correct_direction(tile, output_coordinates):
+    """
+    When robot is standing on a PusherTile, he should be pushed in the direction of pusher's force.
+    Eg. pusher on the North tile side forces the robot's movement to the South.
+    Robot's direction doesn't change, just the coordinates.
+    The test asserts the coordinates change to a correct ones (in a correct direction).
+    """
+    robot = Robot(Direction.S, None, None, (1, 1))
+    state = State({(1, 0): [Tile(None, None, None)], (0, 1): [Tile(None, None, None)], (2, 1): [Tile(None, None, None)], (1, 2): [Tile(None, None, None)], (1, 1): [tile]}, [robot], 5)
+    state.game_round = 1
+    apply_tile_effects(state)
+    assert robot.direction == Direction.S
+    assert robot.coordinates == output_coordinates
+
+
+@pytest.mark.parametrize(("tile"),
+                         [(PusherTile(Direction.N, None, [{'value': 1}])),
+                         (PusherTile(Direction.S, None, [{'value': 1}])),
+                         (PusherTile(Direction.E, None, [{'value': 1}])),
+                         (PusherTile(Direction.W, None, [{'value': 1}])),
+                          ])
+def test_robot_is_pushed_out_of_the_board(tile):
+    """
+    When robot is standing on a PusherTile, he should be pushed in the direction of pusher's force.
+    Eg. pusher on the North tile side forces the robot's movement to the South.
+    If he is pushed out of a board game, he should be killed.
+    The test asserts the attributes: coordinates, lives and inactive change.
+    """
+    robot = Robot(Direction.S, None, None, (0, 0))
+    state = State({(0, 0): [tile]}, [robot], 1)
+    state.game_round = 1
+    apply_tile_effects(state)
+    assert robot.lives == 2
+    assert robot.inactive is True
+    assert robot.coordinates == (-1, -1)
 
 
 @pytest.mark.parametrize(("card", "new_coordinates"),
