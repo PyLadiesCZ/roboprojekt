@@ -139,54 +139,43 @@ class Robot:
         if isinstance(current_card, RotationCard):
             self.rotate(current_card.rotation)
 
-
     def check_hole(self, state):
         """
         Check tiles on robot's coordinates for HoleTile and apply its effect.
         """
+
         for tile in state.get_tiles(self.coordinates):
             tile.kill_robot(self)
             if self.inactive:
                 break
 
-
     def shoot(self, state):
-        # Check next coordinates in your direction
+        """
+        Shoot in your direction.
+        If there is a wall on the way, the robot's laser stops (it can't pass it).
+        If there is a robot on the way, he gets shot and cyclus ends.
+        The check is performed from robot's position till the end of the board.
+        """
 
         distance_till_end = get_distance_to_board_end(self, state)
         next_coordinates = get_next_coordinates(self.coordinates, self.direction)
 
+        # Start checking the next coordinates till the board end.
         for step in range(distance_till_end):
-            # There is a wall, end of shot
+            # There is a wall, end of shot.
             if not check_wall(self.coordinates, self.direction, state):
                 break
 
             robots_in_the_way = check_robots_in_the_way(state, next_coordinates)
 
+            # There is a robot, shoot him and break the cycle (only one gets shot).
             if robots_in_the_way is not None:
                 do_damage(state.robots[robots_in_the_way])
                 break
 
+            # No robots or walls on the next coordinates, check one step further.
             else:
                 next_coordinates = get_next_coordinates(next_coordinates, self.direction)
-
-
-def get_distance_to_board_end(robot, state):
-    """
-    Side function to check how far it is to the end of the board.
-    Take robot and game state, return integer - subtraction of distance from
-    the end of the board to the robot.
-    """
-
-    if robot.direction == Direction.N:
-        return state.sizes[1] - robot.coordinates[1]
-    if robot.direction == Direction.S:
-        return robot.coordinates[1]
-    if robot.direction == Direction.E:
-        return state.sizes[0] - robot.coordinates[0]
-    if robot.direction == Direction.W:
-        return robot.coordinates[0]
-
 
 
 class Card:
@@ -385,9 +374,24 @@ def check_robots_in_the_way(state, next_coordinates):
     for robot in state.robots:
         if robot.coordinates == next_coordinates:
             # Return index of robot that is in the way.
-            #robot_in_the_way = state.robots.index(robot)
             return state.robots.index(robot)
 
+
+def get_distance_to_board_end(robot, state):
+    """
+    Side function to check how far it is to the end of the board.
+    Take robot and game state, return integer - subtraction of distance from
+    the end of the board to the robot.
+    """
+
+    if robot.direction == Direction.N:
+        return state.sizes[1] - robot.coordinates[1]
+    if robot.direction == Direction.S:
+        return robot.coordinates[1]
+    if robot.direction == Direction.E:
+        return state.sizes[0] - robot.coordinates[0]
+    if robot.direction == Direction.W:
+        return robot.coordinates[0]
 
 
 def apply_tile_effects(state):
