@@ -10,15 +10,13 @@ from frontend import init_window, draw_board
 import pyglet
 import sys
 
-# This line is temporary, just for the development purposes
-from util import Rotation
-
 
 # load JSON map data from the backend module
 if len(sys.argv) == 1:
     map_name = "maps/test_effects.json"
 
-# if other map should be loaded, use extra argument "maps/MAP_NAME.json" when calling game.py by Python
+# if other map should be loaded, use extra argument "maps/MAP_NAME.json"
+# when calling game.py by Python
 # for example: python game.py maps/test_2.json
 else:
     map_name = sys.argv[1]
