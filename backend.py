@@ -94,15 +94,15 @@ class Robot:
             # There is no wall. Get new coordinates.
             next_coordinates = get_next_coordinates(self.coordinates, direction)
             # Check robots on the next tile before moving.
-            robot_check = True
-            for robot in state.robots:
-                if robot.coordinates == next_coordinates:
-                    # There is a robot on the next tile.
-                    # Robot can't be moved.
-                    robot_check = False
-                    break
+            robot_check = check_robots_in_the_way(state, next_coordinates)
+
+            if robot_check is not None:
+                # There is a robot on the next tile.
+                # Robot can't be moved.
+                break
+
             # There isn't a robot on the next tile. Robot will be moved.
-            if robot_check:
+            if robot_check is None:
                 self.coordinates = next_coordinates
                 # Check hole on new coordinates.
                 self.check_hole(state)
@@ -357,6 +357,7 @@ def check_robots_in_the_way(state, next_coordinates):
     """
     Check if there are robots on the next coordinates.
     Return index of the first robot on the way from given point.
+    It there are no robots, return None.
     """
     # Check robots on the next tile.
     for robot in state.robots:
