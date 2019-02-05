@@ -18,7 +18,8 @@ window = init_window()
 # Interface element sprites
 interface_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/interface.png'), x=0, y=0) # All Interface background
 power_down_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/power.png'), x=186, y=854)
-indicator_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/green.png'),  x=688, y=864) # Time indicator
+indicator_green_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/green.png'),  x=688, y=864) # Time indicator
+indicator_red_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/red.png'),  x=688, y=864) # Time indicator
 card_background_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/card_bg.png')) # Universal cards background
 select_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/card_cv.png')) # Gray overlay on selected cards
 cursor_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/card_sl.png')) # Selection cursor
@@ -157,6 +158,14 @@ def draw_interface(window):
     # Power Down
     if interface_state.power_down == True:
         power_down_sprite.draw()
+
+    # Indicator
+
+    if interface_state.indicator == False:
+        indicator_green_sprite.draw()
+    else:
+        indicator_red_sprite.draw()
+
     pyglet.gl.glPopMatrix()
 
 @window.event
@@ -198,5 +207,8 @@ def on_text(text):
     #Put and take a Power Down token
     if text == 'p':
         interface_state.switch_power_down()
+
+    if text == 'k':
+        interface_state.confirm_selection()
 
 pyglet.app.run()
