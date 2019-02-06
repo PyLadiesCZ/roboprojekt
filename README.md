@@ -7,22 +7,31 @@ The assignment of this project is transforming board game RoboRally to computer 
 
 You can follow the progress on our [blog](https://roboprojekt.pyladies.cz/).
 
+Please note that the game is still in progress and the current version is not playable.
+
 ### Requirements
 
 Python v.3.x
 We recommend to use virtual environment.
 
-To succesfully run the project you need to install [pyglet](https://bitbucket.org/pyglet/pyglet/wiki/Home) library.
+To succesfully run the project, run the script below. It will install all the requirements including [pyglet](https://bitbucket.org/pyglet/pyglet/wiki/Home) library.
 ```
-python -m pip install pyglet
+python -m pip install -r requirements.txt
 ```
 
-For testing of this project we use [pytest](https://docs.pytest.org/en/latest/) framework. If you don't have it on your computer, you can install it with the following command:
+For testing of this project we use [pytest](https://docs.pytest.org/en/latest/) framework. If you want to run the tests and don't have pytest on your computer, you can install it with the following command:
 ```
 python -m pip install pytest
 ```
 
 ### The game
+
+**How do you run the game?**
+
+To run the game you need to open the `game.py` module in the command line:
+```
+python game.py
+```
 
 **How do you win and how does the game round look like?**
 
@@ -44,6 +53,7 @@ After this phase is complete, the robots standing on the repair tile or in Power
 Currently, the tests are divided into two separate files, `test_backend.py` and `test_loading.py`, covering respective modules. The second file also contains map validator (see map details below).
 
 To run the tests, write the following command into the command line: `python -m pytest -v` 
+
 If you want to run only one of the testing files, add the name of the file after the command above. 
 
 ### Create your own map
@@ -58,3 +68,10 @@ When creating multiple-layered tiles, keep the following order of layers:
 4. laser, wall, pusher
 
 Part of the test suite is a map validator which checks the order of tile layers.
+
+### Automatic conversion from .SVG to .PNG
+
+This project also contains a program `export_img.py` for automatic conversion of images in .SVG format to .PNG format. 
+The current version of the program uses [Inkscape](https://inkscape.org/) vector graphic editor so if you want to use this program, you need to install Inkscape first.  
+To convert all images, run the `export_img.py` file from the root directory of the project. It will then export all images in .SVG to .PNG in all subdirectories.
+
