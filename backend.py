@@ -160,15 +160,21 @@ class Card:
 
 
 class MovementCard(Card):
+    name = 'MovementCard'
     def __init__(self, priority, value):
         self.distance = value
         super().__init__(priority)
+    def __repr__(self):
+        return "<{} {} {}>".format(self.name, self.priority, self.distance)
 
 
 class RotationCard(Card):
+    name = 'RotationCard'
     def __init__(self, priority, value):
         self.rotation = value
         super().__init__(priority)
+    def __repr__(self):
+        return "<{} {} {}>".format(self.name, self.priority, self.rotation)
 
 
 class State:
