@@ -1,7 +1,7 @@
 import pyglet
 from pyglet.window import key
 from interface import get_interface_state, MAX_CARD_COUNT
-
+from util import Direction, Rotation
 interface_state = get_interface_state()
 
 
@@ -18,7 +18,8 @@ window = init_window()
 # Interface element sprites
 interface_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/interface.png'), x=0, y=0) # All Interface background
 power_down_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/power.png'), x=186, y=854)
-indicator_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/green.png'),  x=688, y=864) # Time indicator
+indicator_green_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/green.png'),  x=688, y=864) # Time indicator
+indicator_red_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/red.png'),  x=688, y=864) # Time indicator
 card_background_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/card_bg.png')) # Universal cards background
 select_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/card_cv.png')) # Gray overlay on selected cards
 cursor_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/card_sl.png')) # Selection cursor
@@ -70,13 +71,34 @@ for i in range(5):
     x = x + i * 144
     cards_hand_coordinates.append((x, y))
 
+# dict card object distanc/rotation and fronend card name
+card_types_dict = {
+-1: 'back_up',
+1: 'move1',
+2: 'move2',
+3: 'move3',
+Rotation.U_TURN: 'u_turn',
+Rotation.LEFT: 'left',
+Rotation.RIGHT: 'right',
+}
 
-def draw_card(coordinate, card_type):
+
+def get_card_type(card):
+    """
+    Take a card object and return the 'frontend' name for it
+    """
+    if card.name == 'MovementCard':
+        name = card_types_dict[card.distance]
+    if card.name == 'RotationCard':
+        name = card_types_dict[card.rotation]
+    return name
+
+
+def draw_card(coordinate, card):
     """
     Draw one card
     Take coordinate and type of card and return all image with background,
     number and direction image.
-
     """
     x, y = coordinate
 
@@ -86,16 +108,16 @@ def draw_card(coordinate, card_type):
     card_background_sprite.draw()
 
     # Draw card type
-    name, value = card_type
-    name = cards_type_sprites[name]
-    name.x = x
-    name.y = y
-    name.draw()
+    name_card = get_card_type(card)
+    card_sprite = cards_type_sprites[name_card]
+    card_sprite.x = x
+    card_sprite.y = y
+    card_sprite.draw()
 
     # Draw card value
     x = x + 70
     y = y + 118
-    text = pyglet.text.Label(text=str(value), font_size=14, x=x, y=y, anchor_x='right')
+    text = pyglet.text.Label(text=str(card.priority), font_size=14, x=x, y=y, anchor_x='right')
     text.draw()
 
 
@@ -135,13 +157,13 @@ def draw_interface(window):
         draw_card(coordinate, card) # draw_card(coordinate, card_type)
 
     # Cards hand
-    for coordinate, card in zip(cards_hand_coordinates, interface_state.my_cards):
+    for coordinate, card in zip(cards_hand_coordinates, interface_state.my_program):
         if card != None: # if selected card exist
             draw_card(coordinate, card)
 
     # Selected cards
     # if card is selected, selected card on the table is gray
-    for i in interface_state.my_cards:
+    for i in interface_state.my_program:
         if i != None:
             x, y = cards_table_coordinates[interface_state.deal_cards.index(i)]
             select_sprite.x = x
@@ -157,7 +179,16 @@ def draw_interface(window):
     # Power Down
     if interface_state.power_down == True:
         power_down_sprite.draw()
+
+    # Indicator
+    if interface_state.indicator == False:
+        indicator_green_sprite.draw()
+    else:
+        indicator_red_sprite.draw()
+
+
     pyglet.gl.glPopMatrix()
+
 
 @window.event
 def on_draw():
@@ -174,8 +205,8 @@ def on_text(text):
     Wait for user input on keyboard and react for it.
     """
     if text in CARD_KEYS:
-        #Select a card and take it in your "hand"
-        #Selected card is in "GREEN" cursor
+        # Select a card and take it in your "hand"
+        # Selected card is in "GREEN" cursor
         deal_card_index = CARD_KEYS.index(text)
         interface_state.select_card(deal_card_index)
 
@@ -187,16 +218,20 @@ def on_text(text):
     if text == 'o':
         interface_state.return_cards()
 
-    #Move  selector cursor to the right
+    # Move  selector cursor to the right
     if text == 'm':
         interface_state.cursor_index_plus()
 
-    #Move selector cursor to the left
+    # Move selector cursor to the left
     if text == 'n':
         interface_state.cursor_index_minus()
 
-    #Put and take a Power Down token
+    # Put and take a Power Down token
     if text == 'p':
         interface_state.switch_power_down()
+
+    # confirm selection of cards
+    if text == 'k':
+        interface_state.confirm_selection()
 
 pyglet.app.run()
