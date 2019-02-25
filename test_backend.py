@@ -346,17 +346,22 @@ def test_robot_is_pushed_out_of_the_board(tile):
     assert robot.coordinates == (-1, -1)
 
 
-@pytest.mark.parametrize(("card", "new_coordinates"),
-                         [(MovementCard(100, 1), (5, 6)),
-                         (MovementCard(100, 2), (5, 7)),
-                         (MovementCard(100, 3), (5, 8)),
-                         (MovementCard(100, -1), (5, 4)),
+@pytest.mark.parametrize(("direction", "card", "new_coordinates"),
+                         [(Direction.E, MovementCard(100, 1), (5, 7)),
+                         (Direction.E, MovementCard(100, 2), (6, 7)),
+                         (Direction.E, MovementCard(100, 3), (7, 7)),
+                         (Direction.E, MovementCard(100, -1), (3, 7)),
+                         (Direction.S, MovementCard(100, 1), (4, 6)),
+                         (Direction.S, MovementCard(100, 2), (4, 5)),
+                         (Direction.S, MovementCard(100, 3), (4, 4)),
+                         (Direction.S, MovementCard(100, -1), (4, 8)),
+                         (Direction.N, MovementCard(100, -1), (4, 6)), (Direction.W, MovementCard(100, -1), (5, 7)),
                           ])
-def test_move_cards(card, new_coordinates):
+def test_move_cards(direction, card, new_coordinates):
     """
     Give mock robot the MovementCard and check if he moved to the expected coordinates.
     """
-    robot = Robot(Direction.N, None, None, (5, 5))
+    robot = Robot(direction, None, None, (4, 7))
     robot.program = [card]
     state = get_start_state("maps/test_3.json")
     robot.apply_card_effect(state)

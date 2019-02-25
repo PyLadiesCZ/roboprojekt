@@ -16,7 +16,7 @@ from util import Rotation
 
 # load JSON map data from the backend module
 if len(sys.argv) == 1:
-    map_name = "maps/test_effects.json"
+    map_name = "maps/test_3.json"
 
 # if other map should be loaded, use extra argument "maps/MAP_NAME.json" when calling game.py by Python
 # for example: python game.py maps/test_2.json
