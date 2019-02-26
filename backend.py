@@ -386,8 +386,7 @@ def set_robots_for_new_turn(state):
     # Delete robots with zero lives
     state.robots = [robot for robot in state.robots if robot.lives > 0]
     for robot in state.robots:
-        # If robot lost life during register, he will now ressurect at his
-        # starting coordinates.
+        #Robot will now ressurect at his starting coordinates
         if robot.inactive:
             robot.coordinates = robot.start_coordinates
             robot.damages = 0
