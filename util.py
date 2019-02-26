@@ -98,9 +98,6 @@ class Tile:
         """
         Move robot by one tile during a specific register phase.
 
-        robot: Robot class
-        state: State class containing register
-
         Return Robot class.
         """
         return robot
