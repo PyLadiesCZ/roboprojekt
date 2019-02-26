@@ -115,7 +115,7 @@ class Robot:
 
     def die(self):
         """
-        Robot lose life and skip rest of register.
+        Robot lose life and skip rest of game round.
         Robot is moved out of game board for the rest of the round.
         """
         self.lives -= 1
