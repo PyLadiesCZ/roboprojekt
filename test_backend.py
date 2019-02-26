@@ -128,7 +128,7 @@ def test_robot_is_repaired_after_5th_round(damages_before, tile, damages_after):
                           ])
 def test_robot_is_not_repaired(damages, tile, current_register):
     """
-    When robot is on RepairTile but the register is not 5, he is not yet repaired. His damage count doesn't change.
+    When robot is on RepairTile but the register phase is not 5, he is not yet repaired. His damage count doesn't change.
     """
     robot = Robot(None, None, None, (0, 0))
     state = State({(0, 0): [tile]}, [robot], 1)
