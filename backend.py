@@ -157,9 +157,15 @@ class Robot:
         The check is performed from robot's position till the end of the board in robot's direction.
         """
 
-        distance_till_end = get_distance_to_board_end(self, state)
-        next_coordinates = get_next_coordinates(self.coordinates, self.direction)
+        distance_till_end = self.get_distance_to_board_end(state)
+        print(distance_till_end)
 
+        # Check if there is no wall on robot's tile. If there is - return.
+        if not check_wall(self.coordinates, self.direction, state):
+            return
+
+        # If there is no wall, get the next coordinates
+        next_coordinates = get_next_coordinates(self.coordinates, self.direction)
         # Start checking the next coordinates till the board end.
         for step in range(distance_till_end):
             # There is a wall, end of shot.
@@ -194,6 +200,21 @@ class Robot:
             # Robot is damaged so much that laser kills it.
             self.die()
 
+
+    def get_distance_to_board_end(self, state):
+        """
+        Get the distance from the robot's coordinates to the end of the board in robot's direction.
+        Measured number is in the count of tiles between the robot and the board's edge.
+        """
+
+        if self.direction == Direction.N:
+            return state.sizes[1] - self.coordinates[1]
+        if self.direction == Direction.S:
+            return self.coordinates[1]
+        if self.direction == Direction.E:
+            return state.sizes[0] - self.coordinates[0]
+        if self.direction == Direction.W:
+            return self.coordinates[0]
 
 class Card:
     def __init__(self, priority):
@@ -391,21 +412,6 @@ def check_robot_in_the_way(state, coordinates):
     else:
         return None
 
-
-def get_distance_to_board_end(robot, state):
-    """
-    Get the distance from the robot's coordinates to the end of the board in robot's direction.
-    Measured number is in the count of tiles between the robot and the board's edge.
-    """
-
-    if robot.direction == Direction.N:
-        return state.sizes[1] - robot.coordinates[1]
-    if robot.direction == Direction.S:
-        return robot.coordinates[1]
-    if robot.direction == Direction.E:
-        return state.sizes[0] - robot.coordinates[0]
-    if robot.direction == Direction.W:
-        return robot.coordinates[0]
 
 
 def apply_tile_effects(state):
