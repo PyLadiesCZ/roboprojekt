@@ -163,7 +163,7 @@ class Robot:
         # Start checking the next coordinates till the board end.
         for step in range(distance_till_end):
             # There is a wall, end of shot.
-            if not check_wall(self.coordinates, self.direction, state):
+            if not check_wall(next_coordinates, self.direction, state):
                 break
 
             robot_in_the_way_index = check_robot_in_the_way(state, next_coordinates)
