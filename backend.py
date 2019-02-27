@@ -78,7 +78,7 @@ class Robot:
                 # There isn't a robot in the way. Robot walks to next coordinates.
                 else:
                     self.coordinates = next_coordinates
-                    # Check hole on new coordinates.
+                    # Check hole on next coordinates.
                     self.check_hole(state)
 
     def move(self, direction, distance, state):
