@@ -158,14 +158,15 @@ class Robot:
         """
 
         distance_till_end = self.get_distance_to_board_end(state)
-        print(distance_till_end)
 
-        # Check if there is no wall on robot's tile. If there is - return.
-        if not check_wall(self.coordinates, self.direction, state):
-            return
+        # Firstly check if there is no wall on robot's tile.
+        if check_wall(self.coordinates, self.direction, state):
+            # There is no wall, get the next coordinates
+            next_coordinates = get_next_coordinates(self.coordinates, self.direction)
+        else:
+            # There is wall - return state.
+            return state
 
-        # If there is no wall, get the next coordinates
-        next_coordinates = get_next_coordinates(self.coordinates, self.direction)
         # Start checking the next coordinates till the board end.
         for step in range(distance_till_end):
             # There is a wall, end of shot.
