@@ -447,7 +447,7 @@ def apply_tile_effects(state):
 
     # Activate robot laser
     for robot in [robot for robot in state.robots if not robot.inactive]:
-            robot.shoot(state)
+        robot.shoot(state)
 
     # Collect flags, repair robots
     for robot in [robot for robot in state.robots if not robot.inactive]:
