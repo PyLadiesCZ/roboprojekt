@@ -96,10 +96,7 @@ class Tile:
 
     def push_robot(self, robot, state):
         """
-        Move robot by one tile in specific game round.
-
-        robot: Robot class
-        state: State class containing game round
+        Move robot by one tile during a specific register phase.
 
         Return Robot class.
         """
@@ -188,15 +185,15 @@ class BeltTile(Tile):
 
 class PusherTile(Tile):
     def __init__(self, direction, path, properties):
-        self.game_round = properties[0]["value"]
+        self.register = properties[0]["value"]
         super().__init__(direction, path, properties)
 
     def push_robot(self, robot, state):
-        # Check game round and activate correct pushers.
-        # PusherTile property game_round:
-        #  0 for even game round number,
-        #  1 for odd game round number.
-        if state.game_round % 2 == self.game_round:
+        # Check register and activate correct pushers.
+        # PusherTile property register:
+        #  0 for even register number,
+        #  1 for odd register number.
+        if state.register % 2 == self.register:
             robot.move(self.direction.get_new_direction(Rotation.U_TURN), 1, state)
 
 
@@ -291,7 +288,7 @@ class RepairTile(Tile):
         super().__init__(direction, path, properties)
 
     def repair_robot(self, robot, state):
-        if state.game_round == 5:
+        if state.register == 5:
             # Remove one robot damage.
             if robot.damages > 0:
                 robot.damages -= 1

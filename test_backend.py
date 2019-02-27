@@ -109,31 +109,31 @@ def test_robot_change_direction(current_direction, towards, new_direction):
                           ])
 def test_robot_is_repaired_after_5th_round(damages_before, tile, damages_after):
     """
-    When robot is on RepairTile he is supposed to be repaired after the 5th game round.
+    When robot is on RepairTile he is supposed to be repaired after the 5th register.
     If he doesn't have any damages, the count remains the same as previous.
     """
     robot = Robot(None, None, None, (0, 0))
     state = State({(0, 0): [tile]}, [robot], 1)
     robot.damages = damages_before
-    state.game_round = 5
+    state.register = 5
     apply_tile_effects(state)
     assert robot.damages == damages_after
 
 
-@pytest.mark.parametrize(("damages", "tile", "current_game_round"),
+@pytest.mark.parametrize(("damages", "tile", "current_register"),
                          [(0, RepairTile(None, None, [{'value': True}]), 1),
                          (9, RepairTile(None, None, [{'value': True}]), 2),
                          (3, RepairTile(None, None, [{'value': True}]), 3),
                          (5, RepairTile(None, None, [{'value': True}]), 4),
                           ])
-def test_robot_is_not_repaired(damages, tile, current_game_round):
+def test_robot_is_not_repaired(damages, tile, current_register):
     """
-    When robot is on RepairTile but the game round is not 5, he is not yet repaired. His damage count doesn't change.
+    When robot is on RepairTile but the register phase is not 5, he is not yet repaired. His damage count doesn't change.
     """
     robot = Robot(None, None, None, (0, 0))
     state = State({(0, 0): [tile]}, [robot], 1)
     robot.damages = damages
-    state.game_round = current_game_round
+    state.register = current_register
     apply_tile_effects(state)
     assert robot.damages == damages
 
@@ -280,24 +280,24 @@ def test_robot_is_damaged_by_laser(input_coordinates, damages_after):
 
 # PusherTile
 
-@pytest.mark.parametrize(("game_round", "tile", "output_coordinates"),
+@pytest.mark.parametrize(("register", "tile", "output_coordinates"),
                          [(1, PusherTile(Direction.N, None, [{'value': 1}]), (1, 0)),
                          (2, PusherTile(Direction.N, None, [{'value': 1}]), (1, 1)),
                          (3, PusherTile(Direction.N, None, [{'value': 0}]), (1, 1)),
                          (4, PusherTile(Direction.N, None, [{'value': 0}]), (1, 0)),
                          (5, PusherTile(Direction.N, None, [{'value': 1}]), (1, 0)),
                           ])
-def test_robot_is_pushed_at_the_correct_round(game_round, tile, output_coordinates):
+def test_robot_is_pushed_at_the_correct_round(register, tile, output_coordinates):
     """
     When robot is standing on a PusherTile, he should be pushed in the direction of pusher's force.
     Eg. pusher on the North tile side forces the robot's movement to the South.
     Robot's direction doesn't change, just the coordinates.
-    The push is performed only at the certain game round (1-3-5 or 2-4) according
+    The push is performed only at the certain register (1-3-5 or 2-4) according
     to the value on the tile.
     """
     robot = Robot(Direction.W, None, None, (1, 1))
     state = State({(1, 0): [Tile(None, None, None)], (1, 1): [tile]}, [robot], 2)
-    state.game_round = game_round
+    state.register = register
     apply_tile_effects(state)
     assert robot.direction == Direction.W
     assert robot.coordinates == output_coordinates
@@ -318,7 +318,7 @@ def test_robot_is_pushed_to_the_correct_direction(tile, output_coordinates):
     """
     robot = Robot(Direction.S, None, None, (1, 1))
     state = State({(1, 0): [Tile(None, None, None)], (0, 1): [Tile(None, None, None)], (2, 1): [Tile(None, None, None)], (1, 2): [Tile(None, None, None)], (1, 1): [tile]}, [robot], 5)
-    state.game_round = 1
+    state.register = 1
     apply_tile_effects(state)
     assert robot.direction == Direction.S
     assert robot.coordinates == output_coordinates
@@ -339,7 +339,7 @@ def test_robot_is_pushed_out_of_the_board(tile):
     """
     robot = Robot(Direction.S, None, None, (0, 0))
     state = State({(0, 0): [tile]}, [robot], 1)
-    state.game_round = 1
+    state.register = 1
     apply_tile_effects(state)
     assert robot.lives == 2
     assert robot.inactive is True
