@@ -71,11 +71,11 @@ class Robot:
                         state.robots[robot_in_the_way_index].walk(1, state, direction)
                         # Check that robot moved.
                         if state.robots[robot_in_the_way_index].coordinates != next_coordinates:
-                            # Robot walks to new coordinates.
+                            # Robot walks to next coordinates.
                             self.coordinates = next_coordinates
-                            # Check hole on new coordinates.
+                            # Check hole on next coordinates.
                             self.check_hole(state)
-                # There isn't a robot in the way. Robot walks to new coordinates.
+                # There isn't a robot in the way. Robot walks to next coordinates.
                 else:
                     self.coordinates = next_coordinates
                     # Check hole on new coordinates.
@@ -105,7 +105,7 @@ class Robot:
 
             # There isn't a robot on the next tile. Robot will be moved.
             self.coordinates = next_coordinates
-            # Check hole on new coordinates.
+            # Check hole on next coordinates.
             self.check_hole(state)
 
     def die(self):
