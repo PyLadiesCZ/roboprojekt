@@ -263,7 +263,7 @@ class LaserTile(Tile):
                     # Don't check new tiles.
                     break
         if hit:
-            do_damage(robot, self.laser_strength)
+            robot.be_damaged(self.laser_strength)
 
 
 class FlagTile(Tile):
@@ -307,18 +307,6 @@ def select_tile(direction, path, type, properties):
     Select tile subclass according to its type and create coressponding subclass.
     """
     return TILE_CLS[type](direction, path, properties)
-
-
-def do_damage(robot, strength=1):
-    """
-    Common function for laser shots (both tile and robot's).
-    """
-    if robot.damages < (10 - strength):
-        # Laser won't kill robot, but it will damage robot.
-        robot.damages += strength
-    else:
-        # Robot is damaged so much that laser kills it.
-        robot.die()
 
 
 def get_next_coordinates(coordinates, direction):
