@@ -104,7 +104,6 @@ class Robot:
                 break
 
             # There isn't a robot on the next tile. Robot will be moved.
-<<<<<<< HEAD
             self.coordinates = next_coordinates
             # Check hole on new coordinates.
             self.check_hole(state)
