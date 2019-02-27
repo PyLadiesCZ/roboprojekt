@@ -100,9 +100,9 @@ def test_robot_change_direction(current_direction, towards, new_direction):
     assert robot.direction == new_direction
 
 
-def test_robot_shoots():
+def test_robot_and_tiles_shoot():
     """
-    Robots are placed on a test_laser.json map and become obstacles.
+    Robots are placed on a test_laser.json map.
     There are some walls that stop their lasers on the way.
     (In order to see the "human" version with arrows representing robots,
     check test_shoot_human_view.json),
@@ -110,40 +110,25 @@ def test_robot_shoots():
     If there is wall on the way, the damage is not done.
     """
     board = get_board("maps/test_laser.json")
-    robot_obstacle1 = Robot(Direction.W, None, None, (2, 2))
-    robot_obstacle2 = Robot(Direction.N, None, None, (1, 1))
-    robot_obstacle3 = Robot(Direction.E, None, None, (0, 2))
-    robot_obstacle4 = Robot(Direction.W, None, None, (1, 2))
-    robot_obstacle5 = Robot(Direction.S, None, None, (1, 3))
-    robot_obstacle6 = Robot(Direction.E, None, None, (0, 0))
-    robot_obstacle7 = Robot(Direction.N, None, None, (2, 0))
-    robot_obstacle8 = Robot(Direction.N, None, None, (3, 0))
 
-    robots = [robot_obstacle1,
-              robot_obstacle2,
-              robot_obstacle3,
-              robot_obstacle4,
-              robot_obstacle5,
-              robot_obstacle6,
-              robot_obstacle7,
-              robot_obstacle8,
+    robots = [Robot(Direction.W, None, None, (2, 2)),
+              Robot(Direction.N, None, None, (1, 1)),
+              Robot(Direction.E, None, None, (0, 2)),
+              Robot(Direction.W, None, None, (1, 2)),
+              Robot(Direction.S, None, None, (1, 3)),
+              Robot(Direction.E, None, None, (0, 0)),
+              Robot(Direction.N, None, None, (2, 0)),
+              Robot(Direction.N, None, None, (3, 0)),
               ]
     for robot in robots:
         robot.damages = 0
 
     state = State(board, robots, (4, 4))
-
     apply_tile_effects(state)
-    assert robot_obstacle1.damages == 0
-    assert robot_obstacle2.damages == 4
-    assert robot_obstacle3.damages == 0
-    assert robot_obstacle4.damages == 2
-    assert robot_obstacle5.damages == 3
-    assert robot_obstacle6.damages == 0
-    assert robot_obstacle7.damages == 1
-    assert robot_obstacle8.damages == 1
+    damages_list = [0, 4, 0, 2, 3, 0, 1, 1]
 
-
+    for robot in robots:
+        assert robot.damages == damages_list[robots.index(robot)]
 
 # RepairTile
 
