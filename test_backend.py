@@ -193,7 +193,7 @@ def test_robot_died(lives_before, lives_after):
     robot.walk(1, state)
     assert robot.lives == lives_after
     assert robot.inactive is True
-    assert robot.coordinates == (-1, -1)
+    assert robot.coordinates == None
 
 
 # FlagTile
@@ -343,7 +343,7 @@ def test_robot_is_pushed_out_of_the_board(tile):
     apply_tile_effects(state)
     assert robot.lives == 2
     assert robot.inactive is True
-    assert robot.coordinates == (-1, -1)
+    assert robot.coordinates == None
 
 
 @pytest.mark.parametrize(("direction", "card", "new_coordinates"),
