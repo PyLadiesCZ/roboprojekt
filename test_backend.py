@@ -1,4 +1,4 @@
-from backend import get_starting_coordinates, get_robot_paths, get_robots_to_start, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects
+from backend import get_starting_coordinates, get_robot_paths, create_robots, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects
 from util import Tile, HoleTile, GearTile, PusherTile, RepairTile, FlagTile, Direction, Rotation
 from loading import get_board
 from pathlib import Path
@@ -28,11 +28,11 @@ def test_robot_paths():
 
 def test_robots_on_starting_coordinates():
     """
-    Assert that the result of get_robots_to_start is a list which contains
+    Assert that the result of create_robots is a list which contains
     Robot objects with correct attribute coordinates.
     """
     board = get_board("maps/test_3.json")
-    robots = get_robots_to_start(board)
+    robots = create_robots(board)
     assert isinstance(robots, list)
     assert isinstance(robots[0], Robot)
 
@@ -193,7 +193,7 @@ def test_robot_died(lives_before, lives_after):
     robot.walk(1, state)
     assert robot.lives == lives_after
     assert robot.inactive is True
-    assert robot.coordinates == (-1, -1)
+    assert robot.coordinates == None
 
 
 # FlagTile
@@ -343,7 +343,7 @@ def test_robot_is_pushed_out_of_the_board(tile):
     apply_tile_effects(state)
     assert robot.lives == 2
     assert robot.inactive is True
-    assert robot.coordinates == (-1, -1)
+    assert robot.coordinates == None
 
 
 @pytest.mark.parametrize(("direction", "card", "new_coordinates"),
