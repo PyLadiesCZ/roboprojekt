@@ -28,7 +28,7 @@ class Robot:
         """
         Return True if robot is inactive (not on the game board).
 
-        All inactive robots have coordinates -1, -1.
+        All inactive robots have coordinates None.
         """
         return self.coordinates == None
 
@@ -239,7 +239,7 @@ def get_robot_paths():
     return robot_paths
 
 
-def initial_robots_list(board):
+def create_robots(board):
     """
     Place robots on starting tiles.
 
@@ -296,7 +296,7 @@ def get_start_state(map_name):
     """
     board = get_board(map_name)
     tile_count = get_tile_count(board)
-    robots_start = initial_robots_list(board)
+    robots_start = create_robots(board)
     state = State(board, robots_start, tile_count)
     return state
 
