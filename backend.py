@@ -49,12 +49,10 @@ class Robot:
             direction = self.direction
 
         # Robot can go backwards - then his distance is -1.
-        # In this case we want to rotate him, make him walk 1 step and rotate back.
-        # He still can move the other robots on the way.
+        # In this case he walks 1 step in the direction opposite to his.
+        # He can still move the other robots on the way.
         if distance < 0:
-            self.rotate(Rotation.U_TURN)
-            self.walk((-distance), state)
-            self.rotate(Rotation.U_TURN)
+            self.walk((-distance), state, self.direction.get_new_direction(Rotation.U_TURN))
         else:
             for step in range(distance):
                 # Check walls before moving.
