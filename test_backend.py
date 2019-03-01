@@ -1,4 +1,4 @@
-from backend import get_starting_coordinates, get_robot_paths, initial_robots_list, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects
+from backend import get_starting_coordinates, get_robot_paths, create_robots, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects
 from util import Tile, HoleTile, GearTile, PusherTile, RepairTile, FlagTile, Direction, Rotation
 from loading import get_board
 from pathlib import Path
@@ -28,11 +28,11 @@ def test_robot_paths():
 
 def test_robots_on_starting_coordinates():
     """
-    Assert that the result of initial_robots_list is a list which contains
+    Assert that the result of create_robots is a list which contains
     Robot objects with correct attribute coordinates.
     """
     board = get_board("maps/test_3.json")
-    robots = initial_robots_list(board)
+    robots = create_robots(board)
     assert isinstance(robots, list)
     assert isinstance(robots[0], Robot)
 
