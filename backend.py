@@ -208,11 +208,11 @@ class Robot:
         if self.direction == Direction.N:
             return state.sizes[1] - self.coordinates[1]
         if self.direction == Direction.S:
-            return self.coordinates[1]
+            return self.coordinates[1] + 1
         if self.direction == Direction.E:
             return state.sizes[0] - self.coordinates[0]
         if self.direction == Direction.W:
-            return self.coordinates[0]
+            return self.coordinates[0] + 1
 
 class Card:
     def __init__(self, priority):
