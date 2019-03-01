@@ -107,7 +107,6 @@ def test_robot_and_tiles_shoot():
     (In order to see the "human" version with arrows representing robots,
     check test_shoot_human_view.json),
     They should receive damages according to their and lasers' position.
-    If there is wall on the way, the damage is not done.
     """
     board = get_board("maps/test_laser.json")
 
@@ -131,6 +130,41 @@ def test_robot_and_tiles_shoot():
 
     for robot in robots:
         assert robot.damages == damages_list[robots.index(robot)]
+
+
+def test_power_down_robots_dont_shoot():
+    """
+    Robots are placed on a test_laser.json map.
+    There are some walls that stop their lasers on the way.
+    (In order to see the "human" version with arrows representing robots,
+    check test_shoot_human_view.json),
+    They shouldn't receive damage when they are under power-down.
+    """
+    board = get_board("maps/test_laser.json")
+
+    robots = [Robot(Direction.W, None, None, (2, 2)),
+              Robot(Direction.N, None, None, (1, 1)),
+              Robot(Direction.E, None, None, (0, 2)),
+              Robot(Direction.W, None, None, (1, 2)),
+              Robot(Direction.S, None, None, (1, 3)),
+              Robot(Direction.E, None, None, (0, 0)),
+              Robot(Direction.N, None, None, (2, 0)),
+              Robot(Direction.E, None, None, (3, 0)),
+              Robot(Direction.N, None, None, (2, 1)),
+              Robot(Direction.S, None, None, (3, 3)),
+              ]
+    for robot in robots:
+        robot.damages = 0
+        robot.power_down = True
+
+    state = State(board, robots, (4, 4))
+    apply_tile_effects(state)
+    damages_list = [0, 4, 0, 0, 0, 0, 0, 0, 0, 4]
+
+    for robot in robots:
+        assert robot.damages == damages_list[robots.index(robot)]
+
+
 
 # RepairTile
 

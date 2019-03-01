@@ -21,6 +21,7 @@ class Robot:
         self.lives = 3
         self.flags = 0
         self.damages = 4
+        self.power_down = False
 
     @property
     # More info about @property decorator - official documentation:
@@ -154,32 +155,34 @@ class Robot:
         Shoot in robot's direction.
         If there is a wall on the way, the robot's laser stops (it can't pass it).
         If there is a robot on the way, he gets shot and the laser ends there.
+        If a robot has activated Power Down for this register, he can't shoot.
         The check is performed from robot's position till the end of the board in robot's direction.
         """
 
-        distance_till_end = self.get_distance_to_board_end(state)
+        if not self.power_down:
+            distance_till_end = self.get_distance_to_board_end(state)
 
-        # First coordinates are robot's coordinates - wall must be checked
-        next_coordinates = self.coordinates
+            # First coordinates are robot's coordinates - wall must be checked
+            next_coordinates = self.coordinates
 
-        for step in range(distance_till_end):
-            # Check if there is a robot on the next coordinates.
-            # Skip this if the shooting robot's current coordinates are checked
-            if next_coordinates != self.coordinates:
-                robot_in_the_way_index = check_robot_in_the_way(state, next_coordinates)
+            for step in range(distance_till_end):
+                # Check if there is a robot on the next coordinates.
+                # Skip this if the shooting robot's current coordinates are checked
+                if next_coordinates != self.coordinates:
+                    robot_in_the_way_index = check_robot_in_the_way(state, next_coordinates)
 
-                # There is a robot, shoot him and break the cycle (only one gets shot).
-                if robot_in_the_way_index is not None:
-                    state.robots[robot_in_the_way_index].be_damaged()
+                    # There is a robot, shoot him and break the cycle (only one gets shot).
+                    if robot_in_the_way_index is not None:
+                        state.robots[robot_in_the_way_index].be_damaged()
+                        break
+
+                # Check if there is a wall, if is: end of shot.
+                if not check_wall(next_coordinates, self.direction, state):
                     break
 
-            # Check if there is a wall, if is: end of shot.
-            if not check_wall(next_coordinates, self.direction, state):
-                break
-
-            # No robots or walls on the coordinates, check one step further.
-            else:
-                next_coordinates = get_next_coordinates(next_coordinates, self.direction)
+                # No robots or walls on the coordinates, check one step further.
+                else:
+                    next_coordinates = get_next_coordinates(next_coordinates, self.direction)
 
 
     def be_damaged(self, strength=1):
