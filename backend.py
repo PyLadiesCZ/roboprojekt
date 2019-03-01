@@ -407,8 +407,9 @@ def check_robot_in_the_way(state, coordinates):
         if robot.coordinates == coordinates:
             # Return index of robot that is in the way.
             return state.robots.index(robot)
-    else:
-        return None
+
+    # There are no robots, return None
+    return None
 
 
 
