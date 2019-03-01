@@ -52,7 +52,7 @@ class Robot:
         # In this case he walks 1 step in the direction opposite to his.
         # He can still move the other robots on the way.
         if distance < 0:
-            self.walk((-distance), state, self.direction.get_new_direction(Rotation.U_TURN))
+            self.walk((-distance), state, direction.get_new_direction(Rotation.U_TURN))
         else:
             for step in range(distance):
                 # Check walls before moving.
