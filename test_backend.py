@@ -119,13 +119,14 @@ def test_robot_and_tiles_shoot():
               Robot(Direction.E, None, None, (0, 0)),
               Robot(Direction.N, None, None, (2, 0)),
               Robot(Direction.N, None, None, (3, 0)),
+              Robot(Direction.N, None, None, (2, 1))
               ]
     for robot in robots:
         robot.damages = 0
 
     state = State(board, robots, (4, 4))
     apply_tile_effects(state)
-    damages_list = [0, 4, 0, 2, 3, 0, 1, 1]
+    damages_list = [0, 4, 0, 2, 3, 0, 1, 1, 1]
 
     for robot in robots:
         assert robot.damages == damages_list[robots.index(robot)]

@@ -159,28 +159,25 @@ class Robot:
 
         distance_till_end = self.get_distance_to_board_end(state)
 
-        # Firstly check if there is no wall on robot's tile.
-        if check_wall(self.coordinates, self.direction, state):
-            # There is no wall, get the next coordinates
-            next_coordinates = get_next_coordinates(self.coordinates, self.direction)
-        else:
-            # There is wall - return state.
-            return state
+        # First coordinates are robot's coordinates - wall must be checked
+        next_coordinates = self.coordinates
 
-        # Start checking the next coordinates till the board end.
         for step in range(distance_till_end):
-            # There is a wall, end of shot.
+            # Check if there is a robot on the next coordinates.
+            # Skip this if the shooting robot's current coordinates are checked
+            if next_coordinates != self.coordinates:
+                robot_in_the_way_index = check_robot_in_the_way(state, next_coordinates)
+
+                # There is a robot, shoot him and break the cycle (only one gets shot).
+                if robot_in_the_way_index is not None:
+                    state.robots[robot_in_the_way_index].be_damaged()
+                    break
+
+            # Check if there is a wall, if is: end of shot.
             if not check_wall(next_coordinates, self.direction, state):
                 break
 
-            robot_in_the_way_index = check_robot_in_the_way(state, next_coordinates)
-
-            # There is a robot, shoot him and break the cycle (only one gets shot).
-            if robot_in_the_way_index is not None:
-                state.robots[robot_in_the_way_index].be_damaged()
-                break
-
-            # No robots or walls on the next coordinates, check one step further.
+            # No robots or walls on the coordinates, check one step further.
             else:
                 next_coordinates = get_next_coordinates(next_coordinates, self.direction)
 
