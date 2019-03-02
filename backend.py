@@ -30,9 +30,9 @@ class Robot:
         """
         Return True if robot is inactive (not on the game board).
 
-        All inactive robots have coordinates -1, -1.
+        All inactive robots have coordinates None.
         """
-        return self.coordinates == (-1, -1)
+        return self.coordinates == None
 
     def __repr__(self):
         return "<Robot {} {} {} Lives: {} Flags: {} Damages: {}, Inactive: {}>".format(
@@ -51,13 +51,10 @@ class Robot:
             direction = self.direction
 
         # Robot can go backwards - then his distance is -1.
-        # In this case we want to rotate him, make him walk 1 step and rotate back.
-        # He still can move the other robots on the way.
+        # In this case he walks 1 step in the direction opposite to the given one.
+        # He can still move the other robots on the way.
         if distance < 0:
-            self.rotate(Rotation.U_TURN)
-            self.walk((-distance), state)
-            self.rotate(Rotation.U_TURN)
-
+            self.walk((-distance), state, direction.get_new_direction(Rotation.U_TURN))
         else:
             for step in range(distance):
                 # Check walls before moving.
@@ -115,7 +112,7 @@ class Robot:
         Robot is moved out of game board for the rest of the round.
         """
         self.lives -= 1
-        self.coordinates = (-1, -1)
+        self.coordinates = None
 
     def rotate(self, where_to):
         """
@@ -302,7 +299,7 @@ def get_robot_paths():
     return robot_paths
 
 
-def get_robots_to_start(board):
+def create_robots(board):
     """
     Place robots on starting tiles.
 
@@ -359,7 +356,7 @@ def get_start_state(map_name):
     """
     board = get_board(map_name)
     tile_count = get_tile_count(board)
-    robots_start = get_robots_to_start(board)
+    robots_start = create_robots(board)
     state = State(board, robots_start, tile_count)
     return state
 
