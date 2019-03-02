@@ -58,7 +58,7 @@ class Robot:
         else:
             for step in range(distance):
                 # Check walls before moving.
-                if not check_wall(self.coordinates, direction, state):
+                if not check_the_absence_of_a_wall(self.coordinates, direction, state):
                     break
 
                 # There is no wall. Get next coordinates.
@@ -95,7 +95,7 @@ class Robot:
         """
         for step in range(distance):
             # Check walls before moving.
-            if not check_wall(self.coordinates, direction, state):
+            if not check_the_absence_of_a_wall(self.coordinates, direction, state):
                 break
             # There is no wall. Get next coordinates.
             next_coordinates = get_next_coordinates(self.coordinates, direction)
@@ -301,7 +301,7 @@ def get_start_state(map_name):
     return state
 
 
-def check_wall(coordinates, direction, state):
+def check_the_absence_of_a_wall(coordinates, direction, state):
     """
     Check wall in the direction of the move.
 
@@ -321,19 +321,19 @@ def check_wall(coordinates, direction, state):
         if not move_from:
             # Current tile: There is a wall in the direction of the move.
             return False
-    if move_from:
-        # There is no wall, so get next coordinates.
-        next_coordinates = get_next_coordinates(coordinates, direction)
-        # Get new list of tiles.
-        new_tiles = state.get_tiles(next_coordinates)
-        # Check wall on the next tile in the direction of the move.
-        for tile in new_tiles:
-            move_to = tile.can_move_to(direction)
-            if not move_to:
-                # Next tile: There is a wall in the direction of the move.
-                return False
-        if move_to:
-            return True
+
+    # There is no wall, so get next coordinates.
+    next_coordinates = get_next_coordinates(coordinates, direction)
+    # Get new list of tiles.
+    new_tiles = state.get_tiles(next_coordinates)
+    # Check wall on the next tile in the direction of the move.
+    for tile in new_tiles:
+        move_to = tile.can_move_to(direction)
+        if not move_to:
+            # Next tile: There is a wall in the direction of the move.
+            return False
+
+    return True
 
 
 def apply_tile_effects(state):
