@@ -28,7 +28,7 @@ class Robot:
         """
         Return True if robot is inactive (not on the game board).
 
-        All inactive robots have coordinates -1, -1.
+        All inactive robots have coordinates None.
         """
         return self.coordinates == None
 
@@ -58,7 +58,7 @@ class Robot:
         else:
             for step in range(distance):
                 # Check walls before moving.
-                if not no_wall_in_the_way(self.coordinates, direction, state):
+                if not check_the_absence_of_a_wall(self.coordinates, direction, state):
                     break
 
                 # There is no wall. Get next coordinates.
@@ -95,7 +95,7 @@ class Robot:
         """
         for step in range(distance):
             # Check walls before moving.
-            if not no_wall_in_the_way(self.coordinates, direction, state):
+            if not check_the_absence_of_a_wall(self.coordinates, direction, state):
                 break
             # There is no wall. Get next coordinates.
             next_coordinates = get_next_coordinates(self.coordinates, direction)
@@ -239,7 +239,7 @@ def get_robot_paths():
     return robot_paths
 
 
-def initial_robots_list(board):
+def create_robots(board):
     """
     Place robots on starting tiles.
 
@@ -296,12 +296,12 @@ def get_start_state(map_name):
     """
     board = get_board(map_name)
     tile_count = get_tile_count(board)
-    robots_start = initial_robots_list(board)
+    robots_start = create_robots(board)
     state = State(board, robots_start, tile_count)
     return state
 
 
-def no_wall_in_the_way(coordinates, direction, state):
+def check_the_absence_of_a_wall(coordinates, direction, state):
     """
     Check wall in the direction of the move.
 
