@@ -360,12 +360,14 @@ def test_robot_is_pushed_out_of_the_board(tile):
 def test_move_cards(direction, card, new_coordinates):
     """
     Give mock robot the MovementCard and check if he moved to the expected coordinates.
+    Check if the robot's direction remained the same.
     """
     robot = Robot(direction, None, None, (4, 7))
     robot.program = [card]
     state = get_start_state("maps/test_3.json")
     robot.apply_card_effect(state)
     assert robot.coordinates == new_coordinates
+    assert robot.direction == direction
 
 
 @pytest.mark.parametrize(("card", "new_direction"),
