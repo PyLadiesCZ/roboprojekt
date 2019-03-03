@@ -6,6 +6,7 @@ import random
 from util import Direction, Rotation, HoleTile, get_next_coordinates
 from loading import get_board
 
+MAX_DAMAGE_VALUE = 10
 
 class Robot:
     def __init__(self, direction, path, path_front, coordinates):
@@ -20,6 +21,7 @@ class Robot:
         self.lives = 3
         self.flags = 0
         self.damages = 4
+        self.power_down = False
 
     @property
     # More info about @property decorator - official documentation:
@@ -59,20 +61,14 @@ class Robot:
                 if not check_the_absence_of_a_wall(self.coordinates, direction, state):
                     break
 
-                # There is no wall. Get next coordinates.
                 next_coordinates = get_next_coordinates(self.coordinates, direction)
-                # Check robots on the next tile.
-                robot_in_the_way = None
-                for robot in state.robots:
-                    if robot.coordinates == next_coordinates:
-                        # Save index of robot that is in the way.
-                        robot_in_the_way = state.robots.index(robot)
-                        break
+                robot_in_the_way_index = check_robot_in_the_way(state, next_coordinates)
+
                 # Move robot in the way.
-                if robot_in_the_way is not None:
-                        state.robots[robot_in_the_way].walk(1, state, direction)
+                if robot_in_the_way_index is not None:
+                        state.robots[robot_in_the_way_index].walk(1, state, direction)
                         # Check that robot moved.
-                        if state.robots[robot_in_the_way].coordinates != next_coordinates:
+                        if state.robots[robot_in_the_way_index].coordinates != next_coordinates:
                             # Robot walks to next coordinates.
                             self.coordinates = next_coordinates
                             # Check hole on next coordinates.
@@ -98,18 +94,17 @@ class Robot:
             # There is no wall. Get next coordinates.
             next_coordinates = get_next_coordinates(self.coordinates, direction)
             # Check robots on the next tile before moving.
-            robot_check = True
-            for robot in state.robots:
-                if robot.coordinates == next_coordinates:
-                    # There is a robot on the next tile.
-                    # Robot can't be moved.
-                    robot_check = False
-                    break
+            robot_in_the_way_index = check_robot_in_the_way(state, next_coordinates)
+
+            if robot_in_the_way_index is not None:
+                # There is a robot on the next tile.
+                # Robot can't be moved.
+                break
+
             # There isn't a robot on the next tile. Robot will be moved.
-            if robot_check:
-                self.coordinates = next_coordinates
-                # Check hole on next coordinates.
-                self.check_hole(state)
+            self.coordinates = next_coordinates
+            # Check hole on next coordinates.
+            self.check_hole(state)
 
     def die(self):
         """
@@ -146,11 +141,78 @@ class Robot:
         """
         Check tiles on robot's coordinates for HoleTile and apply its effect.
         """
+
         for tile in state.get_tiles(self.coordinates):
             tile.kill_robot(self)
             if self.inactive:
                 break
 
+    def shoot(self, state):
+        """
+        Shoot in robot's direction.
+        If there is a wall on the way, the robot's laser stops (it can't pass it).
+        If there is a robot on the way, he gets shot and the laser ends there.
+        If a robot has activated Power Down for this register, he can't shoot.
+        The check is performed from robot's position till the end of the board in robot's direction.
+        """
+
+        if not self.power_down:
+            distance_till_end = self.get_distance_to_board_end(state)
+
+            # First coordinates are robot's coordinates - wall must be checked
+            next_coordinates = self.coordinates
+
+            for step in range(distance_till_end):
+                # Check if there is a robot on the next coordinates.
+                # Skip this if the shooting robot's current coordinates are checked
+                if next_coordinates != self.coordinates:
+                    robot_in_the_way_index = check_robot_in_the_way(state, next_coordinates)
+
+                    # There is a robot, shoot him and break the cycle (only one gets shot).
+                    if robot_in_the_way_index is not None:
+                        state.robots[robot_in_the_way_index].be_damaged()
+                        break
+
+                # Check if there is a wall, if is: end of shot.
+                if not check_the_absence_of_a_wall(next_coordinates, self.direction, state):
+                    break
+
+                # No robots or walls on the coordinates, check one step further.
+                else:
+                    next_coordinates = get_next_coordinates(next_coordinates, self.direction)
+
+
+    def be_damaged(self, strength=1):
+        """
+        Give one or more damages to the robot.
+
+        If the robot has reached the maximum damage value, he gets killed.
+        Strengh: optional argument, meaning how many damages should be added.
+        By default it is 1 - the value of robot's laser.
+        When the damage is performed by laser tile, there can be bigger number.
+        """
+        if self.damages < (MAX_DAMAGE_VALUE - strength):
+            # Laser won't kill robot, but it will damage robot.
+            self.damages += strength
+        else:
+            # Robot is damaged so much that laser kills it.
+            self.die()
+
+
+    def get_distance_to_board_end(self, state):
+        """
+        Get the distance from the robot's coordinates to the end of the board in robot's direction.
+        Measured number is in the count of tiles between the robot and the board's edge.
+        """
+
+        if self.direction == Direction.N:
+            return state.sizes[1] - self.coordinates[1]
+        if self.direction == Direction.S:
+            return self.coordinates[1] + 1
+        if self.direction == Direction.E:
+            return state.sizes[0] - self.coordinates[0]
+        if self.direction == Direction.W:
+            return self.coordinates[0] + 1
 
 class Card:
     def __init__(self, priority):
@@ -334,9 +396,29 @@ def check_the_absence_of_a_wall(coordinates, direction, state):
     return True
 
 
+def check_robot_in_the_way(state, coordinates):
+    """
+    Check if there are robot on the next coordinates.
+    Return index of the robot on the way from given point.
+    It there are no robots, return None.
+    """
+    # Check robots on the next tile.
+    for robot in state.robots:
+        if robot.coordinates == coordinates:
+            # Return index of robot that is in the way.
+            return state.robots.index(robot)
+
+    # There are no robots, return None
+    return None
+
+
+
 def apply_tile_effects(state):
     """
-    Apply tile effects according to game rules.
+    Apply the effects according to game rules.
+
+    The function name is not entirely exact: the whole register phase actions take place
+    (both tiles and robot's effects).
     """
     # Activate belts
         # 1) Express belts move 1 space
@@ -360,7 +442,10 @@ def apply_tile_effects(state):
             tile.shoot_robot(robot, state)
             if robot.inactive:
                 break
+
     # Activate robot laser
+    for robot in [robot for robot in state.robots if not robot.inactive]:
+        robot.shoot(state)
 
     # Collect flags, repair robots
     for robot in [robot for robot in state.robots if not robot.inactive]:
@@ -378,7 +463,8 @@ def set_robots_for_new_turn(state):
     After 5th register there comes evaluation of the robots' state.
     "Dead" robots who don't have any lives left, are deleted from the robot's lists.
 
-    "Inactive" robots who have lost one life during the round, will reboot on starting coordinates.
+    "Inactive" robots who have lost one life during the round,
+    will reboot on starting coordinates.
     """
 
     # Delete robots with zero lives

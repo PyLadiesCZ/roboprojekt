@@ -16,13 +16,15 @@ class Direction(Enum):
         Get attributes value and vector of the given Direction class values.
 
         Override standard enum __new__ method.
-        vector: new coordinates (where the robot goes to)
+        coor_delta: new coordinates (where the robot goes to)
         tile_property: map tile property: value (custom - added in Tiled).
-        Makes it possible to change vector and tile_property when the object is rotated.
-        With degrees change (value) there comes the coordinates (vector) change and tile_property.
+        Makes it possible to change delta and tile_property
+        when the object is rotated.
 
-        More info about enum - official documentation: https://docs.python.org/3/library/enum.html
-        Blog post with the exact __new__() usage: http://xion.io/post/code/python-enums-are-ok.html
+        More info about enum - official documentation:
+        https://docs.python.org/3/library/enum.html
+        Blog post with the exact __new__() usage:
+        http://xion.io/post/code/python-enums-are-ok.html
         """
         obj = object.__new__(cls)
         obj._value_ = degrees
@@ -36,7 +38,8 @@ class Direction(Enum):
     def get_new_direction(self, where_to):
         """
         Get new direction of given object.
-        Change attribute direction according to argument where_to, passed from class Rotation.
+        Change attribute direction according to argument where_to,
+        passed from class Rotation.
         """
         return Direction(self + where_to)
 
@@ -257,14 +260,7 @@ class LaserTile(Tile):
                     # Don't check new tiles.
                     break
         if hit:
-            # No robots found in the direction of incoming laser.
-            # So do damage to robot.
-            if robot.damages < (10 - self.laser_strength):
-                # Laser won't kill robot, but it will damage robot.
-                robot.damages += self.laser_strength
-            else:
-                # Robot is damaged so much that laser kills him.
-                robot.die()
+            robot.be_damaged(self.laser_strength)
 
 
 class FlagTile(Tile):
