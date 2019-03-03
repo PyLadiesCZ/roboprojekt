@@ -303,7 +303,7 @@ def get_start_state(map_name):
 
 def check_the_absence_of_a_wall(coordinates, direction, state):
     """
-    Check wall in the direction of the move.
+    Check the absence of a wall in the direction of the move.
 
     coordinates: tuple of x and y coordinate
     direction: object of Direction class
