@@ -174,7 +174,7 @@ class Robot:
                         break
 
                 # Check if there is a wall, if is: end of shot.
-                if not check_wall(next_coordinates, self.direction, state):
+                if not check_the_absence_of_a_wall(next_coordinates, self.direction, state):
                     break
 
                 # No robots or walls on the coordinates, check one step further.
