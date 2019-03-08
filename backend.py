@@ -57,7 +57,7 @@ class Robot:
             self.walk((-distance), state, direction.get_new_direction(Rotation.U_TURN))
         else:
             for step in range(distance):
-                # Check walls before moving.
+                # Check the absence of a walls before moving.
                 if not check_the_absence_of_a_wall(self.coordinates, direction, state):
                     break
 
@@ -68,16 +68,13 @@ class Robot:
                 if robot_in_the_way_index is not None:
                         state.robots[robot_in_the_way_index].walk(1, state, direction)
                         # Check that robot moved.
-                        if state.robots[robot_in_the_way_index].coordinates != next_coordinates:
-                            # Robot walks to next coordinates.
-                            self.coordinates = next_coordinates
-                            # Check hole on next coordinates.
-                            self.check_hole(state)
-                # There isn't a robot in the way. Robot walks to next coordinates.
-                else:
-                    self.coordinates = next_coordinates
-                    # Check hole on next coordinates.
-                    self.check_hole(state)
+                        if state.robots[robot_in_the_way_index].coordinates == next_coordinates:
+                            break
+
+                # Robot walks to next coordinates.
+                self.coordinates = next_coordinates
+                # Check hole on next coordinates.
+                self.check_hole(state)
 
     def move(self, direction, distance, state):
         """

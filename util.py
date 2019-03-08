@@ -202,22 +202,21 @@ class PusherTile(Tile):
 
 class GearTile(Tile):
     def __init__(self, direction, path, properties):
-        self.move_direction = self.transform_direction(properties[0]["value"])
+        self.move_direction = transform_direction(properties[0]["value"])
         super().__init__(direction, path, properties)
-
-    def transform_direction(self, direction_string):
-        """
-        Method to transform the string taken from json properties to valid Rotation class instance for later processing.
-        """
-        if direction_string == "left":
-            return Rotation.LEFT
-        if direction_string == "right":
-            return Rotation.RIGHT
 
     def rotate_robot(self, robot):
         # Rotate robot by 90° according to GearTile property: left or right.
         robot.rotate(self.move_direction)
 
+def transform_direction(direction_string):
+    """
+    Function to transform the string taken from json properties to valid Rotation class instance for later processing.
+    """
+    if direction_string == "left":
+        return Rotation.LEFT
+    if direction_string == "right":
+        return Rotation.RIGHT
 
 class LaserTile(Tile):
     def __init__(self, direction, path, properties):
