@@ -11,7 +11,7 @@ TILE_WIDTH = 64
 TILE_HEIGHT = 64
 
 
-def init_window(state):
+def create_window(state):
     """
     Return a pyglet window for graphic output.
 
@@ -74,7 +74,7 @@ def create_sprites(coordinate, items):
     return items_sprites
 
 
-def draw_board(state, window):
+def draw_state(state, window):
     """
     Draw the images of tiles and robots into map, react to user's resizing of window by scaling the board.
 

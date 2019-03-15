@@ -5,15 +5,13 @@ from util import Direction, Rotation
 interface_state = get_interface_state()
 
 
-def init_window():
+def create_window():
     """
     Return a pyglet window for graphic output.
-
-    state: State object containing game board, robots and map sizes
     """
     window = pyglet.window.Window(768, 1024, resizable=True)
     return window
-window = init_window()
+window = create_window()
 
 # Interface element sprites
 interface_sprite = pyglet.sprite.Sprite(pyglet.image.load('interface/png/interface.png'), x=0, y=0) # All Interface background

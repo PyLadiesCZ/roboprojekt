@@ -6,7 +6,7 @@ The game module
 """
 
 from backend import get_start_state, apply_tile_effects
-from frontend import init_window, draw_board
+from frontend import create_window, draw_state
 import pyglet
 import sys
 
@@ -25,7 +25,7 @@ else:
 state = get_start_state(map_name)
 
 # Load pyglet graphic window from the frontend module.
-window = init_window(state)
+window = create_window(state)
 
 
 @window.event
@@ -35,7 +35,7 @@ def on_draw():
     """
 
     window.clear()
-    draw_board(state, window)
+    draw_state(state, window)
 
 
 def move_once(t):
