@@ -217,19 +217,35 @@ class Card:
 
 
 class MovementCard(Card):
-    name = 'MovementCard'
     def __init__(self, priority, value):
         self.distance = value
         super().__init__(priority)
+
+    @property
+    def name(self):
+        if self.distance == -1:
+            return "back_up"
+        else:
+            return "move{}".format(self.distance)
+
     def __repr__(self):
         return "<{} {} {}>".format(self.name, self.priority, self.distance)
 
 
 class RotationCard(Card):
-    name = 'RotationCard'
     def __init__(self, priority, value):
         self.rotation = value
         super().__init__(priority)
+
+    @property
+    def name(self):
+        if self.rotation == Rotation.RIGHT:
+            return "right"
+        if self.rotation == Rotation.LEFT:
+            return "left"
+        else:
+            return "u_turn"
+
     def __repr__(self):
         return "<{} {} {}>".format(self.name, self.priority, self.rotation)
 
