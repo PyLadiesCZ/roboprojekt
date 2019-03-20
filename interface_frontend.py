@@ -12,15 +12,13 @@ MAX_FLAGS_COUNT = 8
 MAX_DAMAGES_COUNT = 9
 
 
-def init_window():
+def create_window():
     """
     Return a pyglet window for graphic output.
-
-    state: State object containing game board, robots and map sizes
     """
     window = pyglet.window.Window(768, 1024, resizable=True)
     return window
-window = init_window()
+window = create_window()
 
 
 def get_sprite(img_path, x=0, y=0):
