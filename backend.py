@@ -73,6 +73,8 @@ class Robot:
 
                 # Robot walks to next coordinates.
                 self.coordinates = next_coordinates
+                # Check hole on next coordinates.
+                self.fall_into_hole(state)
                 # If robot falls into hole, he becomes inactive.
                 if self.inactive:
                     break
@@ -101,6 +103,8 @@ class Robot:
 
             # There isn't a robot on the next tile. Robot will be moved.
             self.coordinates = next_coordinates
+            # Check hole on next coordinates.
+            self.fall_into_hole(state)
             # If robot falls into hole, he becomes inactive.
             if self.inactive:
                 break
