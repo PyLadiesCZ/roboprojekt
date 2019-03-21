@@ -17,8 +17,8 @@ def create_window(state):
 
     state: State object containing game board, robots and map sizes
     """
-    window = pyglet.window.Window(state.sizes[0] * TILE_WIDTH,
-                                  state.sizes[1] * TILE_HEIGHT, resizable=True)
+    window = pyglet.window.Window(state.tile_count[0] * TILE_WIDTH,
+                                  state.tile_count[1] * TILE_HEIGHT, resizable=True)
     return window
 
 
@@ -88,8 +88,8 @@ def draw_state(state, window):
 
     #scaling ratio
     zoom = min(
-        window.height / (state.sizes[1] * TILE_HEIGHT),
-        window.width / (state.sizes[0] * TILE_WIDTH)
+        window.height / (state.tile_count[1] * TILE_HEIGHT),
+        window.width / (state.tile_count[0] * TILE_WIDTH)
     )
 
     pyglet.gl.glScalef(zoom, zoom, 1)

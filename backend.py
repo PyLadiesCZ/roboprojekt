@@ -209,11 +209,11 @@ class Robot:
         """
 
         if self.direction == Direction.N:
-            return state.sizes[1] - self.coordinates[1]
+            return state.tile_count[1] - self.coordinates[1]
         if self.direction == Direction.S:
             return self.coordinates[1] + 1
         if self.direction == Direction.E:
-            return state.sizes[0] - self.coordinates[0]
+            return state.tile_count[0] - self.coordinates[0]
         if self.direction == Direction.W:
             return self.coordinates[0] + 1
 
@@ -257,10 +257,10 @@ class RotationCard(Card):
 
 
 class State:
-    def __init__(self, board, robots, sizes):
+    def __init__(self, board, robots, tile_count):
         self._board = board
         self.robots = robots
-        self.sizes = sizes
+        self.tile_count = tile_count
         self.register = 1
 
     def __repr__(self):
