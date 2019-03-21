@@ -251,7 +251,7 @@ def test_robot_died(lives_before, lives_after):
     When robot comes to a HoleTile (or goes / is pushed out of the game board),
     he gets killed.
     Check that his lives were lowered, he got inactive till the next game round
-    and his coordinates changed to the (-1, -1).
+    and his coordinates changed to the None.
     """
     robot = Robot(Direction.N, None, None, (0, 0))
     state = State({(0, 1): [HoleTile(None, None, None)]}, [robot], (1, 2))
