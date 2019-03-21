@@ -300,7 +300,7 @@ TILE_CLS = {'wall': WallTile, 'starting_square': StartTile, 'hole': HoleTile,
 
 def create_tile_subclass(direction, path, type, properties):
     """
-    Create tile subclass according to its type and create coressponding subclass.
+    Create tile subclass according to its type. 
     """
     return TILE_CLS[type](direction, path, properties)
 
