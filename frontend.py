@@ -42,11 +42,10 @@ def load_robots(state):
     state: State object containing game board and robots
     """
     robot_sprites = []
-    for robot in state.robots:
-        # Only alive and active robots will be drawn.
-        for robot in [robot for robot in state.robots if not robot.inactive]:
-            robot_sprite = create_sprites(robot.coordinates, [robot])
-            robot_sprites.extend(robot_sprite)
+    # Only active robots will be drawn.
+    for robot in [robot for robot in state.robots if not robot.inactive]:
+        robot_sprite = create_sprites(robot.coordinates, [robot])
+        robot_sprites.extend(robot_sprite)
     return robot_sprites
 
 
