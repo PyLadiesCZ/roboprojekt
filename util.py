@@ -298,9 +298,9 @@ TILE_CLS = {'wall': WallTile, 'starting_square': StartTile, 'hole': HoleTile,
             'ground': Tile}
 
 
-def select_tile(direction, path, type, properties):
+def create_tile_subclass(direction, path, type, properties):
     """
-    Select tile subclass according to its type and create coressponding subclass.
+    Create tile subclass according to its type and create coressponding subclass.
     """
     return TILE_CLS[type](direction, path, properties)
 
