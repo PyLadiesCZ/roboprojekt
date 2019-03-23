@@ -27,20 +27,20 @@ def get_sprite(img_path, x=0, y=0):
 
 
 # Interface element sprites
-interface_sprite = get_sprite('interface/png/interface.png', x=0, y=0) # All Interface background
-power_down_sprite = get_sprite('interface/png/power.png', x=186, y=854)
-indicator_green_sprite = get_sprite('interface/png/green.png',  x=688, y=864) # Time indicator
-indicator_red_sprite = get_sprite('interface/png/red.png',  x=688, y=864) # Time indicator
-card_background_sprite = get_sprite('interface/png/card_bg.png') # Universal cards background
-select_sprite = get_sprite('interface/png/card_cv.png') # Gray overlay on selected cards
-cursor_sprite = get_sprite('interface/png/card_sl.png') # Selection cursor
+interface_sprite = get_sprite('img/interface/png/interface.png', x=0, y=0) # All Interface background
+power_down_sprite = get_sprite('img/interface/png/power.png', x=186, y=854)
+indicator_green_sprite = get_sprite('img/interface/png/green.png',  x=688, y=864) # Time indicator
+indicator_red_sprite = get_sprite('img/interface/png/red.png',  x=688, y=864) # Time indicator
+card_background_sprite = get_sprite('img/interface/png/card_bg.png') # Universal cards background
+select_sprite = get_sprite('img/interface/png/card_cv.png') # Gray overlay on selected cards
+cursor_sprite = get_sprite('img/interface/png/card_sl.png') # Selection cursor
 my_robot_sprite = get_sprite(interface_state.robot_data.path, x=74, y=888) # My Robot img
 
 lives_sprite = []
 for i in range(MAX_LIVES_COUNT):
     x = 354 + i * 46
     y = 864
-    lives_sprite.append(get_sprite('interface/png/life.png', x, y))
+    lives_sprite.append(get_sprite('img/interface/png/life.png', x, y))
 
 flags_sprite = []
 for i in range(MAX_FLAGS_COUNT):
@@ -52,17 +52,17 @@ damages_tokens_sprite = [] # Tokens of damage
 for i in range(MAX_DAMAGES_COUNT):
     x = 676 + i * -70
     y = 768
-    damages_tokens_sprite.append(get_sprite('interface/png/token.png', x, y))
+    damages_tokens_sprite.append(get_sprite('img/interface/png/token.png', x, y))
 
 # Cards Sprites
 cards_type_sprites = {
-    'u_turn': get_sprite('interface/png/u_turn.png'),
-    'back_up': get_sprite('interface/png/back.png'),
-    'left': get_sprite('interface/png/rotate_left.png'),
-    'right': get_sprite('interface/png/rotate_right.png'),
-    'move1': get_sprite('interface/png/move.png'),
-    'move2': get_sprite('interface/png/move.png'),
-    'move3': get_sprite('interface/png/move.png'),
+    'u_turn': get_sprite('img/interface/png/u_turn.png'),
+    'back_up': get_sprite('img/interface/png/back.png'),
+    'left': get_sprite('img/interface/png/rotate_left.png'),
+    'right': get_sprite('img/interface/png/rotate_right.png'),
+    'move1': get_sprite('img/interface/png/move1.png'),
+    'move2': get_sprite('img/interface/png/move2.png'),
+    'move3': get_sprite('img/interface/png/move3.png'),
 }
 
 dealt_cards_coordinates = []
@@ -81,6 +81,16 @@ for i in range(5):
     x = x + i * 144
     program_coordinates.append((x, y))
 
+# dict for drawing cards names
+cards_type_names = {
+    'u_turn': 'U TURN',
+    'back_up': 'BACK UP',
+    'left': 'LEFT',
+    'right': 'RIGHT',
+    'move1': 'MOVE 1',
+    'move2': 'MOVE 2',
+    'move3': 'MOVE 3',
+}
 
 def draw_card(coordinate, card):
     """
@@ -96,18 +106,23 @@ def draw_card(coordinate, card):
     card_background_sprite.draw()
 
     # Draw card type
-
     card_sprite = cards_type_sprites[card.name]
     card_sprite.x = x
     card_sprite.y = y
     card_sprite.draw()
 
     # Draw card value
-    x = x + 70
-    y = y + 118
-    text = pyglet.text.Label(text=str(card.priority), font_size=14, x=x, y=y, anchor_x='right')
-    text.draw()
+    x_priority = x + 70
+    y_priority = y + 118
+    priority = pyglet.text.Label(text=str(card.priority), font_size=14, x=x_priority, y=y_priority, anchor_x='right')
+    priority.draw()
 
+    # Draw card name
+    x_name = x + 50
+    y_name = y + 20
+    card_name = cards_type_names[card.name]
+    name = pyglet.text.Label(text=card_name, font_size=10, x=x_name, y=y_name, anchor_x='center')
+    name.draw()
 
 def draw_interface(window):
     """
@@ -151,9 +166,9 @@ def draw_interface(window):
 
     # Selected cards
     # if card is selected, selected card in dealt cards is gray
-    for i in interface_state.my_program:
-        if i != None:
-            x, y = dealt_cards_coordinates[interface_state.dealt_cards.index(i)]
+    for card in interface_state.my_program:
+        if card != None:
+            x, y = dealt_cards_coordinates[interface_state.dealt_cards.index(card)]
             select_sprite.x = x
             select_sprite.y = y
             select_sprite.draw()

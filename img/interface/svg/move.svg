@@ -14,10 +14,10 @@
    viewBox="0 0 25.909528 38.11947"
    version="1.1"
    id="svg8"
-   inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/interface/png/move.png"
+   inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/img/interface/png/move.png"
    inkscape:export-xdpi="96.000008"
    inkscape:export-ydpi="96.000008"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   inkscape:version="0.92.2 2405546, 2018-03-11"
    sodipodi:docname="move.svg">
   <defs
      id="defs2" />
@@ -28,9 +28,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.3146948"
-     inkscape:cx="102.05133"
-     inkscape:cy="87.838408"
+     inkscape:zoom="4"
+     inkscape:cx="-35.708829"
+     inkscape:cy="81.860048"
      inkscape:document-units="mm"
      inkscape:current-layer="layer4"
      showgrid="true"
@@ -75,14 +75,43 @@
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="Vrstva 4"
-     transform="translate(-32.566669,-0.22218406)">
-    <path
+     transform="translate(-32.566669,-0.22218406)"
+     style="display:inline">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot819-3"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffff00;fill-opacity:1;stroke:none"
+       transform="matrix(0.16250697,0,0,0.16250697,72.483106,20.736254)"><flowRegion
+         id="flowRegion821-6"
+         style="fill:#ffff00"><rect
+           id="rect823-7"
+           width="40"
+           height="56"
+           x="-235.08662"
+           y="63.160248"
+           style="fill:#ffff00" /></flowRegion><flowPara
+         id="flowPara825-5">MOM</flowPara><flowPara
+         id="flowPara827-3" /></flowRoot>    <path
        inkscape:connector-curvature="0"
-       d="M 56.123077,21.372128 H 34.919804 L 45.521442,9.8759828 v 0 z m -6.36098,8.360832 H 41.280789 V 18.236817 h 8.481308 z"
-       style="opacity:1;fill:#3c3c3c;fill-opacity:1;stroke:#e72222;stroke-width:1.14875042;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:21.1607151;stroke-opacity:1;paint-order:markers stroke fill"
+       d="M 54.425319,20.250459 H 36.595452 l 8.914935,-9.667127 v 0 z m -5.348958,7.030638 h -7.131946 v -9.667126 h 7.131946 z"
+       style="opacity:1;fill:#3c3c3c;fill-opacity:1;stroke:#e72222;stroke-width:0.96598613;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:21.1607151;stroke-opacity:1;paint-order:markers stroke fill"
        id="path959"
        inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/interface/png/move.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96" />
+    <rect
+       style="opacity:1;fill:#d3d3d3;fill-opacity:0;stroke:none;stroke-width:0.52200001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:21.1607151;stroke-opacity:0.99044584;paint-order:normal"
+       id="rect937"
+       width="12.7"
+       height="13.758333"
+       x="4.2333312"
+       y="11.641666" />
+    <rect
+       style="opacity:1;fill:#d3d3d3;fill-opacity:0;stroke:none;stroke-width:0.52200001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:21.1607151;stroke-opacity:0.99044584;paint-order:normal"
+       id="rect939"
+       width="12.7"
+       height="10.583333"
+       x="4.2333312"
+       y="6.3499994" />
   </g>
 </svg>

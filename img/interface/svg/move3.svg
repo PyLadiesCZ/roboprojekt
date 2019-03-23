@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="25.909527mm"
+   height="38.119469mm"
+   viewBox="0 0 25.909528 38.11947"
+   version="1.1"
+   id="svg8"
+   inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/img/interface/png/move3.png"
+   inkscape:export-xdpi="96.000008"
+   inkscape:export-ydpi="96.000008"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="move3.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="8"
+     inkscape:cx="39.999783"
+     inkscape:cy="71.38951"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer4"
+     showgrid="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:measure-start="0,0"
+     inkscape:measure-end="0,0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid1554"
+       empspacing="4"
+       originx="-85.483337"
+       originy="-162.74168" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Vrstva 2"
+     style="display:inline"
+     transform="translate(-32.566669,-0.22218406)" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Vrstva 3"
+     transform="translate(-32.566669,-0.22218406)" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="Vrstva 4"
+     transform="translate(-32.566669,-0.22218406)"
+     style="display:inline">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot819-3"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffff00;fill-opacity:1;stroke:none"
+       transform="matrix(0.16250697,0,0,0.16250697,72.483106,20.736254)"><flowRegion
+         id="flowRegion821-6"
+         style="fill:#ffff00"><rect
+           id="rect823-7"
+           width="40"
+           height="56"
+           x="-235.08662"
+           y="63.160248"
+           style="fill:#ffff00" /></flowRegion><flowPara
+         id="flowPara825-5">MOM</flowPara><flowPara
+         id="flowPara827-3" /></flowRoot>    <rect
+       style="opacity:1;fill:#d3d3d3;fill-opacity:0;stroke:none;stroke-width:0.52200001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:21.1607151;stroke-opacity:0.99044584;paint-order:normal"
+       id="rect937"
+       width="12.7"
+       height="13.758333"
+       x="4.2333312"
+       y="11.641666" />
+    <rect
+       style="opacity:1;fill:#d3d3d3;fill-opacity:0;stroke:none;stroke-width:0.52200001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:21.1607151;stroke-opacity:0.99044584;paint-order:normal"
+       id="rect939"
+       width="12.7"
+       height="10.583333"
+       x="4.2333312"
+       y="6.3499994" />
+    <g
+       id="g119">
+      <path
+         inkscape:export-ydpi="96"
+         inkscape:export-xdpi="96"
+         inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/interface/png/move.png"
+         id="path959"
+         style="opacity:1;fill:#3c3c3c;fill-opacity:1;stroke:#e72222;stroke-width:0.96598613;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:21.1607151;stroke-opacity:1;paint-order:markers stroke fill"
+         d="M 54.425319,20.250459 H 36.595452 l 8.914935,-9.667127 v 0 z m -5.348958,7.030638 h -7.131946 v -9.667126 h 7.131946 z"
+         inkscape:connector-curvature="0" />
+      <g
+         id="text20"
+         style="font-style:normal;font-weight:normal;font-size:7.77056217px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffff00;fill-opacity:1;stroke:none;stroke-width:0.19426405"
+         aria-label="3
+">
+        <path
+           id="path113"
+           style="fill:#ffff00;stroke-width:0.19426405"
+           d="m 46.142613,20.113233 q 0.550162,0.117621 0.857494,0.489454 0.311126,0.371834 0.311126,0.918201 0,0.838523 -0.576722,1.297623 -0.576721,0.459101 -1.639103,0.459101 -0.356656,0 -0.736078,-0.07209 -0.375628,-0.0683 -0.777815,-0.208682 v -0.739873 q 0.318714,0.185917 0.698136,0.280772 0.379422,0.09486 0.792992,0.09486 0.720902,0 1.09653,-0.284567 0.379422,-0.284566 0.379422,-0.82714 0,-0.500837 -0.352863,-0.781609 -0.349068,-0.284567 -0.975114,-0.284567 h -0.660195 v -0.62984 h 0.690548 q 0.565339,0 0.865083,-0.223859 0.299743,-0.227653 0.299743,-0.652606 0,-0.436335 -0.311126,-0.667782 -0.307332,-0.235242 -0.884053,-0.235242 -0.314921,0 -0.675371,0.0683 -0.360451,0.0683 -0.792992,0.212476 v -0.682959 q 0.436335,-0.121415 0.815757,-0.182123 0.383216,-0.06071 0.720902,-0.06071 0.87267,0 1.381096,0.398393 0.508425,0.394598 0.508425,1.06997 0,0.470483 -0.26939,0.796786 -0.269389,0.322508 -0.766432,0.447718 z" />
+      </g>
+    </g>
+  </g>
+</svg>
