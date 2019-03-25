@@ -1,4 +1,5 @@
 from random import shuffle
+
 from backend import Robot, MovementCard, RotationCard
 from util import Direction, Rotation
 

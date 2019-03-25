@@ -3,6 +3,7 @@ Backend file contains functions for the game logic.
 """
 from pathlib import Path
 import random
+
 from util import Direction, Rotation, get_next_coordinates
 from tile import HoleTile
 from loading import get_board
@@ -276,22 +277,22 @@ class State:
             return [HoleTile()]
 
 
-def get_starting_coordinates(board):
+def get_start_coordinates(board):
     """
-    Get starting coordinates for robots.
+    Get start coordinates for robots.
     board: dictionary returned by get_board().
-    Return a list with coordinates of starting tiles.
-    Find the objects which are starting tiles (matching attribute path of Tile object),
-    then add coordinate of those tiles to the list of starting coordinates.
+    Return a list with coordinates of start tiles.
+    Find the objects which are start tiles (matching attribute path of Tile object),
+    then add coordinate of those tiles to the list of start coordinates.
     """
-    starting_coordinates = []
+    start_coordinates = []
     for coordinate, tiles in board.items():
         for tile in tiles:
-            # range(9) because there may be max. 8 starting squares
+            # range(9) because there may be max. 8 start squares
             for i in range(9):
-                if tile.path == ("./img/squares/png/starting_square0{}.png".format(i)):
-                    starting_coordinates.append(coordinate)
-    return starting_coordinates
+                if tile.path == ("./img/squares/png/start_square0{}.png".format(i)):
+                    start_coordinates.append(coordinate)
+    return start_coordinates
 
 
 def get_robot_paths():
@@ -310,19 +311,19 @@ def get_robot_paths():
 
 def create_robots(board):
     """
-    Place robots on starting tiles.
+    Place robots on start tiles.
     board: dictionary returned by get_board()
-    Return list of robots on the starting tiles of the board.
-    Initialize Robot objects on the starting tiles coordinates with random
+    Return list of robots on the start tiles of the board.
+    Initialize Robot objects on the start tiles coordinates with random
     choice of robot's avatar on particular tile.
     Once the robot is randomly chosen, he is removed from the list
     (he cannot appear twice on the board).
     On the beginning all the Robot objects have implicit 0 degree direction.
     """
-    starting_coordinates = get_starting_coordinates(board)
+    start_coordinates = get_start_coordinates(board)
     robot_paths = get_robot_paths()
     robots_start = []
-    for coordinate in starting_coordinates:
+    for coordinate in start_coordinates:
         # Condition to assure no exception in case robot_paths is shorter
         # than coordinate's list.
         if robot_paths:
@@ -350,9 +351,9 @@ def get_tile_count(board):
 
 def get_start_state(map_name):
     """
-    Get starting state of game.
+    Get start state of game.
     map_name: path to map file. Currently works only for .json files from Tiled 1.2
-    Create board and robots on starting squares, initialize State object
+    Create board and robots on start squares, initialize State object
     containing Tile and Robot object as well as the map size.
     Return State object.
     """
@@ -461,13 +462,13 @@ def set_robots_for_new_turn(state):
     After 5th register there comes evaluation of the robots' state.
     "Dead" robots who don't have any lives left, are deleted from the robot's lists.
     "Inactive" robots who have lost one life during the round,
-    will reboot on starting coordinates.
+    will reboot on start coordinates.
     """
 
     # Delete robots with zero lives
     state.robots = [robot for robot in state.robots if robot.lives > 0]
     for robot in state.robots:
-        #Robot will now ressurect at his starting coordinates
+        #Robot will now ressurect at his start coordinates
         if robot.inactive:
             robot.coordinates = robot.start_coordinates
             robot.damages = 0

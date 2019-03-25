@@ -1,19 +1,20 @@
-from backend import get_starting_coordinates, get_robot_paths, create_robots, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects
+import pytest
+from pathlib import Path
+
+from backend import get_start_coordinates, get_robot_paths, create_robots, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects
 from util import Direction, Rotation
 from tile import Tile, HoleTile, GearTile, PusherTile, RepairTile, FlagTile
 from loading import get_board
-from pathlib import Path
-import pytest
 
 
-def test_starting_coordinates():
+def test_start_coordinates():
     """
-    Take board (based on JSON test_3 map) and assert correct starting coordinates are returned.
+    Take board (based on JSON test_3 map) and assert correct start coordinates are returned.
     If the test_3.json map is changed or removed, the test needs to be updated.
     """
     board = get_board("maps/test_3.json")
-    assert len(get_starting_coordinates(board)) == 8
-    assert isinstance(get_starting_coordinates(board), list)
+    assert len(get_start_coordinates(board)) == 8
+    assert isinstance(get_start_coordinates(board), list)
 
 
 def test_robot_paths():
@@ -27,7 +28,7 @@ def test_robot_paths():
     assert isinstance(path, Path)
 
 
-def test_robots_on_starting_coordinates():
+def test_robots_on_start_coordinates():
     """
     Assert that the result of create_robots is a list which contains
     Robot objects with correct attribute coordinates.
@@ -38,9 +39,9 @@ def test_robots_on_starting_coordinates():
     assert isinstance(robots[0], Robot)
 
 
-def test_starting_state():
+def test_start_state():
     """
-    Assert that created starting state (board and robots) contains
+    Assert that created start state (board and robots) contains
     the correct instances of objects.
     """
     ss = get_start_state("maps/test_3.json")
@@ -211,8 +212,8 @@ def test_robot_is_not_repaired(damages, tile, current_register):
                           ])
 def test_robot_changed_start_coordinates(tile, coordinates_after):
     """
-    When robot is on RepairTile with special property, he changes his starting coordinates to the tile coordinates.
-    On a normal RepairTile he doesn't change the starting tile.
+    When robot is on RepairTile with special property, he changes his start coordinates to the tile coordinates.
+    On a normal RepairTile he doesn't change the start tile.
     """
     robot = Robot(Direction.N, None, None, (0, 0))
     state = State({(0, 0): [tile]}, [robot], (1, 1))
@@ -289,7 +290,7 @@ def test_robot_collected_flags(flags_before, tile, flags_after):
                           ])
 def test_robot_changed_coordinates(tile):
     """
-    When a robot stands on FlagTile the starting coordinates change to the tile's coordinates.
+    When a robot stands on FlagTile the start coordinates change to the tile's coordinates.
     """
     robot = Robot(Direction.N, None, None, (0, 0))
     state = State({(0, 0): [tile]}, [robot], (1, 1))
