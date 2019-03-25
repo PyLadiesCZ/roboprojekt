@@ -4,6 +4,7 @@ Tile contains class Tile and its subclasses.
 
 from util import Direction, Rotation, get_next_coordinates
 
+
 class Tile:
     def __init__(self, direction, path, properties):
         self.direction = direction
@@ -38,10 +39,8 @@ class Tile:
 
     def kill_robot(self, robot):
         """
-        Take away one robot life, set him to inactive mode and move him
-        to coordinates for inactive robots (None).
-
-        Take and return Robot class.
+        Take away one robot life, set him to inactive mode
+        and set his coordinates to None.
         """
         return robot
 
@@ -51,46 +50,33 @@ class Tile:
     def push_robot(self, robot, state):
         """
         Move robot by one tile during a specific register phase.
-
-        Return Robot class.
         """
         return robot
 
     def rotate_robot(self, robot):
         """
         Rotate robot by 90° to the left or right according to tile properties.
-
-        Take and return Robot class.
         """
         return robot
 
     def shoot_robot(self, robot, state):
         """
-        Shoot robot with tile laser.
-
-        robot: Robot class
-        state: State class
-
-        Return Robot class.
+        Shoot robot with tile laser. Number of robot's damages is raised by
+        the strength of laser. If the new number of damages is greater than 9,
+        robot is killed.
         """
         return robot
 
     def collect_flag(self, robot):
         """
         Collect flag by robot and change robot's start coordinates.
-
-        Take and return Robot class.
         """
         return robot
 
     def repair_robot(self, robot, state):
         """
-        Repair one robot's damage. Change robot's start coordinates, if possible by tile properties.
-
-        robot: Robot class
-        state: State class
-
-        Return Robot class.
+        Repair one robot's damage. Change robot's start coordinates,
+        if possible by tile properties.
         """
         return robot
 
@@ -162,6 +148,7 @@ class GearTile(Tile):
     def rotate_robot(self, robot):
         # Rotate robot by 90° according to GearTile property: left or right.
         robot.rotate(self.move_direction)
+
 
 class LaserTile(Tile):
     def __init__(self, direction, path, properties):
@@ -252,7 +239,8 @@ def create_tile_subclass(direction, path, type, properties):
 
 def transform_direction(direction_int):
     """
-    Function to transform the string taken from json properties to valid Rotation class instance for later processing.
+    Function to transform the string taken from json properties to valid
+    Rotation class instance for later processing.
     """
     if direction_int == -1:
         return Rotation.LEFT
