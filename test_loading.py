@@ -8,7 +8,8 @@ import pytest
 from pathlib import Path
 
 from loading import get_data, get_tile_id, get_tile_direction, get_board
-from util import Tile, HoleTile, Direction
+from util import Direction
+from tile import Tile, HoleTile
 from validator import check_squares
 
 
