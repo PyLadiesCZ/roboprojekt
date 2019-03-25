@@ -331,7 +331,6 @@ def create_robots(board):
     robot_paths = get_robot_paths()
     robots_on_start = []
     for start_tile_number in start_tiles:
-        print(start_tile_number)
         # Condition to assure no exception in case there is less robot_paths
         # than tiles.
         if robot_paths:
