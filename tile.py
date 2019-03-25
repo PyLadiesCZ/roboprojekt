@@ -2,7 +2,7 @@
 Tile contains class Tile and its subclasses.
 """
 
-from util import Direction, Rotation, transform_direction, get_next_coordinates
+from util import Direction, Rotation, get_next_coordinates
 
 class Tile:
     def __init__(self, direction, path, properties):
@@ -245,3 +245,13 @@ def create_tile_subclass(direction, path, type, properties):
     Create tile subclass according to its type.
     """
     return TILE_CLS[type](direction, path, properties)
+
+
+def transform_direction(direction_string):
+    """
+    Function to transform the string taken from json properties to valid Rotation class instance for later processing.
+    """
+    if direction_string == "left":
+        return Rotation.LEFT
+    if direction_string == "right":
+        return Rotation.RIGHT
