@@ -214,6 +214,7 @@ class Robot:
         if self.direction == Direction.W:
             return self.coordinates[0] + 1
 
+
 class Card:
     def __init__(self, priority):
         self.priority = priority  # int - to decide who goes first
@@ -277,27 +278,28 @@ class State:
             return [HoleTile()]
 
 
-def get_start_coordinates(board):
+def get_start_tiles(board):
     """
     Get start coordinates for robots.
+
     board: dictionary returned by get_board().
-    Return a list with coordinates of start tiles.
     Find the objects which are start tiles (matching attribute path of Tile object),
-    then add coordinate of those tiles to the list of start coordinates.
+    then add coordinate as a key and direction of the tile as value.
     """
-    start_coordinates = []
+    start_tiles = {}
     for coordinate, tiles in board.items():
         for tile in tiles:
             # range(9) because there may be max. 8 start squares
             for i in range(9):
                 if tile.path == ("./img/squares/png/start_square0{}.png".format(i)):
-                    start_coordinates.append(coordinate)
-    return start_coordinates
+                    start_tiles[coordinate] = tile.direction
+    return start_tiles
 
 
 def get_robot_paths():
     """
     Return a list of paths to robots images.
+
     Using pathlib.Path library add all the files in given directory to the list.
     Ex. [PosixPath('img/robots_map/png/MintBot.png'), PosixPath('img/robots_map/png/terka_robot_map.png')].
     """
@@ -312,27 +314,27 @@ def get_robot_paths():
 def create_robots(board):
     """
     Place robots on start tiles.
+
     board: dictionary returned by get_board()
-    Return list of robots on the start tiles of the board.
     Initialize Robot objects on the start tiles coordinates with random
     choice of robot's avatar on particular tile.
     Once the robot is randomly chosen, he is removed from the list
     (he cannot appear twice on the board).
     On the beginning all the Robot objects have implicit 0 degree direction.
     """
-    start_coordinates = get_start_coordinates(board)
+    start_tiles = get_start_tiles(board)
     robot_paths = get_robot_paths()
-    robots_start = []
-    for coordinate in start_coordinates:
+    robots_on_start = []
+    for coordinate in start_tiles:
         # Condition to assure no exception in case robot_paths is shorter
         # than coordinate's list.
         if robot_paths:
             paths = random.choice(robot_paths)
             robot_paths.remove(paths)
             path, path_front = paths
-            robot = Robot(Direction.N, path, path_front, coordinate)
-            robots_start.append(robot)
-    return robots_start
+            robot = Robot(start_tiles[coordinate], path, path_front, coordinate)
+            robots_on_start.append(robot)
+    return robots_on_start
 
 
 def get_tile_count(board):
