@@ -330,6 +330,29 @@ def create_robots(board):
     start_tiles = get_start_tiles(board)
     robot_paths = get_robot_paths()
     robots_on_start = []
+
+    for i in range(len(start_tiles)):
+        # Condition to assure no exception in case there is less robot_paths
+        # than tiles.
+        if robot_paths:
+            # Get graphics for the robot
+            paths = random.choice(robot_paths)
+            robot_paths.remove(paths)
+            path, path_front = paths
+
+            # Get direction and coordinates for the robot
+            # Start tiles go from 1 to max. 8, so the index must be increased by 1
+            initial_direction = start_tiles[i + 1]["tile_direction"]
+            initial_coordinates = start_tiles[i + 1]["coordinates"]
+
+            # Create a robot, add him to robot's list
+            robot = Robot(initial_direction, path, path_front, initial_coordinates)
+            robots_on_start.append(robot)
+
+    print(robots_on_start)
+    return robots_on_start
+
+    """
     for start_tile_number in start_tiles:
         # Condition to assure no exception in case there is less robot_paths
         # than tiles.
@@ -350,7 +373,7 @@ def create_robots(board):
             # Set robot on the index of his starting tile (1 -> 0 and so on)
             robots_on_start[start_tile_number - 1] = robot
     return robots_on_start
-
+    """
 
 def get_tile_count(board):
     """
