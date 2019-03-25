@@ -12,7 +12,7 @@
          "width":5,
          "x":0,
          "y":0
-        }, 
+        },
         {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3221225485, 0, 0, 3221225485, 13, 0, 0, 13, 0, 0, 0, 0],
          "height":5,
@@ -53,14 +53,14 @@
                  "imageheight":64,
                  "imagewidth":64,
                  "type":"ground"
-                }, 
+                },
                 {
                  "id":1,
                  "image":"..\/img\/squares\/png\/hole.png",
                  "imageheight":64,
                  "imagewidth":64,
                  "type":"hole"
-                }, 
+                },
                 {
                  "id":2,
                  "image":"..\/img\/squares\/png\/laser_1_base.png",
@@ -71,14 +71,14 @@
                          "name":"number_laser",
                          "type":"int",
                          "value":1
-                        }, 
+                        },
                         {
                          "name":"start",
                          "type":"bool",
                          "value":true
                         }],
                  "type":"laser"
-                }, 
+                },
                 {
                  "id":3,
                  "image":"..\/img\/squares\/png\/laser_1.png",
@@ -89,14 +89,14 @@
                          "name":"number_laser",
                          "type":"int",
                          "value":1
-                        }, 
+                        },
                         {
                          "name":"start",
                          "type":"bool",
                          "value":false
                         }],
                  "type":"laser"
-                }, 
+                },
                 {
                  "id":6,
                  "image":"..\/img\/squares\/png\/gear_r.png",
@@ -109,7 +109,7 @@
                          "value":"right"
                         }],
                  "type":"gear"
-                }, 
+                },
                 {
                  "id":7,
                  "image":"..\/img\/squares\/png\/gear_l.png",
@@ -122,7 +122,7 @@
                          "value":"left"
                         }],
                  "type":"gear"
-                }, 
+                },
                 {
                  "id":9,
                  "image":"..\/img\/squares\/png\/pusher_1_3_5.png",
@@ -135,7 +135,7 @@
                          "value":1
                         }],
                  "type":"pusher"
-                }, 
+                },
                 {
                  "id":10,
                  "image":"..\/img\/squares\/png\/pusher_2_4.png",
@@ -148,14 +148,14 @@
                          "value":0
                         }],
                  "type":"pusher"
-                }, 
+                },
                 {
                  "id":12,
                  "image":"..\/img\/squares\/png\/wall.png",
                  "imageheight":64,
                  "imagewidth":64,
                  "type":"wall"
-                }, 
+                },
                 {
                  "id":13,
                  "image":"..\/img\/squares\/png\/laser_3_base.png",
@@ -166,14 +166,14 @@
                          "name":"number_laser",
                          "type":"int",
                          "value":3
-                        }, 
+                        },
                         {
                          "name":"start",
                          "type":"bool",
                          "value":true
                         }],
                  "type":"laser"
-                }, 
+                },
                 {
                  "id":14,
                  "image":"..\/img\/squares\/png\/laser_3.png",
@@ -184,14 +184,14 @@
                          "name":"number_laser",
                          "type":"int",
                          "value":3
-                        }, 
+                        },
                         {
                          "name":"start",
                          "type":"bool",
                          "value":false
                         }],
                  "type":"laser"
-                }, 
+                },
                 {
                  "id":15,
                  "image":"..\/img\/squares\/png\/laser_2_base.png",
@@ -202,14 +202,14 @@
                          "name":"number_laser",
                          "type":"int",
                          "value":2
-                        }, 
+                        },
                         {
                          "name":"start",
                          "type":"bool",
                          "value":true
                         }],
                  "type":"laser"
-                }, 
+                },
                 {
                  "id":16,
                  "image":"..\/img\/squares\/png\/laser_2.png",
@@ -220,14 +220,14 @@
                          "name":"number_laser",
                          "type":"int",
                          "value":2
-                        }, 
+                        },
                         {
                          "name":"start",
                          "type":"bool",
                          "value":false
                         }],
                  "type":"laser"
-                }, 
+                },
                 {
                  "id":17,
                  "image":"..\/img\/squares\/png\/conveyor_belt_1.png",
@@ -238,19 +238,19 @@
                          "name":"crossroads",
                          "type":"bool",
                          "value":false
-                        }, 
+                        },
                         {
                          "name":"direction",
                          "type":"int",
                          "value":0
-                        }, 
+                        },
                         {
                          "name":"move",
                          "type":"int",
                          "value":1
                         }],
                  "type":"belt"
-                }, 
+                },
                 {
                  "id":18,
                  "image":"..\/img\/squares\/png\/conveyor_belt_1_corner_l.png",
@@ -261,19 +261,19 @@
                          "name":"crossroads",
                          "type":"bool",
                          "value":false
-                        }, 
+                        },
                         {
                          "name":"direction",
                          "type":"int",
                          "value":3
-                        }, 
+                        },
                         {
                          "name":"move",
                          "type":"int",
                          "value":1
                         }],
                  "type":"belt"
-                }, 
+                },
                 {
                  "id":19,
                  "image":"..\/img\/squares\/png\/conveyor_belt_1_corner_r.png",
@@ -284,19 +284,19 @@
                          "name":"crossroads",
                          "type":"bool",
                          "value":false
-                        }, 
+                        },
                         {
                          "name":"direction",
                          "type":"int",
                          "value":1
-                        }, 
+                        },
                         {
                          "name":"move",
                          "type":"int",
                          "value":1
                         }],
                  "type":"belt"
-                }, 
+                },
                 {
                  "id":20,
                  "image":"..\/img\/squares\/png\/conveyor_belt_1_cross_l.png",
@@ -307,19 +307,19 @@
                          "name":"crossroads",
                          "type":"bool",
                          "value":true
-                        }, 
+                        },
                         {
                          "name":"direction",
                          "type":"int",
                          "value":3
-                        }, 
+                        },
                         {
                          "name":"move",
                          "type":"int",
                          "value":1
                         }],
                  "type":"belt"
-                }, 
+                },
                 {
                  "id":21,
                  "image":"..\/img\/squares\/png\/conveyor_belt_1_cross_r.png",
@@ -330,19 +330,19 @@
                          "name":"crossroads",
                          "type":"bool",
                          "value":true
-                        }, 
+                        },
                         {
                          "name":"direction",
                          "type":"int",
                          "value":1
-                        }, 
+                        },
                         {
                          "name":"move",
                          "type":"int",
                          "value":1
                         }],
                  "type":"belt"
-                }, 
+                },
                 {
                  "id":22,
                  "image":"..\/img\/squares\/png\/conveyor_belt_1_cross_t.png",
@@ -353,19 +353,19 @@
                          "name":"crossroads",
                          "type":"bool",
                          "value":true
-                        }, 
+                        },
                         {
                          "name":"direction",
                          "type":"int",
                          "value":2
-                        }, 
+                        },
                         {
                          "name":"move",
                          "type":"int",
                          "value":1
                         }],
                  "type":"belt"
-                }, 
+                },
                 {
                  "id":23,
                  "image":"..\/img\/squares\/png\/conveyor_belt_2.png",
@@ -376,19 +376,19 @@
                          "name":"crossroads",
                          "type":"bool",
                          "value":false
-                        }, 
+                        },
                         {
                          "name":"direction",
                          "type":"int",
                          "value":0
-                        }, 
+                        },
                         {
                          "name":"move",
                          "type":"int",
                          "value":2
                         }],
                  "type":"belt"
-                }, 
+                },
                 {
                  "id":24,
                  "image":"..\/img\/squares\/png\/conveyor_belt_2_corner.svg.png",
@@ -399,19 +399,19 @@
                          "name":"crossroads",
                          "type":"bool",
                          "value":false
-                        }, 
+                        },
                         {
                          "name":"direction",
                          "type":"int",
                          "value":1
-                        }, 
+                        },
                         {
                          "name":"move",
                          "type":"int",
                          "value":2
                         }],
                  "type":"belt"
-                }, 
+                },
                 {
                  "id":25,
                  "image":"..\/img\/squares\/png\/conveyor_belt_2_corner_l.png",
@@ -422,19 +422,19 @@
                          "name":"crossroads",
                          "type":"bool",
                          "value":false
-                        }, 
+                        },
                         {
                          "name":"direction",
                          "type":"int",
                          "value":3
-                        }, 
+                        },
                         {
                          "name":"move",
                          "type":"int",
                          "value":2
                         }],
                  "type":"belt"
-                }, 
+                },
                 {
                  "id":26,
                  "image":"..\/img\/squares\/png\/conveyor_belt_2_cross_l.png",
@@ -445,19 +445,19 @@
                          "name":"crossroads",
                          "type":"bool",
                          "value":true
-                        }, 
+                        },
                         {
                          "name":"direction",
                          "type":"int",
                          "value":3
-                        }, 
+                        },
                         {
                          "name":"move",
                          "type":"int",
                          "value":2
                         }],
                  "type":"belt"
-                }, 
+                },
                 {
                  "id":27,
                  "image":"..\/img\/squares\/png\/conveyor_belt_2_cross_r.png",
@@ -468,19 +468,19 @@
                          "name":"crossroads",
                          "type":"bool",
                          "value":true
-                        }, 
+                        },
                         {
                          "name":"direction",
                          "type":"int",
                          "value":1
-                        }, 
+                        },
                         {
                          "name":"move",
                          "type":"int",
                          "value":2
                         }],
                  "type":"belt"
-                }, 
+                },
                 {
                  "id":28,
                  "image":"..\/img\/squares\/png\/conveyor_belt_2_cross_t.png",
@@ -491,19 +491,19 @@
                          "name":"crossroads",
                          "type":"bool",
                          "value":true
-                        }, 
+                        },
                         {
                          "name":"direction",
                          "type":"int",
                          "value":2
-                        }, 
+                        },
                         {
                          "name":"move",
                          "type":"int",
                          "value":2
                         }],
                  "type":"belt"
-                }, 
+                },
                 {
                  "id":29,
                  "image":"..\/img\/squares\/png\/flag_1.png",
@@ -516,7 +516,7 @@
                          "value":1
                         }],
                  "type":"flag"
-                }, 
+                },
                 {
                  "id":30,
                  "image":"..\/img\/squares\/png\/flag_2.png",
@@ -529,7 +529,7 @@
                          "value":2
                         }],
                  "type":"flag"
-                }, 
+                },
                 {
                  "id":31,
                  "image":"..\/img\/squares\/png\/flag_3.png",
@@ -542,7 +542,7 @@
                          "value":3
                         }],
                  "type":"flag"
-                }, 
+                },
                 {
                  "id":32,
                  "image":"..\/img\/squares\/png\/flag_4.png",
@@ -555,7 +555,7 @@
                          "value":4
                         }],
                  "type":"flag"
-                }, 
+                },
                 {
                  "id":33,
                  "image":"..\/img\/squares\/png\/flag_5.png",
@@ -568,7 +568,7 @@
                          "value":5
                         }],
                  "type":"flag"
-                }, 
+                },
                 {
                  "id":34,
                  "image":"..\/img\/squares\/png\/flag_6.png",
@@ -581,7 +581,7 @@
                          "value":6
                         }],
                  "type":"flag"
-                }, 
+                },
                 {
                  "id":35,
                  "image":"..\/img\/squares\/png\/flag_7.png",
@@ -594,7 +594,7 @@
                          "value":7
                         }],
                  "type":"flag"
-                }, 
+                },
                 {
                  "id":36,
                  "image":"..\/img\/squares\/png\/flag_8.png",
@@ -607,7 +607,7 @@
                          "value":8
                         }],
                  "type":"flag"
-                }, 
+                },
                 {
                  "id":37,
                  "image":"..\/img\/squares\/png\/repair.png",
@@ -620,7 +620,7 @@
                          "value":false
                         }],
                  "type":"repair"
-                }, 
+                },
                 {
                  "id":38,
                  "image":"..\/img\/squares\/png\/repair_2.png",
@@ -633,62 +633,62 @@
                          "value":true
                         }],
                  "type":"repair"
-                }, 
+                },
                 {
                  "id":39,
-                 "image":"..\/img\/squares\/png\/starting_square01.png",
+                 "image":"..\/img\/squares\/png\/start_square01.png",
                  "imageheight":64,
                  "imagewidth":64,
-                 "type":"starting_square"
-                }, 
+                 "type":"start_square"
+                },
                 {
                  "id":40,
-                 "image":"..\/img\/squares\/png\/starting_square02.png",
+                 "image":"..\/img\/squares\/png\/start_square02.png",
                  "imageheight":64,
                  "imagewidth":64,
-                 "type":"starting_square"
-                }, 
+                 "type":"start_square"
+                },
                 {
                  "id":41,
-                 "image":"..\/img\/squares\/png\/starting_square03.png",
+                 "image":"..\/img\/squares\/png\/start_square03.png",
                  "imageheight":64,
                  "imagewidth":64,
-                 "type":"starting_square"
-                }, 
+                 "type":"start_square"
+                },
                 {
                  "id":42,
-                 "image":"..\/img\/squares\/png\/starting_square04.png",
+                 "image":"..\/img\/squares\/png\/start_square04.png",
                  "imageheight":64,
                  "imagewidth":64,
-                 "type":"starting_square"
-                }, 
+                 "type":"start_square"
+                },
                 {
                  "id":43,
-                 "image":"..\/img\/squares\/png\/starting_square05.png",
+                 "image":"..\/img\/squares\/png\/start_square05.png",
                  "imageheight":64,
                  "imagewidth":64,
-                 "type":"starting_square"
-                }, 
+                 "type":"start_square"
+                },
                 {
                  "id":44,
-                 "image":"..\/img\/squares\/png\/starting_square06.png",
+                 "image":"..\/img\/squares\/png\/start_square06.png",
                  "imageheight":64,
                  "imagewidth":64,
-                 "type":"starting_square"
-                }, 
+                 "type":"start_square"
+                },
                 {
                  "id":45,
-                 "image":"..\/img\/squares\/png\/starting_square07.png",
+                 "image":"..\/img\/squares\/png\/start_square07.png",
                  "imageheight":64,
                  "imagewidth":64,
-                 "type":"starting_square"
-                }, 
+                 "type":"start_square"
+                },
                 {
                  "id":46,
-                 "image":"..\/img\/squares\/png\/starting_square08.png",
+                 "image":"..\/img\/squares\/png\/start_square08.png",
                  "imageheight":64,
                  "imagewidth":64,
-                 "type":"starting_square"
+                 "type":"start_square"
                 }],
          "tilewidth":64
         }],

@@ -11,7 +11,7 @@ def get_order_squares(text):
     order_squares = {
         'Tile': "A_ground",
         'HoleTile': "B_hole",
-        'StartTile': "B_starting_square",
+        'StartTile': "B_start_square",
         'RepairTile': "B_repair",
         'BeltTile': "B_belt",
         'GearTile': "B_gear",
@@ -71,7 +71,7 @@ def check_squares(map_name):
         "Flag" mustn't be over the "Hole" or "Starting square"
         """
         for i in range(len(square_type_letter)-1):
-            if square_type_letter[i] == "B_hole" and square_type_letter[i+1] == "C_flag" or square_type_letter[i] == "B_starting_square" and square_type_letter[i+1] == "C_flag":
+            if square_type_letter[i] == "B_hole" and square_type_letter[i+1] == "C_flag" or square_type_letter[i] == "B_start_square" and square_type_letter[i+1] == "C_flag":
                 return coordinate, square_type_letter[i]
 
     return True

@@ -648,59 +648,59 @@
                 },
                 {
                  "id":39,
-                 "image":"..\/img\/squares\/png\/starting_square01.png",
+                 "image":"..\/img\/squares\/png\/start_square01.png",
                  "imageheight":64,
                  "imagewidth":64,
-                 "type":"starting_square"
+                 "type":"start_square"
                 },
                 {
                  "id":40,
-                 "image":"..\/img\/squares\/png\/starting_square02.png",
+                 "image":"..\/img\/squares\/png\/start_square02.png",
                  "imageheight":64,
                  "imagewidth":64,
-                 "type":"starting_square"
+                 "type":"start_square"
                 },
                 {
                  "id":41,
-                 "image":"..\/img\/squares\/png\/starting_square03.png",
+                 "image":"..\/img\/squares\/png\/start_square03.png",
                  "imageheight":64,
                  "imagewidth":64,
-                 "type":"starting_square"
+                 "type":"start_square"
                 },
                 {
                  "id":42,
-                 "image":"..\/img\/squares\/png\/starting_square04.png",
+                 "image":"..\/img\/squares\/png\/start_square04.png",
                  "imageheight":64,
                  "imagewidth":64,
-                 "type":"starting_square"
+                 "type":"start_square"
                 },
                 {
                  "id":43,
-                 "image":"..\/img\/squares\/png\/starting_square05.png",
+                 "image":"..\/img\/squares\/png\/start_square05.png",
                  "imageheight":64,
                  "imagewidth":64,
-                 "type":"starting_square"
+                 "type":"start_square"
                 },
                 {
                  "id":44,
-                 "image":"..\/img\/squares\/png\/starting_square06.png",
+                 "image":"..\/img\/squares\/png\/start_square06.png",
                  "imageheight":64,
                  "imagewidth":64,
-                 "type":"starting_square"
+                 "type":"start_square"
                 },
                 {
                  "id":45,
-                 "image":"..\/img\/squares\/png\/starting_square07.png",
+                 "image":"..\/img\/squares\/png\/start_square07.png",
                  "imageheight":64,
                  "imagewidth":64,
-                 "type":"starting_square"
+                 "type":"start_square"
                 },
                 {
                  "id":46,
-                 "image":"..\/img\/squares\/png\/starting_square08.png",
+                 "image":"..\/img\/squares\/png\/start_square08.png",
                  "imageheight":64,
                  "imagewidth":64,
-                 "type":"starting_square"
+                 "type":"start_square"
                 }],
          "tilewidth":64
         }],
