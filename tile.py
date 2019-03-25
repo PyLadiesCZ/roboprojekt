@@ -39,7 +39,7 @@ class Tile:
     def kill_robot(self, robot):
         """
         Take away one robot life, set him to inactive mode and move him
-        to coordinates for inactive robots (-1, -1).
+        to coordinates for inactive robots (None).
 
         Take and return Robot class.
         """
