@@ -4,11 +4,11 @@ The game module
     - call pyglet window, various backend and frontend functions
     - choose standard or other map to be loaded
 """
+import pyglet
+import sys
 
 from backend import get_start_state, apply_tile_effects
 from frontend import create_window, draw_state
-import pyglet
-import sys
 
 
 # load JSON map data from the backend module

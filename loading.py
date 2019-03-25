@@ -1,9 +1,10 @@
 """
 Loading module contains functions to load map file exported to json format from Tiled 1.2.
 """
+import json
+
 from util import Direction
 from tile import create_tile_subclass
-import json
 
 
 def get_data(map_name):

@@ -1,9 +1,10 @@
+import pytest
+from pathlib import Path
+
 from backend import get_start_coordinates, get_robot_paths, create_robots, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects
 from util import Direction, Rotation
 from tile import Tile, HoleTile, GearTile, PusherTile, RepairTile, FlagTile
 from loading import get_board
-from pathlib import Path
-import pytest
 
 
 def test_start_coordinates():

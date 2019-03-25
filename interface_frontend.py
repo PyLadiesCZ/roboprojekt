@@ -1,8 +1,6 @@
 import pyglet
 
-from pyglet.window import key
-from interface import get_interface_state, MAX_CARD_COUNT
-from util import Direction, Rotation
+from interface import get_interface_state
 
 
 interface_state = get_interface_state()
