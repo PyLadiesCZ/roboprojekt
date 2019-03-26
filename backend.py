@@ -291,7 +291,7 @@ def get_start_tiles(board):
     of the new keys being added.
     """
 
-    start_tiles = OrderedDict()
+    start_tiles = {}
     for coordinate, tiles in board.items():
         for tile in tiles:
             # range(9) because there may be max. 8 start squares
@@ -301,6 +301,9 @@ def get_start_tiles(board):
                         "coordinates": coordinate,
                         "tile_direction": tile.direction,
                     }
+    # Sort created dictionary by the first element - start tile number
+    OrderedDict(sorted(start_tiles.items(), key=lambda stn: stn[0]))
+
     return start_tiles
 
 
