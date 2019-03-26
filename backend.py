@@ -280,7 +280,7 @@ class State:
         """
         Return a list of active robots.
         """
-        return [robot for robot in state.robots if not robot.inactive]
+        return [robot for robot in self.robots if not robot.inactive]
 
 
 def get_start_coordinates(board):
