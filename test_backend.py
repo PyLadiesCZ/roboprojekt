@@ -417,6 +417,24 @@ def test_robot_on_start_has_the_correct_direction():
         assert robot.direction == tile_direction
 
 
+@pytest.mark.parametrize(("robot_index", "expected_coordinates"),
+                         [(0, (0, 0)),
+                          (1, (1, 0)),
+                          (2, (2, 0)),
+                          (3, (3, 0)),
+                          ])
+def test_robots_order_on_start(robot_index, expected_coordinates):
+    """
+    The order of robots list should reflect their starting positions.
+    First robot from the list stands on first start tile and so on.
+    Assert the list is correcly created.
+    Test to check the behaviour in Python 3.5.
+    """
+    state = get_start_state("maps/test_start_direction.json")
+    current_robot = state.robots[robot_index]
+    assert current_robot.coordinates == expected_coordinates
+
+
 
 @pytest.mark.parametrize(("direction", "card", "new_coordinates"),
                          [(Direction.E, MovementCard(100, 1), (5, 7)),
