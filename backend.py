@@ -2,6 +2,7 @@
 Backend file contains functions for the game logic.
 """
 from pathlib import Path
+from collections import OrderedDict
 import random
 
 from util import Direction, Rotation, get_next_coordinates
@@ -284,10 +285,13 @@ def get_start_tiles(board):
 
     board: dictionary returned by get_board().
     Find the objects which are start tiles (matching attribute path of Tile object),
-    then add create a dictionary of start tile number with values: coordinates
+    then add create an ordered dictionary of start tile number with values: coordinates
     and tile_direction.
+    OrderedDict is a structure that ensures the dictionary is stored in the order
+    of the new keys being added.
     """
-    start_tiles = {}
+
+    start_tiles = OrderedDict()
     for coordinate, tiles in board.items():
         for tile in tiles:
             # range(9) because there may be max. 8 start squares
@@ -331,7 +335,7 @@ def create_robots(board):
     robot_paths = get_robot_paths()
     robots_on_start = []
 
-    for i in range(len(start_tiles)):
+    for start_tile_number in start_tiles:
         # Condition to assure no exception in case there is less robot_paths
         # than tiles.
         if robot_paths:
@@ -340,15 +344,13 @@ def create_robots(board):
             robot_paths.remove(paths)
             path, path_front = paths
 
-            # Get direction and coordinates for the robot
-            # Start tiles go from 1 to max. 8, so the index must be increased by 1
-            initial_direction = start_tiles[i + 1]["tile_direction"]
-            initial_coordinates = start_tiles[i + 1]["coordinates"]
+            # Get direction and coordinates for the robot on the tile
+            initial_direction = start_tiles[start_tile_number]["tile_direction"]
+            initial_coordinates = start_tiles[start_tile_number]["coordinates"]
 
             # Create a robot, add him to robot's list
             robot = Robot(initial_direction, path, path_front, initial_coordinates)
             robots_on_start.append(robot)
-
     return robots_on_start
 
 

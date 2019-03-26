@@ -45,7 +45,8 @@ def move_once(t):
 
     for robot in state.robots:
         # robot.apply_card_effect(state)
-        robot.walk(3, state)
+        if not robot.inactive:
+            robot.walk(3, state)
         # print(robot)
 
     apply_tile_effects(state)
