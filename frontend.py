@@ -43,7 +43,7 @@ def load_robots(state):
     """
     robot_sprites = []
     # Only active robots will be drawn.
-    for robot in [robot for robot in state.robots if not robot.inactive]:
+    for robot in state.active_robots(state):
         robot_sprite = create_sprites(robot.coordinates, [robot])
         robot_sprites.extend(robot_sprite)
     return robot_sprites

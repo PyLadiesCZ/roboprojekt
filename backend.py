@@ -276,6 +276,12 @@ class State:
             # Return hole tile.
             return [HoleTile()]
 
+    def active_robots(self, state):
+        """
+        Return a list of active robots.
+        """
+        return [robot for robot in state.robots if not robot.inactive]
+
 
 def get_start_coordinates(board):
     """
@@ -424,30 +430,30 @@ def apply_tile_effects(state):
         # 2) Express belts and normal belts move 1 space
 
     # Activate pusher
-    for robot in [robot for robot in state.robots if not robot.inactive]:
+    for robot in state.active_robots(state):
         for tile in state.get_tiles(robot.coordinates):
             tile.push_robot(robot, state)
             if robot.inactive:
                 break
 
     # Activate gear
-    for robot in [robot for robot in state.robots if not robot.inactive]:
+    for robot in state.active_robots(state):
         for tile in state.get_tiles(robot.coordinates):
             tile.rotate_robot(robot)
 
     # Activate laser
-    for robot in [robot for robot in state.robots if not robot.inactive]:
+    for robot in state.active_robots(state):
         for tile in state.get_tiles(robot.coordinates):
             tile.shoot_robot(robot, state)
             if robot.inactive:
                 break
 
     # Activate robot laser
-    for robot in [robot for robot in state.robots if not robot.inactive]:
+    for robot in state.active_robots(state):
         robot.shoot(state)
 
     # Collect flags, repair robots
-    for robot in [robot for robot in state.robots if not robot.inactive]:
+    for robot in state.active_robots(state):
         for tile in state.get_tiles(robot.coordinates):
             tile.collect_flag(robot)
             tile.repair_robot(robot, state)
