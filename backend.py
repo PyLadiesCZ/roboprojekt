@@ -276,7 +276,7 @@ class State:
             # Return hole tile.
             return [HoleTile()]
 
-    def active_robots(self, state):
+    def get_active_robots(self):
         """
         Return a list of active robots.
         """
@@ -430,30 +430,30 @@ def apply_tile_effects(state):
         # 2) Express belts and normal belts move 1 space
 
     # Activate pusher
-    for robot in state.active_robots(state):
+    for robot in state.get_active_robots():
         for tile in state.get_tiles(robot.coordinates):
             tile.push_robot(robot, state)
             if robot.inactive:
                 break
 
     # Activate gear
-    for robot in state.active_robots(state):
+    for robot in state.get_active_robots():
         for tile in state.get_tiles(robot.coordinates):
             tile.rotate_robot(robot)
 
     # Activate laser
-    for robot in state.active_robots(state):
+    for robot in state.get_active_robots():
         for tile in state.get_tiles(robot.coordinates):
             tile.shoot_robot(robot, state)
             if robot.inactive:
                 break
 
     # Activate robot laser
-    for robot in state.active_robots(state):
+    for robot in state.get_active_robots():
         robot.shoot(state)
 
     # Collect flags, repair robots
-    for robot in state.active_robots(state):
+    for robot in state.get_active_robots():
         for tile in state.get_tiles(robot.coordinates):
             tile.collect_flag(robot)
             tile.repair_robot(robot, state)
