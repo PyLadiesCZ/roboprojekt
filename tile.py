@@ -110,7 +110,10 @@ class WallTile(Tile):
 
 class StartTile(Tile):
     # Start tile has no tile effect.
-    pass
+    def __init__(self, direction, path, properties):
+        self.number = properties[0]["value"]
+        super().__init__(direction, path, properties)
+
 
 
 class HoleTile(Tile):
