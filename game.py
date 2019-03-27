@@ -56,5 +56,6 @@ def move_once(t):
 
 pyglet.clock.schedule_once(move_once, 3)
 
+
 # Run the pyglet library.
 pyglet.app.run()
