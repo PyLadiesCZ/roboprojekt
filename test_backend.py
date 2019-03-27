@@ -1,20 +1,10 @@
 import pytest
 from pathlib import Path
 
-from backend import get_start_coordinates, get_robot_paths, create_robots, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects
+from backend import get_robot_paths, create_robots, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects
 from util import Direction, Rotation
 from tile import Tile, HoleTile, GearTile, PusherTile, RepairTile, FlagTile
 from loading import get_board
-
-
-def test_start_coordinates():
-    """
-    Take board (based on JSON test_3 map) and assert correct start coordinates are returned.
-    If the test_3.json map is changed or removed, the test needs to be updated.
-    """
-    board = get_board("maps/test_3.json")
-    assert len(get_start_coordinates(board)) == 8
-    assert isinstance(get_start_coordinates(board), list)
 
 
 def test_robot_paths():
@@ -412,7 +402,38 @@ def test_robot_is_pushed_out_of_the_board(tile):
     apply_tile_effects(state)
     assert robot.lives == 2
     assert robot.inactive is True
-    assert robot.coordinates == None
+    assert robot.coordinates is None
+
+
+def test_robot_on_start_has_the_correct_direction():
+    """
+    When robot is created, his direction shoud be the same as the direction
+    of start tile he stands on.
+    Assert the direction is correcly initiated.
+    """
+    state = get_start_state("maps/test_start_direction.json")
+    for robot in state.robots:
+        tile_direction = state.get_tiles(robot.coordinates)[0].direction
+        assert robot.direction == tile_direction
+
+
+@pytest.mark.parametrize(("robot_index", "expected_coordinates"),
+                         [(0, (0, 0)),
+                          (1, (1, 0)),
+                          (2, (2, 0)),
+                          (3, (3, 0)),
+                          ])
+def test_robots_order_on_start(robot_index, expected_coordinates):
+    """
+    The order of robots list should reflect their starting positions.
+    First robot from the list stands on first start tile and so on.
+    Assert the list is correcly created.
+    Test to check the behaviour in Python 3.5.
+    """
+    state = get_start_state("maps/test_start_direction.json")
+    current_robot = state.robots[robot_index]
+    assert current_robot.coordinates == expected_coordinates
+
 
 
 @pytest.mark.parametrize(("direction", "card", "new_coordinates"),

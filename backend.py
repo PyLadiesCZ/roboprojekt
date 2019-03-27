@@ -2,6 +2,7 @@
 Backend file contains functions for the game logic.
 """
 from pathlib import Path
+from collections import OrderedDict
 import random
 
 from util import Direction, Rotation, get_next_coordinates
@@ -214,6 +215,7 @@ class Robot:
         if self.direction == Direction.W:
             return self.coordinates[0] + 1
 
+
 class Card:
     def __init__(self, priority):
         self.priority = priority  # int - to decide who goes first
@@ -283,27 +285,38 @@ class State:
         return [robot for robot in self.robots if not robot.inactive]
 
 
-def get_start_coordinates(board):
+def get_start_tiles(board):
     """
-    Get start coordinates for robots.
+    Get start tiles for robots.
+
     board: dictionary returned by get_board().
-    Return a list with coordinates of start tiles.
     Find the objects which are start tiles (matching attribute path of Tile object),
-    then add coordinate of those tiles to the list of start coordinates.
+    then add create an ordered dictionary of start tile number with values: coordinates
+    and tile_direction.
+    OrderedDict is a structure that ensures the dictionary is stored in the order
+    of the new keys being added.
     """
-    start_coordinates = []
+
+    start_tiles = {}
     for coordinate, tiles in board.items():
         for tile in tiles:
             # range(9) because there may be max. 8 start squares
             for i in range(9):
                 if tile.path == ("./img/squares/png/start_square0{}.png".format(i)):
-                    start_coordinates.append(coordinate)
-    return start_coordinates
+                    start_tiles[i] = {
+                        "coordinates": coordinate,
+                        "tile_direction": tile.direction,
+                    }
+    # Sort created dictionary by the first element - start tile number
+    OrderedDict(sorted(start_tiles.items(), key=lambda stn: stn[0]))
+
+    return start_tiles
 
 
 def get_robot_paths():
     """
     Return a list of paths to robots images.
+
     Using pathlib.Path library add all the files in given directory to the list.
     Ex. [PosixPath('img/robots_map/png/MintBot.png'), PosixPath('img/robots_map/png/terka_robot_map.png')].
     """
@@ -318,27 +331,36 @@ def get_robot_paths():
 def create_robots(board):
     """
     Place robots on start tiles.
+
     board: dictionary returned by get_board()
-    Return list of robots on the start tiles of the board.
     Initialize Robot objects on the start tiles coordinates with random
     choice of robot's avatar on particular tile.
     Once the robot is randomly chosen, he is removed from the list
     (he cannot appear twice on the board).
-    On the beginning all the Robot objects have implicit 0 degree direction.
+    Robots are placed on board in the direction of their start tiles.
+    The robots are ordered according to their start tiles.
     """
-    start_coordinates = get_start_coordinates(board)
+    start_tiles = get_start_tiles(board)
     robot_paths = get_robot_paths()
-    robots_start = []
-    for coordinate in start_coordinates:
-        # Condition to assure no exception in case robot_paths is shorter
-        # than coordinate's list.
+    robots_on_start = []
+
+    for start_tile_number in start_tiles:
+        # Condition to assure no exception in case there is less robot_paths
+        # than tiles.
         if robot_paths:
+            # Get graphics for the robot
             paths = random.choice(robot_paths)
             robot_paths.remove(paths)
             path, path_front = paths
-            robot = Robot(Direction.N, path, path_front, coordinate)
-            robots_start.append(robot)
-    return robots_start
+
+            # Get direction and coordinates for the robot on the tile
+            initial_direction = start_tiles[start_tile_number]["tile_direction"]
+            initial_coordinates = start_tiles[start_tile_number]["coordinates"]
+
+            # Create a robot, add him to robot's list
+            robot = Robot(initial_direction, path, path_front, initial_coordinates)
+            robots_on_start.append(robot)
+    return robots_on_start
 
 
 def get_tile_count(board):
@@ -358,6 +380,7 @@ def get_tile_count(board):
 def get_start_state(map_name):
     """
     Get start state of game.
+
     map_name: path to map file. Currently works only for .json files from Tiled 1.2
     Create board and robots on start squares, initialize State object
     containing Tile and Robot object as well as the map size.
@@ -373,6 +396,7 @@ def get_start_state(map_name):
 def check_the_absence_of_a_wall(coordinates, direction, state):
     """
     Check the absence of a wall in the direction of the move.
+
     coordinates: tuple of x and y coordinate
     direction: object of Direction class
     state: object of State class
@@ -416,7 +440,6 @@ def check_robot_in_the_way(state, coordinates):
 
     # There are no robots, return None
     return None
-
 
 
 def apply_tile_effects(state):
