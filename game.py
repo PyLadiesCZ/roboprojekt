@@ -43,7 +43,7 @@ def move_once(t):
     Move all robots according to mock cards on hand and perform tile effects.
     """
 
-    for robot in state.robots:
+    for robot in state.get_active_robots():
         # robot.apply_card_effect(state)
         robot.walk(3, state)
         # print(robot)
