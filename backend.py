@@ -287,7 +287,7 @@ class State:
 
 def get_start_tiles(board):
     """
-    Get start coordinates for robots.
+    Get start tiles for robots.
 
     board: dictionary returned by get_board().
     Find the objects which are start tiles (matching attribute path of Tile object),
