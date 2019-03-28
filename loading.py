@@ -44,7 +44,7 @@ def get_data_properties(data):
     and return a tuple: tile types dict, tile's custom properties dict
     and paths to images dict.
     """
-    no_properties_tiles = {'ground', 'hole', 'wall', 'start_square'}
+    no_properties_tiles = {'ground', 'hole', 'wall'}
     types = {}
     properties = {}
     paths = {}

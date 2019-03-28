@@ -153,8 +153,8 @@
                  "properties":[
                         {
                          "name":"rotate",
-                         "type":"string",
-                         "value":"right"
+                         "type":"int",
+                         "value":1
                         }],
                  "type":"gear"
                 },
@@ -166,8 +166,8 @@
                  "properties":[
                         {
                          "name":"rotate",
-                         "type":"string",
-                         "value":"left"
+                         "type":"int",
+                         "value":-1
                         }],
                  "type":"gear"
                 },
@@ -687,6 +687,12 @@
                  "image":"..\/img\/squares\/png\/start_square01.png",
                  "imageheight":64,
                  "imagewidth":64,
+                 "properties":[
+                        {
+                         "name":"number",
+                         "type":"int",
+                         "value":1
+                        }],
                  "type":"start_square"
                 },
                 {
@@ -694,6 +700,12 @@
                  "image":"..\/img\/squares\/png\/start_square02.png",
                  "imageheight":64,
                  "imagewidth":64,
+                 "properties":[
+                        {
+                         "name":"number",
+                         "type":"int",
+                         "value":2
+                        }],
                  "type":"start_square"
                 },
                 {
@@ -701,6 +713,12 @@
                  "image":"..\/img\/squares\/png\/start_square03.png",
                  "imageheight":64,
                  "imagewidth":64,
+                 "properties":[
+                        {
+                         "name":"number",
+                         "type":"int",
+                         "value":3
+                        }],
                  "type":"start_square"
                 },
                 {
@@ -708,6 +726,12 @@
                  "image":"..\/img\/squares\/png\/start_square04.png",
                  "imageheight":64,
                  "imagewidth":64,
+                 "properties":[
+                        {
+                         "name":"number",
+                         "type":"int",
+                         "value":4
+                        }],
                  "type":"start_square"
                 },
                 {
@@ -715,6 +739,12 @@
                  "image":"..\/img\/squares\/png\/start_square05.png",
                  "imageheight":64,
                  "imagewidth":64,
+                 "properties":[
+                        {
+                         "name":"number",
+                         "type":"int",
+                         "value":5
+                        }],
                  "type":"start_square"
                 },
                 {
@@ -722,6 +752,12 @@
                  "image":"..\/img\/squares\/png\/start_square06.png",
                  "imageheight":64,
                  "imagewidth":64,
+                 "properties":[
+                        {
+                         "name":"number",
+                         "type":"int",
+                         "value":6
+                        }],
                  "type":"start_square"
                 },
                 {
@@ -729,6 +765,12 @@
                  "image":"..\/img\/squares\/png\/start_square07.png",
                  "imageheight":64,
                  "imagewidth":64,
+                 "properties":[
+                        {
+                         "name":"number",
+                         "type":"int",
+                         "value":7
+                        }],
                  "type":"start_square"
                 },
                 {
@@ -736,6 +778,12 @@
                  "image":"..\/img\/squares\/png\/start_square08.png",
                  "imageheight":64,
                  "imagewidth":64,
+                 "properties":[
+                        {
+                         "name":"number",
+                         "type":"int",
+                         "value":8
+                        }],
                  "type":"start_square"
                 }],
          "tilewidth":64

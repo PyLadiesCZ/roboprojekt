@@ -110,7 +110,10 @@ class WallTile(Tile):
 
 class StartTile(Tile):
     # Start tile has no tile effect.
-    pass
+    def __init__(self, direction, path, properties):
+        self.number = properties[0]["value"]
+        super().__init__(direction, path, properties)
+
 
 
 class HoleTile(Tile):
@@ -247,11 +250,11 @@ def create_tile_subclass(direction, path, type, properties):
     return TILE_CLS[type](direction, path, properties)
 
 
-def transform_direction(direction_string):
+def transform_direction(direction_int):
     """
     Function to transform the string taken from json properties to valid Rotation class instance for later processing.
     """
-    if direction_string == "left":
+    if direction_int == -1:
         return Rotation.LEFT
-    if direction_string == "right":
+    if direction_int == 1:
         return Rotation.RIGHT

@@ -215,10 +215,10 @@ def test_robot_changed_start_coordinates(tile, coordinates_after):
 # GearTile
 
 @pytest.mark.parametrize(("direction_before", "tile", "direction_after"),
-                         [(Direction.E, GearTile(None, None, [{'value': "left"}]),  Direction.N),
-                         (Direction.E, GearTile(None, None, [{'value': "right"}]), Direction.S),
-                         (Direction.S, GearTile(None, None, [{'value': "left"}]), Direction.E),
-                         (Direction.S, GearTile(None, None, [{'value': "right"}]), Direction.W),
+                         [(Direction.E, GearTile(None, None, [{'value': -1}]),  Direction.N),
+                         (Direction.E, GearTile(None, None, [{'value': 1}]), Direction.S),
+                         (Direction.S, GearTile(None, None, [{'value': -1}]), Direction.E),
+                         (Direction.S, GearTile(None, None, [{'value': 1}]), Direction.W),
                           ])
 def test_robot_changed_direction(direction_before, tile, direction_after):
     """
