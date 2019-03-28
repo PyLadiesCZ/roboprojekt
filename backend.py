@@ -41,11 +41,6 @@ class Robot:
             self.direction, self.path, self.coordinates, self.lives, self.flags,
             self.damages, self.inactive)
 
-    #provizorní
-    def as_dict(self):
-        return {"coordinates": self.coordinates, "lives": self.lives,
-                "flag": self.flags, "damages": self.damages, "inactive": self.inactive}
-
     def walk(self, distance, state, direction=None, push_others=True):
         """
         Move a robot to next coordinates based on his direction.
@@ -267,10 +262,6 @@ class State:
             # Coordinates are out of game board.
             # Return hole tile.
             return [HoleTile()]
-
-    def as_dict(self):
-        #return {"board": board_to dict(self.board), "robots": [robot.as_dict() for robot in self.robots]}
-        return {"robots": [robot.as_dict() for robot in self.robots]}
 
     def get_active_robots(self):
         """
