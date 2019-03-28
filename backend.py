@@ -61,7 +61,7 @@ class Robot:
         # He can still move the other robots on the way.
         if distance < 0:
             self.walk((-distance), state, direction.get_new_direction(Rotation.U_TURN),
-                        push_others=push_others)
+                    push_others=push_others)
         else:
             for step in range(distance):
                 # Check the absence of a walls before moving.
