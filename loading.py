@@ -52,16 +52,19 @@ def get_data_properties(data):
     for json_tile in data['tilesets'][0]['tiles']:
         id = json_tile['id'] + data['tilesets'][0]['firstgid']
 
-        #types as 'hole', 'pusher'
+        # types as 'hole', 'pusher'
         types[id] = json_tile['type']
 
-        #custom properties
+        # custom properties
         if types[id] not in no_properties_tiles:
-            properties[id] = json_tile['properties']
+            properties_list = []
+            for property in json_tile['properties']:
+                properties_list.append((property['name'], property['value']))
+            properties[id] = dict(properties_list)
         else:
             properties[id] = []
 
-        #paths to tile image
+        # paths to tile image
         path = json_tile['image']
         path = path[1:]  # unelegant way of removing ../ at the beginning of the path
         paths[id] = path
