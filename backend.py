@@ -62,18 +62,18 @@ class Robot:
                 # Check the absence of a walls before moving.
                 if not check_the_absence_of_a_wall(self.coordinates, direction, state):
                     break
-                    
+
                 # There is no wall. Get next coordinates.
                 next_coordinates = get_next_coordinates(self.coordinates, direction)
                 # Check robots on the next tile before moving.
-                robot_in_the_way_index = check_robot_in_the_way(state, next_coordinates)
+                robot_in_the_way = check_robot_in_the_way(state, next_coordinates)
 
                 # Move robot in the way.
-                if robot_in_the_way_index is not None:
+                if robot_in_the_way is not None:
                     if push_others:
-                        state.robots[robot_in_the_way_index].walk(1, state, direction)
+                        robot_in_the_way.walk(1, state, direction)
                         # Check that robot moved.
-                        if state.robots[robot_in_the_way_index].coordinates == next_coordinates:
+                        if robot_in_the_way.coordinates == next_coordinates:
                             break
                     else:
                         break
@@ -154,11 +154,11 @@ class Robot:
                 # Check if there is a robot on the next coordinates.
                 # Skip this if the shooting robot's current coordinates are checked
                 if next_coordinates != self.coordinates:
-                    robot_in_the_way_index = check_robot_in_the_way(state, next_coordinates)
+                    robot_in_the_way = check_robot_in_the_way(state, next_coordinates)
 
                     # There is a robot, shoot him and break the cycle (only one gets shot).
-                    if robot_in_the_way_index is not None:
-                        state.robots[robot_in_the_way_index].be_damaged()
+                    if robot_in_the_way is not None:
+                        robot_in_the_way.be_damaged()
                         break
 
                 # Check if there is a wall, if is: end of shot.
@@ -274,7 +274,7 @@ class State:
 def get_start_tiles(board):
     """
     Get start tiles for robots.
-    
+
     board: dictionary returned by get_board().
     Find the objects which are start tiles (matching attribute path of Tile object),
     then add create an ordered dictionary of start tile number with values: coordinates
@@ -302,7 +302,7 @@ def get_start_tiles(board):
 def get_robot_paths():
     """
     Return a list of paths to robots images.
-    
+
     Using pathlib.Path library add all the files in given directory to the list.
     Ex. [PosixPath('img/robots_map/png/MintBot.png'), PosixPath('img/robots_map/png/terka_robot_map.png')].
     """
@@ -317,7 +317,7 @@ def get_robot_paths():
 def create_robots(board):
     """
     Place robots on start tiles.
-    
+
     board: dictionary returned by get_board()
     Initialize Robot objects on the start tiles coordinates with random
     choice of robot's avatar on particular tile.
@@ -366,7 +366,7 @@ def get_tile_count(board):
 def get_start_state(map_name):
     """
     Get start state of game.
-    
+
     map_name: path to map file. Currently works only for .json files from Tiled 1.2
     Create board and robots on start squares, initialize State object
     containing Tile and Robot object as well as the map size.
@@ -382,7 +382,7 @@ def get_start_state(map_name):
 def check_the_absence_of_a_wall(coordinates, direction, state):
     """
     Check the absence of a wall in the direction of the move.
-    
+
     coordinates: tuple of x and y coordinate
     direction: object of Direction class
     state: object of State class
@@ -421,8 +421,8 @@ def check_robot_in_the_way(state, coordinates):
     # Check robots on the next tile.
     for robot in state.robots:
         if robot.coordinates == coordinates:
-            # Return index of robot that is in the way.
-            return state.robots.index(robot)
+            # Return robot that is in the way.
+            return robot
 
     # There are no robots, return None
     return None
