@@ -143,3 +143,11 @@ def test_convert_tile_direction(test_case):
     """
     tile_number = test_case
     assert get_tile_direction(tile_number) == CONVERT_TEST_DATA[test_case]["direction"]
+
+
+def test_map_with_embedded_tileset():
+    """
+    Try to load the map with tileset directly in map file.
+    Assert board exists.
+    """
+    assert get_board("maps/test_4.json")
