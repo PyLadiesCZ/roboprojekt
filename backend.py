@@ -69,7 +69,7 @@ class Robot:
                 robot_in_the_way = check_robot_in_the_way(state, next_coordinates)
 
                 # Move robot in the way.
-                if robot_in_the_way is not None:
+                if not robot_in_the_way:
                     if push_others:
                         robot_in_the_way.walk(1, state, direction)
                         # Check that robot moved.
