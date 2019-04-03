@@ -69,7 +69,7 @@ class Robot:
                 robot_in_the_way = check_robot_in_the_way(state, next_coordinates)
 
                 # Move robot in the way.
-                if not robot_in_the_way:
+                if robot_in_the_way:
                     if push_others:
                         robot_in_the_way.walk(1, state, direction)
                         # Check that robot moved.
@@ -157,7 +157,7 @@ class Robot:
                     robot_in_the_way = check_robot_in_the_way(state, next_coordinates)
 
                     # There is a robot, shoot him and break the cycle (only one gets shot).
-                    if not robot_in_the_way:
+                    if robot_in_the_way:
                         robot_in_the_way.be_damaged()
                         break
 
