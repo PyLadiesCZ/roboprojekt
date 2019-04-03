@@ -37,6 +37,9 @@ def get_coordinates(map_data):
 
 
 def get_tiles_data(map_data):
+    """
+    Check for the tileset in the map data, open the file and load the tiles data from it.
+    """
     tileset_name = map_data['tilesets'][0]['source']
     tileset_src = "maps/" + tileset_name
     with open(tileset_src, encoding="utf-8") as tiles_file:
