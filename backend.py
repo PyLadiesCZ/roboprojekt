@@ -157,7 +157,7 @@ class Robot:
                     robot_in_the_way = check_robot_in_the_way(state, next_coordinates)
 
                     # There is a robot, shoot him and break the cycle (only one gets shot).
-                    if robot_in_the_way is not None:
+                    if not robot_in_the_way:
                         robot_in_the_way.be_damaged()
                         break
 
