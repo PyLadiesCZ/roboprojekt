@@ -314,7 +314,6 @@ def get_robot_names():
     for img in Path('./img/robots/png').iterdir():
         robot_name = img.stem
         robot_names.append(robot_name)
-
     return robot_names
 
 
