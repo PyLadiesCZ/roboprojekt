@@ -158,7 +158,6 @@ class LaserTile(Tile):
 
     def shoot_robot(self, robot, state):
         # Robot stands on laser tile.
-        hit = True
         # If robot isn't standing on the start of the laser, look for other robots.
         if not self.laser_start:
             # Get coordinates of current robot.
@@ -170,15 +169,14 @@ class LaserTile(Tile):
             # Get direction in which it will be checked for other robots or laser start.
             direction_to_start = self.direction.get_new_direction(Rotation.U_TURN)
             # Check if there is another robot in direction of incoming laser.
-            while hit:
+            while True:
                 # Get new coordinates.
                 (x, y) = get_next_coordinates((x, y), direction_to_start)
                 # Check for other robots.
                 if (x, y) in coordinates:
                     # There is another robot.
                     # Current robot won't be hit by laser.
-                    hit = False
-                    break
+                    return
                 # Get new tiles.
                 new_tiles = state.get_tiles((x, y))
                 for tile in new_tiles:
@@ -190,8 +188,7 @@ class LaserTile(Tile):
                 if isinstance(tile, LaserTile) and tile.laser_start:
                     # Don't check new tiles.
                     break
-        if hit:
-            robot.be_damaged(self.laser_strength)
+        robot.be_damaged(self.laser_strength)
 
 
 class FlagTile(Tile):
