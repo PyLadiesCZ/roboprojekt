@@ -12,10 +12,8 @@ from loading import get_board
 MAX_DAMAGE_VALUE = 10
 
 class Robot:
-    def __init__(self, direction, path, path_front, coordinates):
+    def __init__(self, direction, coordinates, name):
         self.direction = direction
-        self.path = path
-        self.path_front = path_front
         self.coordinates = coordinates
         self.start_coordinates = coordinates
         # program = cards on hand, list.
@@ -25,6 +23,7 @@ class Robot:
         self.flags = 0
         self.damages = 4
         self.power_down = False
+        self.name = name
 
     @property
     # More info about @property decorator - official documentation:
@@ -40,6 +39,10 @@ class Robot:
         return "<Robot {} {} {} Lives: {} Flags: {} Damages: {}, Inactive: {}>".format(
             self.direction, self.path, self.coordinates, self.lives, self.flags,
             self.damages, self.inactive)
+
+    def as_dict(self):
+        return {"name": self.name, "coordinates": self.coordinates, "lives": self.lives,
+                "flag": self.flags, "damages": self.damages, "inactive": self.inactive}
 
     def walk(self, distance, state, direction=None, push_others=True):
         """
@@ -250,6 +253,10 @@ class State:
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
 
+    def as_dict(self):
+        #return {"board": board_to dict(self.board), "robots": [robot.as_dict() for robot in self.robots]}
+        return {"robots": [robot.as_dict() for robot in self.robots]}
+
     def get_tiles(self, coordinates):
         """
         Get tiles on requested coordinates.
@@ -298,19 +305,13 @@ def get_start_tiles(board):
     return start_tiles
 
 
-def get_robot_paths():
-    """
-    Return a list of paths to robots images.
+def get_robot_names():
+    robot_names = []
+    for img in Path('./img/robots/png').iterdir():
+        robot_name = img.stem
+        robot_names.append(robot_name)
 
-    Using pathlib.Path library add all the files in given directory to the list.
-    Ex. [PosixPath('img/robots_map/png/MintBot.png'), PosixPath('img/robots_map/png/terka_robot_map.png')].
-    """
-    robot_paths = []
-    for robot_path in Path('./img/robots_map/png/').iterdir():  # search image file
-        name = robot_path.name
-        robot_front_path = './img/robots/png/' + name
-        robot_paths.append((robot_path, robot_front_path))
-    return robot_paths
+    return robot_names
 
 
 def create_robots(board):
@@ -326,24 +327,19 @@ def create_robots(board):
     The robots are ordered according to their start tiles.
     """
     start_tiles = get_start_tiles(board)
-    robot_paths = get_robot_paths()
     robots_on_start = []
+    robot_names = get_robot_names()
 
-    for start_tile_number in start_tiles:
+    for start_tile_number, name in zip(start_tiles, robot_names):
         # Condition to assure no exception in case there is less robot_paths
         # than tiles.
-        if robot_paths:
-            # Get graphics for the robot
-            paths = random.choice(robot_paths)
-            robot_paths.remove(paths)
-            path, path_front = paths
-
+        if robot_names:
             # Get direction and coordinates for the robot on the tile
             initial_direction = start_tiles[start_tile_number]["tile_direction"]
             initial_coordinates = start_tiles[start_tile_number]["coordinates"]
 
             # Create a robot, add him to robot's list
-            robot = Robot(initial_direction, path, path_front, initial_coordinates)
+            robot = Robot(initial_direction, initial_coordinates, name)
             robots_on_start.append(robot)
     return robots_on_start
 

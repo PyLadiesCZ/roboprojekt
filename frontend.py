@@ -5,6 +5,7 @@ The frontend module
 """
 
 import pyglet
+from pathlib import Path
 
 # Constatnts for size of tile image in px
 TILE_WIDTH = 64
@@ -33,6 +34,21 @@ def load_tiles(state):
         sprites = create_sprites(coordinate, tiles)
         tile_sprites.extend(sprites)
     return tile_sprites
+
+
+def get_robot_paths():
+    """
+    Return a list of paths to robots images.
+
+    Using pathlib.Path library add all the files in given directory to the list.
+    Ex. [PosixPath('img/robots_map/png/MintBot.png'), PosixPath('img/robots_map/png/terka_robot_map.png')].
+    """
+    robot_paths = []
+    for robot_path in Path('./img/robots_map/png/').iterdir():  # search image file
+        name = robot_path.name
+        robot_front_path = './img/robots/png/' + name
+        robot_paths.append((robot_path, robot_front_path))
+    return robot_paths
 
 
 def load_robots(state):
