@@ -7,18 +7,18 @@ from util import Direction
 from tile import create_tile_subclass
 
 
-def get_data(map_name):
+def get_map_data(map_name):
     """
     Return a dictionary of decoded JSON map file.
 
     map_name: a map of the game board created in Tiled 1.2 and saved as a JSON file
     """
     with open(map_name, encoding="utf-8") as map_file:
-        data = json.load(map_file)
-    return data
+        map_data = json.load(map_file)
+    return map_data
 
 
-def get_coordinates(data):
+def get_coordinates(map_data):
     """
     Return a list of coordinates for individual tiles on the map.
 
@@ -30,13 +30,21 @@ def get_coordinates(data):
     Transformation with reversed is required as the JSON tiles are in an opposite direction.
     """
     coordinates = []
-    for y in reversed(range(data["height"])):
-        for x in range(data["width"]):
+    for y in reversed(range(map_data["height"])):
+        for x in range(map_data["width"]):
             coordinates.append((x, y))
     return coordinates
 
 
-def get_data_properties(data):
+def get_tiles_data(map_data):
+    tileset_name = map_data['tilesets'][0]['source']
+    tileset_src = "maps/" + tileset_name
+    with open(tileset_src, encoding="utf-8") as tiles_file:
+        tiles_data = json.load(tiles_file)
+    return tiles_data
+
+
+def get_tiles_properties(map_data):
     """
     Get significant data from JSON file fields.
 
@@ -44,24 +52,27 @@ def get_data_properties(data):
     and return a tuple: tile types dict, tile's custom properties dict
     and paths to images dict.
     """
+
+    tiles_data = get_tiles_data(map_data)
+
     no_properties_tiles = {'ground', 'hole', 'wall'}
     types = {}
     properties = {}
     paths = {}
 
-    for json_tile in data['tilesets'][0]['tiles']:
-        id = json_tile['id'] + data['tilesets'][0]['firstgid']
+    for json_tile in tiles_data['tiles']:
+        id = json_tile['id'] + map_data['tilesets'][0]['firstgid']
 
-        #types as 'hole', 'pusher'
+        # types as 'hole', 'pusher'
         types[id] = json_tile['type']
 
-        #custom properties
+        # custom properties
         if types[id] not in no_properties_tiles:
             properties[id] = json_tile['properties']
         else:
             properties[id] = []
 
-        #paths to tile image
+        # paths to tile image
         path = json_tile['image']
         path = path[1:]  # unelegant way of removing ../ at the beginning of the path
         paths[id] = path
@@ -107,13 +118,13 @@ def get_board(map_name):
     Basic idea about dict comprehension used to create board can be found here:
     https://www.geeksforgeeks.org/python-dictionary-comprehension/
     """
-    data = get_data(map_name)
-    types, properties, paths = get_data_properties(data)
-    coordinates = get_coordinates(data)
+    map_data = get_map_data(map_name)
+    types, properties, paths = get_tiles_properties(map_data)
+    coordinates = get_coordinates(map_data)
 
     # create dictionary of coordinates where value is empty list for further transformation
     board = {coordinate: [] for coordinate in coordinates}
-    for layer in data['layers']:
+    for layer in map_data['layers']:
 
         # make tuple containing tile data and matching coordinates
         for tile_number, coordinate in zip(layer['data'], coordinates):

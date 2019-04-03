@@ -7,7 +7,7 @@ Tests checking the structure of read JSON file.
 import pytest
 from pathlib import Path
 
-from loading import get_data, get_tile_id, get_tile_direction, get_board
+from loading import get_map_data, get_tiles_data, get_tile_id, get_tile_direction, get_board
 from util import Direction
 from tile import Tile, HoleTile
 from validator import check_squares
@@ -75,8 +75,8 @@ def test_map_returns_correct_image_ID(index_number, expected_value):
 
     Regression test of get_data function. Uses test_1.json map for this.
     """
-    data = get_data("maps/test_1.json")
-    assert data["tilesets"][0]["tiles"][index_number]["id"] == expected_value
+    tiles_data = get_tiles_data(get_map_data("maps/test_1.json"))
+    assert tiles_data["tiles"][index_number]["id"] == expected_value
 
 
 @pytest.mark.parametrize(("index_number", "expected_value"),
@@ -91,8 +91,9 @@ def test_map_returns_correct_image_path(index_number, expected_value):
 
     Regression test of get_data function. Uses test_1.json map for this.
     """
-    data = get_data("maps/test_1.json")
-    assert data["tilesets"][0]["tiles"][index_number]["image"] == expected_value
+    # map_data = get_map_data("maps/test_1.json")
+    tiles_data = get_tiles_data(get_map_data("maps/test_1.json"))
+    assert tiles_data["tiles"][index_number]["image"] == expected_value
 
 
 def test_board_structure():
