@@ -38,32 +38,44 @@ def get_coordinates(map_data):
 
 def get_tiles_data(map_data):
     """
-    Check for the tileset in the map data, open the file and load the tiles data from it.
+    Get the tileset for the loaded map.
+    If it is in separate file, load it from there.
+    If the tileset is part of map data, load it directly.
     """
-    tileset_name = map_data['tilesets'][0]['source']
-    tileset_src = "maps/" + tileset_name
-    with open(tileset_src, encoding="utf-8") as tiles_file:
-        tiles_data = json.load(tiles_file)
-    return tiles_data
+    # If the tileset is external, there will be ['source'] property present
+    try:
+        tileset_name = map_data['tilesets'][0]['source']
+        tileset_src = "maps/" + tileset_name
+        with open(tileset_src, encoding="utf-8") as tiles_file:
+            tiles_data = json.load(tiles_file)
+        loaded_tileset = tiles_data['tiles']
+
+    # If the tileset is part of the map, the ['source'] property is not there,
+    # therefore it throws KeyError. Use the map embedded tileset.
+    except KeyError:
+        loaded_tileset = map_data['tilesets'][0]['tiles']
+
+    # Whatever happened above, return the set variable for further processing.
+    finally:
+        return loaded_tileset
 
 
 def get_tiles_properties(map_data):
     """
-    Get significant data from JSON file fields.
+    Get significant data from JSON tile fields.
 
-    Take data - a dict created from decoded Tiled 1.2 JSON file
-    and return a tuple: tile types dict, tile's custom properties dict
-    and paths to images dict.
+    Take loaded data with tiles properties and return a tuple:
+    tile types dict, tile's custom properties dict and paths to images dict.
     """
 
-    tiles_data = get_tiles_data(map_data)
+    loaded_tileset = get_tiles_data(map_data)
 
     no_properties_tiles = {'ground', 'hole', 'wall'}
     types = {}
     properties = {}
     paths = {}
 
-    for json_tile in tiles_data['tiles']:
+    for json_tile in loaded_tileset:
         id = json_tile['id'] + map_data['tilesets'][0]['firstgid']
 
         # types as 'hole', 'pusher'

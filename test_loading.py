@@ -75,8 +75,8 @@ def test_map_returns_correct_image_ID(index_number, expected_value):
 
     Regression test of get_data function. Uses test_1.json map for this.
     """
-    tiles_data = get_tiles_data(get_map_data("maps/test_1.json"))
-    assert tiles_data["tiles"][index_number]["id"] == expected_value
+    loaded_tileset = get_tiles_data(get_map_data("maps/test_1.json"))
+    assert loaded_tileset[index_number]["id"] == expected_value
 
 
 @pytest.mark.parametrize(("index_number", "expected_value"),
@@ -92,8 +92,8 @@ def test_map_returns_correct_image_path(index_number, expected_value):
     Regression test of get_data function. Uses test_1.json map for this.
     """
     # map_data = get_map_data("maps/test_1.json")
-    tiles_data = get_tiles_data(get_map_data("maps/test_1.json"))
-    assert tiles_data["tiles"][index_number]["image"] == expected_value
+    loaded_tileset = get_tiles_data(get_map_data("maps/test_1.json"))
+    assert loaded_tileset[index_number]["image"] == expected_value
 
 
 def test_board_structure():
