@@ -53,16 +53,6 @@ class Rotation(Enum):
     U_TURN = 180
 
 
-def transform_direction(direction_string):
-    """
-    Function to transform the string taken from json properties to valid Rotation class instance for later processing.
-    """
-    if direction_string == "left":
-        return Rotation.LEFT
-    if direction_string == "right":
-        return Rotation.RIGHT
-
-
 def get_next_coordinates(coordinates, direction):
     """
     Get next coordinates in the given direction from current coordinates.

@@ -4,6 +4,7 @@ Tile contains class Tile and its subclasses.
 
 from util import Direction, Rotation, get_next_coordinates
 
+
 class Tile:
     def __init__(self, direction, path, properties):
         self.direction = direction
@@ -38,10 +39,8 @@ class Tile:
 
     def kill_robot(self, robot):
         """
-        Take away one robot life, set him to inactive mode and move him
-        to coordinates for inactive robots (None).
-
-        Take and return Robot class.
+        Take away one robot life, set him to inactive mode
+        and set his coordinates to None.
         """
         return robot
 
@@ -51,46 +50,33 @@ class Tile:
     def push_robot(self, robot, state):
         """
         Move robot by one tile during a specific register phase.
-
-        Return Robot class.
         """
         return robot
 
     def rotate_robot(self, robot):
         """
         Rotate robot by 90° to the left or right according to tile properties.
-
-        Take and return Robot class.
         """
         return robot
 
     def shoot_robot(self, robot, state):
         """
-        Shoot robot with tile laser.
-
-        robot: Robot class
-        state: State class
-
-        Return Robot class.
+        Shoot robot with tile laser. Number of robot's damages is raised by
+        the strength of laser. If the new number of damages is greater than 9,
+        robot is killed.
         """
         return robot
 
     def collect_flag(self, robot):
         """
         Collect flag by robot and change robot's start coordinates.
-
-        Take and return Robot class.
         """
         return robot
 
     def repair_robot(self, robot, state):
         """
-        Repair one robot's damage. Change robot's start coordinates, if possible by tile properties.
-
-        robot: Robot class
-        state: State class
-
-        Return Robot class.
+        Repair one robot's damage. Change robot's start coordinates,
+        if possible by tile properties.
         """
         return robot
 
@@ -110,7 +96,10 @@ class WallTile(Tile):
 
 class StartTile(Tile):
     # Start tile has no tile effect.
-    pass
+    def __init__(self, direction, path, properties):
+        self.number = properties[0]["value"]
+        super().__init__(direction, path, properties)
+
 
 
 class HoleTile(Tile):
@@ -160,6 +149,7 @@ class GearTile(Tile):
         # Rotate robot by 90° according to GearTile property: left or right.
         robot.rotate(self.move_direction)
 
+
 class LaserTile(Tile):
     def __init__(self, direction, path, properties):
         self.laser_strength = properties[0]["value"]
@@ -168,7 +158,6 @@ class LaserTile(Tile):
 
     def shoot_robot(self, robot, state):
         # Robot stands on laser tile.
-        hit = True
         # If robot isn't standing on the start of the laser, look for other robots.
         if not self.laser_start:
             # Get coordinates of current robot.
@@ -180,15 +169,14 @@ class LaserTile(Tile):
             # Get direction in which it will be checked for other robots or laser start.
             direction_to_start = self.direction.get_new_direction(Rotation.U_TURN)
             # Check if there is another robot in direction of incoming laser.
-            while hit:
+            while True:
                 # Get new coordinates.
                 (x, y) = get_next_coordinates((x, y), direction_to_start)
                 # Check for other robots.
                 if (x, y) in coordinates:
                     # There is another robot.
                     # Current robot won't be hit by laser.
-                    hit = False
-                    break
+                    return
                 # Get new tiles.
                 new_tiles = state.get_tiles((x, y))
                 for tile in new_tiles:
@@ -200,8 +188,7 @@ class LaserTile(Tile):
                 if isinstance(tile, LaserTile) and tile.laser_start:
                     # Don't check new tiles.
                     break
-        if hit:
-            robot.be_damaged(self.laser_strength)
+        robot.be_damaged(self.laser_strength)
 
 
 class FlagTile(Tile):
@@ -247,11 +234,12 @@ def create_tile_subclass(direction, path, type, properties):
     return TILE_CLS[type](direction, path, properties)
 
 
-def transform_direction(direction_string):
+def transform_direction(direction_int):
     """
-    Function to transform the string taken from json properties to valid Rotation class instance for later processing.
+    Function to transform the string taken from json properties to valid
+    Rotation class instance for later processing.
     """
-    if direction_string == "left":
+    if direction_int == -1:
         return Rotation.LEFT
-    if direction_string == "right":
+    if direction_int == 1:
         return Rotation.RIGHT

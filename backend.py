@@ -41,12 +41,13 @@ class Robot:
             self.direction, self.path, self.coordinates, self.lives, self.flags,
             self.damages, self.inactive)
 
-    #provizorní
+      
     def as_dict(self):
         return {"coordinates": self.coordinates, "lives": self.lives,
                 "flag": self.flags, "damages": self.damages, "inactive": self.inactive}
 
-    def walk(self, distance, state, direction=None):
+
+    def walk(self, distance, state, direction=None, push_others=True):
         """
         Move a robot to next coordinates based on his direction.
         Optional argument:
@@ -60,22 +61,28 @@ class Robot:
         # In this case he walks 1 step in the direction opposite to the given one.
         # He can still move the other robots on the way.
         if distance < 0:
-            self.walk((-distance), state, direction.get_new_direction(Rotation.U_TURN))
+            self.walk((-distance), state, direction.get_new_direction(Rotation.U_TURN),
+                        push_others=push_others)
         else:
             for step in range(distance):
                 # Check the absence of a walls before moving.
                 if not check_the_absence_of_a_wall(self.coordinates, direction, state):
                     break
 
+                # There is no wall. Get next coordinates.
                 next_coordinates = get_next_coordinates(self.coordinates, direction)
-                robot_in_the_way_index = check_robot_in_the_way(state, next_coordinates)
+                # Check robots on the next tile before moving.
+                robot_in_the_way = check_robot_in_the_way(state, next_coordinates)
 
                 # Move robot in the way.
-                if robot_in_the_way_index is not None:
-                        state.robots[robot_in_the_way_index].walk(1, state, direction)
+                if robot_in_the_way:
+                    if push_others:
+                        robot_in_the_way.walk(1, state, direction)
                         # Check that robot moved.
-                        if state.robots[robot_in_the_way_index].coordinates == next_coordinates:
+                        if robot_in_the_way.coordinates == next_coordinates:
                             break
+                    else:
+                        break
 
                 # Robot walks to next coordinates.
                 self.coordinates = next_coordinates
@@ -92,27 +99,7 @@ class Robot:
         he doesn't have enough power to push other robots. If there is a robot
         in the way, the movement is stopped.
         """
-        for step in range(distance):
-            # Check walls before moving.
-            if not check_the_absence_of_a_wall(self.coordinates, direction, state):
-                break
-            # There is no wall. Get next coordinates.
-            next_coordinates = get_next_coordinates(self.coordinates, direction)
-            # Check robots on the next tile before moving.
-            robot_in_the_way_index = check_robot_in_the_way(state, next_coordinates)
-
-            if robot_in_the_way_index is not None:
-                # There is a robot on the next tile.
-                # Robot can't be moved.
-                break
-
-            # There isn't a robot on the next tile. Robot will be moved.
-            self.coordinates = next_coordinates
-            # Check hole on next coordinates.
-            self.fall_into_hole(state)
-            # If robot falls into hole, he becomes inactive.
-            if self.inactive:
-                break
+        self.walk(distance=distance, state=state, direction=direction, push_others=False)
 
     def die(self):
         """
@@ -173,11 +160,11 @@ class Robot:
                 # Check if there is a robot on the next coordinates.
                 # Skip this if the shooting robot's current coordinates are checked
                 if next_coordinates != self.coordinates:
-                    robot_in_the_way_index = check_robot_in_the_way(state, next_coordinates)
+                    robot_in_the_way = check_robot_in_the_way(state, next_coordinates)
 
                     # There is a robot, shoot him and break the cycle (only one gets shot).
-                    if robot_in_the_way_index is not None:
-                        state.robots[robot_in_the_way_index].be_damaged()
+                    if robot_in_the_way:
+                        robot_in_the_way.be_damaged()
                         break
 
                 # Check if there is a wall, if is: end of shot.
@@ -444,8 +431,8 @@ def check_robot_in_the_way(state, coordinates):
     # Check robots on the next tile.
     for robot in state.robots:
         if robot.coordinates == coordinates:
-            # Return index of robot that is in the way.
-            return state.robots.index(robot)
+            # Return robot that is in the way.
+            return robot
 
     # There are no robots, return None
     return None
