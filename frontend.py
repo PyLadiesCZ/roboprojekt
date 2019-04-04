@@ -15,7 +15,6 @@ TILE_HEIGHT = 64
 def create_window(state):
     """
     Return a pyglet window for graphic output.
-
     state: State object containing game board, robots and map sizes
     """
     window = pyglet.window.Window(state.tile_count[0] * TILE_WIDTH,
@@ -26,7 +25,6 @@ def create_window(state):
 def load_tiles(state):
     """
     Return list of sprites of tiles.
-
     state: State object containing game board and robots
     """
     tile_sprites = []
@@ -36,25 +34,9 @@ def load_tiles(state):
     return tile_sprites
 
 
-def get_robot_paths():
-    """
-    Return a list of paths to robots images.
-
-    Using pathlib.Path library add all the files in given directory to the list.
-    Ex. [PosixPath('img/robots_map/png/MintBot.png'), PosixPath('img/robots_map/png/terka_robot_map.png')].
-    """
-    robot_paths = []
-    for robot_path in Path('./img/robots_map/png/').iterdir():  # search image file
-        name = robot_path.name
-        robot_front_path = './img/robots/png/' + name
-        robot_paths.append((robot_path, robot_front_path))
-    return robot_paths
-
-
 def load_robots(state):
     """
     Return list of sprites of robots.
-
     state: State object containing game board and robots
     """
     robot_sprites = []
@@ -68,7 +50,6 @@ def load_robots(state):
 def create_sprites(coordinate, tiles):
     """
     Return list of sprites of items.
-
     coordinate: coordinate of tiles
     tiles: a list of Tile
     """
@@ -95,12 +76,11 @@ def create_robot_sprites(coordinate, robots):
     coordinate: coordinate of tiles
     robots: a list of robots
     """
-    robots_sprites = []
-    robot_paths = get_robot_paths
-    
+    robot_sprites = []
+
     for robot in robots:
         rotation = robot.direction.value
-        path = robot_paths
+        path = Path("./img/robots/png/" + robot.name + ".png")
         x, y = coordinate
         img = pyglet.image.load(path)
         img.anchor_x = img.width//2
@@ -110,14 +90,13 @@ def create_robot_sprites(coordinate, robots):
         img_sprite = pyglet.sprite.Sprite(img, x=img.anchor_x + robot_x,
                                                y=img.anchor_y + robot_y)
         img_sprite.rotation = rotation
-        items_sprites.append(img_sprite)
-    return robots_sprites
+        robot_sprites.append(img_sprite)
+    return robot_sprites
 
 
 def draw_state(state, window):
     """
     Draw the images of tiles and robots into map, react to user's resizing of window by scaling the board.
-
     state: State object containing game board, robots and map sizes
     """
     tile_sprites = load_tiles(state)
