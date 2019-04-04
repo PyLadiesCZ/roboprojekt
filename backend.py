@@ -37,7 +37,7 @@ class Robot:
 
     def __repr__(self):
         return "<Robot {} {} {} Lives: {} Flags: {} Damages: {}, Inactive: {}>".format(
-            self.direction, self.path, self.coordinates, self.lives, self.flags,
+            self.name, self.direction, self.coordinates, self.lives, self.flags,
             self.damages, self.inactive)
 
     def as_dict(self):
