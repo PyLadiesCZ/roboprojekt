@@ -7,7 +7,7 @@ Tests checking the structure of read JSON file.
 import pytest
 from pathlib import Path
 
-from loading import get_data, get_tile_id, get_tile_direction, get_board
+from loading import get_map_data, get_tiles_data, get_tile_id, get_tile_direction, get_board
 from util import Direction
 from tile import Tile, HoleTile
 from validator import check_squares
@@ -75,8 +75,8 @@ def test_map_returns_correct_image_ID(index_number, expected_value):
 
     Regression test of get_data function. Uses test_1.json map for this.
     """
-    data = get_data("maps/test_1.json")
-    assert data["tilesets"][0]["tiles"][index_number]["id"] == expected_value
+    loaded_tileset = get_tiles_data(get_map_data("maps/test_1.json"))
+    assert loaded_tileset[index_number]["id"] == expected_value
 
 
 @pytest.mark.parametrize(("index_number", "expected_value"),
@@ -91,8 +91,9 @@ def test_map_returns_correct_image_path(index_number, expected_value):
 
     Regression test of get_data function. Uses test_1.json map for this.
     """
-    data = get_data("maps/test_1.json")
-    assert data["tilesets"][0]["tiles"][index_number]["image"] == expected_value
+    # map_data = get_map_data("maps/test_1.json")
+    loaded_tileset = get_tiles_data(get_map_data("maps/test_1.json"))
+    assert loaded_tileset[index_number]["image"] == expected_value
 
 
 def test_board_structure():
@@ -142,3 +143,11 @@ def test_convert_tile_direction(test_case):
     """
     tile_number = test_case
     assert get_tile_direction(tile_number) == CONVERT_TEST_DATA[test_case]["direction"]
+
+
+def test_map_with_embedded_tileset():
+    """
+    Try to load the map with tileset directly in map file.
+    Assert board exists.
+    """
+    assert get_board("maps/test_4.json")
