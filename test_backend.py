@@ -1,21 +1,10 @@
 import pytest
 from pathlib import Path
 
-from backend import get_robot_paths, create_robots, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects
+from backend import create_robots, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects
 from util import Direction, Rotation
 from tile import Tile, HoleTile, GearTile, PusherTile, RepairTile, FlagTile
 from loading import get_board
-
-
-def test_robot_paths():
-    """
-    Get list of robot paths, assert that instance of the list is Path object.
-    The list will change in time, it is not possible to test length or all the paths.
-    """
-    robot_paths = get_robot_paths()
-    path, path_front = robot_paths[0]
-    assert isinstance(robot_paths, list)
-    assert isinstance(path, Path)
 
 
 def test_robots_on_start_coordinates():
