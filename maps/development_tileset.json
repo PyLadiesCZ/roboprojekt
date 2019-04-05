@@ -18,14 +18,14 @@
          "imageheight":64,
          "imagewidth":64,
          "type":"ground"
-        }, 
+        },
         {
          "id":1,
          "image":"..\/img\/squares\/png\/hole.png",
          "imageheight":64,
          "imagewidth":64,
          "type":"hole"
-        }, 
+        },
         {
          "id":2,
          "image":"..\/img\/squares\/png\/laser_1_base.png",
@@ -33,17 +33,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"number_laser",
+                 "name":"laser_strength",
                  "type":"int",
                  "value":1
-                }, 
+                },
                 {
-                 "name":"start",
+                 "name":"laser_start",
                  "type":"bool",
                  "value":true
                 }],
          "type":"laser"
-        }, 
+        },
         {
          "id":3,
          "image":"..\/img\/squares\/png\/laser_1.png",
@@ -51,17 +51,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"number_laser",
+                 "name":"laser_strength",
                  "type":"int",
                  "value":1
-                }, 
+                },
                 {
-                 "name":"start",
+                 "name":"laser_start",
                  "type":"bool",
                  "value":false
                 }],
          "type":"laser"
-        }, 
+        },
         {
          "id":6,
          "image":"..\/img\/squares\/png\/gear_r.png",
@@ -69,12 +69,12 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"rotate",
+                 "name":"move_direction",
                  "type":"int",
                  "value":1
                 }],
          "type":"gear"
-        }, 
+        },
         {
          "id":7,
          "image":"..\/img\/squares\/png\/gear_l.png",
@@ -82,12 +82,12 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"rotate",
+                 "name":"move_direction",
                  "type":"int",
                  "value":-1
                 }],
          "type":"gear"
-        }, 
+        },
         {
          "id":9,
          "image":"..\/img\/squares\/png\/pusher_1_3_5.png",
@@ -95,12 +95,12 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"game_round",
+                 "name":"register",
                  "type":"int",
                  "value":1
                 }],
          "type":"pusher"
-        }, 
+        },
         {
          "id":10,
          "image":"..\/img\/squares\/png\/pusher_2_4.png",
@@ -108,19 +108,19 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"game_round",
+                 "name":"register",
                  "type":"int",
                  "value":0
                 }],
          "type":"pusher"
-        }, 
+        },
         {
          "id":12,
          "image":"..\/img\/squares\/png\/wall.png",
          "imageheight":64,
          "imagewidth":64,
          "type":"wall"
-        }, 
+        },
         {
          "id":13,
          "image":"..\/img\/squares\/png\/laser_3_base.png",
@@ -128,17 +128,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"number_laser",
+                 "name":"laser_strength",
                  "type":"int",
                  "value":3
-                }, 
+                },
                 {
-                 "name":"start",
+                 "name":"laser_start",
                  "type":"bool",
                  "value":true
                 }],
          "type":"laser"
-        }, 
+        },
         {
          "id":14,
          "image":"..\/img\/squares\/png\/laser_3.png",
@@ -146,17 +146,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"number_laser",
+                 "name":"laser_strength",
                  "type":"int",
                  "value":3
-                }, 
+                },
                 {
-                 "name":"start",
+                 "name":"laser_start",
                  "type":"bool",
                  "value":false
                 }],
          "type":"laser"
-        }, 
+        },
         {
          "id":15,
          "image":"..\/img\/squares\/png\/laser_2_base.png",
@@ -164,17 +164,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"number_laser",
+                 "name":"laser_strength",
                  "type":"int",
                  "value":2
-                }, 
+                },
                 {
-                 "name":"start",
+                 "name":"laser_start",
                  "type":"bool",
                  "value":true
                 }],
          "type":"laser"
-        }, 
+        },
         {
          "id":16,
          "image":"..\/img\/squares\/png\/laser_2.png",
@@ -182,17 +182,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"number_laser",
+                 "name":"laser_strength",
                  "type":"int",
                  "value":2
-                }, 
+                },
                 {
-                 "name":"start",
+                 "name":"laser_start",
                  "type":"bool",
                  "value":false
                 }],
          "type":"laser"
-        }, 
+        },
         {
          "id":17,
          "image":"..\/img\/squares\/png\/conveyor_belt_1.png",
@@ -200,22 +200,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"crossroads",
-                 "type":"bool",
-                 "value":false
-                }, 
-                {
-                 "name":"direction",
+                 "name":"direction_out",
                  "type":"int",
                  "value":0
-                }, 
+                },
                 {
-                 "name":"move",
-                 "type":"int",
-                 "value":1
+                 "name":"express",
+                 "type":"bool",
+                 "value":false
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":18,
          "image":"..\/img\/squares\/png\/conveyor_belt_1_corner_l.png",
@@ -223,22 +218,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"crossroads",
+                 "name":"direction_out",
+                 "type":"int",
+                 "value":-1
+                },
+                {
+                 "name":"express",
                  "type":"bool",
                  "value":false
-                }, 
-                {
-                 "name":"direction",
-                 "type":"int",
-                 "value":3
-                }, 
-                {
-                 "name":"move",
-                 "type":"int",
-                 "value":1
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":19,
          "image":"..\/img\/squares\/png\/conveyor_belt_1_corner_r.png",
@@ -246,22 +236,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"crossroads",
+                 "name":"direction_out",
+                 "type":"int",
+                 "value":1
+                },
+                {
+                 "name":"express",
                  "type":"bool",
                  "value":false
-                }, 
-                {
-                 "name":"direction",
-                 "type":"int",
-                 "value":1
-                }, 
-                {
-                 "name":"move",
-                 "type":"int",
-                 "value":1
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":20,
          "image":"..\/img\/squares\/png\/conveyor_belt_1_cross_l.png",
@@ -269,22 +254,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"crossroads",
+                 "name":"direction_out",
+                 "type":"int",
+                 "value":-1
+                },
+                {
+                 "name":"express",
                  "type":"bool",
-                 "value":true
-                }, 
-                {
-                 "name":"direction",
-                 "type":"int",
-                 "value":3
-                }, 
-                {
-                 "name":"move",
-                 "type":"int",
-                 "value":1
+                 "value":false
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":21,
          "image":"..\/img\/squares\/png\/conveyor_belt_1_cross_r.png",
@@ -292,22 +272,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"crossroads",
+                 "name":"direction_out",
+                 "type":"int",
+                 "value":1
+                },
+                {
+                 "name":"express",
                  "type":"bool",
-                 "value":true
-                }, 
-                {
-                 "name":"direction",
-                 "type":"int",
-                 "value":1
-                }, 
-                {
-                 "name":"move",
-                 "type":"int",
-                 "value":1
+                 "value":false
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":22,
          "image":"..\/img\/squares\/png\/conveyor_belt_1_cross_t.png",
@@ -315,22 +290,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"crossroads",
-                 "type":"bool",
-                 "value":true
-                }, 
-                {
-                 "name":"direction",
+                 "name":"direction_out",
                  "type":"int",
                  "value":2
-                }, 
+                },
                 {
-                 "name":"move",
-                 "type":"int",
-                 "value":1
+                 "name":"express",
+                 "type":"bool",
+                 "value":false
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":23,
          "image":"..\/img\/squares\/png\/conveyor_belt_2.png",
@@ -338,22 +308,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"crossroads",
-                 "type":"bool",
-                 "value":false
-                }, 
-                {
-                 "name":"direction",
+                 "name":"direction_out",
                  "type":"int",
                  "value":0
-                }, 
+                },
                 {
-                 "name":"move",
-                 "type":"int",
-                 "value":2
+                 "name":"express",
+                 "type":"bool",
+                 "value":true
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":24,
          "image":"..\/img\/squares\/png\/conveyor_belt_2_corner.svg.png",
@@ -361,22 +326,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"crossroads",
-                 "type":"bool",
-                 "value":false
-                }, 
-                {
-                 "name":"direction",
+                 "name":"direction_out",
                  "type":"int",
                  "value":1
-                }, 
+                },
                 {
-                 "name":"move",
-                 "type":"int",
-                 "value":2
+                 "name":"express",
+                 "type":"bool",
+                 "value":true
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":25,
          "image":"..\/img\/squares\/png\/conveyor_belt_2_corner_l.png",
@@ -384,22 +344,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"crossroads",
+                 "name":"direction_out",
+                 "type":"int",
+                 "value":-1
+                },
+                {
+                 "name":"express",
                  "type":"bool",
-                 "value":false
-                }, 
-                {
-                 "name":"direction",
-                 "type":"int",
-                 "value":3
-                }, 
-                {
-                 "name":"move",
-                 "type":"int",
-                 "value":2
+                 "value":true
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":26,
          "image":"..\/img\/squares\/png\/conveyor_belt_2_cross_l.png",
@@ -407,22 +362,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"crossroads",
+                 "name":"direction_out",
+                 "type":"int",
+                 "value":-1
+                },
+                {
+                 "name":"express",
                  "type":"bool",
                  "value":true
-                }, 
-                {
-                 "name":"direction",
-                 "type":"int",
-                 "value":3
-                }, 
-                {
-                 "name":"move",
-                 "type":"int",
-                 "value":2
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":27,
          "image":"..\/img\/squares\/png\/conveyor_belt_2_cross_r.png",
@@ -430,22 +380,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"crossroads",
-                 "type":"bool",
-                 "value":true
-                }, 
-                {
-                 "name":"direction",
+                 "name":"direction_out",
                  "type":"int",
                  "value":1
-                }, 
+                },
                 {
-                 "name":"move",
-                 "type":"int",
-                 "value":2
+                 "name":"express",
+                 "type":"bool",
+                 "value":true
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":28,
          "image":"..\/img\/squares\/png\/conveyor_belt_2_cross_t.png",
@@ -453,22 +398,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"crossroads",
+                 "name":"direction_out",
+                 "type":"int",
+                 "value":2
+                },
+                {
+                 "name":"express",
                  "type":"bool",
                  "value":true
-                }, 
-                {
-                 "name":"direction",
-                 "type":"int",
-                 "value":2
-                }, 
-                {
-                 "name":"move",
-                 "type":"int",
-                 "value":2
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":29,
          "image":"..\/img\/squares\/png\/flag_1.png",
@@ -476,12 +416,12 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"number",
+                 "name":"flag_number",
                  "type":"int",
                  "value":1
                 }],
          "type":"flag"
-        }, 
+        },
         {
          "id":30,
          "image":"..\/img\/squares\/png\/flag_2.png",
@@ -489,12 +429,12 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"number",
+                 "name":"flag_number",
                  "type":"int",
                  "value":2
                 }],
          "type":"flag"
-        }, 
+        },
         {
          "id":31,
          "image":"..\/img\/squares\/png\/flag_3.png",
@@ -502,12 +442,12 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"number",
+                 "name":"flag_number",
                  "type":"int",
                  "value":3
                 }],
          "type":"flag"
-        }, 
+        },
         {
          "id":32,
          "image":"..\/img\/squares\/png\/flag_4.png",
@@ -515,12 +455,12 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"number",
+                 "name":"flag_number",
                  "type":"int",
                  "value":4
                 }],
          "type":"flag"
-        }, 
+        },
         {
          "id":33,
          "image":"..\/img\/squares\/png\/flag_5.png",
@@ -528,12 +468,12 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"number",
+                 "name":"flag_number",
                  "type":"int",
                  "value":5
                 }],
          "type":"flag"
-        }, 
+        },
         {
          "id":34,
          "image":"..\/img\/squares\/png\/flag_6.png",
@@ -541,12 +481,12 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"number",
+                 "name":"flag_number",
                  "type":"int",
                  "value":6
                 }],
          "type":"flag"
-        }, 
+        },
         {
          "id":35,
          "image":"..\/img\/squares\/png\/flag_7.png",
@@ -554,12 +494,12 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"number",
+                 "name":"flag_number",
                  "type":"int",
                  "value":7
                 }],
          "type":"flag"
-        }, 
+        },
         {
          "id":36,
          "image":"..\/img\/squares\/png\/flag_8.png",
@@ -567,12 +507,12 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"number",
+                 "name":"flag_number",
                  "type":"int",
                  "value":8
                 }],
          "type":"flag"
-        }, 
+        },
         {
          "id":37,
          "image":"..\/img\/squares\/png\/repair.png",
@@ -585,7 +525,7 @@
                  "value":false
                 }],
          "type":"repair"
-        }, 
+        },
         {
          "id":38,
          "image":"..\/img\/squares\/png\/repair_2.png",
@@ -598,7 +538,7 @@
                  "value":true
                 }],
          "type":"repair"
-        }, 
+        },
         {
          "id":39,
          "image":"..\/img\/squares\/png\/start_square01.png",
@@ -611,7 +551,7 @@
                  "value":1
                 }],
          "type":"start_square"
-        }, 
+        },
         {
          "id":40,
          "image":"..\/img\/squares\/png\/start_square02.png",
@@ -624,7 +564,7 @@
                  "value":2
                 }],
          "type":"start_square"
-        }, 
+        },
         {
          "id":41,
          "image":"..\/img\/squares\/png\/start_square03.png",
@@ -637,7 +577,7 @@
                  "value":3
                 }],
          "type":"start_square"
-        }, 
+        },
         {
          "id":42,
          "image":"..\/img\/squares\/png\/start_square04.png",
@@ -650,7 +590,7 @@
                  "value":4
                 }],
          "type":"start_square"
-        }, 
+        },
         {
          "id":43,
          "image":"..\/img\/squares\/png\/start_square05.png",
@@ -663,7 +603,7 @@
                  "value":5
                 }],
          "type":"start_square"
-        }, 
+        },
         {
          "id":44,
          "image":"..\/img\/squares\/png\/start_square06.png",
@@ -676,7 +616,7 @@
                  "value":6
                 }],
          "type":"start_square"
-        }, 
+        },
         {
          "id":45,
          "image":"..\/img\/squares\/png\/start_square07.png",
@@ -689,7 +629,7 @@
                  "value":7
                 }],
          "type":"start_square"
-        }, 
+        },
         {
          "id":46,
          "image":"..\/img\/squares\/png\/start_square08.png",
