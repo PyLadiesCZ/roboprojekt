@@ -7,7 +7,7 @@ import random
 
 from util import Direction, Rotation, get_next_coordinates
 from tile import HoleTile
-from loading import get_board
+from loading import get_board, get_data
 
 MAX_DAMAGE_VALUE = 10
 
