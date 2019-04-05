@@ -79,7 +79,7 @@ def create_robot_sprite(robot):
     Return sprite of robot.
     """
     rotation = robot.direction.value
-    path = Path("./img/robots/png/" + robot.name + ".png")
+    path = Path("./img/robots_map/png/" + robot.name + ".png")
     x, y = robot.coordinates
     img = pyglet.image.load(path)
     img.anchor_x = img.width//2
