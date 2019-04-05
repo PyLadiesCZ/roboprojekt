@@ -498,7 +498,7 @@ def set_robots_for_new_turn(state):
             robot.damages = 0
             robot.direction = Direction.N
 
- def board_as_dict(map_name):
+def board_as_dict(map_name):
     """
     JSON format of board for server
     """
