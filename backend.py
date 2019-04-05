@@ -7,7 +7,7 @@ import random
 
 from util import Direction, Rotation, get_next_coordinates
 from tile import HoleTile
-from loading import get_board, get_data
+from loading import get_board, get_map_data
 
 MAX_DAMAGE_VALUE = 10
 
@@ -502,5 +502,5 @@ def board_as_dict(map_name):
     """
     JSON format of board for server
     """
-    board_json = get_data(map_name)
+    board_json = get_map_data(map_name)
     return json.dumps(board_json)
