@@ -44,7 +44,7 @@ class Robot:
       
     def as_dict(self):
         return {"coordinates": self.coordinates, "lives": self.lives,
-                "flag": self.flags, "damages": self.damages, "inactive": self.inactive}
+                "flags": self.flags, "damages": self.damages, "inactive": self.inactive}
 
 
     def walk(self, distance, state, direction=None, push_others=True):
@@ -271,8 +271,7 @@ class State:
             return [HoleTile()]
 
     def as_dict(self):
-        #return {"board": board_to dict(self.board), "robots": [robot.as_dict() for robot in self.robots]}
-        return {"robots": [robot.as_dict() for robot in self.robots]}
+        return {"board": board_as_dict(map_name), "robots": [robot.as_dict() for robot in self.robots]}
 
     def get_active_robots(self):
         """
@@ -498,3 +497,10 @@ def set_robots_for_new_turn(state):
             robot.coordinates = robot.start_coordinates
             robot.damages = 0
             robot.direction = Direction.N
+
+ def board_as_dict(map_name):
+    """
+    JSON format of board for server
+    """
+    board_json = get_data(map_name)
+    return json.dumps(board_json)
