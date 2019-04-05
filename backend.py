@@ -3,7 +3,6 @@ Backend file contains functions for the game logic.
 """
 from pathlib import Path
 from collections import OrderedDict
-import random
 
 from util import Direction, Rotation, get_next_coordinates
 from tile import HoleTile
@@ -255,7 +254,6 @@ class State:
         return "<State {} {}>".format(self._board, self.robots)
 
     def as_dict(self):
-        #return {"board": board_to dict(self.board), "robots": [robot.as_dict() for robot in self.robots]}
         return {"robots": [robot.as_dict() for robot in self.robots]}
 
     def get_tiles(self, coordinates):
@@ -334,16 +332,13 @@ def create_robots(board):
     robot_names = get_robot_names()
 
     for start_tile_number, name in zip(start_tiles, robot_names):
-        # Condition to assure no exception in case there is less robot_paths
-        # than tiles.
-        if robot_names:
-            # Get direction and coordinates for the robot on the tile
-            initial_direction = start_tiles[start_tile_number]["tile_direction"]
-            initial_coordinates = start_tiles[start_tile_number]["coordinates"]
+        # Get direction and coordinates for the robot on the tile
+        initial_direction = start_tiles[start_tile_number]["tile_direction"]
+        initial_coordinates = start_tiles[start_tile_number]["coordinates"]
 
-            # Create a robot, add him to robot's list
-            robot = Robot(initial_direction, initial_coordinates, name)
-            robots_on_start.append(robot)
+        # Create a robot, add him to robot's list
+        robot = Robot(initial_direction, initial_coordinates, name)
+        robots_on_start.append(robot)
     return robots_on_start
 
 
