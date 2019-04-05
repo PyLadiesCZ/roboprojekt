@@ -83,7 +83,10 @@ def get_tiles_properties(map_data):
 
         # custom properties
         if types[id] not in no_properties_tiles:
-            properties[id] = json_tile['properties']
+            properties_list = []
+            for property in json_tile['properties']:
+                properties_list.append((property['name'], property['value']))
+            properties[id] = dict(properties_list)
         else:
             properties[id] = []
 

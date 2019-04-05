@@ -93,6 +93,7 @@
          "name":"test",
          "spacing":0,
          "tilecount":43,
+         "tiledversion":"1.2.1",
          "tileheight":64,
          "tiles":[
                 {
@@ -116,12 +117,12 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"number_laser",
+                         "name":"laser_strength",
                          "type":"int",
                          "value":1
                         },
                         {
-                         "name":"start",
+                         "name":"laser_start",
                          "type":"bool",
                          "value":true
                         }],
@@ -134,12 +135,12 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"number_laser",
+                         "name":"laser_strength",
                          "type":"int",
                          "value":1
                         },
                         {
-                         "name":"start",
+                         "name":"laser_start",
                          "type":"bool",
                          "value":false
                         }],
@@ -152,7 +153,7 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"rotate",
+                         "name":"move_direction",
                          "type":"int",
                          "value":1
                         }],
@@ -165,7 +166,7 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"rotate",
+                         "name":"move_direction",
                          "type":"int",
                          "value":-1
                         }],
@@ -178,7 +179,7 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"game_round",
+                         "name":"register",
                          "type":"int",
                          "value":1
                         }],
@@ -191,7 +192,7 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"game_round",
+                         "name":"register",
                          "type":"int",
                          "value":0
                         }],
@@ -211,12 +212,12 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"number_laser",
+                         "name":"laser_strength",
                          "type":"int",
                          "value":3
                         },
                         {
-                         "name":"start",
+                         "name":"laser_start",
                          "type":"bool",
                          "value":true
                         }],
@@ -229,12 +230,12 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"number_laser",
+                         "name":"laser_strength",
                          "type":"int",
                          "value":3
                         },
                         {
-                         "name":"start",
+                         "name":"laser_start",
                          "type":"bool",
                          "value":false
                         }],
@@ -247,12 +248,12 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"number_laser",
+                         "name":"laser_strength",
                          "type":"int",
                          "value":2
                         },
                         {
-                         "name":"start",
+                         "name":"laser_start",
                          "type":"bool",
                          "value":true
                         }],
@@ -265,12 +266,12 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"number_laser",
+                         "name":"laser_strength",
                          "type":"int",
                          "value":2
                         },
                         {
-                         "name":"start",
+                         "name":"laser_start",
                          "type":"bool",
                          "value":false
                         }],
@@ -283,19 +284,14 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"crossroads",
-                         "type":"bool",
-                         "value":false
-                        },
-                        {
-                         "name":"direction",
+                         "name":"direction_out",
                          "type":"int",
                          "value":0
                         },
                         {
-                         "name":"move",
-                         "type":"int",
-                         "value":1
+                         "name":"express",
+                         "type":"bool",
+                         "value":false
                         }],
                  "type":"belt"
                 },
@@ -306,19 +302,14 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"crossroads",
+                         "name":"direction_out",
+                         "type":"int",
+                         "value":-1
+                        },
+                        {
+                         "name":"express",
                          "type":"bool",
                          "value":false
-                        },
-                        {
-                         "name":"direction",
-                         "type":"int",
-                         "value":3
-                        },
-                        {
-                         "name":"move",
-                         "type":"int",
-                         "value":1
                         }],
                  "type":"belt"
                 },
@@ -329,19 +320,14 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"crossroads",
+                         "name":"direction_out",
+                         "type":"int",
+                         "value":1
+                        },
+                        {
+                         "name":"express",
                          "type":"bool",
                          "value":false
-                        },
-                        {
-                         "name":"direction",
-                         "type":"int",
-                         "value":1
-                        },
-                        {
-                         "name":"move",
-                         "type":"int",
-                         "value":1
                         }],
                  "type":"belt"
                 },
@@ -352,19 +338,14 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"crossroads",
+                         "name":"direction_out",
+                         "type":"int",
+                         "value":-1
+                        },
+                        {
+                         "name":"express",
                          "type":"bool",
-                         "value":true
-                        },
-                        {
-                         "name":"direction",
-                         "type":"int",
-                         "value":3
-                        },
-                        {
-                         "name":"move",
-                         "type":"int",
-                         "value":1
+                         "value":false
                         }],
                  "type":"belt"
                 },
@@ -375,19 +356,14 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"crossroads",
+                         "name":"direction_out",
+                         "type":"int",
+                         "value":1
+                        },
+                        {
+                         "name":"express",
                          "type":"bool",
-                         "value":true
-                        },
-                        {
-                         "name":"direction",
-                         "type":"int",
-                         "value":1
-                        },
-                        {
-                         "name":"move",
-                         "type":"int",
-                         "value":1
+                         "value":false
                         }],
                  "type":"belt"
                 },
@@ -398,19 +374,14 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"crossroads",
-                         "type":"bool",
-                         "value":true
-                        },
-                        {
-                         "name":"direction",
+                         "name":"direction_out",
                          "type":"int",
                          "value":2
                         },
                         {
-                         "name":"move",
-                         "type":"int",
-                         "value":1
+                         "name":"express",
+                         "type":"bool",
+                         "value":false
                         }],
                  "type":"belt"
                 },
@@ -421,19 +392,14 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"crossroads",
-                         "type":"bool",
-                         "value":false
-                        },
-                        {
-                         "name":"direction",
+                         "name":"direction_out",
                          "type":"int",
                          "value":0
                         },
                         {
-                         "name":"move",
-                         "type":"int",
-                         "value":2
+                         "name":"express",
+                         "type":"bool",
+                         "value":true
                         }],
                  "type":"belt"
                 },
@@ -444,19 +410,14 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"crossroads",
-                         "type":"bool",
-                         "value":false
-                        },
-                        {
-                         "name":"direction",
+                         "name":"direction_out",
                          "type":"int",
                          "value":1
                         },
                         {
-                         "name":"move",
-                         "type":"int",
-                         "value":2
+                         "name":"express",
+                         "type":"bool",
+                         "value":true
                         }],
                  "type":"belt"
                 },
@@ -467,19 +428,14 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"crossroads",
+                         "name":"direction_out",
+                         "type":"int",
+                         "value":-1
+                        },
+                        {
+                         "name":"express",
                          "type":"bool",
-                         "value":false
-                        },
-                        {
-                         "name":"direction",
-                         "type":"int",
-                         "value":3
-                        },
-                        {
-                         "name":"move",
-                         "type":"int",
-                         "value":2
+                         "value":true
                         }],
                  "type":"belt"
                 },
@@ -490,19 +446,14 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"crossroads",
+                         "name":"direction_out",
+                         "type":"int",
+                         "value":-1
+                        },
+                        {
+                         "name":"express",
                          "type":"bool",
                          "value":true
-                        },
-                        {
-                         "name":"direction",
-                         "type":"int",
-                         "value":3
-                        },
-                        {
-                         "name":"move",
-                         "type":"int",
-                         "value":2
                         }],
                  "type":"belt"
                 },
@@ -513,19 +464,14 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"crossroads",
-                         "type":"bool",
-                         "value":true
-                        },
-                        {
-                         "name":"direction",
+                         "name":"direction_out",
                          "type":"int",
                          "value":1
                         },
                         {
-                         "name":"move",
-                         "type":"int",
-                         "value":2
+                         "name":"express",
+                         "type":"bool",
+                         "value":true
                         }],
                  "type":"belt"
                 },
@@ -536,19 +482,14 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"crossroads",
+                         "name":"direction_out",
+                         "type":"int",
+                         "value":2
+                        },
+                        {
+                         "name":"express",
                          "type":"bool",
                          "value":true
-                        },
-                        {
-                         "name":"direction",
-                         "type":"int",
-                         "value":2
-                        },
-                        {
-                         "name":"move",
-                         "type":"int",
-                         "value":2
                         }],
                  "type":"belt"
                 },
@@ -559,7 +500,7 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"number",
+                         "name":"flag_number",
                          "type":"int",
                          "value":1
                         }],
@@ -572,7 +513,7 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"number",
+                         "name":"flag_number",
                          "type":"int",
                          "value":2
                         }],
@@ -585,7 +526,7 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"number",
+                         "name":"flag_number",
                          "type":"int",
                          "value":3
                         }],
@@ -598,7 +539,7 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"number",
+                         "name":"flag_number",
                          "type":"int",
                          "value":4
                         }],
@@ -611,7 +552,7 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"number",
+                         "name":"flag_number",
                          "type":"int",
                          "value":5
                         }],
@@ -624,7 +565,7 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"number",
+                         "name":"flag_number",
                          "type":"int",
                          "value":6
                         }],
@@ -637,7 +578,7 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"number",
+                         "name":"flag_number",
                          "type":"int",
                          "value":7
                         }],
@@ -650,7 +591,7 @@
                  "imagewidth":64,
                  "properties":[
                         {
-                         "name":"number",
+                         "name":"flag_number",
                          "type":"int",
                          "value":8
                         }],
