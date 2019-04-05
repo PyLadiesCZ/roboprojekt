@@ -24,14 +24,14 @@ async def websocket(request):
     await ws.prepare(request)
     websockets.append(ws)
     try:
-        await ws.send_str("Ahoj, vítej ve hře.")
+        await ws.send_str(json.dumps(state.as_dict(map_name), indent=1))
 
         async for msg in ws:
             if msg.type == aiohttp.WSMsgType.TEXT:
                 print(msg.data) #měnit stav
                 for client in websockets:
                     #poslat info o stavu
-                    await client.send_str(json.dumps(state.as_dict()))
+                    await client.send_str(json.dumps(state.as_dict(map_name), indent=1))
 
         return ws
     finally:
