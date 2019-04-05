@@ -42,7 +42,7 @@ class Robot:
 
     def as_dict(self):
         return {"name": self.name, "coordinates": self.coordinates, "lives": self.lives,
-                "flag": self.flags, "damages": self.damages, "inactive": self.inactive}
+                "flags": self.flags, "damages": self.damages, "inactive": self.inactive}
 
     def walk(self, distance, state, direction=None, push_others=True):
         """
