@@ -275,7 +275,7 @@ class State:
 
     def as_dict(self, map_name):
         """
-        Return state described as dictionary for sending with server
+        Return state as dictionary for sending with server
         """
         return {"board": get_map_data(map_name), "robots": [robot.as_dict() for robot in self.robots]}
 
