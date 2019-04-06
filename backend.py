@@ -41,7 +41,7 @@ class Robot:
             self.direction, self.path, self.coordinates, self.lives, self.flags,
             self.damages, self.inactive)
 
-      
+
     def as_dict(self):
         """
         Return robot´s info as dictionary for sending with server
@@ -273,7 +273,7 @@ class State:
             # Return hole tile.
             return [HoleTile()]
 
-    def as_dict(self):
+    def as_dict(self, map_name):
         """
         Return state described as dictionary for sending with server
         """
