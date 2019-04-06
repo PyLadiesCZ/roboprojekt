@@ -43,6 +43,9 @@ class Robot:
 
       
     def as_dict(self):
+        """
+        Return robot´s info as dictionary for sending with server
+        """
         return {"coordinates": self.coordinates, "lives": self.lives,
                 "flags": self.flags, "damages": self.damages, "inactive": self.inactive}
 
@@ -271,7 +274,10 @@ class State:
             return [HoleTile()]
 
     def as_dict(self):
-        return {"board": board_as_dict(map_name), "robots": [robot.as_dict() for robot in self.robots]}
+        """
+        Return state described as dictionary for sending with server
+        """
+        return {"board": get_map_data(map_name), "robots": [robot.as_dict() for robot in self.robots]}
 
     def get_active_robots(self):
         """
@@ -497,10 +503,3 @@ def set_robots_for_new_turn(state):
             robot.coordinates = robot.start_coordinates
             robot.damages = 0
             robot.direction = Direction.N
-
-def board_as_dict(map_name):
-    """
-    JSON format of board for server
-    """
-    board_json = get_map_data(map_name)
-    return json.dumps(board_json)
