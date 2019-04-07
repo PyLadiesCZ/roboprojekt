@@ -52,7 +52,7 @@ def load_robots(state):
 
 def create_tile_sprites(coordinate, tiles):
     """
-    Return list of sprites of items.
+     Return list of sprites of tiles.
 
     coordinate: coordinate of tiles
     tiles = list of Tile
