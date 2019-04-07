@@ -1,7 +1,6 @@
 import pytest
-from pathlib import Path
 
-from backend import create_robots, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects, get_robot_names
+from backend import create_robots, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects
 from util import Direction, Rotation
 from tile import Tile, HoleTile, GearTile, PusherTile, RepairTile, FlagTile
 from loading import get_board
