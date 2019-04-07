@@ -100,6 +100,12 @@ class StartTile(Tile):
         super().__init__(direction, path, properties)
 
 
+class StopTile(Tile):
+    def __init__(self, direction, path, properties):
+        self.number = properties["number"]
+        super().__init__(direction, path, properties)
+
+
 class HoleTile(Tile):
     def __init__(self, direction=Direction.N, path=None, properties=[]):
         super().__init__(direction, path, properties)
@@ -221,7 +227,7 @@ class RepairTile(Tile):
 TILE_CLS = {'wall': WallTile, 'start': StartTile, 'hole': HoleTile,
             'laser': LaserTile, 'gear': GearTile, 'pusher': PusherTile,
             'belt': BeltTile, 'flag': FlagTile, 'repair': RepairTile,
-            'ground': Tile}
+            'ground': Tile, 'stop': StopTile}
 
 
 def create_tile_subclass(direction, path, type, properties):
