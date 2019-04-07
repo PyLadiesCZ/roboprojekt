@@ -12,6 +12,7 @@ def get_order_tiles(text):
         'Tile': "A_ground",
         'HoleTile': "B_hole",
         'StartTile': "B_start_tile",
+        'StopTile': "B_stop_tile",
         'RepairTile': "B_repair",
         'BeltTile': "B_belt",
         'GearTile': "B_gear",

@@ -8,8 +8,8 @@
  "margin":0,
  "name":"test",
  "spacing":0,
- "tilecount":43,
- "tiledversion":"1.2.1",
+ "tilecount":51,
+ "tiledversion":"1.2.3",
  "tileheight":64,
  "tiles":[
         {
@@ -642,6 +642,110 @@
                  "value":8
                 }],
          "type":"start"
+        }, 
+        {
+         "id":47,
+         "image":"..\/img\/tiles\/png\/stop_tile01.png",
+         "imageheight":64,
+         "imagewidth":64,
+         "properties":[
+                {
+                 "name":"number",
+                 "type":"int",
+                 "value":1
+                }],
+         "type":"stop"
+        }, 
+        {
+         "id":48,
+         "image":"..\/img\/tiles\/png\/stop_tile02.png",
+         "imageheight":64,
+         "imagewidth":64,
+         "properties":[
+                {
+                 "name":"number",
+                 "type":"int",
+                 "value":2
+                }],
+         "type":"stop"
+        }, 
+        {
+         "id":49,
+         "image":"..\/img\/tiles\/png\/stop_tile03.png",
+         "imageheight":64,
+         "imagewidth":64,
+         "properties":[
+                {
+                 "name":"number",
+                 "type":"int",
+                 "value":3
+                }],
+         "type":"stop"
+        }, 
+        {
+         "id":50,
+         "image":"..\/img\/tiles\/png\/stop_tile04.png",
+         "imageheight":64,
+         "imagewidth":64,
+         "properties":[
+                {
+                 "name":"number",
+                 "type":"int",
+                 "value":4
+                }],
+         "type":"stop"
+        }, 
+        {
+         "id":51,
+         "image":"..\/img\/tiles\/png\/stop_tile05.png",
+         "imageheight":64,
+         "imagewidth":64,
+         "properties":[
+                {
+                 "name":"number",
+                 "type":"int",
+                 "value":5
+                }],
+         "type":"stop"
+        }, 
+        {
+         "id":52,
+         "image":"..\/img\/tiles\/png\/stop_tile06.png",
+         "imageheight":64,
+         "imagewidth":64,
+         "properties":[
+                {
+                 "name":"number",
+                 "type":"int",
+                 "value":6
+                }],
+         "type":"stop"
+        }, 
+        {
+         "id":53,
+         "image":"..\/img\/tiles\/png\/stop_tile07.png",
+         "imageheight":64,
+         "imagewidth":64,
+         "properties":[
+                {
+                 "name":"number",
+                 "type":"int",
+                 "value":7
+                }],
+         "type":"stop"
+        }, 
+        {
+         "id":54,
+         "image":"..\/img\/tiles\/png\/stop_tile08.png",
+         "imageheight":64,
+         "imagewidth":64,
+         "properties":[
+                {
+                 "name":"number",
+                 "type":"int",
+                 "value":8
+                }],
+         "type":"stop"
         }],
  "tilewidth":64,
  "type":"tileset",
