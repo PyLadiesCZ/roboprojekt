@@ -67,10 +67,10 @@ def create_tile_sprites(coordinate, tiles):
         img.anchor_y = img.height//2
         tile_x = x*TILE_WIDTH
         tile_y = y*TILE_HEIGHT
-        img_sprite = pyglet.sprite.Sprite(img, x=img.anchor_x + tile_x,
+        tile_sprite = pyglet.sprite.Sprite(img, x=img.anchor_x + tile_x,
                                                y=img.anchor_y + tile_y)
-        img_sprite.rotation = rotation
-        tile_sprites.append(img_sprite)
+        tile_sprite.rotation = rotation
+        tile_sprites.append(tile_sprite)
     return tile_sprites
 
 
