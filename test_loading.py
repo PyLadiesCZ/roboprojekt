@@ -10,11 +10,11 @@ from pathlib import Path
 from loading import get_map_data, get_tiles_data, get_tile_id, get_tile_direction, get_board
 from util import Direction
 from tile import Tile, HoleTile
-from validator import check_squares
+from validator import check_tiles
 
 
 # List of paths to valid test maps.
-# To be used as an argument for check_squares which checks validity of all maps
+# To be used as an argument for check_tiles which checks validity of all maps
 VALID_MAPS_PATHS = []
 for map_path in Path("maps/").glob("test_*.json"):
     VALID_MAPS_PATHS.append(str(map_path))
@@ -25,7 +25,7 @@ def test_map_is_valid(map_name):
     """
     Use validator to check all the valid maps are correctly layered, therefore accepted.
     """
-    assert check_squares(map_name) is True
+    assert check_tiles(map_name) is True
 
 
 @pytest.mark.parametrize("map_name", ["maps/bad_map.json"])
@@ -33,7 +33,7 @@ def test_map_is_invalid(map_name):
     """
     Use validator to check the invalid map is not accepted.
     """
-    assert check_squares(map_name) is not True
+    assert check_tiles(map_name) is not True
 
 
 @pytest.mark.parametrize(
@@ -80,11 +80,11 @@ def test_map_returns_correct_image_ID(index_number, expected_value):
 
 
 @pytest.mark.parametrize(("index_number", "expected_value"),
-                         [(0, "../img/squares/png/ground.png"),
-                          (2, "../img/squares/png/laser_1_base.png"),
-                          (4, "../img/squares/png/gear_r.png"),
-                          (6, "../img/squares/png/pusher_1_3_5.png"),
-                          (13, "../img/squares/png/conveyor_belt_1.png"), ])
+                         [(0, "../img/tiles/png/ground.png"),
+                          (2, "../img/tiles/png/laser_1_base.png"),
+                          (4, "../img/tiles/png/gear_r.png"),
+                          (6, "../img/tiles/png/pusher_1_3_5.png"),
+                          (13, "../img/tiles/png/conveyor_belt_1.png"), ])
 def test_map_returns_correct_image_path(index_number, expected_value):
     """
     Test the loaded map file returns expected image path.
