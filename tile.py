@@ -95,7 +95,6 @@ class WallTile(Tile):
 
 
 class StartTile(Tile):
-    # Start tile has no tile effect.
     def __init__(self, direction, path, properties):
         self.number = properties["number"]
         super().__init__(direction, path, properties)
@@ -219,7 +218,7 @@ class RepairTile(Tile):
             robot.start_coordinates = robot.coordinates
 
 
-TILE_CLS = {'wall': WallTile, 'start_square': StartTile, 'hole': HoleTile,
+TILE_CLS = {'wall': WallTile, 'start': StartTile, 'hole': HoleTile,
             'laser': LaserTile, 'gear': GearTile, 'pusher': PusherTile,
             'belt': BeltTile, 'flag': FlagTile, 'repair': RepairTile,
             'ground': Tile}

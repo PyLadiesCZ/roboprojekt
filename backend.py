@@ -291,9 +291,9 @@ def get_start_tiles(board):
     start_tiles = {}
     for coordinate, tiles in board.items():
         for tile in tiles:
-            # range(9) because there may be max. 8 start squares
+            # range(9) because there may be max. 8 start tiles
             for i in range(9):
-                if tile.path == ("./img/squares/png/start_square0{}.png".format(i)):
+                if tile.path == ("./img/tiles/png/start_tile0{}.png".format(i)):
                     start_tiles[i] = {
                         "coordinates": coordinate,
                         "tile_direction": tile.direction,
@@ -361,7 +361,7 @@ def get_start_state(map_name):
     Get start state of game.
 
     map_name: path to map file. Currently works only for .json files from Tiled 1.2
-    Create board and robots on start squares, initialize State object
+    Create board and robots on start tiles, initialize State object
     containing Tile and Robot object as well as the map size.
     Return State object.
     """

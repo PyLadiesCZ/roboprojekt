@@ -44,7 +44,7 @@ flags_sprite = []
 for i in range(MAX_FLAGS_COUNT):
     x = 332 + i * 48
     y = 928
-    flags_sprite.append(get_sprite('img/squares/png/flag_{}.png'.format(i+1), x, y))
+    flags_sprite.append(get_sprite('img/tiles/png/flag_{}.png'.format(i+1), x, y))
 
 damages_tokens_sprite = [] # Tokens of damage
 for i in range(MAX_DAMAGES_COUNT):
