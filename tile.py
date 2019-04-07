@@ -96,9 +96,8 @@ class WallTile(Tile):
 
 class StartTile(Tile):
     def __init__(self, direction, path, properties):
-        self.number = properties[0]["value"]
+        self.number = properties["number"]
         super().__init__(direction, path, properties)
-
 
 
 class HoleTile(Tile):
@@ -112,9 +111,8 @@ class HoleTile(Tile):
 
 class BeltTile(Tile):
     def __init__(self, direction, path, properties):
-        self.crossroads = properties[0]["value"]
-        self.belt_direction = properties[1]["value"]
-        self.move_count = properties[2]["value"]
+        self.direction_out = transform_direction(properties["direction_out"])
+        self.express = properties["express"]
         super().__init__(direction, path, properties)
 
     def move_robot(self, state):
@@ -127,7 +125,7 @@ class BeltTile(Tile):
 
 class PusherTile(Tile):
     def __init__(self, direction, path, properties):
-        self.register = properties[0]["value"]
+        self.register = properties["register"]
         super().__init__(direction, path, properties)
 
     def push_robot(self, robot, state):
@@ -141,7 +139,7 @@ class PusherTile(Tile):
 
 class GearTile(Tile):
     def __init__(self, direction, path, properties):
-        self.move_direction = transform_direction(properties[0]["value"])
+        self.move_direction = transform_direction(properties["move_direction"])
         super().__init__(direction, path, properties)
 
     def rotate_robot(self, robot):
@@ -151,8 +149,8 @@ class GearTile(Tile):
 
 class LaserTile(Tile):
     def __init__(self, direction, path, properties):
-        self.laser_strength = properties[0]["value"]
-        self.laser_start = properties[1]["value"]
+        self.laser_strength = properties["laser_strength"]
+        self.laser_start = properties["laser_start"]
         super().__init__(direction, path, properties)
 
     def shoot_robot(self, robot, state):
@@ -192,7 +190,7 @@ class LaserTile(Tile):
 
 class FlagTile(Tile):
     def __init__(self, direction, path, properties):
-        self.flag_number = properties[0]["value"]
+        self.flag_number = properties["flag_number"]
         super().__init__(direction, path, properties)
 
     def collect_flag(self, robot):
@@ -207,7 +205,7 @@ class FlagTile(Tile):
 
 class RepairTile(Tile):
     def __init__(self, direction, path, properties):
-        self.new_start = properties[0]["value"]
+        self.new_start = properties["new_start"]
         super().__init__(direction, path, properties)
 
     def repair_robot(self, robot, state):
@@ -238,7 +236,11 @@ def transform_direction(direction_int):
     Function to transform the string taken from json properties to valid
     Rotation class instance for later processing.
     """
+    if direction_int == 0:
+        return Direction.N
     if direction_int == -1:
         return Rotation.LEFT
     if direction_int == 1:
         return Rotation.RIGHT
+    if direction_int == 2:
+        return Rotation.U_TURN
