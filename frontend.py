@@ -5,6 +5,7 @@ The frontend module
 """
 
 import pyglet
+from pathlib import Path
 
 # Constatnts for size of tile image in px
 TILE_WIDTH = 64
@@ -30,7 +31,7 @@ def load_tiles(state):
     """
     tile_sprites = []
     for coordinate, tiles in state._board.items():
-        sprites = create_sprites(coordinate, tiles)
+        sprites = create_tile_sprites(coordinate, tiles)
         tile_sprites.extend(sprites)
     return tile_sprites
 
@@ -44,33 +45,51 @@ def load_robots(state):
     robot_sprites = []
     # Only active robots will be drawn.
     for robot in state.get_active_robots():
-        robot_sprite = create_sprites(robot.coordinates, [robot])
-        robot_sprites.extend(robot_sprite)
+        robot_sprite = create_robot_sprite(robot)
+        robot_sprites.append(robot_sprite)
     return robot_sprites
 
 
-def create_sprites(coordinate, items):
+def create_tile_sprites(coordinate, tiles):
     """
-    Return list of sprites of items.
+     Return list of sprites of tiles.
 
-    coordinate: coordinate of tiles or robot
-    items: a list of Tile or Robot objects
+    coordinate: coordinate of tiles
+    tiles = list of Tile
     """
-    items_sprites = []
-    for item in items:
-        rotation = item.direction.value
-        path = item.path
+    tile_sprites = []
+    for tile in tiles:
+        rotation = tile.direction.value
+        path = tile.path
         x, y = coordinate
         img = pyglet.image.load(path)
         img.anchor_x = img.width//2
         img.anchor_y = img.height//2
-        item_x = x*TILE_WIDTH
-        item_y = y*TILE_HEIGHT
-        img_sprite = pyglet.sprite.Sprite(img, x=img.anchor_x + item_x,
-                                               y=img.anchor_y + item_y)
-        img_sprite.rotation = rotation
-        items_sprites.append(img_sprite)
-    return items_sprites
+        tile_x = x*TILE_WIDTH
+        tile_y = y*TILE_HEIGHT
+        tile_sprite = pyglet.sprite.Sprite(img, x=img.anchor_x + tile_x,
+                                               y=img.anchor_y + tile_y)
+        tile_sprite.rotation = rotation
+        tile_sprites.append(tile_sprite)
+    return tile_sprites
+
+
+def create_robot_sprite(robot):
+    """
+    Return sprite of robot.
+    """
+    rotation = robot.direction.value
+    path = Path("./img/robots_map/png/" + robot.name + ".png")
+    x, y = robot.coordinates
+    img = pyglet.image.load(path)
+    img.anchor_x = img.width//2
+    img.anchor_y = img.height//2
+    robot_x = x*TILE_WIDTH
+    robot_y = y*TILE_HEIGHT
+    robot_sprite = pyglet.sprite.Sprite(img, x=img.anchor_x + robot_x,
+                                           y=img.anchor_y + robot_y)
+    robot_sprite.rotation = rotation
+    return robot_sprite
 
 
 def draw_state(state, window):
