@@ -3,6 +3,7 @@ import pyglet
 from interface import get_interface_state
 
 
+
 interface_state = get_interface_state()
 MAX_CARDS_COUNT = 9
 MAX_LIVES_COUNT = 3
@@ -32,7 +33,8 @@ indicator_red_sprite = get_sprite('img/interface/png/red.png',  x=688, y=864) # 
 card_background_sprite = get_sprite('img/interface/png/card_bg.png') # Universal cards background
 select_sprite = get_sprite('img/interface/png/card_cv.png') # Gray overlay on selected cards
 cursor_sprite = get_sprite('img/interface/png/card_sl.png') # Selection cursor
-my_robot_sprite = get_sprite(interface_state.robot_data.path, x=74, y=888) # My Robot img
+my_robot_sprite = get_sprite('img/robots/png/' + interface_state.robot_data.name + '.png', x=74, y=888) # My Robot img
+
 
 lives_sprite = []
 for i in range(MAX_LIVES_COUNT):
@@ -235,5 +237,7 @@ def on_text(text):
     # confirm selection of cards
     if text == 'k':
         interface_state.confirm_selection()
+
+
 
 pyglet.app.run()

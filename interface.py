@@ -4,7 +4,7 @@ from backend import Robot, MovementCard, RotationCard
 from util import Direction, Rotation
 
 
-robot_data = Robot(Direction.N, "./img/robots/png/mintbot.png", "./img/robots/png/mintbot.png", None) # a makeshift fictitious robot
+robot_data = Robot(Direction.N, None, "mintbot") # a makeshift fictitious robot
 MAX_CARD_COUNT = 9
 
 
