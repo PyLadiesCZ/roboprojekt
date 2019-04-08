@@ -256,7 +256,7 @@ class State:
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
 
-    def as_dict(self):
+    def as_dict(self, map_name):
         """
         Return state as dictionary for sending with server
         """
