@@ -32,7 +32,7 @@ indicator_red_sprite = get_sprite('img/interface/png/red.png',  x=688, y=864) # 
 card_background_sprite = get_sprite('img/interface/png/card_bg.png') # Universal cards background
 select_sprite = get_sprite('img/interface/png/card_cv.png') # Gray overlay on selected cards
 cursor_sprite = get_sprite('img/interface/png/card_sl.png') # Selection cursor
-my_robot_sprite = get_sprite(interface_state.robot_data.path, x=74, y=888) # My Robot img
+my_robot_sprite = get_sprite('img/robots/png/mintbot.png', x=74, y=888) # My Robot img
 
 lives_sprite = []
 for i in range(MAX_LIVES_COUNT):
