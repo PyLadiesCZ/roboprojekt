@@ -1,11 +1,10 @@
 """
-This text will be edited.
 The server will run and play the game.
 More info about creating server and client - https://aiohttp.readthedocs.io/en/stable/index.html
 
 Run server.py in command line, open new command line and run client_receiver.py, it will receive
 messages from server. You can send one message to server, which will be displayed - in another
-command line open client_sender.py with argument(message) - "python client_sender Hello".
+command line open client_sender.py with argument(message) - "python client_sender.py Hello".
 """
 import sys
 import asyncio
