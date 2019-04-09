@@ -1,1 +1,3 @@
 pyglet
+asyncio
+aiohttp
