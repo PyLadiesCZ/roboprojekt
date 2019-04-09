@@ -5,7 +5,7 @@ Client receive messages from server and print them
 import asyncio
 import sys
 import aiohttp
-
+import json
 
 async def client():
     async with aiohttp.ClientSession() as session:
@@ -14,7 +14,9 @@ async def client():
             async for msg in ws:
                 # Cycle "for" is finished when client disconnect from server
                 if msg.type == aiohttp.WSMsgType.TEXT:
-                    print(msg.data)
+                    message = msg.data
+                    state_client = json.loads(message)
+                    print(state_client)
 
 
 asyncio.run(client())
