@@ -5,7 +5,7 @@ from pathlib import Path
 from collections import OrderedDict
 
 from util import Direction, Rotation, get_next_coordinates
-from tile import HoleTile
+from tile import HoleTile, StartTile
 from loading import get_board
 
 MAX_DAMAGE_VALUE = 10
@@ -291,13 +291,9 @@ def get_start_tiles(board):
     start_tiles = {}
     for coordinate, tiles in board.items():
         for tile in tiles:
-            # range(9) because there may be max. 8 start tiles
-            for i in range(9):
-                if tile.path == ("./img/tiles/png/start_tile0{}.png".format(i)):
-                    start_tiles[i] = {
-                        "coordinates": coordinate,
-                        "tile_direction": tile.direction,
-                    }
+            if tile.properties_dict(coordinate) is not None:
+                start_tiles[tile.number] = tile.properties_dict(coordinate)
+
     # Sort created dictionary by the first element - start tile number
     OrderedDict(sorted(start_tiles.items(), key=lambda stn: stn[0]))
 

@@ -37,6 +37,9 @@ class Tile:
         """
         return True
 
+    def properties_dict(self, coordinate):
+        return
+
     def kill_robot(self, robot):
         """
         Take away one robot life, set him to inactive mode
@@ -98,6 +101,9 @@ class StartTile(Tile):
     def __init__(self, direction, path, properties):
         self.number = properties["number"]
         super().__init__(direction, path, properties)
+
+    def properties_dict(self, coordinate):
+        return {"coordinates": coordinate, "tile_direction": self.direction}
 
 
 class StopTile(Tile):
