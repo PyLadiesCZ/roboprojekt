@@ -114,18 +114,11 @@ class Robot:
     def apply_card_effect(self, state):
         """
         Get the current card (depending on register) and perform the card effect.
-        If the card's effect is move - it calls robot's method walk,
-        if it is rotation - robot's method rotate.
         TODO: resolve card's priority
         """
         # card on an index of a current register
         current_card = self.program[state.register - 1]
-
-        if isinstance(current_card, MovementCard):
-            self.walk(current_card.distance, state)
-
-        if isinstance(current_card, RotationCard):
-            self.rotate(current_card.rotation)
+        current_card.apply_effect(self)
 
     def fall_into_hole(self, state):
         """
@@ -224,6 +217,12 @@ class MovementCard(Card):
     def __repr__(self):
         return "<{} {} {}>".format(self.name, self.priority, self.distance)
 
+    def apply_effect(self, robot):
+        """
+        Card calls robot's method walk.
+        """
+        robot.walk(current_card.distance, state)
+
 
 class RotationCard(Card):
     def __init__(self, priority, value):
@@ -241,6 +240,12 @@ class RotationCard(Card):
 
     def __repr__(self):
         return "<{} {} {}>".format(self.name, self.priority, self.rotation)
+
+    def apply_effect(self, robot):
+        """
+        Card calls robot's method rotate.
+        """
+        robot.rotate(current_card.direction)
 
 
 class State:
