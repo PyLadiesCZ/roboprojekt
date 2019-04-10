@@ -271,9 +271,11 @@ class State:
 
     def get_active_robots(self):
         """
-        Return a list of active robots.
+        Yield all active robots.
         """
-        return [robot for robot in self.robots if not robot.inactive]
+        for robot in self.robots:
+            if not robot.inactive:
+                yield robot
 
 
 def get_start_tiles(board):
