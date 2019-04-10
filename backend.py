@@ -6,7 +6,7 @@ from collections import OrderedDict
 
 from util import Direction, Rotation, get_next_coordinates
 from tile import HoleTile
-from loading import get_board
+from loading import get_board, get_map_data
 
 MAX_DAMAGE_VALUE = 10
 
@@ -40,6 +40,9 @@ class Robot:
             self.damages, self.inactive)
 
     def as_dict(self):
+        """
+        Return robot´s info as dictionary for sending with server.
+        """
         return {"name": self.name, "coordinates": self.coordinates, "lives": self.lives,
                 "flags": self.flags, "damages": self.damages, "inactive": self.inactive}
 
@@ -253,8 +256,11 @@ class State:
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
 
-    def as_dict(self):
-        return {"robots": [robot.as_dict() for robot in self.robots]}
+    def as_dict(self, map_name):
+        """
+        Return state as dictionary for sending with server
+        """
+        return {"board": get_map_data(map_name), "robots": [robot.as_dict() for robot in self.robots]}
 
     def get_tiles(self, coordinates):
         """
