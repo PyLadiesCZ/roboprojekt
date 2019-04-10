@@ -5,7 +5,7 @@ from pathlib import Path
 from collections import OrderedDict
 
 from util import Direction, Rotation, get_next_coordinates
-from tile import HoleTile, StartTile
+from tile import HoleTile
 from loading import get_board
 
 MAX_DAMAGE_VALUE = 10
@@ -281,11 +281,10 @@ def get_start_tiles(board):
     Get start tiles for robots.
 
     board: dictionary returned by get_board().
-    Find the objects which are start tiles (matching attribute path of Tile object),
-    then add create an ordered dictionary of start tile number with values: coordinates
-    and tile_direction.
-    OrderedDict is a structure that ensures the dictionary is stored in the order
-    of the new keys being added.
+    Create an ordered dictionary of all start tiles in the board with start
+    tile number as a key and values: coordinates and tile_direction.
+    OrderedDict is a structure that ensures the dictionary is stored
+    in the order of the new keys being added.
     """
 
     start_tiles = {}

@@ -38,7 +38,13 @@ class Tile:
         return True
 
     def properties_dict(self, coordinate):
-        return
+        """
+        Create a dictionary of properties (coordinates and direction).
+
+        For StartTile return a dictionary.
+        For other tiles return None.
+        """
+        return None
 
     def kill_robot(self, robot):
         """
