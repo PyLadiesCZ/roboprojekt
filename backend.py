@@ -271,7 +271,7 @@ class State:
 
     def get_active_robots(self):
         """
-        Create generator function for active robots.
+        Yield all active robots.
         """
         for robot in self.robots:
             if not robot.inactive:
