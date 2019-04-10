@@ -281,23 +281,18 @@ def get_start_tiles(board):
     Get start tiles for robots.
 
     board: dictionary returned by get_board().
-    Find the objects which are start tiles (matching attribute path of Tile object),
-    then add create an ordered dictionary of start tile number with values: coordinates
-    and tile_direction.
-    OrderedDict is a structure that ensures the dictionary is stored in the order
-    of the new keys being added.
+    Create an ordered dictionary of all start tiles in the board with start
+    tile number as a key and values: coordinates and tile_direction.
+    OrderedDict is a structure that ensures the dictionary is stored
+    in the order of the new keys being added.
     """
 
     start_tiles = {}
     for coordinate, tiles in board.items():
         for tile in tiles:
-            # range(9) because there may be max. 8 start tiles
-            for i in range(9):
-                if tile.path == ("./img/tiles/png/start_tile0{}.png".format(i)):
-                    start_tiles[i] = {
-                        "coordinates": coordinate,
-                        "tile_direction": tile.direction,
-                    }
+            if tile.properties_dict(coordinate) is not None:
+                start_tiles[tile.number] = tile.properties_dict(coordinate)
+
     # Sort created dictionary by the first element - start tile number
     OrderedDict(sorted(start_tiles.items(), key=lambda stn: stn[0]))
 
