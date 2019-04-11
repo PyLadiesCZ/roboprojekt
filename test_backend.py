@@ -460,5 +460,5 @@ def test_rotate_cards(card, new_direction):
     robot = Robot(Direction.N, None,  "tester")
     robot.program = [card]
     state = get_start_state("maps/test_3.json")
-    card.apply_effect(robot)
+    card.apply_effect(robot, state)
     assert robot.direction == new_direction
