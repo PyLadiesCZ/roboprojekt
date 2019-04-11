@@ -111,15 +111,6 @@ class Robot:
         """
         self.direction = self.direction.get_new_direction(where_to)
 
-    def apply_card_effect(self, state):
-        """
-        Get the current card (depending on register) and perform the card effect.
-        TODO: resolve card's priority
-        """
-        # card on an index of a current register
-        current_card = self.program[state.register - 1]
-        current_card.apply_effect(self)
-
     def fall_into_hole(self, state):
         """
         Check tiles on robot's coordinates for HoleTile and apply its effect.
@@ -217,11 +208,11 @@ class MovementCard(Card):
     def __repr__(self):
         return "<{} {} {}>".format(self.name, self.priority, self.distance)
 
-    def apply_effect(self, robot):
+    def apply_effect(self, robot, state):
         """
         Card calls robot's method walk.
         """
-        robot.walk(current_card.distance, state)
+        robot.walk(self.distance, state)
 
 
 class RotationCard(Card):
@@ -245,7 +236,7 @@ class RotationCard(Card):
         """
         Card calls robot's method rotate.
         """
-        robot.rotate(current_card.direction)
+        robot.rotate(self.rotation)
 
 
 class State:
