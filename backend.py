@@ -232,7 +232,7 @@ class RotationCard(Card):
     def __repr__(self):
         return "<{} {} {}>".format(self.name, self.priority, self.rotation)
 
-    def apply_effect(self, robot):
+    def apply_effect(self, robot, state):
         """
         Card calls robot's method rotate.
         """
