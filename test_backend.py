@@ -443,7 +443,7 @@ def test_move_cards(direction, card, new_coordinates):
     robot = Robot(direction, (4, 7),  "tester")
     robot.program = [card]
     state = get_start_state("maps/test_3.json")
-    robot.apply_card_effect(state)
+    card.apply_effect(robot, state)
     assert robot.coordinates == new_coordinates
     assert robot.direction == direction
 
@@ -460,5 +460,5 @@ def test_rotate_cards(card, new_direction):
     robot = Robot(Direction.N, None,  "tester")
     robot.program = [card]
     state = get_start_state("maps/test_3.json")
-    robot.apply_card_effect(state)
+    card.apply_effect(robot, state)
     assert robot.direction == new_direction
