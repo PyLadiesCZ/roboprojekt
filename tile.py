@@ -117,6 +117,9 @@ class StopTile(Tile):
         self.number = properties["number"]
         super().__init__(direction, path, properties)
 
+    def stop_properties_dict(self, coordinate):
+        return {"coordinates": coordinate, "tile_direction": self.direction}
+
 
 class HoleTile(Tile):
     def __init__(self, direction=Direction.N, path=None, properties=[]):

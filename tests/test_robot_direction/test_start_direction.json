@@ -1,0 +1,31 @@
+{ "height":1,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[40, 2684354601, 3221225514, 1610612779],
+         "height":1,
+         "id":1,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":4,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.2.1",
+ "tileheight":64,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"..\/..\/maps\/development_tileset.json"
+        }],
+ "tilewidth":64,
+ "type":"map",
+ "version":1.2,
+ "width":4
+}
