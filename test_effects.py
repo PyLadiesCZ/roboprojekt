@@ -26,43 +26,6 @@ def decode_results():
     pass
 
 
-def get_stop_tiles(board):
-    """
-    Get stop tiles for robots.
-
-    board: dictionary returned by get_board().
-    Create an ordered dictionary of all start tiles in the board with start
-    tile number as a key and values: coordinates and tile_direction.
-    OrderedDict is a structure that ensures the dictionary is stored
-    in the order of the new keys being added.
-    """
-
-    stop_tiles = {}
-    for coordinate, tiles in board.items():
-        for tile in tiles:
-            if tile.stop_properties_dict(coordinate) is not None:
-                stop_tiles[tile.number] = tile.stop_properties_dict(coordinate)
-
-    # Sort created dictionary by the first element - start tile number
-    OrderedDict(sorted(stop_tiles.items(), key=lambda stn: stn[0]))
-
-    return stop_tiles
-
-
-def get_stop_state(map_name):
-    """
-    Get start state of game.
-
-    map_name: path to map file. Currently works only for .json files from Tiled 1.2
-    Create board and robots on start tiles, initialize State object
-    containing Tile and Robot object as well as the map size.
-    Return State object.
-    """
-    board = get_board(map_name)
-    robots_start = create_robots(board)
-    state = State(board, robots_start, tile_count)
-    return state
-
 
 # GearTile
 """
