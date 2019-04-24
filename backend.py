@@ -10,6 +10,7 @@ from loading import get_board, get_map_data
 
 MAX_DAMAGE_VALUE = 10
 
+
 class Robot:
     def __init__(self, direction, coordinates, name):
         self.direction = direction
@@ -280,29 +281,6 @@ class State:
                 yield robot
 
 
-def get_start_tiles(board):
-    """
-    Get start tiles for robots.
-
-    board: dictionary returned by get_board().
-    Create an ordered dictionary of all start tiles in the board with start
-    tile number as a key and values: coordinates and tile_direction.
-    OrderedDict is a structure that ensures the dictionary is stored
-    in the order of the new keys being added.
-    """
-
-    start_tiles = {}
-    for coordinate, tiles in board.items():
-        for tile in tiles:
-            if tile.properties_dict(coordinate) is not None:
-                start_tiles[tile.number] = tile.properties_dict(coordinate)
-
-    # Sort created dictionary by the first element - start tile number
-    OrderedDict(sorted(start_tiles.items(), key=lambda stn: stn[0]))
-
-    return start_tiles
-
-
 def get_robot_names():
     """
     Return a list of robots names using pathlib.Path library.
@@ -314,7 +292,37 @@ def get_robot_names():
     return robot_names
 
 
-def create_robots(board):
+def get_start_tiles(board, robot_tile_type):
+    """
+    Get start tiles for robots.
+
+    board: dictionary returned by get_board().
+    Create an ordered dictionary of all start tiles in the board with start
+    tile number as a key and values: coordinates and tile_direction.
+    OrderedDict is a structure that ensures the dictionary is stored
+    in the order of the new keys being added.
+    """
+    if robot_tile_type is None:
+        robot_tile_type = "start"
+
+    robot_tiles = {}
+
+    for coordinate, tiles in board.items():
+        for tile in tiles:
+                if robot_tile_type == "start":
+                    if tile.properties_dict(coordinate) is not None:
+                        robot_tiles[tile.number] = tile.properties_dict(coordinate)
+                if robot_tile_type == "stop":
+                    if tile.stop_properties_dict(coordinate) is not None:
+                        robot_tiles[tile.number] = tile.stop_properties_dict(coordinate)
+
+    # Sort created dictionary by the first element - start tile number
+    OrderedDict(sorted(robot_tiles.items(), key=lambda stn: stn[0]))
+
+    return robot_tiles
+
+
+def create_robots(board, robot_tile_type):
     """
     Place robots on start tiles.
 
@@ -326,7 +334,7 @@ def create_robots(board):
     Robots are placed on board in the direction of their start tiles.
     The robots are ordered according to their start tiles.
     """
-    start_tiles = get_start_tiles(board)
+    start_tiles = get_start_tiles(board, robot_tile_type)
     robots_on_start = []
     robot_names = get_robot_names()
 
@@ -341,6 +349,21 @@ def create_robots(board):
     return robots_on_start
 
 
+def get_start_state(map_name, robot_tile_type=None):
+    """
+    Get start state of game.
+
+    map_name: path to map file. Currently works only for .json files from Tiled 1.2
+    Create board and robots on start tiles, initialize State object
+    containing Tile and Robot object as well as the map size.
+    Return State object.
+    """
+    board = get_board(map_name)
+    robots_start = create_robots(board, robot_tile_type)
+    state = State(board, robots_start)
+    return state
+
+
 def get_tile_count(board):
     """
     From the board coordinates get the count of tiles in horizontal (x) and vertical (y) ax.
@@ -353,21 +376,6 @@ def get_tile_count(board):
         x_set.add(x)
         y_set.add(y)
     return len(x_set), len(y_set)
-
-
-def get_start_state(map_name):
-    """
-    Get start state of game.
-
-    map_name: path to map file. Currently works only for .json files from Tiled 1.2
-    Create board and robots on start tiles, initialize State object
-    containing Tile and Robot object as well as the map size.
-    Return State object.
-    """
-    board = get_board(map_name)
-    robots_start = create_robots(board)
-    state = State(board, robots_start)
-    return state
 
 
 def check_the_absence_of_a_wall(coordinates, direction, state):

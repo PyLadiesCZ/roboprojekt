@@ -46,6 +46,15 @@ class Tile:
         """
         return None
 
+    def stop_properties_dict(self, coordinate):
+        """
+        Create a dictionary of properties (coordinates and direction).
+
+        For StartTile return a dictionary.
+        For other tiles return None.
+        """
+        return None
+
     def kill_robot(self, robot):
         """
         Take away one robot life, set him to inactive mode
