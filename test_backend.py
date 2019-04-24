@@ -43,7 +43,7 @@ def test_robot_walk(input_coordinates, input_direction, distance, output_coordin
     to correct coordinates.
     """
     state = get_start_state("maps/test_3.json")
-    robot = Robot(input_direction,input_coordinates,  "tester")
+    robot = Robot(input_direction, input_coordinates, "tester")
     robot.walk(distance, state, input_direction)
     assert robot.coordinates == output_coordinates
 
@@ -104,7 +104,7 @@ def test_robot_and_tiles_shoot():
     for robot in robots:
         robot.damages = 0
 
-    state = State(board, robots, (4, 4))
+    state = State(board, robots)
     apply_tile_effects(state)
     damages_list = [0, 4, 0, 2, 0, 0, 1, 1, 1, 4]
 
@@ -137,7 +137,7 @@ def test_power_down_robots_dont_shoot():
         robot.damages = 0
         robot.power_down = True
 
-    state = State(board, robots, (4, 4))
+    state = State(board, robots)
     apply_tile_effects(state)
     damages_list = [0, 4, 0, 0, 0, 0, 0, 0, 0, 4]
 
@@ -159,7 +159,7 @@ def test_robot_is_repaired_after_5th_round(damages_before, tile, damages_after):
     If he doesn't have any damages, the count remains the same as previous.
     """
     robot = Robot(Direction.N, (0, 0),  "tester")
-    state = State({(0, 0): [tile]}, [robot], (1, 1))
+    state = State({(0, 0): [tile]}, [robot])
     robot.damages = damages_before
     state.register = 5
     apply_tile_effects(state)
@@ -177,7 +177,7 @@ def test_robot_is_not_repaired(damages, tile, current_register):
     When robot is on RepairTile but the register phase is not 5, he is not yet repaired. His damage count doesn't change.
     """
     robot = Robot(Direction.N, (0, 0),  "tester")
-    state = State({(0, 0): [tile]}, [robot], (1, 1))
+    state = State({(0, 0): [tile]}, [robot])
     robot.damages = damages
     state.register = current_register
     apply_tile_effects(state)
@@ -194,7 +194,7 @@ def test_robot_changed_start_coordinates(tile, coordinates_after):
     On a normal RepairTile he doesn't change the start tile.
     """
     robot = Robot(Direction.N, (0, 0),  "tester")
-    state = State({(0, 0): [tile]}, [robot], (1, 1))
+    state = State({(0, 0): [tile]}, [robot])
     robot.start_coordinates = (1, 1)
     apply_tile_effects(state)
     assert robot.start_coordinates == coordinates_after
@@ -214,7 +214,7 @@ def test_robot_changed_direction(direction_before, tile, direction_after):
     Check that his direction changed after applying tile effect.
     """
     robot = Robot(direction_before, (0, 0),  "tester")
-    state = State({(0, 0): [tile]}, [robot], (1, 1))
+    state = State({(0, 0): [tile]}, [robot])
     apply_tile_effects(state)
     assert robot.direction == direction_after
 
@@ -234,7 +234,7 @@ def test_robot_died(lives_before, lives_after):
     and his coordinates changed to the None.
     """
     robot = Robot(Direction.N, (0, 0),  "tester")
-    state = State({(0, 1): [HoleTile(None, None, None)]}, [robot], (1, 2))
+    state = State({(0, 1): [HoleTile(None, None, None)]}, [robot])
     robot.lives = lives_before
     robot.walk(1, state)
     assert robot.lives == lives_after
@@ -255,7 +255,7 @@ def test_robot_collected_flags(flags_before, tile, flags_after):
     He doesn't collect the flags with the other number than defined. They don't have any effect on him.
     """
     robot = Robot(Direction.N, (0, 0),  "tester")
-    state = State({(0, 0): [tile]}, [robot], (1, 1))
+    state = State({(0, 0): [tile]}, [robot])
     robot.flags = flags_before
     apply_tile_effects(state)
     assert robot.flags == flags_after
@@ -271,7 +271,7 @@ def test_robot_changed_coordinates(tile):
     When a robot stands on FlagTile the start coordinates change to the tile's coordinates.
     """
     robot = Robot(Direction.N, (0, 0),  "tester")
-    state = State({(0, 0): [tile]}, [robot], (1, 1))
+    state = State({(0, 0): [tile]}, [robot])
     robot.start_coordinates = (1, 1)
     apply_tile_effects(state)
     assert robot.start_coordinates == (0, 0)
@@ -293,7 +293,7 @@ def test_robot_is_stopped_by_wall(input_coordinates, output_coordinates):
     """
     board = get_board("maps/test_walls.json")
     robot = Robot(Direction.N, input_coordinates,  "tester")
-    state = State(board, [robot], (5, 5))
+    state = State(board, [robot])
     robot.move(Direction.N, 2, state)
     assert robot.coordinates == output_coordinates
 
@@ -320,7 +320,7 @@ def test_robot_is_damaged_by_laser(input_coordinates, damages_after):
     robot_obstacle2 = Robot(Direction.E, (3, 2),  "tester")
     robot = Robot(Direction.W, input_coordinates,  "tester")
     robot.damages = 0
-    state = State(board, [robot_obstacle1, robot_obstacle2, robot], (4, 4))
+    state = State(board, [robot_obstacle1, robot_obstacle2, robot])
     apply_tile_effects(state)
     assert robot.damages == damages_after
 
@@ -343,7 +343,7 @@ def test_robot_is_pushed_at_the_correct_round(register, tile, output_coordinates
     to the value on the tile.
     """
     robot = Robot(Direction.W, (1, 1),  "tester")
-    state = State({(1, 0): [Tile(None, None, None)], (1, 1): [tile]}, [robot], (2, 1))
+    state = State({(1, 0): [Tile(None, None, None)], (1, 1): [tile]}, [robot])
     state.register = register
     apply_tile_effects(state)
     assert robot.direction == Direction.W
@@ -364,7 +364,7 @@ def test_robot_is_pushed_to_the_correct_direction(tile, output_coordinates):
     The test asserts the coordinates change to a correct ones (in a correct direction).
     """
     robot = Robot(Direction.S, (1, 1),  "tester")
-    state = State({(1, 0): [Tile(None, None, None)], (0, 1): [Tile(None, None, None)], (2, 1): [Tile(None, None, None)], (1, 2): [Tile(None, None, None)], (1, 1): [tile]}, [robot], (3, 3))
+    state = State({(1, 0): [Tile(None, None, None)], (0, 1): [Tile(None, None, None)], (2, 1): [Tile(None, None, None)], (1, 2): [Tile(None, None, None)], (1, 1): [tile]}, [robot])
     state.register = 1
     apply_tile_effects(state)
     assert robot.direction == Direction.S
@@ -385,7 +385,7 @@ def test_robot_is_pushed_out_of_the_board(tile):
     The test asserts the attributes: coordinates, lives and inactive change.
     """
     robot = Robot(Direction.S, (0, 0),  "tester")
-    state = State({(0, 0): [tile]}, [robot], (1, 1))
+    state = State({(0, 0): [tile]}, [robot])
     state.register = 1
     apply_tile_effects(state)
     assert robot.lives == 2
