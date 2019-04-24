@@ -50,7 +50,7 @@ class Tile:
         """
         Create a dictionary of properties (coordinates and direction).
 
-        For StartTile return a dictionary.
+        For StopTile return a dictionary.
         For other tiles return None.
         """
         return None
