@@ -243,10 +243,10 @@ class RotationCard(Card):
 
 
 class State:
-    def __init__(self, board, robots, tile_count):
+    def __init__(self, board, robots):
         self._board = board
         self.robots = robots
-        self.tile_count = tile_count
+        self.tile_count = get_tile_count(board)
         self.register = 1
 
     def __repr__(self):
@@ -365,9 +365,8 @@ def get_start_state(map_name):
     Return State object.
     """
     board = get_board(map_name)
-    tile_count = get_tile_count(board)
     robots_start = create_robots(board)
-    state = State(board, robots_start, tile_count)
+    state = State(board, robots_start)
     return state
 
 
