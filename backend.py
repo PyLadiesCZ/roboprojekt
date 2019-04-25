@@ -292,7 +292,7 @@ def get_robot_names():
     return robot_names
 
 
-def get_start_tiles(board, robot_tile_type):
+def get_start_tiles(board, robot_tile_type=None):
     """
     Get initial tiles for robots. It can be either start or stop tiles.
 
@@ -324,7 +324,7 @@ def get_start_tiles(board, robot_tile_type):
     return robot_tiles
 
 
-def create_robots(board, robot_tile_type):
+def create_robots(board):
     """
     Place robots on start tiles.
 
@@ -336,7 +336,7 @@ def create_robots(board, robot_tile_type):
     Robots are placed on board in the direction of their start tiles.
     The robots are ordered according to their start tiles.
     """
-    start_tiles = get_start_tiles(board, robot_tile_type)
+    start_tiles = get_start_tiles(board)
     robots_on_start = []
     robot_names = get_robot_names()
 
@@ -351,7 +351,7 @@ def create_robots(board, robot_tile_type):
     return robots_on_start
 
 
-def get_start_state(map_name, robot_tile_type=None):
+def get_start_state(map_name):
     """
     Get start state of game.
 
@@ -361,7 +361,7 @@ def get_start_state(map_name, robot_tile_type=None):
     Return State object.
     """
     board = get_board(map_name)
-    robots_start = create_robots(board, robot_tile_type)
+    robots_start = create_robots(board)
     state = State(board, robots_start)
     return state
 
