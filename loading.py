@@ -44,8 +44,11 @@ def get_tiles_data(map_data):
     """
     # If the tileset is external, there will be ['source'] property present
     try:
-        tileset_name = map_data['tilesets'][0]['source']
-        tileset_src = "maps/" + tileset_name
+        # This part is prepared for diferent tile sources, we don't support them now.
+        # tileset_name = map_data['tilesets'][0]['source']
+        # tileset_src = "maps/" + tileset_name
+
+        tileset_src = "./maps/development_tileset.json"
         with open(tileset_src, encoding="utf-8") as tiles_file:
             tiles_data = json.load(tiles_file)
         loaded_tileset = tiles_data['tiles']
