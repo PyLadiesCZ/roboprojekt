@@ -1,7 +1,7 @@
 import pytest
 import yaml
 
-from backend import get_start_state, get_start_tiles
+from backend import get_start_state, get_start_tiles, apply_tile_effects
 
 
 def get_commands():
@@ -24,11 +24,19 @@ def decode_actions():
 def decode_results():
     pass
 
-def get_my_robots():
-    state = get_start_state("tests/test_gear/map.json")
 
+def test_get_my_robots():
+    state = get_start_state("tests/test_gear/map.json")
+    for robot in state.get_active_robots():
+        robot.walk(1, state)
+    apply_tile_effects(state)
+    for robot in state.get_active_robots():
+        robot.walk(1, state)
     print(state)
 
     stop_pole = get_start_tiles(state._board, "stop")
 
     print(stop_pole)
+    for robot in state.get_active_robots():
+        if robot.start_coordinates == (1, 2):
+            assert robot.coordinates == stop_pole[1]["coordinates"]
