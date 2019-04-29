@@ -304,19 +304,17 @@ def get_start_tiles(board, robot_tile_type=None):
     OrderedDict is a structure that ensures the dictionary is stored
     in the order of the new keys being added.
     """
-    if robot_tile_type is None:
-        robot_tile_type = "start"
 
     robot_tiles = {}
 
     for coordinate, tiles in board.items():
         for tile in tiles:
-                if robot_tile_type == "start":
-                    if tile.properties_dict(coordinate) is not None:
-                        robot_tiles[tile.number] = tile.properties_dict(coordinate)
-                if robot_tile_type == "stop":
-                    if tile.stop_properties_dict(coordinate) is not None:
-                        robot_tiles[tile.number] = tile.stop_properties_dict(coordinate)
+            if robot_tile_type == "stop":
+                if tile.stop_properties_dict(coordinate) is not None:
+                    robot_tiles[tile.number] = tile.stop_properties_dict(coordinate)
+            else:
+                if tile.properties_dict(coordinate) is not None:
+                    robot_tiles[tile.number] = tile.properties_dict(coordinate)
 
     # Sort created dictionary by the first element - start tile number
     OrderedDict(sorted(robot_tiles.items(), key=lambda stn: stn[0]))
