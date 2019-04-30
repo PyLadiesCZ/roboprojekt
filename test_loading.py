@@ -79,19 +79,22 @@ def test_map_returns_correct_image_ID(index_number, expected_value):
     assert loaded_tileset[index_number]["id"] == expected_value
 
 
-@pytest.mark.parametrize(("index_number", "expected_value"),
-                         [(0, "../img/tiles/png/ground.png"),
-                          (2, "../img/tiles/png/laser_1_base.png"),
-                          (4, "../img/tiles/png/gear_r.png"),
-                          (6, "../img/tiles/png/pusher_1_3_5.png"),
-                          (13, "../img/tiles/png/conveyor_belt_1.png"), ])
+@pytest.mark.parametrize(
+    ("index_number", "expected_value"),
+    [
+        (0, "../img/tiles/png/ground.png"),
+        (2, "../img/tiles/png/laser_1_base.png"),
+        (4, "../img/tiles/png/gear_r.png"),
+        (6, "../img/tiles/png/pusher_1_3_5.png"),
+        (13, "../img/tiles/png/conveyor_belt_1.png"),
+    ]
+)
 def test_map_returns_correct_image_path(index_number, expected_value):
     """
     Test the loaded map file returns expected image path.
 
     Regression test of get_data function. Uses test_1.json map for this.
     """
-    # map_data = get_map_data("maps/test_1.json")
     loaded_tileset = get_tiles_data(get_map_data("maps/test_1.json"))
     assert loaded_tileset[index_number]["image"] == expected_value
 
