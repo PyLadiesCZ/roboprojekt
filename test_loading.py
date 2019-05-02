@@ -17,7 +17,7 @@ from validator import check_tiles
 # To be used as an argument for check_tiles which checks validity of all maps
 VALID_MAPS_PATHS = []
 for map_path in Path("maps/").glob("test_*.json"):
-    VALID_MAPS_PATHS.append(str(map_path))
+    VALID_MAPS_PATHS.append(map_path)
 
 
 @pytest.mark.parametrize("map_name", VALID_MAPS_PATHS)
