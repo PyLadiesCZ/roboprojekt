@@ -58,7 +58,7 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"..\/maps\/development_tileset.json"
+         "source":"..\/..\/maps\/development_tileset.json"
         }],
  "tilewidth":64,
  "type":"map",
