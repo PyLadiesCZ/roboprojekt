@@ -1,29 +1,29 @@
 actions:
   1:
-    - type: MovementCard
+    - type: move
       priority: 100
-      value: 1
-    - type: MovementCard
+      value: 3
+    - type: move
       priority: 100
       value: 1
   2:
-    - type: MovementCard
+    - type: rotate
       priority: 100
-      value: 1
-    - type: MovementCard
+      value: left
+    - type: move
       priority: 100
-      value: 1
+      value: 7
   3:
-    - type: MovementCard
+    - type: move
       priority: 100
       value: 1
-    - type: MovementCard
+    - type: move
       priority: 100
-      value: 1
+      value: 4
   4:
-    - type: MovementCard
+    - type: move
       priority: 100
-      value: 1
-    - type: MovementCard
+      value: 7
+    - type: move
       priority: 100
-      value: 1
+      value: 8
