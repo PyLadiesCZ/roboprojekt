@@ -91,7 +91,7 @@ def get_tiles_properties(map_data):
                 properties_list.append((property['name'], property['value']))
             properties[id] = dict(properties_list)
         else:
-            properties[id] = []
+            properties[id] = {}
 
         # paths to tile image
         path = json_tile['image']

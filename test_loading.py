@@ -7,7 +7,8 @@ Tests checking the structure of read JSON file.
 import pytest
 from pathlib import Path
 
-from loading import get_map_data, get_tiles_data, get_tile_id, get_tile_direction, get_board
+from loading import get_map_data, get_tiles_data, get_tile_id, get_tile_direction
+from loading import get_board, get_tiles_properties
 from util import Direction
 from tile import Tile, HoleTile
 from validator import check_tiles
@@ -17,7 +18,7 @@ from validator import check_tiles
 # To be used as an argument for check_tiles which checks validity of all maps
 VALID_MAPS_PATHS = []
 for map_path in Path("maps/").glob("test_*.json"):
-    VALID_MAPS_PATHS.append(str(map_path))
+    VALID_MAPS_PATHS.append(map_path)
 
 
 @pytest.mark.parametrize("map_name", VALID_MAPS_PATHS)
@@ -79,19 +80,22 @@ def test_map_returns_correct_image_ID(index_number, expected_value):
     assert loaded_tileset[index_number]["id"] == expected_value
 
 
-@pytest.mark.parametrize(("index_number", "expected_value"),
-                         [(0, "../img/tiles/png/ground.png"),
-                          (2, "../img/tiles/png/laser_1_base.png"),
-                          (4, "../img/tiles/png/gear_r.png"),
-                          (6, "../img/tiles/png/pusher_1_3_5.png"),
-                          (13, "../img/tiles/png/conveyor_belt_1.png"), ])
+@pytest.mark.parametrize(
+    ("index_number", "expected_value"),
+    [
+        (0, "../img/tiles/png/ground.png"),
+        (2, "../img/tiles/png/laser_1_base.png"),
+        (4, "../img/tiles/png/gear_r.png"),
+        (6, "../img/tiles/png/pusher_1_3_5.png"),
+        (13, "../img/tiles/png/conveyor_belt_1.png"),
+    ]
+)
 def test_map_returns_correct_image_path(index_number, expected_value):
     """
     Test the loaded map file returns expected image path.
 
     Regression test of get_data function. Uses test_1.json map for this.
     """
-    # map_data = get_map_data("maps/test_1.json")
     loaded_tileset = get_tiles_data(get_map_data("maps/test_1.json"))
     assert loaded_tileset[index_number]["image"] == expected_value
 
@@ -99,6 +103,32 @@ def test_map_returns_correct_image_path(index_number, expected_value):
 def test_board_structure():
 
     pass
+
+
+@pytest.mark.parametrize(
+    ("id", "tile_type", "tile_properties"),
+    [
+        (1, "ground", {}),
+        (2, "hole", {}),
+        (13, "wall", {}),
+        (4, "laser", {"laser_strength": 1, "laser_start": False}),
+        (7, "gear", {"move_direction": 1}),
+        (10, "pusher", {"register": 1}),
+        (24, "belt", {"direction_out": 0, "express": True}),
+    ]
+)
+def test_loading_of_tile_type_properties(id, tile_type, tile_properties):
+    """
+    Test tile type and properties are correctly obtained from map data,
+    that contains information of used tileset.
+
+    Use test_1.json map, but all maps would work. All of them refers
+    to the same external tileset (except for test_4.json).
+    """
+    map_data = get_map_data("maps/test_1.json")
+    types, properties, path = get_tiles_properties(map_data)
+    assert types[id] == tile_type
+    assert properties[id] == tile_properties
 
 
 CONVERT_TEST_DATA = {

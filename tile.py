@@ -131,7 +131,7 @@ class StopTile(Tile):
 
 
 class HoleTile(Tile):
-    def __init__(self, direction=Direction.N, path=None, properties=[]):
+    def __init__(self, direction=Direction.N, path=None, properties={}):
         super().__init__(direction, path, properties)
 
     def kill_robot(self, robot):
