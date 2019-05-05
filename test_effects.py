@@ -3,18 +3,11 @@ import yaml
 
 from backend import get_start_state, get_start_tiles, apply_tile_effects
 from backend import MovementCard, RotationCard
-from util import Rotation
 
 
 CARD_TYPES = {
     "move": MovementCard,
     "rotate": RotationCard,
-}
-
-ROTATIONS = {
-    "left": Rotation.LEFT,
-    "right": Rotation.RIGHT,
-    "u_turn": Rotation.U_TURN,
 }
 
 
@@ -52,6 +45,7 @@ def get_test_cards(data):
                 action["priority"],
                 action["value"],
                 )
+
             robot_cards.append(robot_card)
             robots_program[robot_number] = robot_cards
 
