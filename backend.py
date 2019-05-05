@@ -221,6 +221,8 @@ class MovementCard(Card):
 
 class RotationCard(Card):
     def __init__(self, priority, value):
+        if type(value) == int:
+            value = Rotation(value)
         self.rotation = value
         super().__init__(priority)
 
