@@ -65,7 +65,7 @@ class Tile:
     def move_robot(self, robot, state):
         return robot
 
-    def push_robot(self, robot, state):
+    def push_robot(self, robot, state, round):
         """
         Move robot by one tile during a specific register phase.
         """
@@ -91,7 +91,7 @@ class Tile:
         """
         return robot
 
-    def repair_robot(self, robot, state):
+    def repair_robot(self, robot, state, round):
         """
         Repair one robot's damage. Change robot's start coordinates,
         if possible by tile properties.
@@ -158,12 +158,12 @@ class PusherTile(Tile):
         self.register = properties["register"]
         super().__init__(direction, path, properties)
 
-    def push_robot(self, robot, state):
+    def push_robot(self, robot, state, round):
         # Check register and activate correct pushers.
         # PusherTile property register:
         #  0 for even register number,
         #  1 for odd register number.
-        if state.register % 2 == self.register:
+        if (round + 1) % 2 == self.register:
             robot.move(self.direction.get_new_direction(Rotation.U_TURN), 1, state)
 
 
@@ -238,8 +238,8 @@ class RepairTile(Tile):
         self.new_start = properties["new_start"]
         super().__init__(direction, path, properties)
 
-    def repair_robot(self, robot, state):
-        if state.register == 5:
+    def repair_robot(self, robot, state, round):
+        if (round + 1) == 5:
             # Remove one robot damage.
             if robot.damages > 0:
                 robot.damages -= 1

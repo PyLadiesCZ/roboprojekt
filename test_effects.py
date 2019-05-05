@@ -65,7 +65,7 @@ def test_get_my_robots():
     state = get_start_state("tests/test_gear/map.json")
     for robot in state.get_active_robots():
         robot.walk(1, state)
-    apply_tile_effects(state)
+    apply_tile_effects(state, 1)
     for robot in state.get_active_robots():
         robot.walk(1, state)
     print(state)

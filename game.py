@@ -7,7 +7,7 @@ The game module
 import pyglet
 import sys
 
-from backend import get_start_state, apply_tile_effects
+from backend import get_start_state, play_the_game
 from frontend import create_window, draw_state
 
 
@@ -43,14 +43,11 @@ def move_once(t):
     Move all robots according to mock cards on hand and perform tile effects.
     """
 
-    for robot in state.get_active_robots():
-        robot.walk(3, state)
-        # print(robot)
-
-    apply_tile_effects(state)
+    play_the_game(state)
     print("After tile effects:")
     for robot in state.robots:
         print(robot)
+
 
 pyglet.clock.schedule_once(move_once, 3)
 

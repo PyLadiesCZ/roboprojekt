@@ -16,9 +16,7 @@ class Robot:
         self.direction = direction
         self.coordinates = coordinates
         self.start_coordinates = coordinates
-        # program = cards on hand, list.
-        # currently testing's value, to be removed
-        self.program = [RotationCard(200, Rotation.LEFT), MovementCard(100, 2)]
+        self.program = []
         self.lives = 3
         self.flags = 0
         self.damages = 4
@@ -250,7 +248,6 @@ class State:
         self._board = board
         self.robots = robots
         self.tile_count = get_tile_count(board)
-        self.register = 1
 
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
@@ -429,7 +426,7 @@ def check_robot_in_the_way(state, coordinates):
     return None
 
 
-def apply_tile_effects(state):
+def apply_tile_effects(state, round):
     """
     Apply the effects according to game rules.
     The function name is not entirely exact: the whole register phase actions take place
@@ -442,7 +439,7 @@ def apply_tile_effects(state):
     # Activate pusher
     for robot in state.get_active_robots():
         for tile in state.get_tiles(robot.coordinates):
-            tile.push_robot(robot, state)
+            tile.push_robot(robot, state, round)
             if robot.inactive:
                 break
 
@@ -466,11 +463,7 @@ def apply_tile_effects(state):
     for robot in state.get_active_robots():
         for tile in state.get_tiles(robot.coordinates):
             tile.collect_flag(robot)
-            tile.repair_robot(robot, state)
-
-    # after 5th register the inactive robots are back to the start
-    if state.register == 5:
-        set_robots_for_new_turn(state)
+            tile.repair_robot(robot, state, round)
 
 
 def set_robots_for_new_turn(state):
@@ -484,8 +477,24 @@ def set_robots_for_new_turn(state):
     # Delete robots with zero lives
     state.robots = [robot for robot in state.robots if robot.lives > 0]
     for robot in state.robots:
-        #Robot will now ressurect at his start coordinates
+        # Robot will now ressurect at his start coordinates
         if robot.inactive:
             robot.coordinates = robot.start_coordinates
             robot.damages = 0
             robot.direction = Direction.N
+
+
+def play_the_game(state):
+    for round in range(5):
+        for robot in state.get_active_robots():
+            try:
+                current_card = robot.program[round]
+                current_card.apply_effect(robot, state)
+
+            # If the program on hand is shorter than 5,
+            # pass the error and go to tile effects
+            except IndexError:
+                pass
+            apply_tile_effects(state, round)
+    # After 5th round ressurect the robots to their starting coordinates.
+    set_robots_for_new_turn(state)
