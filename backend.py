@@ -23,6 +23,9 @@ class Robot:
         self.power_down = False
         self.name = name
 
+        # special testing attribute, start tile number
+        self.stn = 0
+
     @property
     # More info about @property decorator - official documentation:
     # https://docs.python.org/3/library/functions.html#property
@@ -157,7 +160,6 @@ class Robot:
                 else:
                     next_coordinates = get_next_coordinates(next_coordinates, self.direction)
 
-
     def be_damaged(self, strength=1):
         """
         Give one or more damages to the robot.
@@ -172,7 +174,6 @@ class Robot:
         else:
             # Robot is damaged so much that laser kills it.
             self.die()
-
 
     def get_distance_to_board_end(self, state):
         """
@@ -296,8 +297,9 @@ def get_start_tiles(board, robot_tile_type=None):
     Get initial tiles for robots. It can be either start or stop tiles.
 
     board: dictionary returned by get_board().
-    robot_tile_type: choose the "start" or "stop" initial tile type.
-    By default it is None, which results in "start" type.
+    robot_tile_type: choose the "stop" initial tile type if you want to get
+    the final tiles (only for tests).
+    By default it is None, which results in reading classic start tiles.
     Create an ordered dictionary of all initial tiles in the board with initial
     tile number as a key and values: coordinates and tile_direction.
     OrderedDict is a structure that ensures the dictionary is stored
@@ -484,8 +486,14 @@ def set_robots_for_new_turn(state):
             robot.direction = Direction.N
 
 
-def play_the_game(state):
-    for round in range(5):
+def play_the_game(state, rounds=5):
+    """
+    Play the whole game: for the given number of iterations
+    perform robot's cards effects and tile effects on a given game state.
+    At the end ressurect the inactive robots to their starting coordinates.
+    rounds: default iterations count is 5, can be changed for testing purposes.
+    """
+    for round in range(rounds):
         for robot in state.get_active_robots():
             try:
                 current_card = robot.program[round]
@@ -495,6 +503,6 @@ def play_the_game(state):
             # pass the error and go to tile effects
             except IndexError:
                 pass
-            apply_tile_effects(state, round)
-    # After 5th round ressurect the robots to their starting coordinates.
+        apply_tile_effects(state, round)
+    # After last round ressurect the robots to their starting coordinates.
     set_robots_for_new_turn(state)
