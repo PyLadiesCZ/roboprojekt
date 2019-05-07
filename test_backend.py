@@ -1,6 +1,6 @@
 import pytest
 
-from backend import create_robots, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects, get_direction_from_coordinates, play_the_game
+from backend import create_robots, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects, get_direction_from_coordinates, apply_all_effects
 from util import Direction, Rotation
 from tile import Tile, HoleTile, GearTile, PusherTile, RepairTile, FlagTile
 from loading import get_board
@@ -160,7 +160,8 @@ def test_robot_is_repaired_after_5th_round(damages_before, tile, damages_after):
     robot = Robot(Direction.N, (0, 0), "tester")
     state = State({(0, 0): [tile]}, [robot])
     robot.damages = damages_before
-    play_the_game(state)
+    robot.program = [MovementCard(100, 0) for x in range(5)]
+    apply_all_effects(state)
     assert robot.damages == damages_after
 
 

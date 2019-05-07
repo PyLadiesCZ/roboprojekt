@@ -12,7 +12,7 @@ This file works currently only with one map. Under heavy construction.
 import pytest
 import yaml
 
-from backend import get_start_state, get_start_tiles, play_the_game
+from backend import get_start_state, get_start_tiles, apply_all_effects
 from backend import MovementCard, RotationCard
 from tile import StartTile
 
@@ -79,7 +79,7 @@ def add_start_tile_number_to_robots(state):
     for robot in state.robots:
         for tile in state.get_tiles(robot.coordinates):
             if isinstance(tile, StartTile):
-                robot.stn = tile.number
+                robot._serial_number = tile.number
 
 
 def match_programs_to_robots(robots_program, state):
@@ -88,7 +88,7 @@ def match_programs_to_robots(robots_program, state):
     """
     for robot_number, robot_cards in robots_program.items():
         for robot in state.robots:
-            if robot.stn == robot_number:
+            if robot._serial_number == robot_number:
                 robot.program = robot_cards
 
 
@@ -107,7 +107,7 @@ def play_test_game():
     add_start_tile_number_to_robots(state)
     match_programs_to_robots(robots_program, state)
 
-    play_the_game(state, rounds=2)
+    apply_all_effects(state, registers=2)
 
     stop_fields = get_start_tiles(state._board, "stop")
 
@@ -120,4 +120,4 @@ def test_robots_moved_to_desired_positions():
     """
     state, stop_fields = play_test_game()
     for robot in state.get_active_robots():
-        assert robot.coordinates == stop_fields[robot.stn]["coordinates"]
+        assert robot.coordinates == stop_fields[robot._serial_number]["coordinates"]
