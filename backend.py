@@ -33,7 +33,7 @@ class Robot:
         Return True if robot is inactive (not on the game board).
         All inactive robots have coordinates None.
         """
-        return self.coordinates == None
+        return self.coordinates is None
 
     def __repr__(self):
         return "<Robot {} {} {} Lives: {} Flags: {} Damages: {}, Inactive: {}>".format(
@@ -62,7 +62,7 @@ class Robot:
         # He can still move the other robots on the way.
         if distance < 0:
             self.walk((-distance), state, direction.get_new_direction(Rotation.U_TURN),
-                        push_others=push_others)
+                      push_others=push_others)
         else:
             for step in range(distance):
                 # Check the absence of a walls before moving.
@@ -95,7 +95,8 @@ class Robot:
     def move(self, direction, distance, state):
         """
         Move a robot to next coordinates according to direction of the move.
-        When robot is moved by game elements (convoyer belt or pusher),
+
+        When robot is moved by game elements (conveyor belt or pusher),
         he doesn't have enough power to push other robots. If there is a robot
         in the way, the movement is stopped.
         """
@@ -427,6 +428,120 @@ def check_robot_in_the_way(state, coordinates):
     return None
 
 
+def move_belts(state):
+    """
+    Move robots on conveyor belts.
+    """
+    # According to rules:
+    # First, express belts move robots by one tile (express attribute is set to True).
+    # Then all belts move robots by one tile (express attribute is set to False).
+    for express_belts in [True, False]:
+        # Get robots next coordinates after move of conveyor belts
+        robots_next_coordinates = get_next_coordinates_for_belts(state, express_belts)
+
+        # Solve colliding robots
+        while True:
+            colliding_robots = get_colliding_robots(robots_next_coordinates)
+            if not colliding_robots:
+                break
+            else:
+                # For colliding robots set next coordinates to their current.
+                for robot in colliding_robots:
+                    robots_next_coordinates[robot] = robot.coordinates
+        # Solve robots who would switch coordinates
+        while True:
+            swapping_robots = get_swapping_robots(robots_next_coordinates)
+            if not swapping_robots:
+                break
+            else:
+                # For swapping robots set next coordinates to their current.
+                for robot in swapping_robots:
+                    robots_next_coordinates[robot] = robot.coordinates
+
+        # All collision sorted, move robots to new coordinates
+        for robot in robots_next_coordinates:
+            if robot.coordinates != robots_next_coordinates[robot]:
+                # Get direction of belt movement
+                direction = get_direction_from_coordinates(robot.coordinates, robots_next_coordinates[robot])
+                # Check if the next tile is rotating belt.
+                for tile in state.get_tiles(robots_next_coordinates[robot]):
+                    tile.rotate_robot_on_belt(robot, direction)
+            robot.coordinates = robots_next_coordinates[robot]
+
+
+def get_next_coordinates_for_belts(state, express_belts):
+    """
+    Get all robot's next coordinates after move of certain type of conveyor belts.
+
+    express_belts: a boolean, True - for express belts, False - for all belts.
+
+    Return a dictionary of robots as keys and their next coordinates as values.
+    """
+    robots_next_coordinates = {}
+    for robot in state.robots:
+        for tile in state.get_tiles(robot.coordinates):
+            if tile.check_belts(express_belts):
+                # Get next coordinates of robots on belts
+                robots_next_coordinates[robot] = get_next_coordinates(robot.coordinates, tile.direction.get_new_direction(tile.direction_out))
+                break
+            else:
+                # Other robots will have the same coordinates
+                robots_next_coordinates[robot] = robot.coordinates
+    return robots_next_coordinates
+
+
+def get_colliding_robots(robots):
+    """
+    Get a list of robots, who would collide during belt movement.
+    """
+    colliding_robots = []
+    for robot in robots.keys():
+        # Check if there are duplicate values of next coordinates.
+        if is_duplicate(robots, robot):
+            colliding_robots.append(robot)
+    return colliding_robots
+
+
+def is_duplicate(data, key):
+    """
+    For input key check if its value is duplicate of other values in dictionary.
+    """
+    value = data[key]
+    for current_key, current_value in data.items():
+        if current_value == value and current_key != key:
+            return True
+    return False
+
+
+def get_swapping_robots(robots):
+    """
+    Get list of robots, who would switch coordinates during belt movement.
+    """
+    swapping_robots = []
+    for robot1, next_coordinates1 in robots.items():
+        for robot2, next_coordinates2 in robots.items():
+            if robot1 != robot2:
+                if robot1.coordinates == next_coordinates2 and robot2.coordinates == next_coordinates1:
+                    swapping_robots.append(robot1)
+    return swapping_robots
+
+
+def get_direction_from_coordinates(start_coordinates, stop_coordinates):
+    """
+    Get Direction class object according to change in coordinates.
+    Work only for change by one tile.
+    """
+    x, y = start_coordinates
+    if (x, y + 1) == stop_coordinates:
+        return Direction.N
+    elif (x, y - 1) == stop_coordinates:
+        return Direction.S
+    elif (x + 1, y) == stop_coordinates:
+        return Direction.E
+    elif (x - 1, y) == stop_coordinates:
+        return Direction.W
+
+
 def apply_tile_effects(state, round):
     """
     Apply the effects according to game rules.
@@ -434,8 +549,7 @@ def apply_tile_effects(state, round):
     (both tiles and robot's effects).
     """
     # Activate belts
-        # 1) Express belts move 1 space
-        # 2) Express belts and normal belts move 1 space
+    move_belts(state)
 
     # Activate pusher
     for robot in state.get_active_robots():
