@@ -23,8 +23,6 @@ class Robot:
         self.power_down = False
         self.name = name
 
-        self._tile_number_for_tests = 0
-
     @property
     # More info about @property decorator - official documentation:
     # https://docs.python.org/3/library/functions.html#property
@@ -427,7 +425,7 @@ def check_robot_in_the_way(state, coordinates):
     return None
 
 
-def apply_tile_effects(state, round):
+def apply_tile_effects(state, register):
     """
     Apply the effects according to game rules.
     The function name is not entirely exact: the whole register phase actions take place
@@ -440,7 +438,7 @@ def apply_tile_effects(state, round):
     # Activate pusher
     for robot in state.get_active_robots():
         for tile in state.get_tiles(robot.coordinates):
-            tile.push_robot(robot, state, round)
+            tile.push_robot(robot, state, register)
             if robot.inactive:
                 break
 
@@ -464,7 +462,7 @@ def apply_tile_effects(state, round):
     for robot in state.get_active_robots():
         for tile in state.get_tiles(robot.coordinates):
             tile.collect_flag(robot)
-            tile.repair_robot(robot, state, round)
+            tile.repair_robot(robot, state, register)
 
 
 def set_robots_for_new_turn(state):
@@ -485,23 +483,17 @@ def set_robots_for_new_turn(state):
             robot.direction = Direction.N
 
 
-def play_the_game(state, rounds=5):
+def play_the_game(state, registers=5):
     """
     Play the whole game: for the given number of iterations
     perform robot's cards effects and tile effects on a given game state.
     At the end ressurect the inactive robots to their starting coordinates.
-    rounds: default iterations count is 5, can be changed for testing purposes.
+    registers: default iterations count is 5, can be changed for testing purposes.
     """
-    for round in range(rounds):
+    for register in range(registers):
         for robot in state.get_active_robots():
-            try:
-                current_card = robot.program[round]
-                current_card.apply_effect(robot, state)
-
-            # If the program on hand is shorter than 5,
-            # pass the error and go to tile effects
-            except IndexError:
-                pass
-        apply_tile_effects(state, round)
-    # After last round ressurect the robots to their starting coordinates.
+            current_card = robot.program[register]
+            current_card.apply_effect(robot, state)
+        apply_tile_effects(state, register)
+    # After last register ressurect the robots to their starting coordinates.
     set_robots_for_new_turn(state)

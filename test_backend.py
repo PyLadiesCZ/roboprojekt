@@ -161,6 +161,7 @@ def test_robot_is_repaired_after_5th_round(damages_before, tile, damages_after):
     robot = Robot(Direction.N, (0, 0),  "tester")
     state = State({(0, 0): [tile]}, [robot])
     robot.damages = damages_before
+    robot.program = [MovementCard(100, 0) for x in range(5)]
     play_the_game(state)
     assert robot.damages == damages_after
 
