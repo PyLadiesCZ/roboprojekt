@@ -597,7 +597,7 @@ def set_robots_for_new_turn(state):
             robot.direction = Direction.N
 
 
-def play_the_game(state, registers=5):
+def apply_all_effects(state, registers=5):
     """
     Play the whole game: for the given number of iterations
     perform robot's cards effects and tile effects on a given game state.
