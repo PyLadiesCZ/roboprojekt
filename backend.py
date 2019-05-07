@@ -10,19 +10,20 @@ from loading import get_board, get_map_data
 
 MAX_DAMAGE_VALUE = 10
 
+
 class Robot:
     def __init__(self, direction, coordinates, name):
         self.direction = direction
         self.coordinates = coordinates
         self.start_coordinates = coordinates
-        # program = cards on hand, list.
-        # currently testing's value, to be removed
-        self.program = [RotationCard(200, Rotation.LEFT), MovementCard(100, 2)]
+        self.program = []
         self.lives = 3
         self.flags = 0
         self.damages = 4
         self.power_down = False
         self.name = name
+
+        self._tile_number_for_tests = 0
 
     @property
     # More info about @property decorator - official documentation:
@@ -158,7 +159,6 @@ class Robot:
                 else:
                     next_coordinates = get_next_coordinates(next_coordinates, self.direction)
 
-
     def be_damaged(self, strength=1):
         """
         Give one or more damages to the robot.
@@ -173,7 +173,6 @@ class Robot:
         else:
             # Robot is damaged so much that laser kills it.
             self.die()
-
 
     def get_distance_to_board_end(self, state):
         """
@@ -220,6 +219,8 @@ class MovementCard(Card):
 
 class RotationCard(Card):
     def __init__(self, priority, value):
+        if isinstance(value, int):
+            value = Rotation(value)
         self.rotation = value
         super().__init__(priority)
 
@@ -247,7 +248,6 @@ class State:
         self._board = board
         self.robots = robots
         self.tile_count = get_tile_count(board)
-        self.register = 1
 
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
@@ -280,38 +280,46 @@ class State:
                 yield robot
 
 
-def get_start_tiles(board):
-    """
-    Get start tiles for robots.
-
-    board: dictionary returned by get_board().
-    Create an ordered dictionary of all start tiles in the board with start
-    tile number as a key and values: coordinates and tile_direction.
-    OrderedDict is a structure that ensures the dictionary is stored
-    in the order of the new keys being added.
-    """
-
-    start_tiles = {}
-    for coordinate, tiles in board.items():
-        for tile in tiles:
-            if tile.properties_dict(coordinate) is not None:
-                start_tiles[tile.number] = tile.properties_dict(coordinate)
-
-    # Sort created dictionary by the first element - start tile number
-    OrderedDict(sorted(start_tiles.items(), key=lambda stn: stn[0]))
-
-    return start_tiles
-
-
 def get_robot_names():
     """
-    Return a list of robots names using pathlib.Path library.
+    Return a list of robots names (names of the files with robots avatars).
     """
     robot_names = []
     for img in Path('./img/robots/png').iterdir():
         robot_name = img.stem
         robot_names.append(robot_name)
     return robot_names
+
+
+def get_start_tiles(board, robot_tile_type=None):
+    """
+    Get initial tiles for robots. It can be either start or stop tiles.
+
+    board: dictionary returned by get_board().
+    robot_tile_type: choose the "stop" initial tile type if you want to get
+    the final tiles (only for tests).
+    By default it is None, which results in reading classic start tiles.
+    Create an ordered dictionary of all initial tiles in the board with initial
+    tile number as a key and values: coordinates and tile_direction.
+    OrderedDict is a structure that ensures the dictionary is stored
+    in the order of the new keys being added.
+    """
+
+    robot_tiles = {}
+
+    for coordinate, tiles in board.items():
+        for tile in tiles:
+            if robot_tile_type == "stop":
+                if tile.stop_properties_dict(coordinate) is not None:
+                    robot_tiles[tile.number] = tile.stop_properties_dict(coordinate)
+            else:
+                if tile.properties_dict(coordinate) is not None:
+                    robot_tiles[tile.number] = tile.properties_dict(coordinate)
+
+    # Sort created dictionary by the first element - start tile number
+    OrderedDict(sorted(robot_tiles.items(), key=lambda stn: stn[0]))
+
+    return robot_tiles
 
 
 def create_robots(board):
@@ -341,20 +349,6 @@ def create_robots(board):
     return robots_on_start
 
 
-def get_tile_count(board):
-    """
-    From the board coordinates get the count of tiles in horizontal (x) and vertical (y) ax.
-    Takes board: result of get_board() from loading module.
-    """
-    x_set = set()
-    y_set = set()
-    for coordinate in board.keys():
-        x, y = coordinate
-        x_set.add(x)
-        y_set.add(y)
-    return len(x_set), len(y_set)
-
-
 def get_start_state(map_name):
     """
     Get start state of game.
@@ -368,6 +362,20 @@ def get_start_state(map_name):
     robots_start = create_robots(board)
     state = State(board, robots_start)
     return state
+
+
+def get_tile_count(board):
+    """
+    From the board coordinates get the count of tiles in horizontal (x) and vertical (y) ax.
+    Takes board: result of get_board() from loading module.
+    """
+    x_set = set()
+    y_set = set()
+    for coordinate in board.keys():
+        x, y = coordinate
+        x_set.add(x)
+        y_set.add(y)
+    return len(x_set), len(y_set)
 
 
 def check_the_absence_of_a_wall(coordinates, direction, state):
@@ -419,7 +427,7 @@ def check_robot_in_the_way(state, coordinates):
     return None
 
 
-def apply_tile_effects(state):
+def apply_tile_effects(state, round):
     """
     Apply the effects according to game rules.
     The function name is not entirely exact: the whole register phase actions take place
@@ -432,7 +440,7 @@ def apply_tile_effects(state):
     # Activate pusher
     for robot in state.get_active_robots():
         for tile in state.get_tiles(robot.coordinates):
-            tile.push_robot(robot, state)
+            tile.push_robot(robot, state, round)
             if robot.inactive:
                 break
 
@@ -456,11 +464,7 @@ def apply_tile_effects(state):
     for robot in state.get_active_robots():
         for tile in state.get_tiles(robot.coordinates):
             tile.collect_flag(robot)
-            tile.repair_robot(robot, state)
-
-    # after 5th register the inactive robots are back to the start
-    if state.register == 5:
-        set_robots_for_new_turn(state)
+            tile.repair_robot(robot, state, round)
 
 
 def set_robots_for_new_turn(state):
@@ -474,8 +478,30 @@ def set_robots_for_new_turn(state):
     # Delete robots with zero lives
     state.robots = [robot for robot in state.robots if robot.lives > 0]
     for robot in state.robots:
-        #Robot will now ressurect at his start coordinates
+        # Robot will now ressurect at his start coordinates
         if robot.inactive:
             robot.coordinates = robot.start_coordinates
             robot.damages = 0
             robot.direction = Direction.N
+
+
+def play_the_game(state, rounds=5):
+    """
+    Play the whole game: for the given number of iterations
+    perform robot's cards effects and tile effects on a given game state.
+    At the end ressurect the inactive robots to their starting coordinates.
+    rounds: default iterations count is 5, can be changed for testing purposes.
+    """
+    for round in range(rounds):
+        for robot in state.get_active_robots():
+            try:
+                current_card = robot.program[round]
+                current_card.apply_effect(robot, state)
+
+            # If the program on hand is shorter than 5,
+            # pass the error and go to tile effects
+            except IndexError:
+                pass
+        apply_tile_effects(state, round)
+    # After last round ressurect the robots to their starting coordinates.
+    set_robots_for_new_turn(state)

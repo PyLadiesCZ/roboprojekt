@@ -1,0 +1,41 @@
+# Commands file structure (read by test_effects.py)
+# actions:
+#   robot number (integer):
+#     - card type: move, rotate
+#       priority: integer
+#       value: for move types: -1, 1, 2, 3;
+#              for rotate types: -90, 90, 180
+# results:
+#   robot number (integer):
+#     - TBD
+
+
+actions:
+  1:
+    - type: move
+      priority: 100
+      value: 1
+    - type: move
+      priority: 100
+      value: 1
+  2:
+    - type: move
+      priority: 100
+      value: 1
+    - type: move
+      priority: 100
+      value: 1
+  3:
+    - type: move
+      priority: 100
+      value: 1
+    - type: move
+      priority: 100
+      value: 1
+  4:
+    - type: move
+      priority: 100
+      value: 1
+    - type: move
+      priority: 100
+      value: 1

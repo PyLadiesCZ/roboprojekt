@@ -1,6 +1,6 @@
 import pytest
 
-from backend import create_robots, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects
+from backend import create_robots, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects, play_the_game
 from util import Direction, Rotation
 from tile import Tile, HoleTile, GearTile, PusherTile, RepairTile, FlagTile
 from loading import get_board
@@ -105,7 +105,7 @@ def test_robot_and_tiles_shoot():
         robot.damages = 0
 
     state = State(board, robots)
-    apply_tile_effects(state)
+    apply_tile_effects(state, 0)
     damages_list = [0, 4, 0, 2, 0, 0, 1, 1, 1, 4]
 
     for robot in robots:
@@ -138,7 +138,7 @@ def test_power_down_robots_dont_shoot():
         robot.power_down = True
 
     state = State(board, robots)
-    apply_tile_effects(state)
+    apply_tile_effects(state, 0)
     damages_list = [0, 4, 0, 0, 0, 0, 0, 0, 0, 4]
 
     for robot in robots:
@@ -161,16 +161,15 @@ def test_robot_is_repaired_after_5th_round(damages_before, tile, damages_after):
     robot = Robot(Direction.N, (0, 0),  "tester")
     state = State({(0, 0): [tile]}, [robot])
     robot.damages = damages_before
-    state.register = 5
-    apply_tile_effects(state)
+    play_the_game(state)
     assert robot.damages == damages_after
 
 
 @pytest.mark.parametrize(("damages", "tile", "current_register"),
-                         [(0, RepairTile(None, None, {'new_start': True}), 1),
-                         (9, RepairTile(None, None, {'new_start': True}), 2),
-                         (3, RepairTile(None, None, {'new_start': True}), 3),
-                         (5, RepairTile(None, None, {'new_start': True}), 4),
+                         [(0, RepairTile(None, None, {'new_start': True}), 0),
+                         (9, RepairTile(None, None, {'new_start': True}), 1),
+                         (3, RepairTile(None, None, {'new_start': True}), 2),
+                         (5, RepairTile(None, None, {'new_start': True}), 3),
                           ])
 def test_robot_is_not_repaired(damages, tile, current_register):
     """
@@ -179,8 +178,7 @@ def test_robot_is_not_repaired(damages, tile, current_register):
     robot = Robot(Direction.N, (0, 0),  "tester")
     state = State({(0, 0): [tile]}, [robot])
     robot.damages = damages
-    state.register = current_register
-    apply_tile_effects(state)
+    apply_tile_effects(state, current_register)
     assert robot.damages == damages
 
 
@@ -196,7 +194,7 @@ def test_robot_changed_start_coordinates(tile, coordinates_after):
     robot = Robot(Direction.N, (0, 0),  "tester")
     state = State({(0, 0): [tile]}, [robot])
     robot.start_coordinates = (1, 1)
-    apply_tile_effects(state)
+    apply_tile_effects(state, 0)
     assert robot.start_coordinates == coordinates_after
 
 
@@ -215,7 +213,7 @@ def test_robot_changed_direction(direction_before, tile, direction_after):
     """
     robot = Robot(direction_before, (0, 0),  "tester")
     state = State({(0, 0): [tile]}, [robot])
-    apply_tile_effects(state)
+    apply_tile_effects(state, 0)
     assert robot.direction == direction_after
 
 
@@ -257,7 +255,7 @@ def test_robot_collected_flags(flags_before, tile, flags_after):
     robot = Robot(Direction.N, (0, 0),  "tester")
     state = State({(0, 0): [tile]}, [robot])
     robot.flags = flags_before
-    apply_tile_effects(state)
+    apply_tile_effects(state, 0)
     assert robot.flags == flags_after
 
 
@@ -273,7 +271,7 @@ def test_robot_changed_coordinates(tile):
     robot = Robot(Direction.N, (0, 0),  "tester")
     state = State({(0, 0): [tile]}, [robot])
     robot.start_coordinates = (1, 1)
-    apply_tile_effects(state)
+    apply_tile_effects(state, 0)
     assert robot.start_coordinates == (0, 0)
 
 
@@ -321,18 +319,18 @@ def test_robot_is_damaged_by_laser(input_coordinates, damages_after):
     robot = Robot(Direction.W, input_coordinates,  "tester")
     robot.damages = 0
     state = State(board, [robot_obstacle1, robot_obstacle2, robot])
-    apply_tile_effects(state)
+    apply_tile_effects(state, 0)
     assert robot.damages == damages_after
 
 
 # PusherTile
 
 @pytest.mark.parametrize(("register", "tile", "output_coordinates"),
-                         [(1, PusherTile(Direction.N, None, {'register': 1}), (1, 0)),
-                         (2, PusherTile(Direction.N, None, {'register': 1}), (1, 1)),
-                         (3, PusherTile(Direction.N, None, {'register': 0}), (1, 1)),
-                         (4, PusherTile(Direction.N, None, {'register': 0}), (1, 0)),
-                         (5, PusherTile(Direction.N, None, {'register': 1}), (1, 0)),
+                         [(0, PusherTile(Direction.N, None, {'register': 1}), (1, 0)),
+                         (1, PusherTile(Direction.N, None, {'register': 1}), (1, 1)),
+                         (2, PusherTile(Direction.N, None, {'register': 0}), (1, 1)),
+                         (3, PusherTile(Direction.N, None, {'register': 0}), (1, 0)),
+                         (4, PusherTile(Direction.N, None, {'register': 1}), (1, 0)),
                           ])
 def test_robot_is_pushed_at_the_correct_round(register, tile, output_coordinates):
     """
@@ -344,8 +342,7 @@ def test_robot_is_pushed_at_the_correct_round(register, tile, output_coordinates
     """
     robot = Robot(Direction.W, (1, 1),  "tester")
     state = State({(1, 0): [Tile(None, None, None)], (1, 1): [tile]}, [robot])
-    state.register = register
-    apply_tile_effects(state)
+    apply_tile_effects(state, register)
     assert robot.direction == Direction.W
     assert robot.coordinates == output_coordinates
 
@@ -365,8 +362,7 @@ def test_robot_is_pushed_to_the_correct_direction(tile, output_coordinates):
     """
     robot = Robot(Direction.S, (1, 1),  "tester")
     state = State({(1, 0): [Tile(None, None, None)], (0, 1): [Tile(None, None, None)], (2, 1): [Tile(None, None, None)], (1, 2): [Tile(None, None, None)], (1, 1): [tile]}, [robot])
-    state.register = 1
-    apply_tile_effects(state)
+    apply_tile_effects(state, 0)
     assert robot.direction == Direction.S
     assert robot.coordinates == output_coordinates
 
@@ -386,8 +382,7 @@ def test_robot_is_pushed_out_of_the_board(tile):
     """
     robot = Robot(Direction.S, (0, 0),  "tester")
     state = State({(0, 0): [tile]}, [robot])
-    state.register = 1
-    apply_tile_effects(state)
+    apply_tile_effects(state, 0)
     assert robot.lives == 2
     assert robot.inactive is True
     assert robot.coordinates is None
