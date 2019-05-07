@@ -23,8 +23,7 @@ class Robot:
         self.power_down = False
         self.name = name
 
-        # special testing attribute, start tile number
-        self.stn = 0
+        self._tile_number_for_tests = 0
 
     @property
     # More info about @property decorator - official documentation:
@@ -220,7 +219,7 @@ class MovementCard(Card):
 
 class RotationCard(Card):
     def __init__(self, priority, value):
-        if type(value) == int:
+        if isinstance(value, int):
             value = Rotation(value)
         self.rotation = value
         super().__init__(priority)
@@ -283,7 +282,7 @@ class State:
 
 def get_robot_names():
     """
-    Return a list of robots names using pathlib.Path library.
+    Return a list of robots names (names of the files with robots avatars).
     """
     robot_names = []
     for img in Path('./img/robots/png').iterdir():
