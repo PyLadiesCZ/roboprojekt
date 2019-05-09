@@ -112,7 +112,7 @@ def test_board_structure():
         (2, "hole", {}),
         (13, "wall", {}),
         (4, "laser", {"laser_strength": 1, "laser_start": False}),
-        (7, "gear", {"move_direction": 1}),
+        (7, "gear", {"move_direction": 90}),
         (10, "pusher", {"register": 1}),
         (24, "belt", {"direction_out": 0, "express": True}),
     ]

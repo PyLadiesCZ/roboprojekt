@@ -71,7 +71,7 @@
                 {
                  "name":"move_direction",
                  "type":"int",
-                 "value":1
+                 "value":90
                 }],
          "type":"gear"
         },
@@ -84,7 +84,7 @@
                 {
                  "name":"move_direction",
                  "type":"int",
-                 "value":-1
+                 "value":-90
                 }],
          "type":"gear"
         },
@@ -220,7 +220,7 @@
                 {
                  "name":"direction_out",
                  "type":"int",
-                 "value":-1
+                 "value":-90
                 },
                 {
                  "name":"express",
@@ -238,7 +238,7 @@
                 {
                  "name":"direction_out",
                  "type":"int",
-                 "value":1
+                 "value":90
                 },
                 {
                  "name":"express",
@@ -256,7 +256,7 @@
                 {
                  "name":"direction_out",
                  "type":"int",
-                 "value":-1
+                 "value":-90
                 },
                 {
                  "name":"express",
@@ -274,7 +274,7 @@
                 {
                  "name":"direction_out",
                  "type":"int",
-                 "value":1
+                 "value":90
                 },
                 {
                  "name":"express",
@@ -292,7 +292,7 @@
                 {
                  "name":"direction_out",
                  "type":"int",
-                 "value":2
+                 "value":180
                 },
                 {
                  "name":"express",
@@ -328,7 +328,7 @@
                 {
                  "name":"direction_out",
                  "type":"int",
-                 "value":1
+                 "value":90
                 },
                 {
                  "name":"express",
@@ -346,7 +346,7 @@
                 {
                  "name":"direction_out",
                  "type":"int",
-                 "value":-1
+                 "value":-90
                 },
                 {
                  "name":"express",
@@ -364,7 +364,7 @@
                 {
                  "name":"direction_out",
                  "type":"int",
-                 "value":-1
+                 "value":-90
                 },
                 {
                  "name":"express",
@@ -382,7 +382,7 @@
                 {
                  "name":"direction_out",
                  "type":"int",
-                 "value":1
+                 "value":90
                 },
                 {
                  "name":"express",
@@ -400,7 +400,7 @@
                 {
                  "name":"direction_out",
                  "type":"int",
-                 "value":2
+                 "value":180
                 },
                 {
                  "name":"express",
@@ -642,7 +642,7 @@
                  "value":8
                 }],
          "type":"start"
-        }, 
+        },
         {
          "id":47,
          "image":"..\/img\/tiles\/png\/stop_tile01.png",
@@ -655,7 +655,7 @@
                  "value":1
                 }],
          "type":"stop"
-        }, 
+        },
         {
          "id":48,
          "image":"..\/img\/tiles\/png\/stop_tile02.png",
@@ -668,7 +668,7 @@
                  "value":2
                 }],
          "type":"stop"
-        }, 
+        },
         {
          "id":49,
          "image":"..\/img\/tiles\/png\/stop_tile03.png",
@@ -681,7 +681,7 @@
                  "value":3
                 }],
          "type":"stop"
-        }, 
+        },
         {
          "id":50,
          "image":"..\/img\/tiles\/png\/stop_tile04.png",
@@ -694,7 +694,7 @@
                  "value":4
                 }],
          "type":"stop"
-        }, 
+        },
         {
          "id":51,
          "image":"..\/img\/tiles\/png\/stop_tile05.png",
@@ -707,7 +707,7 @@
                  "value":5
                 }],
          "type":"stop"
-        }, 
+        },
         {
          "id":52,
          "image":"..\/img\/tiles\/png\/stop_tile06.png",
@@ -720,7 +720,7 @@
                  "value":6
                 }],
          "type":"stop"
-        }, 
+        },
         {
          "id":53,
          "image":"..\/img\/tiles\/png\/stop_tile07.png",
@@ -733,7 +733,7 @@
                  "value":7
                 }],
          "type":"stop"
-        }, 
+        },
         {
          "id":54,
          "image":"..\/img\/tiles\/png\/stop_tile08.png",

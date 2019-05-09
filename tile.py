@@ -156,7 +156,10 @@ class HoleTile(Tile):
 
 class BeltTile(Tile):
     def __init__(self, direction, path, properties):
-        self.direction_out = transform_direction(properties["direction_out"])
+        if properties["direction_out"] == 0:
+            self.direction_out = Direction.N
+        else:
+            self.direction_out = Rotation(properties["direction_out"])
         self.express = properties["express"]
         super().__init__(direction, path, properties)
 
@@ -201,7 +204,7 @@ class PusherTile(Tile):
 
 class GearTile(Tile):
     def __init__(self, direction, path, properties):
-        self.move_direction = transform_direction(properties["move_direction"])
+        self.move_direction = Rotation(properties["move_direction"])
         super().__init__(direction, path, properties)
 
     def rotate_robot(self, robot):
@@ -291,18 +294,3 @@ def create_tile_subclass(direction, path, type, properties):
     Create tile subclass according to its type.
     """
     return TILE_CLS[type](direction, path, properties)
-
-
-def transform_direction(direction_int):
-    """
-    Function to transform the string taken from json properties to valid
-    Rotation class instance for later processing.
-    """
-    if direction_int == 0:
-        return Direction.N
-    if direction_int == -1:
-        return Rotation.LEFT
-    if direction_int == 1:
-        return Rotation.RIGHT
-    if direction_int == 2:
-        return Rotation.U_TURN
