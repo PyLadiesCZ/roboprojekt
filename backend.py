@@ -615,7 +615,9 @@ def apply_register(state, register):
             for robot in state.get_active_robots()]
 
     robot_cards.sort(key=sort_by_priority, reverse=True)
-    return robot_cards
+
+    for robot, card in robot_cards:
+        card.apply_effect(robot, state)
 
 
 def apply_all_effects(state, registers=5):
@@ -641,11 +643,7 @@ def _apply_cards_and_tiles_effects(state, registers):
         # robots have no card on hand and we still want to try loading the game
         try:
             # Check the card's priority
-            robot_cards = apply_register(state, register)
-
-            # Apply card's effects in the sorted robot's list order
-            for robot, card in robot_cards:
-                card.apply_effect(robot, state)
+            apply_register(state, register)
 
         except IndexError:
             pass
