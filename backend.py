@@ -597,17 +597,48 @@ def set_robots_for_new_turn(state):
             robot.direction = Direction.N
 
 
+def sort_by_priority(item):
+    """
+    Unpack given item to robot and card and return card's priority.
+    """
+    robot, card = item
+    return card.priority
+
+
+def apply_register(state, register):
+    """
+    For the given register take all current cards for all the active robots.
+    Sort the robot's list according to card's priorities.
+    Return sorted robot's list.
+    """
+    robot_cards = [(robot, robot.program[register])
+            for robot in state.get_active_robots()]
+
+    robot_cards.sort(key=sort_by_priority, reverse=True)
+    return robot_cards
+
+
 def apply_all_effects(state, registers=5):
     """
-    Play the whole game: for the given number of iterations
+    Apply all game effects: for the given number of iterations
     perform robot's cards effects and tile effects on a given game state.
     At the end ressurect the inactive robots to their starting coordinates.
     registers: default iterations count is 5, can be changed for testing purposes.
     """
     for register in range(registers):
-        for robot in state.get_active_robots():
-            current_card = robot.program[register]
-            current_card.apply_effect(robot, state)
+        # try -  except was introduced for devel purposes - it may happen that
+        # robots have no card on hand and we still want to try loading the game
+        try:
+            # Check the card's priority
+            robot_cards = apply_register(state, register)
+
+            # Apply card's effects in the sorted robot's list order
+            for robot, card in robot_cards:
+                card.apply_effect(robot, state)
+
+        except IndexError:
+            pass
+
         apply_tile_effects(state, register)
     # After last register ressurect the robots to their starting coordinates.
     set_robots_for_new_turn(state)
