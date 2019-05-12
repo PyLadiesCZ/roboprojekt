@@ -1,4 +1,5 @@
 # Commands file structure (read by test_effects.py)
+# registers: integer - number of played registers
 # actions:
 #   robot number (integer):
 #     - card type: move, rotate
@@ -9,6 +10,7 @@
 #   robot number (integer):
 #     - TBD
 
+registers: 2
 
 actions:
   1:

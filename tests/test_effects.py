@@ -5,9 +5,11 @@ and convert them into robot's program.
 Play the game with given cards, apply tile's effects and compare the result
 with the expected one.
 TODO: decoding the expected results.
-TODO: reading files from different directories.
-This file works currently only with one map. Under heavy construction.
+TODO: better handling what map is being tested now.
+This file works currently with maps from tests/. Under heavy construction.
 """
+
+from pathlib import Path
 
 import pytest
 import yaml
@@ -23,13 +25,31 @@ CARD_TYPES = {
 }
 
 
-def get_commands(adr):
+def get_test_maps():
+    test_maps_with_commands = []
+    source_path = Path("tests/")
+    for path in source_path.glob("test_*"):
+        if path.is_dir():
+            commands = None
+            for file in path.iterdir():
+                if file.name == "map.json":
+                    map = file
+                if file.name == "commands.yaml":
+                    commands = file
+            test_maps_with_commands.append((map, commands))
+    return test_maps_with_commands
+
+
+def get_commands(file):
     """
     Open the file with yaml commands for robots.
     Currently opens only one file.
     """
-    with open(adr) as commands_file:
-        return yaml.safe_load(commands_file)
+    try:
+        with open(file) as commands_file:
+            return yaml.safe_load(commands_file)
+    except TypeError:
+        file = None
 
 
 def get_test_cards(commands):
@@ -38,28 +58,35 @@ def get_test_cards(commands):
     Transform actions to robot's program
     (list of cards assigned to 1st, 2nd, etc. robots).
     """
+    try:
+        yaml_actions = commands['actions']
 
-    yaml_actions = commands['actions']
+    except KeyError:
+        robots_program = None
 
-    # Create dictionary: for every robot empty list to be filled with cards
-    robots_program = {robot_number: [] for robot_number in yaml_actions.keys()}
+    else:
+        # Create dictionary: for every robot empty list to be filled with cards
+        robots_program = {robot_number: [] for robot_number in yaml_actions.keys()}
 
-    for robot_number, actions in yaml_actions.items():
-        robot_cards = robots_program[robot_number]
+        for robot_number, actions in yaml_actions.items():
+            robot_cards = robots_program[robot_number]
 
-        for action in actions:
+            for action in actions:
 
-            # Create the correct Card instance with read properties.
-            # Add the card to robot_actions list and assign the list to the key.
-            robot_card = CARD_TYPES[action["type"]](
-                action["priority"],
-                action["value"],
-                )
+                # Create the correct Card instance with read properties.
+                # Add the card to robot_actions list and assign the list to the key.
+                robot_card = CARD_TYPES[action["type"]](
+                    action["priority"],
+                    action["value"],
+                    )
 
-            robot_cards.append(robot_card)
-            robots_program[robot_number] = robot_cards
+                robot_cards.append(robot_card)
+                robots_program[robot_number] = robot_cards
 
     return robots_program
+
+def get_registers(commands):
+    return commands['registers']
 
 
 def decode_results():
@@ -92,32 +119,25 @@ def match_programs_to_robots(robots_program, state):
                 robot.program = robot_cards
 
 
-def read_commands_and_state():
-    commands = get_commands("tests/test_gear/commands.yaml")
-    state = get_start_state("tests/test_gear/map.json")
-    return commands, state
-
-
-def play_test_game():
+def test_play_test_game():
     """
     Play the game with given map.
     """
-    commands, state = read_commands_and_state()
-    robots_program = get_test_cards(commands)
-    add_start_tile_number_to_robots(state)
-    match_programs_to_robots(robots_program, state)
 
-    apply_all_effects(state, registers=2)
+    for map, commands in get_test_maps():
+        read_commands = get_commands(commands)
+        state = get_start_state(map)
+        print("File with map:", map)
+        add_start_tile_number_to_robots(state)
 
-    stop_fields = get_start_tiles(state._board, "stop")
+        robots_program = get_test_cards(read_commands)
+        if robots_program:
+            match_programs_to_robots(robots_program, state)
 
-    return state, stop_fields
+        apply_all_effects(state, registers=get_registers(read_commands))
 
+        stop_fields = get_start_tiles(state._board, "stop")
 
-def test_robots_moved_to_desired_positions():
-    """
-    Assert the coordinates of robots changed as they were supposed to.
-    """
-    state, stop_fields = play_test_game()
-    for robot in state.get_active_robots():
-        assert robot.coordinates == stop_fields[robot._serial_number]["coordinates"]
+        for robot in state.get_active_robots():
+            assert robot.coordinates == stop_fields[robot._serial_number]["coordinates"]
+            assert robot.direction == stop_fields[robot._serial_number]["tile_direction"]
