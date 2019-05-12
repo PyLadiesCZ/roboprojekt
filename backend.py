@@ -625,6 +625,17 @@ def apply_all_effects(state, registers=5):
     At the end ressurect the inactive robots to their starting coordinates.
     registers: default iterations count is 5, can be changed for testing purposes.
     """
+    _apply_cards_and_tiles_effects(state, registers)
+
+    # After last register ressurect the robots to their starting coordinates.
+    set_robots_for_new_turn(state)
+
+
+def _apply_cards_and_tiles_effects(state, registers):
+    """
+    Private function without ressurect mode - for testing purposes.
+    It is called within apply_all_effects. Do not call it separately.
+    """
     for register in range(registers):
         # try -  except was introduced for devel purposes - it may happen that
         # robots have no card on hand and we still want to try loading the game
@@ -640,5 +651,3 @@ def apply_all_effects(state, registers=5):
             pass
 
         apply_tile_effects(state, register)
-    # After last register ressurect the robots to their starting coordinates.
-    set_robots_for_new_turn(state)
