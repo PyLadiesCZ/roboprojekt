@@ -45,11 +45,9 @@ def get_commands(file):
     Open the file with yaml commands for robots.
     Currently opens only one file.
     """
-    try:
-        with open(file) as commands_file:
-            return yaml.safe_load(commands_file)
-    except TypeError:
-        file = None
+
+    with open(file) as commands_file:
+        return yaml.safe_load(commands_file)
 
 
 def get_test_cards(commands):
@@ -85,6 +83,7 @@ def get_test_cards(commands):
 
     return robots_program
 
+
 def get_registers(commands):
     return commands['registers']
 
@@ -119,25 +118,28 @@ def match_programs_to_robots(robots_program, state):
                 robot.program = robot_cards
 
 
-def test_play_test_game():
+@pytest.mark.parametrize(
+        ("map", "commands"),
+        get_test_maps(),
+        )
+def test_play_game(map, commands):
     """
     Play the game with given map.
     """
 
-    for map, commands in get_test_maps():
-        read_commands = get_commands(commands)
-        state = get_start_state(map)
-        print("File with map:", map)
-        add_start_tile_number_to_robots(state)
+    read_commands = get_commands(commands)
+    state = get_start_state(map)
 
-        robots_program = get_test_cards(read_commands)
-        if robots_program:
-            match_programs_to_robots(robots_program, state)
+    add_start_tile_number_to_robots(state)
 
-        apply_all_effects(state, registers=get_registers(read_commands))
+    robots_program = get_test_cards(read_commands)
+    if robots_program:
+        match_programs_to_robots(robots_program, state)
 
-        stop_fields = get_start_tiles(state._board, "stop")
+    apply_all_effects(state, registers=get_registers(read_commands))
 
-        for robot in state.get_active_robots():
-            assert robot.coordinates == stop_fields[robot._serial_number]["coordinates"]
-            assert robot.direction == stop_fields[robot._serial_number]["tile_direction"]
+    stop_fields = get_start_tiles(state._board, "stop")
+
+    for robot in state.get_active_robots():
+        assert robot.coordinates == stop_fields[robot._serial_number]["coordinates"]
+        assert robot.direction == stop_fields[robot._serial_number]["tile_direction"]
