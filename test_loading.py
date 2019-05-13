@@ -80,6 +80,7 @@ def test_map_returns_correct_image_ID(index_number, expected_value):
     assert loaded_tileset[index_number]["id"] == expected_value
 
 
+@pytest.mark.xfail()
 @pytest.mark.parametrize(
     ("index_number", "expected_value"),
     [
@@ -90,9 +91,9 @@ def test_map_returns_correct_image_ID(index_number, expected_value):
         (13, "../img/tiles/png/conveyor_belt_1.png"),
     ]
 )
-def test_map_returns_correct_image_path(index_number, expected_value):
+def test_map_returns_correct_image_names(index_number, expected_value):
     """
-    Test the loaded map file returns expected image path.
+    Test the loaded map file returns expected image name.
 
     Regression test of get_data function. Uses test_1.json map for this.
     """
@@ -114,7 +115,7 @@ def test_board_structure():
         (4, "laser", {"laser_strength": 1, "laser_start": False}),
         (7, "gear", {"move_direction": 90}),
         (10, "pusher", {"register": 1}),
-        (24, "belt", {"direction_out": 0, "express": True}),
+        (24, "belt", {"crossroad": False, "direction_out": 0, "express": True}),
     ]
 )
 def test_loading_of_tile_type_properties(id, tile_type, tile_properties):
