@@ -2,7 +2,7 @@ import pytest
 
 from backend import create_robots, get_start_state, Robot, State, MovementCard
 from backend import RotationCard, apply_tile_effects, get_direction_from_coordinates
-from backend import apply_all_effects, sort_robots_by_cards_priority
+from backend import apply_all_effects, get_robots_ordered_by_cards_priority
 from util import Direction, Rotation
 from tile import Tile, HoleTile, GearTile, PusherTile, RepairTile, FlagTile
 from loading import get_board
@@ -710,11 +710,11 @@ def test_card_priorities():
         robot.program = cards[i]
         i += 1
 
-    robot_cards = sort_robots_by_cards_priority(state, 0)
+    robot_cards = get_robots_ordered_by_cards_priority(state, 0)
     print(robot_cards[0])
     assert robot_cards[0][0].program[0].priority == 300
     assert robot_cards[7][0].program[0].priority == 55
 
-    robot_cards = sort_robots_by_cards_priority(state, 1)
+    robot_cards = get_robots_ordered_by_cards_priority(state, 1)
     assert robot_cards[0][0].program[1].priority == 350
     assert robot_cards[7][0].program[1].priority == 80

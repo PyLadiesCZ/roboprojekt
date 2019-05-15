@@ -597,15 +597,7 @@ def set_robots_for_new_turn(state):
             robot.direction = Direction.N
 
 
-def sort_by_priority(item):
-    """
-    Unpack given item to robot and card and return card's priority.
-    """
-    robot, card = item
-    return card.priority
-
-
-def sort_robots_by_cards_priority(state, register):
+def get_robots_ordered_by_cards_priority(state, register):
     """
     Get all the active robots, sort them according to the priority of their
     current card.
@@ -613,7 +605,8 @@ def sort_robots_by_cards_priority(state, register):
     robot_cards = [(robot, robot.program[register])
                    for robot in state.get_active_robots()]
 
-    robot_cards.sort(key=sort_by_priority, reverse=True)
+    robot_cards.sort(key=lambda item: item[1].priority, reverse=True)
+
     return robot_cards
 
 
@@ -622,8 +615,7 @@ def apply_register(state, register):
     For the given register sort the robot's list according to card's priorities.
     Apply cards effects on the sorted robots.
     """
-    robot_cards = sort_robots_by_cards_priority(state, register)
-
+    robot_cards = get_robots_ordered_by_cards_priority(state, register)
     for robot, card in robot_cards:
         card.apply_effect(robot, state)
 
