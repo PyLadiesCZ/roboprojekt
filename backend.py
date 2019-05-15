@@ -602,12 +602,16 @@ def get_robots_ordered_by_cards_priority(state, register):
     Get all the active robots, sort them according to the priority of their
     current card.
     """
-    robot_cards = [(robot, robot.program[register])
-                   for robot in state.get_active_robots()]
+    try:
+        robot_cards = [(robot, robot.program[register])
+                        for robot in state.get_active_robots()]
 
-    robot_cards.sort(key=lambda item: item[1].priority, reverse=True)
+        robot_cards.sort(key=lambda item: item[1].priority, reverse=True)
 
-    return robot_cards
+        return robot_cards
+
+    except IndexError:
+        raise LookupError
 
 
 def apply_register(state, register):
@@ -645,7 +649,7 @@ def _apply_cards_and_tiles_effects(state, registers):
             # Check the card's priority
             apply_register(state, register)
 
-        except IndexError:
+        except LookupError:
             pass
 
         apply_tile_effects(state, register)
