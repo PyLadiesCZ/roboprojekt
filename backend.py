@@ -3,7 +3,7 @@ Backend file contains functions for the game logic.
 """
 from pathlib import Path
 from collections import OrderedDict
-import json
+
 from util import Direction, Rotation, get_next_coordinates
 from tile import HoleTile
 from loading import get_board, get_map_data, board_from_data
