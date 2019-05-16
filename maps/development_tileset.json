@@ -18,14 +18,14 @@
          "imageheight":64,
          "imagewidth":64,
          "type":"ground"
-        }, 
+        },
         {
          "id":1,
          "image":"..\/img\/tiles\/png\/hole.png",
          "imageheight":64,
          "imagewidth":64,
          "type":"hole"
-        }, 
+        },
         {
          "id":2,
          "image":"..\/img\/tiles\/png\/laser_1_base.png",
@@ -33,17 +33,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"laser_start",
+                 "name":"start",
                  "type":"bool",
                  "value":true
-                }, 
+                },
                 {
                  "name":"laser_strength",
                  "type":"int",
                  "value":1
                 }],
          "type":"laser"
-        }, 
+        },
         {
          "id":3,
          "image":"..\/img\/tiles\/png\/laser_1.png",
@@ -51,17 +51,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"laser_start",
+                 "name":"start",
                  "type":"bool",
                  "value":false
-                }, 
+                },
                 {
                  "name":"laser_strength",
                  "type":"int",
                  "value":1
                 }],
          "type":"laser"
-        }, 
+        },
         {
          "id":6,
          "image":"..\/img\/tiles\/png\/gear_r.png",
@@ -74,7 +74,7 @@
                  "value":90
                 }],
          "type":"gear"
-        }, 
+        },
         {
          "id":7,
          "image":"..\/img\/tiles\/png\/gear_l.png",
@@ -87,7 +87,7 @@
                  "value":-90
                 }],
          "type":"gear"
-        }, 
+        },
         {
          "id":9,
          "image":"..\/img\/tiles\/png\/pusher_1_3_5.png",
@@ -100,7 +100,7 @@
                  "value":1
                 }],
          "type":"pusher"
-        }, 
+        },
         {
          "id":10,
          "image":"..\/img\/tiles\/png\/pusher_2_4.png",
@@ -113,14 +113,14 @@
                  "value":0
                 }],
          "type":"pusher"
-        }, 
+        },
         {
          "id":12,
          "image":"..\/img\/tiles\/png\/wall.png",
          "imageheight":64,
          "imagewidth":64,
          "type":"wall"
-        }, 
+        },
         {
          "id":13,
          "image":"..\/img\/tiles\/png\/laser_3_base.png",
@@ -128,17 +128,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"laser_start",
+                 "name":"start",
                  "type":"bool",
                  "value":true
-                }, 
+                },
                 {
                  "name":"laser_strength",
                  "type":"int",
                  "value":3
                 }],
          "type":"laser"
-        }, 
+        },
         {
          "id":14,
          "image":"..\/img\/tiles\/png\/laser_3.png",
@@ -146,17 +146,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"laser_start",
+                 "name":"start",
                  "type":"bool",
                  "value":false
-                }, 
+                },
                 {
                  "name":"laser_strength",
                  "type":"int",
                  "value":3
                 }],
          "type":"laser"
-        }, 
+        },
         {
          "id":15,
          "image":"..\/img\/tiles\/png\/laser_2_base.png",
@@ -164,17 +164,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"laser_start",
+                 "name":"start",
                  "type":"bool",
                  "value":true
-                }, 
+                },
                 {
                  "name":"laser_strength",
                  "type":"int",
                  "value":2
                 }],
          "type":"laser"
-        }, 
+        },
         {
          "id":16,
          "image":"..\/img\/tiles\/png\/laser_2.png",
@@ -182,17 +182,17 @@
          "imagewidth":64,
          "properties":[
                 {
-                 "name":"laser_start",
+                 "name":"start",
                  "type":"bool",
                  "value":false
-                }, 
+                },
                 {
                  "name":"laser_strength",
                  "type":"int",
                  "value":2
                 }],
          "type":"laser"
-        }, 
+        },
         {
          "id":17,
          "image":"..\/img\/tiles\/png\/conveyor_belt_1.png",
@@ -203,19 +203,19 @@
                  "name":"crossroad",
                  "type":"bool",
                  "value":false
-                }, 
+                },
                 {
                  "name":"direction_out",
                  "type":"int",
                  "value":0
-                }, 
+                },
                 {
                  "name":"express",
                  "type":"bool",
                  "value":false
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":18,
          "image":"..\/img\/tiles\/png\/conveyor_belt_1_corner_l.png",
@@ -226,19 +226,19 @@
                  "name":"crossroad",
                  "type":"bool",
                  "value":false
-                }, 
+                },
                 {
                  "name":"direction_out",
                  "type":"int",
                  "value":-90
-                }, 
+                },
                 {
                  "name":"express",
                  "type":"bool",
                  "value":false
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":19,
          "image":"..\/img\/tiles\/png\/conveyor_belt_1_corner_r.png",
@@ -249,19 +249,19 @@
                  "name":"crossroad",
                  "type":"bool",
                  "value":false
-                }, 
+                },
                 {
                  "name":"direction_out",
                  "type":"int",
                  "value":90
-                }, 
+                },
                 {
                  "name":"express",
                  "type":"bool",
                  "value":false
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":20,
          "image":"..\/img\/tiles\/png\/conveyor_belt_1_cross_l.png",
@@ -272,19 +272,19 @@
                  "name":"crossroad",
                  "type":"bool",
                  "value":true
-                }, 
+                },
                 {
                  "name":"direction_out",
                  "type":"int",
                  "value":-90
-                }, 
+                },
                 {
                  "name":"express",
                  "type":"bool",
                  "value":false
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":21,
          "image":"..\/img\/tiles\/png\/conveyor_belt_1_cross_r.png",
@@ -295,19 +295,19 @@
                  "name":"crossroad",
                  "type":"bool",
                  "value":true
-                }, 
+                },
                 {
                  "name":"direction_out",
                  "type":"int",
                  "value":90
-                }, 
+                },
                 {
                  "name":"express",
                  "type":"bool",
                  "value":false
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":22,
          "image":"..\/img\/tiles\/png\/conveyor_belt_1_cross_t.png",
@@ -318,19 +318,19 @@
                  "name":"crossroad",
                  "type":"bool",
                  "value":true
-                }, 
+                },
                 {
                  "name":"direction_out",
                  "type":"int",
                  "value":180
-                }, 
+                },
                 {
                  "name":"express",
                  "type":"bool",
                  "value":false
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":23,
          "image":"..\/img\/tiles\/png\/conveyor_belt_2.png",
@@ -341,19 +341,19 @@
                  "name":"crossroad",
                  "type":"bool",
                  "value":false
-                }, 
+                },
                 {
                  "name":"direction_out",
                  "type":"int",
                  "value":0
-                }, 
+                },
                 {
                  "name":"express",
                  "type":"bool",
                  "value":true
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":24,
          "image":"..\/img\/tiles\/png\/conveyor_belt_2_corner.svg.png",
@@ -364,19 +364,19 @@
                  "name":"crossroad",
                  "type":"bool",
                  "value":false
-                }, 
+                },
                 {
                  "name":"direction_out",
                  "type":"int",
                  "value":90
-                }, 
+                },
                 {
                  "name":"express",
                  "type":"bool",
                  "value":true
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":25,
          "image":"..\/img\/tiles\/png\/conveyor_belt_2_corner_l.png",
@@ -387,19 +387,19 @@
                  "name":"crossroad",
                  "type":"bool",
                  "value":false
-                }, 
+                },
                 {
                  "name":"direction_out",
                  "type":"int",
                  "value":-90
-                }, 
+                },
                 {
                  "name":"express",
                  "type":"bool",
                  "value":true
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":26,
          "image":"..\/img\/tiles\/png\/conveyor_belt_2_cross_l.png",
@@ -410,19 +410,19 @@
                  "name":"crossroad",
                  "type":"bool",
                  "value":true
-                }, 
+                },
                 {
                  "name":"direction_out",
                  "type":"int",
                  "value":-90
-                }, 
+                },
                 {
                  "name":"express",
                  "type":"bool",
                  "value":true
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":27,
          "image":"..\/img\/tiles\/png\/conveyor_belt_2_cross_r.png",
@@ -433,19 +433,19 @@
                  "name":"crossroad",
                  "type":"bool",
                  "value":true
-                }, 
+                },
                 {
                  "name":"direction_out",
                  "type":"int",
                  "value":90
-                }, 
+                },
                 {
                  "name":"express",
                  "type":"bool",
                  "value":true
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":28,
          "image":"..\/img\/tiles\/png\/conveyor_belt_2_cross_t.png",
@@ -456,19 +456,19 @@
                  "name":"crossroad",
                  "type":"bool",
                  "value":true
-                }, 
+                },
                 {
                  "name":"direction_out",
                  "type":"int",
                  "value":180
-                }, 
+                },
                 {
                  "name":"express",
                  "type":"bool",
                  "value":true
                 }],
          "type":"belt"
-        }, 
+        },
         {
          "id":29,
          "image":"..\/img\/tiles\/png\/flag_1.png",
@@ -481,7 +481,7 @@
                  "value":1
                 }],
          "type":"flag"
-        }, 
+        },
         {
          "id":30,
          "image":"..\/img\/tiles\/png\/flag_2.png",
@@ -494,7 +494,7 @@
                  "value":2
                 }],
          "type":"flag"
-        }, 
+        },
         {
          "id":31,
          "image":"..\/img\/tiles\/png\/flag_3.png",
@@ -507,7 +507,7 @@
                  "value":3
                 }],
          "type":"flag"
-        }, 
+        },
         {
          "id":32,
          "image":"..\/img\/tiles\/png\/flag_4.png",
@@ -520,7 +520,7 @@
                  "value":4
                 }],
          "type":"flag"
-        }, 
+        },
         {
          "id":33,
          "image":"..\/img\/tiles\/png\/flag_5.png",
@@ -533,7 +533,7 @@
                  "value":5
                 }],
          "type":"flag"
-        }, 
+        },
         {
          "id":34,
          "image":"..\/img\/tiles\/png\/flag_6.png",
@@ -546,7 +546,7 @@
                  "value":6
                 }],
          "type":"flag"
-        }, 
+        },
         {
          "id":35,
          "image":"..\/img\/tiles\/png\/flag_7.png",
@@ -559,7 +559,7 @@
                  "value":7
                 }],
          "type":"flag"
-        }, 
+        },
         {
          "id":36,
          "image":"..\/img\/tiles\/png\/flag_8.png",
@@ -572,7 +572,7 @@
                  "value":8
                 }],
          "type":"flag"
-        }, 
+        },
         {
          "id":37,
          "image":"..\/img\/tiles\/png\/repair.png",
@@ -585,7 +585,7 @@
                  "value":false
                 }],
          "type":"repair"
-        }, 
+        },
         {
          "id":38,
          "image":"..\/img\/tiles\/png\/repair_2.png",
@@ -598,7 +598,7 @@
                  "value":true
                 }],
          "type":"repair"
-        }, 
+        },
         {
          "id":39,
          "image":"..\/img\/tiles\/png\/start_tile01.png",
@@ -611,7 +611,7 @@
                  "value":1
                 }],
          "type":"start"
-        }, 
+        },
         {
          "id":40,
          "image":"..\/img\/tiles\/png\/start_tile02.png",
@@ -624,7 +624,7 @@
                  "value":2
                 }],
          "type":"start"
-        }, 
+        },
         {
          "id":41,
          "image":"..\/img\/tiles\/png\/start_tile03.png",
@@ -637,7 +637,7 @@
                  "value":3
                 }],
          "type":"start"
-        }, 
+        },
         {
          "id":42,
          "image":"..\/img\/tiles\/png\/start_tile04.png",
@@ -650,7 +650,7 @@
                  "value":4
                 }],
          "type":"start"
-        }, 
+        },
         {
          "id":43,
          "image":"..\/img\/tiles\/png\/start_tile05.png",
@@ -663,7 +663,7 @@
                  "value":5
                 }],
          "type":"start"
-        }, 
+        },
         {
          "id":44,
          "image":"..\/img\/tiles\/png\/start_tile06.png",
@@ -676,7 +676,7 @@
                  "value":6
                 }],
          "type":"start"
-        }, 
+        },
         {
          "id":45,
          "image":"..\/img\/tiles\/png\/start_tile07.png",
@@ -689,7 +689,7 @@
                  "value":7
                 }],
          "type":"start"
-        }, 
+        },
         {
          "id":46,
          "image":"..\/img\/tiles\/png\/start_tile08.png",
@@ -702,7 +702,7 @@
                  "value":8
                 }],
          "type":"start"
-        }, 
+        },
         {
          "id":47,
          "image":"..\/img\/tiles\/png\/stop_tile01.png",
@@ -715,7 +715,7 @@
                  "value":1
                 }],
          "type":"stop"
-        }, 
+        },
         {
          "id":48,
          "image":"..\/img\/tiles\/png\/stop_tile02.png",
@@ -728,7 +728,7 @@
                  "value":2
                 }],
          "type":"stop"
-        }, 
+        },
         {
          "id":49,
          "image":"..\/img\/tiles\/png\/stop_tile03.png",
@@ -741,7 +741,7 @@
                  "value":3
                 }],
          "type":"stop"
-        }, 
+        },
         {
          "id":50,
          "image":"..\/img\/tiles\/png\/stop_tile04.png",
@@ -754,7 +754,7 @@
                  "value":4
                 }],
          "type":"stop"
-        }, 
+        },
         {
          "id":51,
          "image":"..\/img\/tiles\/png\/stop_tile05.png",
@@ -767,7 +767,7 @@
                  "value":5
                 }],
          "type":"stop"
-        }, 
+        },
         {
          "id":52,
          "image":"..\/img\/tiles\/png\/stop_tile06.png",
@@ -780,7 +780,7 @@
                  "value":6
                 }],
          "type":"stop"
-        }, 
+        },
         {
          "id":53,
          "image":"..\/img\/tiles\/png\/stop_tile07.png",
@@ -793,7 +793,7 @@
                  "value":7
                 }],
          "type":"stop"
-        }, 
+        },
         {
          "id":54,
          "image":"..\/img\/tiles\/png\/stop_tile08.png",
