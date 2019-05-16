@@ -3,7 +3,7 @@ Backend file contains functions for the game logic.
 """
 from pathlib import Path
 from collections import OrderedDict
-
+import json
 from util import Direction, Rotation, get_next_coordinates
 from tile import HoleTile
 from loading import get_board, get_map_data, board_from_data
@@ -44,7 +44,8 @@ class Robot:
         Return robot´s info as dictionary for sending with server.
         """
         return {"name": self.name, "coordinates": self.coordinates, "lives": self.lives,
-                "flags": self.flags, "damages": self.damages, "inactive": self.inactive, "direction": self.direction.value}
+                "flags": self.flags, "damages": self.damages, "power down": self.power_down,
+                "direction": self.direction.value, "start coordinates": self.start_coordinates}
 
     def walk(self, distance, state, direction=None, push_others=True):
         """
@@ -616,30 +617,29 @@ def apply_all_effects(state, registers=5):
 
 def state_from_dict(data):
     """
-    Return State from JSON data, which server sent to client.
+    Return State from JSON data received from server."
     """
     map_data = data["board"]
     board = board_from_data(map_data)
     # list of robot objects
     robots = []
     for robot_description in data["robots"]:
-        direction = Direction(robot_description["direction"])
-        coordinates = tuple(robot_description["coordinates"])
-        name = robot_description["name"]
-        robot = Robot(direction, coordinates, name)
+        robot = robot_from_dict(robot_description)
         robots.append(robot)
     return State(board, robots)
 
 
 def robot_from_dict(robot_description):
+    """
+    Return robot from JSON data received from server."
+    """
     direction = Direction(robot_description["direction"])
-    coordinates = tuplte(robot_description["coordinates"])
+    coordinates = tuple(robot_description["coordinates"])
     name = robot_description["name"]
     robot = Robot(direction, coordinates, name)
     robot.lives = robot_description["lives"]
     robot.flags = robot_description["flags"]
     robot.damages = robot_description["damages"]
-    robot.power_down = robot_description["inactive"]
-    #robot.start_coordinates? použít?
-    #robot.program??
+    robot.power_down = robot_description["power down"]
+    robot.start_coordinates = robot_description["start coordinates"]
     return robot
