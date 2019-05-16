@@ -103,7 +103,6 @@ def get_tiles_properties(map_data):
                 elif property_value is not False:
                     unique_properties = f"{unique_properties}_{property_value}"
             name = f"{name}{unique_properties}"
-        print(name)
         names[id] = name
 
     return types, properties, names

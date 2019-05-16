@@ -215,13 +215,13 @@ class GearTile(Tile):
 class LaserTile(Tile):
     def __init__(self, direction, name, properties):
         self.laser_strength = properties["laser_strength"]
-        self.laser_start = properties["laser_start"]
+        self.start = properties["start"]
         super().__init__(direction, name, properties)
 
     def shoot_robot(self, robot, state):
         # Robot stands on laser tile.
         # If robot isn't standing on the start of the laser, look for other robots.
-        if not self.laser_start:
+        if not self.start:
             # Get coordinates of current robot.
             (x, y) = robot.coordinates
             # Get coordinates of other robots.
@@ -247,7 +247,7 @@ class LaserTile(Tile):
                         # Follow-up laser tile found, don't check ohter tiles here.
                         break
                 # Check for laser start tile.
-                if isinstance(tile, LaserTile) and tile.laser_start:
+                if tile.start:
                     # Don't check new tiles.
                     break
         robot.be_damaged(self.laser_strength)

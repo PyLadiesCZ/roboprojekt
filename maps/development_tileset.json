@@ -28,7 +28,7 @@
         },
         {
          "id":2,
-         "image":"..\/img\/tiles\/png\/laser_1_base.png",
+         "image":"..\/img\/tiles\/png\/laser_start_1.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -64,7 +64,7 @@
         },
         {
          "id":6,
-         "image":"..\/img\/tiles\/png\/gear_r.png",
+         "image":"..\/img\/tiles\/png\/gear_90.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -77,7 +77,7 @@
         },
         {
          "id":7,
-         "image":"..\/img\/tiles\/png\/gear_l.png",
+         "image":"..\/img\/tiles\/png\/gear_-90.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -90,7 +90,7 @@
         },
         {
          "id":9,
-         "image":"..\/img\/tiles\/png\/pusher_1_3_5.png",
+         "image":"..\/img\/tiles\/png\/pusher_1.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -103,7 +103,7 @@
         },
         {
          "id":10,
-         "image":"..\/img\/tiles\/png\/pusher_2_4.png",
+         "image":"..\/img\/tiles\/png\/pusher_0.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -123,7 +123,7 @@
         },
         {
          "id":13,
-         "image":"..\/img\/tiles\/png\/laser_3_base.png",
+         "image":"..\/img\/tiles\/png\/laser_start_3.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -159,7 +159,7 @@
         },
         {
          "id":15,
-         "image":"..\/img\/tiles\/png\/laser_2_base.png",
+         "image":"..\/img\/tiles\/png\/laser_start_2.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -195,7 +195,7 @@
         },
         {
          "id":17,
-         "image":"..\/img\/tiles\/png\/conveyor_belt_1.png",
+         "image":"..\/img\/tiles\/png\/belt_0.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -218,7 +218,7 @@
         },
         {
          "id":18,
-         "image":"..\/img\/tiles\/png\/conveyor_belt_1_corner_l.png",
+         "image":"..\/img\/tiles\/png\/belt_-90.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -241,7 +241,7 @@
         },
         {
          "id":19,
-         "image":"..\/img\/tiles\/png\/conveyor_belt_1_corner_r.png",
+         "image":"..\/img\/tiles\/png\/belt_90.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -264,7 +264,7 @@
         },
         {
          "id":20,
-         "image":"..\/img\/tiles\/png\/conveyor_belt_1_cross_l.png",
+         "image":"..\/img\/tiles\/png\/belt_crossroad_-90.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -287,7 +287,7 @@
         },
         {
          "id":21,
-         "image":"..\/img\/tiles\/png\/conveyor_belt_1_cross_r.png",
+         "image":"..\/img\/tiles\/png\/belt_crossroad_90.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -310,7 +310,7 @@
         },
         {
          "id":22,
-         "image":"..\/img\/tiles\/png\/conveyor_belt_1_cross_t.png",
+         "image":"..\/img\/tiles\/png\/belt_crossroad_180.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -333,7 +333,7 @@
         },
         {
          "id":23,
-         "image":"..\/img\/tiles\/png\/conveyor_belt_2.png",
+         "image":"..\/img\/tiles\/png\/belt_0_express.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -356,7 +356,7 @@
         },
         {
          "id":24,
-         "image":"..\/img\/tiles\/png\/conveyor_belt_2_corner.svg.png",
+         "image":"..\/img\/tiles\/png\/belt_90_express.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -379,7 +379,7 @@
         },
         {
          "id":25,
-         "image":"..\/img\/tiles\/png\/conveyor_belt_2_corner_l.png",
+         "image":"..\/img\/tiles\/png\/belt_-90_express.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -402,7 +402,7 @@
         },
         {
          "id":26,
-         "image":"..\/img\/tiles\/png\/conveyor_belt_2_cross_l.png",
+         "image":"..\/img\/tiles\/png\/belt_crossroad_-90_express.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -425,7 +425,7 @@
         },
         {
          "id":27,
-         "image":"..\/img\/tiles\/png\/conveyor_belt_2_cross_r.png",
+         "image":"..\/img\/tiles\/png\/belt_crossroad_90_express.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -448,7 +448,7 @@
         },
         {
          "id":28,
-         "image":"..\/img\/tiles\/png\/conveyor_belt_2_cross_t.png",
+         "image":"..\/img\/tiles\/png\/belt_crossroad_180_express.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -588,7 +588,7 @@
         },
         {
          "id":38,
-         "image":"..\/img\/tiles\/png\/repair_2.png",
+         "image":"..\/img\/tiles\/png\/repair_new_start.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -601,7 +601,7 @@
         },
         {
          "id":39,
-         "image":"..\/img\/tiles\/png\/start_tile01.png",
+         "image":"..\/img\/tiles\/png\/start_1.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -614,7 +614,7 @@
         },
         {
          "id":40,
-         "image":"..\/img\/tiles\/png\/start_tile02.png",
+         "image":"..\/img\/tiles\/png\/start_2.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -627,7 +627,7 @@
         },
         {
          "id":41,
-         "image":"..\/img\/tiles\/png\/start_tile03.png",
+         "image":"..\/img\/tiles\/png\/start_3.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -640,7 +640,7 @@
         },
         {
          "id":42,
-         "image":"..\/img\/tiles\/png\/start_tile04.png",
+         "image":"..\/img\/tiles\/png\/start_4.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -653,7 +653,7 @@
         },
         {
          "id":43,
-         "image":"..\/img\/tiles\/png\/start_tile05.png",
+         "image":"..\/img\/tiles\/png\/start_5.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -666,7 +666,7 @@
         },
         {
          "id":44,
-         "image":"..\/img\/tiles\/png\/start_tile06.png",
+         "image":"..\/img\/tiles\/png\/start_6.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -679,7 +679,7 @@
         },
         {
          "id":45,
-         "image":"..\/img\/tiles\/png\/start_tile07.png",
+         "image":"..\/img\/tiles\/png\/start_7.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -692,7 +692,7 @@
         },
         {
          "id":46,
-         "image":"..\/img\/tiles\/png\/start_tile08.png",
+         "image":"..\/img\/tiles\/png\/start_8.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -705,7 +705,7 @@
         },
         {
          "id":47,
-         "image":"..\/img\/tiles\/png\/stop_tile01.png",
+         "image":"..\/img\/tiles\/png\/stop_1.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -718,7 +718,7 @@
         },
         {
          "id":48,
-         "image":"..\/img\/tiles\/png\/stop_tile02.png",
+         "image":"..\/img\/tiles\/png\/stop_2.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -731,7 +731,7 @@
         },
         {
          "id":49,
-         "image":"..\/img\/tiles\/png\/stop_tile03.png",
+         "image":"..\/img\/tiles\/png\/stop_3.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -744,7 +744,7 @@
         },
         {
          "id":50,
-         "image":"..\/img\/tiles\/png\/stop_tile04.png",
+         "image":"..\/img\/tiles\/png\/stop_4.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -757,7 +757,7 @@
         },
         {
          "id":51,
-         "image":"..\/img\/tiles\/png\/stop_tile05.png",
+         "image":"..\/img\/tiles\/png\/stop_5.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -770,7 +770,7 @@
         },
         {
          "id":52,
-         "image":"..\/img\/tiles\/png\/stop_tile06.png",
+         "image":"..\/img\/tiles\/png\/stop_6.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -783,7 +783,7 @@
         },
         {
          "id":53,
-         "image":"..\/img\/tiles\/png\/stop_tile07.png",
+         "image":"..\/img\/tiles\/png\/stop_7.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
@@ -796,7 +796,7 @@
         },
         {
          "id":54,
-         "image":"..\/img\/tiles\/png\/stop_tile08.png",
+         "image":"..\/img\/tiles\/png\/stop_8.png",
          "imageheight":64,
          "imagewidth":64,
          "properties":[
