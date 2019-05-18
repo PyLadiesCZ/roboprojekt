@@ -193,6 +193,12 @@ class Card:
     def __init__(self, priority):
         self.priority = priority  # int - to decide who goes first
 
+    def __gt__(self, other):
+        if other.priority < self.priority:
+            return True
+        else:
+            return False
+
 
 class MovementCard(Card):
     def __init__(self, priority, value):
@@ -277,6 +283,10 @@ class State:
         for robot in self.robots:
             if not robot.inactive:
                 yield robot
+
+
+class NoCardError(LookupError):
+    """Raised when a robot doesn't have a card for the given register."""
 
 
 def get_robot_names():
@@ -607,12 +617,12 @@ def get_robots_ordered_by_cards_priority(state, register):
         robot_cards = [(robot, robot.program[register])
                         for robot in state.get_active_robots()]
 
-        robot_cards.sort(key=lambda item: item[1].priority, reverse=True)
+        robot_cards.sort(key=lambda item: item[1], reverse=True)
 
         return robot_cards
 
     except IndexError:
-        raise LookupError
+        raise NoCardError
 
 
 def apply_register(state, register):
@@ -650,7 +660,8 @@ def _apply_cards_and_tiles_effects(state, registers):
             # Check the card's priority
             apply_register(state, register)
 
-        except LookupError:
+        except NoCardError:
+            print("No card on hand, continue to tile effects.")
             pass
 
         apply_tile_effects(state, register)
