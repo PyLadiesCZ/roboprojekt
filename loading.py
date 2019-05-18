@@ -124,11 +124,9 @@ def get_tile_direction(tile_number):
     return direction_dict[direction_number]
 
 
-def get_board(map_name):
+def board_from_data(map_data):
     """
-    Create game board from provided data from JSON file.
-
-    map_name: a map of the game board created in Tiled 1.2 and saved as a JSON file
+    Create game board.
 
     Return dictionary of coordinates containing matching Tile objects.
 
@@ -139,7 +137,6 @@ def get_board(map_name):
     Basic idea about dict comprehension used to create board can be found here:
     https://www.geeksforgeeks.org/python-dictionary-comprehension/
     """
-    map_data = get_map_data(map_name)
     types, properties, paths = get_tiles_properties(map_data)
     coordinates = get_coordinates(map_data)
 
@@ -160,3 +157,13 @@ def get_board(map_name):
                 tiles.append(tile)
                 board[coordinate] = tiles
     return board
+
+
+def get_board(map_name):
+    """
+    Create game board from provided data from JSON file.
+
+    map_name: a map of the game board created in Tiled 1.2 and saved as a JSON file
+    """
+    map_data = get_map_data(map_name)
+    return board_from_data(map_data)
