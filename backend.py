@@ -608,11 +608,8 @@ def apply_all_effects(state, registers=5):
     """
     for register in range(registers):
         for robot in state.get_active_robots():
-            try:
-                current_card = robot.program[register]
-                current_card.apply_effect(robot, state)
-            except IndexError:
-                pass
+            current_card = robot.program[register]
+            current_card.apply_effect(robot, state)
         apply_tile_effects(state, register)
     # After last register ressurect the robots to their starting coordinates.
     set_robots_for_new_turn(state)
