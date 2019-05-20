@@ -6,12 +6,12 @@ from enum import Enum
 
 
 class Direction(Enum):
-    N = 0, (0, +1), 0
-    E = 90, (+1, 0), 1
-    S = 180, (0, -1), 2
-    W = 270, (-1, 0), 3
+    N = 0, (0, +1)
+    E = 90, (+1, 0)
+    S = 180, (0, -1)
+    W = 270, (-1, 0)
 
-    def __new__(cls, degrees, coor_delta, tile_property):
+    def __new__(cls, degrees, coor_delta):
         """
         Get attributes value and vector of the given Direction class values.
 
@@ -29,7 +29,6 @@ class Direction(Enum):
         obj = object.__new__(cls)
         obj._value_ = degrees
         obj.coor_delta = coor_delta
-        obj.map_property = tile_property
         return obj
 
     def __add__(self, other):

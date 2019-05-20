@@ -62,7 +62,22 @@ class Tile:
         """
         return robot
 
-    def move_robot(self, robot, state):
+    def check_belts(self, express_belts):
+        """
+        Check that current tile is conveyor belt of desired type.
+        express_belts: a boolean, True for express belts, False for all belts.
+        Return a boolean.
+        True - Tile is conveyor belt of desired type.
+        False - Tile isn't conveyor belt or it's a wrong type of belt.
+        """
+        return False
+
+    def rotate_robot_on_belt(self, robot, direction):
+        """
+        Rotate robot on rotating conveyor belts. If robot's rotated,
+        will be decided by the direction he entered a tile.
+        direction: direction from which robot entered a tile
+        """
         return robot
 
     def push_robot(self, robot, state, register):
@@ -141,16 +156,36 @@ class HoleTile(Tile):
 
 class BeltTile(Tile):
     def __init__(self, direction, path, properties):
-        self.direction_out = transform_direction(properties["direction_out"])
+        if properties["direction_out"] == 0:
+            self.direction_out = Direction.N
+        else:
+            self.direction_out = Rotation(properties["direction_out"])
         self.express = properties["express"]
         super().__init__(direction, path, properties)
 
-    def move_robot(self, state):
-        # TO DO!
+    def check_belts(self, express_belts):
+        # Only express belts
+        if self.express is express_belts:
+            return True
+        # All belts
+        elif express_belts is False:
+            return True
+        else:
+            return False
 
-        # 1) Express belts move 1 space
-        # 2) Express belts and normal belts move 1 space
-        pass
+    def rotate_robot_on_belt(self, robot, direction):
+        # Special condition for one type of crossroads:
+        # If crossroads have Direction.N, then the special type has exit
+        # on south part of tile.
+        if self.direction_out == Rotation.U_TURN:
+            if self.direction.get_new_direction(Rotation.RIGHT) == direction:
+                robot.rotate(Rotation.RIGHT)
+            else:
+                robot.rotate(Rotation.LEFT)
+        # All other rotating belts or crossroads.
+        elif isinstance(self.direction_out, Rotation):
+                if direction == self.direction:
+                    robot.rotate(self.direction_out)
 
 
 class PusherTile(Tile):
@@ -169,7 +204,7 @@ class PusherTile(Tile):
 
 class GearTile(Tile):
     def __init__(self, direction, path, properties):
-        self.move_direction = transform_direction(properties["move_direction"])
+        self.move_direction = Rotation(properties["move_direction"])
         super().__init__(direction, path, properties)
 
     def rotate_robot(self, robot):
@@ -259,18 +294,3 @@ def create_tile_subclass(direction, path, type, properties):
     Create tile subclass according to its type.
     """
     return TILE_CLS[type](direction, path, properties)
-
-
-def transform_direction(direction_int):
-    """
-    Function to transform the string taken from json properties to valid
-    Rotation class instance for later processing.
-    """
-    if direction_int == 0:
-        return Direction.N
-    if direction_int == -1:
-        return Rotation.LEFT
-    if direction_int == 1:
-        return Rotation.RIGHT
-    if direction_int == 2:
-        return Rotation.U_TURN

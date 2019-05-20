@@ -7,13 +7,13 @@ The game module
 import pyglet
 import sys
 
-from backend import get_start_state, play_the_game
+from backend import get_start_state, apply_all_effects
 from frontend import create_window, draw_state
 
 
 # load JSON map data from the backend module
 if len(sys.argv) == 1:
-    map_name = "maps/test_3.json"
+    map_name = "maps/test_effects.json"
 
 # if other map should be loaded, use extra argument "maps/MAP_NAME.json"
 # when calling game.py by Python
@@ -43,7 +43,7 @@ def move_once(t):
     Move all robots according to mock cards on hand and perform tile effects.
     """
 
-    play_the_game(state)
+    apply_all_effects(state)
     print("After tile effects:")
     for robot in state.robots:
         print(robot)

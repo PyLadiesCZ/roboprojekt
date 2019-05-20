@@ -12,7 +12,7 @@ This file works currently only with one map. Under heavy construction.
 import pytest
 import yaml
 
-from backend import get_start_state, get_start_tiles, play_the_game
+from backend import get_start_state, get_start_tiles, apply_all_effects
 from backend import MovementCard, RotationCard
 from tile import StartTile
 
@@ -107,7 +107,7 @@ def play_test_game():
     add_start_tile_number_to_robots(state)
     match_programs_to_robots(robots_program, state)
 
-    play_the_game(state, registers=2)
+    apply_all_effects(state, registers=2)
 
     stop_fields = get_start_tiles(state._board, "stop")
 
