@@ -613,7 +613,7 @@ def get_robots_ordered_by_cards_priority(state, register):
     """
     Get all the active robots, sort them according to the priority of their
     current card.
-    If any of the robots misses the card, raise LookupError.
+    If any of the robots misses the card, raise NoCardError.
     """
     try:
         robot_cards = [(robot, robot.program[register])
