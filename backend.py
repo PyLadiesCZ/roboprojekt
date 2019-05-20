@@ -195,6 +195,12 @@ class Card:
     def __init__(self, priority):
         self.priority = priority  # int - to decide who goes first
 
+    def __gt__(self, other):
+        if other.priority < self.priority:
+            return True
+        else:
+            return False
+
 
 class MovementCard(Card):
     def __init__(self, priority, value):
@@ -279,6 +285,10 @@ class State:
         for robot in self.robots:
             if not robot.inactive:
                 yield robot
+
+
+class NoCardError(LookupError):
+    """Raised when a robot doesn't have a card for the given register."""
 
 
 def get_robot_names():
@@ -599,20 +609,64 @@ def set_robots_for_new_turn(state):
             robot.direction = Direction.N
 
 
+def get_robots_ordered_by_cards_priority(state, register):
+    """
+    Get all the active robots, sort them according to the priority of their
+    current card.
+    If any of the robots misses the card, raise NoCardError.
+    """
+    try:
+        robot_cards = [(robot, robot.program[register])
+                        for robot in state.get_active_robots()]
+
+        robot_cards.sort(key=lambda item: item[1], reverse=True)
+
+        return robot_cards
+
+    except IndexError:
+        raise NoCardError
+
+
+def apply_register(state, register):
+    """
+    For the given register sort the robot's list according to card's priorities.
+    Apply cards effects on the sorted robots.
+    """
+    robot_cards = get_robots_ordered_by_cards_priority(state, register)
+    for robot, card in robot_cards:
+        card.apply_effect(robot, state)
+
+
 def apply_all_effects(state, registers=5):
     """
-    Play the whole game: for the given number of iterations
+    Apply all game effects: for the given number of iterations
     perform robot's cards effects and tile effects on a given game state.
     At the end ressurect the inactive robots to their starting coordinates.
     registers: default iterations count is 5, can be changed for testing purposes.
     """
-    for register in range(registers):
-        for robot in state.get_active_robots():
-            current_card = robot.program[register]
-            current_card.apply_effect(robot, state)
-        apply_tile_effects(state, register)
+    _apply_cards_and_tiles_effects(state, registers)
+
     # After last register ressurect the robots to their starting coordinates.
     set_robots_for_new_turn(state)
+
+
+def _apply_cards_and_tiles_effects(state, registers):
+    """
+    Private function without ressurect mode - for testing purposes.
+    It is called within apply_all_effects. Do not call it separately.
+    """
+    for register in range(registers):
+        # try -  except was introduced for devel purposes - it may happen that
+        # robots have no card on hand and we still want to try loading the game
+        try:
+            # Check the card's priority
+            apply_register(state, register)
+
+        except NoCardError:
+            print("No card on hand, continue to tile effects.")
+            pass
+
+        apply_tile_effects(state, register)
 
 
 def state_from_dict(data):

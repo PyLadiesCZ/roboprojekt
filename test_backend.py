@@ -1,6 +1,8 @@
 import pytest
 
-from backend import create_robots, get_start_state, Robot, State, MovementCard, RotationCard, apply_tile_effects, get_direction_from_coordinates, apply_all_effects
+from backend import create_robots, get_start_state, Robot, State, MovementCard
+from backend import RotationCard, apply_tile_effects, get_direction_from_coordinates
+from backend import apply_all_effects, get_robots_ordered_by_cards_priority
 from util import Direction, Rotation
 from tile import Tile, HoleTile, GearTile, PusherTile, RepairTile, FlagTile
 from loading import get_board
@@ -685,3 +687,34 @@ def test_rotate_cards(card, new_direction):
     state = get_start_state("maps/test_3.json")
     card.apply_effect(robot, state)
     assert robot.direction == new_direction
+
+
+def test_card_priorities():
+    """
+    Check that robots are sorted according to their cards on hand.
+    Assert first and last robot's on the list priority.
+    """
+    state = get_start_state("maps/test_effects.json")
+    cards = [[MovementCard(100, 1), MovementCard(100, 1)],
+             [RotationCard(120, Rotation.U_TURN), MovementCard(200, 2)],
+             [MovementCard(150, -1), MovementCard(110, 1)],
+             [MovementCard(110, 1), MovementCard(140, 1)],
+             [RotationCard(55, Rotation.LEFT), MovementCard(250, 2)],
+             [MovementCard(300, 3), MovementCard(350, 3)],
+             [MovementCard(230, 2), RotationCard(80, Rotation.RIGHT)],
+             [MovementCard(150, 1), MovementCard(140, 1)],
+             ]
+    # create robot's programs
+    i = 0
+    for robot in state.get_active_robots():
+        robot.program = cards[i]
+        i += 1
+
+    robot_cards = get_robots_ordered_by_cards_priority(state, 0)
+    print(robot_cards[0])
+    assert robot_cards[0][0].program[0].priority == 300
+    assert robot_cards[7][0].program[0].priority == 55
+
+    robot_cards = get_robots_ordered_by_cards_priority(state, 1)
+    assert robot_cards[0][0].program[1].priority == 350
+    assert robot_cards[7][0].program[1].priority == 80
