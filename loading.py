@@ -68,7 +68,7 @@ def get_tiles_properties(map_data):
     Get significant data from JSON tile fields.
 
     Take loaded data with tiles properties and return a tuple:
-    tile types dict, tile's custom properties dict and paths to images dict.
+    tile types dict, tile's custom properties dict and names of images dict.
     """
 
     loaded_tileset = get_tiles_data(map_data)
@@ -76,7 +76,7 @@ def get_tiles_properties(map_data):
     no_properties_tiles = {'ground', 'hole', 'wall'}
     types = {}
     properties = {}
-    paths = {}
+    names = {}
 
     for json_tile in loaded_tileset:
         id = json_tile['id'] + map_data['tilesets'][0]['firstgid']
@@ -93,12 +93,19 @@ def get_tiles_properties(map_data):
         else:
             properties[id] = {}
 
-        # paths to tile image
-        path = json_tile['image']
-        path = path[1:]  # unelegant way of removing ../ at the beginning of the path
-        paths[id] = path
+        # names of tile images
+        name = types[id]
+        if properties[id]:
+            unique_properties = ''
+            for property_name, property_value in properties[id].items():
+                if property_value is True:
+                    unique_properties = f"{unique_properties}_{property_name}"
+                elif property_value is not False:
+                    unique_properties = f"{unique_properties}_{property_value}"
+            name = f"{name}{unique_properties}"
+        names[id] = name
 
-    return types, properties, paths
+    return types, properties, names
 
 
 def get_tile_id(tile_number):
@@ -106,8 +113,9 @@ def get_tile_id(tile_number):
     Return tile ID.
 
     Transform tile_number to get tile ID that is equal to
-    addiction of 'firstgid' value of tileset and tile ID stored in 'tilesets' part of JSON map format.
-    The same ID that is used as a key in dict 'paths'.
+    addiction of 'firstgid' value of tileset and tile ID stored in 'tilesets'
+    part of JSON map format.
+    The same ID that is used as a key in dict 'types' or 'properties'.
     """
     return tile_number & 0xFFFFFF
 
@@ -137,7 +145,7 @@ def board_from_data(map_data):
     Basic idea about dict comprehension used to create board can be found here:
     https://www.geeksforgeeks.org/python-dictionary-comprehension/
     """
-    types, properties, paths = get_tiles_properties(map_data)
+    types, properties, names = get_tiles_properties(map_data)
     coordinates = get_coordinates(map_data)
 
     # create dictionary of coordinates where value is empty list for further transformation
@@ -153,7 +161,7 @@ def board_from_data(map_data):
             # otherwise add Tile object to the list of objects on the same coordinates
             if id != 0:
                 direction = get_tile_direction(tile_number)
-                tile = create_tile_subclass(direction, paths[id], types[id], properties[id])
+                tile = create_tile_subclass(direction, names[id], types[id], properties[id])
                 tiles.append(tile)
                 board[coordinate] = tiles
     return board

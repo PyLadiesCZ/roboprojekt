@@ -6,9 +6,9 @@ from util import Direction, Rotation, get_next_coordinates
 
 
 class Tile:
-    def __init__(self, direction, path, properties):
+    def __init__(self, direction, name, properties):
         self.direction = direction
-        self.path = path
+        self.name = name
 
     def __repr__(self):
         # type(self).__name__: shows the type of the particular tile
@@ -128,26 +128,26 @@ class WallTile(Tile):
 
 
 class StartTile(Tile):
-    def __init__(self, direction, path, properties):
+    def __init__(self, direction, name, properties):
         self.number = properties["number"]
-        super().__init__(direction, path, properties)
+        super().__init__(direction, name, properties)
 
     def properties_dict(self, coordinate):
         return {"coordinates": coordinate, "tile_direction": self.direction}
 
 
 class StopTile(Tile):
-    def __init__(self, direction, path, properties):
+    def __init__(self, direction, name, properties):
         self.number = properties["number"]
-        super().__init__(direction, path, properties)
+        super().__init__(direction, name, properties)
 
     def stop_properties_dict(self, coordinate):
         return {"coordinates": coordinate, "tile_direction": self.direction}
 
 
 class HoleTile(Tile):
-    def __init__(self, direction=Direction.N, path=None, properties={}):
-        super().__init__(direction, path, properties)
+    def __init__(self, direction=Direction.N, name=None, properties={}):
+        super().__init__(direction, name, properties)
 
     def kill_robot(self, robot):
         # Call robot's method for dying.
@@ -155,13 +155,13 @@ class HoleTile(Tile):
 
 
 class BeltTile(Tile):
-    def __init__(self, direction, path, properties):
+    def __init__(self, direction, name, properties):
         if properties["direction_out"] == 0:
             self.direction_out = Direction.N
         else:
             self.direction_out = Rotation(properties["direction_out"])
         self.express = properties["express"]
-        super().__init__(direction, path, properties)
+        super().__init__(direction, name, properties)
 
     def check_belts(self, express_belts):
         # Only express belts
@@ -189,9 +189,9 @@ class BeltTile(Tile):
 
 
 class PusherTile(Tile):
-    def __init__(self, direction, path, properties):
+    def __init__(self, direction, name, properties):
         self.register = properties["register"]
-        super().__init__(direction, path, properties)
+        super().__init__(direction, name, properties)
 
     def push_robot(self, robot, state, register):
         # Check register and activate correct pushers.
@@ -203,9 +203,9 @@ class PusherTile(Tile):
 
 
 class GearTile(Tile):
-    def __init__(self, direction, path, properties):
+    def __init__(self, direction, name, properties):
         self.move_direction = Rotation(properties["move_direction"])
-        super().__init__(direction, path, properties)
+        super().__init__(direction, name, properties)
 
     def rotate_robot(self, robot):
         # Rotate robot by 90° according to GearTile property: left or right.
@@ -213,15 +213,15 @@ class GearTile(Tile):
 
 
 class LaserTile(Tile):
-    def __init__(self, direction, path, properties):
+    def __init__(self, direction, name, properties):
         self.laser_strength = properties["laser_strength"]
-        self.laser_start = properties["laser_start"]
-        super().__init__(direction, path, properties)
+        self.start = properties["start"]
+        super().__init__(direction, name, properties)
 
     def shoot_robot(self, robot, state):
         # Robot stands on laser tile.
         # If robot isn't standing on the start of the laser, look for other robots.
-        if not self.laser_start:
+        if not self.start:
             # Get coordinates of current robot.
             (x, y) = robot.coordinates
             # Get coordinates of other robots.
@@ -247,16 +247,16 @@ class LaserTile(Tile):
                         # Follow-up laser tile found, don't check ohter tiles here.
                         break
                 # Check for laser start tile.
-                if isinstance(tile, LaserTile) and tile.laser_start:
+                if tile.start:
                     # Don't check new tiles.
                     break
         robot.be_damaged(self.laser_strength)
 
 
 class FlagTile(Tile):
-    def __init__(self, direction, path, properties):
-        self.flag_number = properties["flag_number"]
-        super().__init__(direction, path, properties)
+    def __init__(self, direction, name, properties):
+        self.number = properties["number"]
+        super().__init__(direction, name, properties)
 
     def collect_flag(self, robot):
         # Robot always changes his start coordinates, when he is on a flag.
@@ -264,14 +264,14 @@ class FlagTile(Tile):
         robot.start_coordinates = robot.coordinates
         # Collect only correct flag.
         # Correct flag will have a number that is equal to robot's flag number plus one.
-        if (robot.flags + 1) == self.flag_number:
+        if (robot.flags + 1) == self.number:
             robot.flags += 1
 
 
 class RepairTile(Tile):
-    def __init__(self, direction, path, properties):
+    def __init__(self, direction, name, properties):
         self.new_start = properties["new_start"]
-        super().__init__(direction, path, properties)
+        super().__init__(direction, name, properties)
 
     def repair_robot(self, robot, state, register):
         if (register + 1) == 5:
@@ -289,8 +289,8 @@ TILE_CLS = {'wall': WallTile, 'start': StartTile, 'hole': HoleTile,
             'ground': Tile, 'stop': StopTile}
 
 
-def create_tile_subclass(direction, path, type, properties):
+def create_tile_subclass(direction, name, type, properties):
     """
     Create tile subclass according to its type.
     """
-    return TILE_CLS[type](direction, path, properties)
+    return TILE_CLS[type](direction, name, properties)

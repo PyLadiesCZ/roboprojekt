@@ -296,7 +296,7 @@ def get_robot_names():
     Return a list of robots names (names of the files with robots avatars).
     """
     robot_names = []
-    for img in Path('./img/robots/png').iterdir():
+    for img in Path('./img/robots_map/png').iterdir():
         robot_name = img.stem
         robot_names.append(robot_name)
     return robot_names
@@ -541,15 +541,13 @@ def get_direction_from_coordinates(start_coordinates, stop_coordinates):
     Get Direction class object according to change in coordinates.
     Work only for change by one tile.
     """
-    x, y = start_coordinates
-    if (x, y + 1) == stop_coordinates:
-        return Direction.N
-    elif (x, y - 1) == stop_coordinates:
-        return Direction.S
-    elif (x + 1, y) == stop_coordinates:
-        return Direction.E
-    elif (x - 1, y) == stop_coordinates:
-        return Direction.W
+    x_stop, y_stop = stop_coordinates
+    x_start, y_start = start_coordinates
+
+    delta = (x_stop - x_start, y_stop - y_start)
+    for direction in list(Direction):
+        if direction.coor_delta == delta:
+            return direction
 
 
 def apply_tile_effects(state, register):
