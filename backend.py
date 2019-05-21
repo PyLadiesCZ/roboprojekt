@@ -296,7 +296,7 @@ def get_robot_names():
     Return a list of robots names (names of the files with robots avatars).
     """
     robot_names = []
-    for img in Path('./img/robots/png').iterdir():
+    for img in Path('./img/robots_map/png').iterdir():
         robot_name = img.stem
         robot_names.append(robot_name)
     return robot_names

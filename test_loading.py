@@ -84,15 +84,15 @@ def test_map_returns_correct_image_ID(index_number, expected_value):
     ("index_number", "expected_value"),
     [
         (0, "../img/tiles/png/ground.png"),
-        (2, "../img/tiles/png/laser_1_base.png"),
-        (4, "../img/tiles/png/gear_r.png"),
-        (6, "../img/tiles/png/pusher_1_3_5.png"),
-        (13, "../img/tiles/png/conveyor_belt_1.png"),
+        (2, "../img/tiles/png/laser_start_1.png"),
+        (4, "../img/tiles/png/gear_90.png"),
+        (6, "../img/tiles/png/pusher_1.png"),
+        (13, "../img/tiles/png/belt_0.png"),
     ]
 )
-def test_map_returns_correct_image_path(index_number, expected_value):
+def test_map_returns_correct_image_names(index_number, expected_value):
     """
-    Test the loaded map file returns expected image path.
+    Test the loaded map file returns expected image name.
 
     Regression test of get_data function. Uses test_1.json map for this.
     """
@@ -111,10 +111,10 @@ def test_board_structure():
         (1, "ground", {}),
         (2, "hole", {}),
         (13, "wall", {}),
-        (4, "laser", {"laser_strength": 1, "laser_start": False}),
+        (4, "laser", {"laser_strength": 1, "start": False}),
         (7, "gear", {"move_direction": 90}),
         (10, "pusher", {"register": 1}),
-        (24, "belt", {"direction_out": 0, "express": True}),
+        (24, "belt", {"crossroad": False, "direction_out": 0, "express": True}),
     ]
 )
 def test_loading_of_tile_type_properties(id, tile_type, tile_properties):

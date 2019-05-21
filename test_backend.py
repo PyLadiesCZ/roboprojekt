@@ -245,9 +245,9 @@ def test_robot_died(lives_before, lives_after):
 # FlagTile
 
 @pytest.mark.parametrize(("flags_before", "tile", "flags_after"),
-                         [(3, FlagTile(None, None, {'flag_number': 1}),  3),
-                         (3, FlagTile(None, None, {'flag_number': 4}),  4),
-                         (3, FlagTile(None, None, {'flag_number': 5}),  3),
+                         [(3, FlagTile(None, None, {'number': 1}),  3),
+                         (3, FlagTile(None, None, {'number': 4}),  4),
+                         (3, FlagTile(None, None, {'number': 5}),  3),
                           ])
 def test_robot_collected_flags(flags_before, tile, flags_after):
     """
@@ -262,9 +262,9 @@ def test_robot_collected_flags(flags_before, tile, flags_after):
 
 
 @pytest.mark.parametrize(("tile"),
-                         [(FlagTile(None, None, {'flag_number': 1})),
-                         (FlagTile(None, None, {'flag_number': 4})),
-                         (FlagTile(None, None, {'flag_number': 5})),
+                         [(FlagTile(None, None, {'number': 1})),
+                         (FlagTile(None, None, {'number': 4})),
+                         (FlagTile(None, None, {'number': 5})),
                           ])
 def test_robot_changed_coordinates(tile):
     """

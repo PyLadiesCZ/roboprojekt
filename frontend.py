@@ -11,6 +11,15 @@ from pathlib import Path
 TILE_WIDTH = 64
 TILE_HEIGHT = 64
 
+# Loading of tiles and robots images
+loaded_tiles_images = {}
+for image_path in Path('./img/tiles/png').iterdir():
+    loaded_tiles_images[image_path.stem] = pyglet.image.load(image_path)
+
+loaded_robots_images = {}
+for image_path in Path('./img/robots_map/png').iterdir():
+    loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
+
 
 def create_window(state):
     """
@@ -60,15 +69,14 @@ def create_tile_sprites(coordinate, tiles):
     tile_sprites = []
     for tile in tiles:
         rotation = tile.direction.value
-        path = tile.path
         x, y = coordinate
-        img = pyglet.image.load(path)
+        img = loaded_tiles_images[tile.name]
         img.anchor_x = img.width//2
         img.anchor_y = img.height//2
         tile_x = x*TILE_WIDTH
         tile_y = y*TILE_HEIGHT
         tile_sprite = pyglet.sprite.Sprite(img, x=img.anchor_x + tile_x,
-                                               y=img.anchor_y + tile_y)
+                                                y=img.anchor_y + tile_y)
         tile_sprite.rotation = rotation
         tile_sprites.append(tile_sprite)
     return tile_sprites
@@ -79,15 +87,14 @@ def create_robot_sprite(robot):
     Return sprite of robot.
     """
     rotation = robot.direction.value
-    path = Path("./img/robots_map/png/" + robot.name + ".png")
     x, y = robot.coordinates
-    img = pyglet.image.load(path)
+    img = loaded_robots_images[robot.name]
     img.anchor_x = img.width//2
     img.anchor_y = img.height//2
     robot_x = x*TILE_WIDTH
     robot_y = y*TILE_HEIGHT
     robot_sprite = pyglet.sprite.Sprite(img, x=img.anchor_x + robot_x,
-                                           y=img.anchor_y + robot_y)
+                                             y=img.anchor_y + robot_y)
     robot_sprite.rotation = rotation
     return robot_sprite
 
@@ -102,10 +109,10 @@ def draw_state(state, window):
     robot_sprites = load_robots(state)
     tile_sprites.extend(robot_sprites)
 
-    #scaling
+    # Scaling
     pyglet.gl.glPushMatrix()
 
-    #scaling ratio
+    # Scaling ratio
     zoom = min(
         window.height / (state.tile_count[1] * TILE_HEIGHT),
         window.width / (state.tile_count[0] * TILE_WIDTH)
