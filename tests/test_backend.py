@@ -613,14 +613,14 @@ def test_robot_does_not_move_onto_another_robot(input_coordinates_1, input_coord
 
 
 @pytest.mark.parametrize(("input_coordinates_1", "input_coordinates_2"),
-                         [((10, 4), (11, 4)),
+                         [((0, 11), (0, 10)),
                           ])
-def test_robots_cannot_switch_places(input_coordinates_1, input_coordinates_2):
+def test_robots_cannot_swap_places(input_coordinates_1, input_coordinates_2):
     """
-    Test robots cannot switch places on belts that go against each other.
+    Test robots cannot swap places on belts that go against each other.
     """
-    robots = [Robot(Direction.N, input_coordinates_1, "tester"),
-              Robot(Direction.N, input_coordinates_2, "tester"),
+    robots = [Robot(Direction.N, input_coordinates_1, "tester1"),
+              Robot(Direction.N, input_coordinates_2, "tester2"),
               ]
     board = get_board("maps/test_belts.json")
     state = State(board, robots)

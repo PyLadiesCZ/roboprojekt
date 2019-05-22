@@ -445,28 +445,19 @@ def move_belts(state):
     # According to rules:
     # First, express belts move robots by one tile (express attribute is set to True).
     # Then all belts move robots by one tile (express attribute is set to False).
-    for express_belts in [True, False]:
+    for express_belts in True, False:
         # Get robots next coordinates after move of conveyor belts
         robots_next_coordinates = get_next_coordinates_for_belts(state, express_belts)
-
-        # Solve colliding robots
-        while True:
-            colliding_robots = get_colliding_robots(robots_next_coordinates)
-            if not colliding_robots:
-                break
-            else:
-                # For colliding robots set next coordinates to their current.
-                for robot in colliding_robots:
-                    robots_next_coordinates[robot] = robot.coordinates
-        # Solve robots who would switch coordinates
-        while True:
-            swapping_robots = get_swapping_robots(robots_next_coordinates)
-            if not swapping_robots:
-                break
-            else:
-                # For swapping robots set next coordinates to their current.
-                for robot in swapping_robots:
-                    robots_next_coordinates[robot] = robot.coordinates
+        # Solve blocked robots (colliding and swapping robots)
+        for blocked_func in get_colliding_robots, get_swapping_robots:
+            while True:
+                blocked_robots = blocked_func(robots_next_coordinates)
+                if not blocked_robots:
+                    break
+                else:
+                    # For blocked robots set next coordinates to their current.
+                    for robot in blocked_robots:
+                        robots_next_coordinates[robot] = robot.coordinates
 
         # All collision sorted, move robots to new coordinates
         for robot in robots_next_coordinates:
