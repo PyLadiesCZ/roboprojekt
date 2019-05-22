@@ -328,7 +328,7 @@ def get_start_tiles(board, robot_tile_type=None):
                     robot_tiles[tile.number] = tile.properties_dict(coordinate)
 
     # Sort created dictionary by the first element - start tile number
-    OrderedDict(sorted(robot_tiles.items(), key=lambda stn: stn[0]))
+    robot_tiles = OrderedDict(sorted(robot_tiles.items(), key=lambda stn: stn[0]))
 
     return robot_tiles
 
