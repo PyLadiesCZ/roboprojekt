@@ -9,30 +9,29 @@
 #   robot number (integer):
 #     - TBD
 
-
 actions:
-  1:
+  -
     - type: move
       priority: 100
       value: 1
     - type: move
       priority: 100
       value: 1
-  2:
+  -
     - type: move
       priority: 100
       value: 1
     - type: move
       priority: 100
       value: 1
-  3:
+  -
     - type: move
       priority: 100
       value: 1
     - type: move
       priority: 100
       value: 1
-  4:
+  -
     - type: move
       priority: 100
       value: 1

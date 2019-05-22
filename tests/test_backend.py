@@ -4,7 +4,7 @@ from backend import create_robots, get_start_state, Robot, State, MovementCard
 from backend import RotationCard, apply_tile_effects, get_direction_from_coordinates
 from backend import apply_all_effects, get_robots_ordered_by_cards_priority
 from util import Direction, Rotation
-from tile import Tile, HoleTile, GearTile, PusherTile, RepairTile, FlagTile
+from tile import Tile, HoleTile, PusherTile, RepairTile, FlagTile
 from loading import get_board
 
 
@@ -198,25 +198,6 @@ def test_robot_changed_start_coordinates(tile, coordinates_after):
     robot.start_coordinates = (1, 1)
     apply_tile_effects(state, 0)
     assert robot.start_coordinates == coordinates_after
-
-
-# GearTile
-
-@pytest.mark.parametrize(("direction_before", "tile", "direction_after"),
-                         [(Direction.E, GearTile(None, None, {'move_direction': -90}),  Direction.N),
-                         (Direction.E, GearTile(None, None, {'move_direction': 90}), Direction.S),
-                         (Direction.S, GearTile(None, None, {'move_direction': -90}), Direction.E),
-                         (Direction.S, GearTile(None, None, {'move_direction': 90}), Direction.W),
-                          ])
-def test_robot_changed_direction(direction_before, tile, direction_after):
-    """
-    When robot is on GearTile, he should be rotated according to the direction of the tile.
-    Check that his direction changed after applying tile effect.
-    """
-    robot = Robot(direction_before, (0, 0), "tester")
-    state = State({(0, 0): [tile]}, [robot])
-    apply_tile_effects(state, 0)
-    assert robot.direction == direction_after
 
 
 # HoleTile hidden in walk method
