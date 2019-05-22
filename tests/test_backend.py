@@ -613,7 +613,7 @@ def test_robot_does_not_move_onto_another_robot(input_coordinates_1, input_coord
 
 
 @pytest.mark.parametrize(("input_coordinates_1", "input_coordinates_2"),
-                         [((10, 4), (11, 4)),
+                         [((0, 11), (0, 10)),
                           ])
 def test_robots_cannot_swap_places(input_coordinates_1, input_coordinates_2):
     """
