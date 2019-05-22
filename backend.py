@@ -573,14 +573,14 @@ def get_robot_names():
     return robot_names
 
 
-def get_start_tiles(board, robot_tile_type=None):
+def get_start_tiles(board, tile_type="start"):
     """
     Get initial tiles for robots. It can be either start or stop tiles.
 
     board: dictionary returned by get_board().
-    robot_tile_type: choose the "stop" initial tile type if you want to get
+    tile_type: choose the "stop" initial tile type if you want to get
     the final tiles (only for tests).
-    By default it is None, which results in reading classic start tiles.
+    By default it is "start", which results in reading classic start tiles.
     Create an ordered dictionary of all initial tiles in the board with initial
     tile number as a key and values: coordinates and tile_direction.
     OrderedDict is a structure that ensures the dictionary is stored
@@ -591,12 +591,9 @@ def get_start_tiles(board, robot_tile_type=None):
 
     for coordinate, tiles in board.items():
         for tile in tiles:
-            if robot_tile_type == "stop":
-                if tile.stop_properties_dict(coordinate) is not None:
-                    robot_tiles[tile.number] = tile.stop_properties_dict(coordinate)
-            else:
-                if tile.properties_dict(coordinate) is not None:
-                    robot_tiles[tile.number] = tile.properties_dict(coordinate)
+            if tile.type == tile_type:
+                robot_tiles[tile.number] = {"coordinates": coordinate,
+                                            "tile_direction": tile.direction}
 
     # Sort created dictionary by the first element - start tile number
     robot_tiles = OrderedDict(sorted(robot_tiles.items(), key=lambda stn: stn[0]))
