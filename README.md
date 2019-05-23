@@ -7,14 +7,14 @@ The assignment of this project is transforming board game RoboRally to computer 
 
 You can follow the progress on our [blog](https://roboprojekt.pyladies.cz/).
 
-Please note that the game is still in progress and the current version is not playable.
+**Please note that the project is still in progress and the current version is not playable.**
 
 ### Requirements
 
-Python v.3.x
+Python v.3.7
 We recommend to use virtual environment.
 
-To succesfully run the project, run the script below. It will install all the requirements including [pyglet](https://bitbucket.org/pyglet/pyglet/wiki/Home) library.
+To succesfully run the project, run the script below. It will install all the requirements including [pyglet](https://bitbucket.org/pyglet/pyglet/wiki/Home) and [asyncio](https://docs.python.org/3/library/asyncio.html) libraries.
 ```
 python -m pip install -r requirements.txt
 ```
@@ -58,9 +58,8 @@ If you want to run only one of the testing files, add the name of the file after
 
 ### Create your own map
 
-Current maps were created in [Tiled](https://www.mapeditor.org/) map editor. 
-You can create your own map by using one of the prepared maps as a template as it contains the tileset used for the game.
-Or you can export the tileset and import it into the blank Tiled project.
+Current maps were created in [Tiled](https://www.mapeditor.org/) map editor, version 1.2.1.. 
+You can create your own map with the prepared tileset `development_tileset.json`. 
 When creating multiple-layered tiles, keep the following order of layers:
 1. earth
 2. one of the following: hole, start, repair, belt, turn
