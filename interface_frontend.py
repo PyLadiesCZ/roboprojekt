@@ -1,4 +1,5 @@
 import pyglet
+import json
 
 from interface import get_interface_state
 
@@ -201,6 +202,7 @@ def on_draw():
 
 CARD_KEYS= ["q", "w", "e", "r", "t", "a","s", "d", "f"]
 
+program = []
 
 @window.event
 def on_text(text):
@@ -213,6 +215,7 @@ def on_text(text):
         # Selected card is in "GREEN" cursor
         dealt_card_index = CARD_KEYS.index(text)
         interface_state.select_card(dealt_card_index)
+        program.append(dealt_card_index)
 
     # Return one card back to the dealt cards
     if text == 'i':
@@ -237,7 +240,7 @@ def on_text(text):
     # confirm selection of cards
     if text == 'k':
         interface_state.confirm_selection()
-
+        print(json.dumps(program[-5:]))
 
 
 pyglet.app.run()
