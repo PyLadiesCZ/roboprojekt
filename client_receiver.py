@@ -45,7 +45,7 @@ def tick_asyncio(dt):
     More about event loop - https://docs.python.org/3/library/asyncio-eventloop.html
     """
     loop = asyncio.get_event_loop()
-    # Run the "asyncio.sleep" coroutine until complete
+    # Run the loop until the "asyncio.sleep" task is complete
     loop.run_until_complete(asyncio.sleep(0))
 
 pyglet.clock.schedule_interval(tick_asyncio, 1/30)
