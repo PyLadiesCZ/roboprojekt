@@ -59,7 +59,7 @@ If you want to run only one of the testing files, add the name of the file after
 ### Create your own map
 
 Current maps were created in [Tiled](https://www.mapeditor.org/) map editor, version 1.2.1.. 
-You can create your own map with the prepared tileset `development_tileset.json`. The tileset can be either part of the map or loaded from separate file.
+You can create your own map with the prepared tileset `development_tileset.json`. 
 When creating multiple-layered tiles, keep the following order of layers:
 1. earth
 2. one of the following: hole, start, repair, belt, turn
