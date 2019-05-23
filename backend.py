@@ -47,6 +47,21 @@ class Robot:
                 "flags": self.flags, "damages": self.damages, "power down": self.power_down,
                 "direction": self.direction.value, "start coordinates": self.start_coordinates}
 
+    @classmethod
+    def from_dict(cls, robot_description):
+        """
+        Return robot from JSON data received from server."
+        """
+        direction = Direction(robot_description["direction"])
+        coordinates = tuple(robot_description["coordinates"])
+        name = robot_description["name"]
+        cls.lives = robot_description["lives"]
+        cls.flags = robot_description["flags"]
+        cls.damages = robot_description["damages"]
+        cls.power_down = robot_description["power down"]
+        cls.start_coordinates = robot_description["start coordinates"]
+        return cls(direction, coordinates, name)
+
     def walk(self, distance, state, direction=None, push_others=True):
         """
         Move a robot to next coordinates based on his direction.
@@ -255,6 +270,20 @@ class State:
         self._board = board
         self.robots = robots
         self.tile_count = get_tile_count(board)
+
+    @classmethod
+    def from_dict(cls, data):
+        """
+        Return State from JSON data received from server."
+        """
+        map_data = data["board"]
+        board = board_from_data(map_data)
+        # list of robot objects
+        robots = []
+        for robot_description in data["robots"]:
+            robot = Robot.from_dict(robot_description)
+            robots.append(robot)
+        return cls(board, robots)
 
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
@@ -656,33 +685,3 @@ def _apply_cards_and_tiles_effects(state, registers):
             pass
 
         apply_tile_effects(state, register)
-
-
-def state_from_dict(data):
-    """
-    Return State from JSON data received from server."
-    """
-    map_data = data["board"]
-    board = board_from_data(map_data)
-    # list of robot objects
-    robots = []
-    for robot_description in data["robots"]:
-        robot = robot_from_dict(robot_description)
-        robots.append(robot)
-    return State(board, robots)
-
-
-def robot_from_dict(robot_description):
-    """
-    Return robot from JSON data received from server."
-    """
-    direction = Direction(robot_description["direction"])
-    coordinates = tuple(robot_description["coordinates"])
-    name = robot_description["name"]
-    robot = Robot(direction, coordinates, name)
-    robot.lives = robot_description["lives"]
-    robot.flags = robot_description["flags"]
-    robot.damages = robot_description["damages"]
-    robot.power_down = robot_description["power down"]
-    robot.start_coordinates = robot_description["start coordinates"]
-    return robot
