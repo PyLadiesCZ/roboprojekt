@@ -53,5 +53,4 @@ pyglet.clock.schedule_interval(tick_asyncio, 1/30)
 # Schedule the "client" task
 # More about Futures - official documentation https://docs.python.org/3/library/asyncio-future.html
 asyncio.ensure_future(client())
-# Run the pyglet library.
 pyglet.app.run()
