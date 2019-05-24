@@ -147,25 +147,6 @@ def test_power_down_robots_dont_shoot():
         assert robot.damages == damages_list[robots.index(robot)]
 
 
-# RepairTile
-
-
-@pytest.mark.parametrize(("tile", "coordinates_after"),
-                         [(RepairTile(None, None, {'new_start': True}), (0, 0)),
-                         (RepairTile(None, None, {'new_start': False}), (1, 1)),
-                          ])
-def test_robot_changed_start_coordinates(tile, coordinates_after):
-    """
-    When robot is on RepairTile with special property, he changes his start coordinates to the tile coordinates.
-    On a normal RepairTile he doesn't change the start tile.
-    """
-    robot = Robot(Direction.N, (0, 0), "tester")
-    state = State({(0, 0): [tile]}, [robot])
-    robot.start_coordinates = (1, 1)
-    apply_tile_effects(state, 0, 1)
-    assert robot.start_coordinates == coordinates_after
-
-
 # HoleTile hidden in walk method
 
 @pytest.mark.parametrize(("lives_before", "lives_after"),

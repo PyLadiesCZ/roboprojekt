@@ -132,13 +132,14 @@ def assign_prerequizites_to_robots(commands, state):
         prerequizites = get_prerequizites(commands)
         if prerequizites:
             for attribute, robot in zip(prerequizites, state.robots):
-                try:
+                if "damages" in attribute:
                     robot.damages = attribute["damages"]
+                if "flags" in attribute:
                     robot.flags = attribute["flags"]
+                if "lives" in attribute:
                     robot.lives = attribute["lives"]
+                if "power_down" in attribute:
                     robot.power_down = attribute["power_down"]
-                except KeyError:
-                    pass
 
 
 def get_results(commands):
@@ -162,14 +163,18 @@ def compare_results_with_robots(commands, state):
     if commands:
         results = get_results(commands)
         if results:
+            print(results)
             for attribute, robot in zip(results, state.robots):
-                try:
+                if "damages" in attribute:
                     assert robot.damages == attribute["damages"]
+                if "flags" in attribute:
                     assert robot.flags == attribute["flags"]
+                if "lives" in attribute:
                     assert robot.lives == attribute["lives"]
+                if "power_down" in attribute:
                     assert robot.power_down == attribute["power_down"]
-                except KeyError:
-                    pass
+                if "start" in attribute:
+                    assert robot.start_coordinates == tuple(attribute["start"])
 
 
 @pytest.mark.parametrize(
@@ -189,21 +194,23 @@ def test_play_game(map_file, commands_file):
     assign_prerequizites_to_robots(commands, state)
 
     # for robot in state.robots:
-    #     print(robot.program)
-    #     print(robot.damages)
-    #     print(robot.flags)
+    # #     print(robot.program)
+    # #     print(robot.damages)
+    # #     print(robot.flags)
     #     print(robot.lives)
-    #     print(robot.power_down)
+    # #     print(robot.power_down)
+    #     print(robot.start_coordinates)
 
     apply_all_effects(state, registers=get_registers(commands))
     compare_results_with_robots(commands, state)
 
     # for robot in state.robots:
-    #     print(robot.program)
-    #     print(robot.damages)
-    #     print(robot.flags)
+    # #     print(robot.program)
+    # #     print(robot.damages)
+    # #     print(robot.flags)
     #     print(robot.lives)
-    #     print(robot.power_down)
+    # #     print(robot.power_down)
+    #     print(robot.start_coordinates)
 
     for robot in state.robots:
         robot_field = state.robots.index(robot) + 1
