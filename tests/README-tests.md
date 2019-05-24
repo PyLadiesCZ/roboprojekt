@@ -1,5 +1,6 @@
-Commands file structure (read by test_effects.py)
+Commands file structure (read by _test_effects.py_)
 
+```
  actions:
    -
      - card type: move, rotate
@@ -20,3 +21,4 @@ Commands file structure (read by test_effects.py)
      attribute: value
      attribute: value
      attribute: value
+```
