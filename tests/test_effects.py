@@ -47,9 +47,27 @@ def read_commands(file):
     """
     Load the file with yaml commands for robots.
     """
+    try:
+        with open(file) as commands_file:
+            file = yaml.safe_load(commands_file)
+    except TypeError:
+        file = None
+    return file
 
-    with open(file) as commands_file:
-        return yaml.safe_load(commands_file)
+
+def get_registers(commands):
+    """
+    Return the count of registers for test game.
+    Look at actions section and check the length of first set of cards.
+    If there are no actions (ergo we test only tile effects),
+    number of registers is 1.
+    """
+
+    try:
+        registers = len(commands["actions"][0])
+    except TypeError:
+        registers = 1
+    return registers
 
 
 def get_cards_from_commands(commands):
@@ -80,37 +98,78 @@ def get_cards_from_commands(commands):
     return all_cards
 
 
-def get_registers(commands):
-    """
-    Return the count of registers for test game.
-    Look at actions section and check the length of first set of cards.
-    If there are no actions (ergo we test only tile effects),
-    number of registers is 1.
-    """
-
-    try:
-        registers = len(commands["actions"][0])
-    except TypeError:
-        registers = 1
-    return registers
-
-
-def decode_results():
-    """
-    Decode the results that are not visible on the map, eg. robot's damages,
-    lives, flags.
-    Use for comparing the expected state of game with the given one.
-    """
-    pass
-
-
-def assign_cards_to_robots(all_cards, state):
+def assign_cards_to_robots(commands, state):
     """
     Take cards read from external file and
     assign them to the robots as their program.
     """
-    for cards_set, robot in zip(all_cards, state.robots):
-        robot.program = cards_set
+    if commands:
+        all_cards = get_cards_from_commands(commands)
+
+        for cards_set, robot in zip(all_cards, state.robots):
+            robot.program = cards_set
+
+
+def get_prerequizites(commands):
+    """
+    Decode the prerequizites that are not visible on the map: robot's damages,
+    lives, flags, power_down state.
+    Use for setup of start state of game.
+    """
+    try:
+        prerequizites = commands['prerequizites']
+    except KeyError:
+        prerequizites = None
+    return prerequizites
+
+
+def assign_prerequizites_to_robots(commands, state):
+    """
+    Take values for start state read from external file and
+    assign them to the robots as their attributes.
+    """
+    if commands:
+        prerequizites = get_prerequizites(commands)
+        if prerequizites:
+            for attribute, robot in zip(prerequizites, state.robots):
+                try:
+                    robot.damages = attribute["damages"]
+                    robot.flags = attribute["flags"]
+                    robot.lives = attribute["lives"]
+                    robot.power_down = attribute["power_down"]
+                except KeyError:
+                    pass
+
+
+def get_results(commands):
+    """
+    Decode the results that are not visible on the map: robot's damages,
+    lives, flags, power_down state.
+    Use for comparing the expected state of game with the given one.
+    """
+    try:
+        results = commands['results']
+    except KeyError:
+        results = None
+    return results
+
+
+def compare_results_with_robots(commands, state):
+    """
+    Take results read from external file and compare the values
+    with the values of robots attributes.
+    """
+    if commands:
+        results = get_results(commands)
+        if results:
+            for attribute, robot in zip(results, state.robots):
+                try:
+                    assert robot.damages == attribute["damages"]
+                    assert robot.flags == attribute["flags"]
+                    assert robot.lives == attribute["lives"]
+                    assert robot.power_down == attribute["power_down"]
+                except KeyError:
+                    pass
 
 
 @pytest.mark.parametrize(
@@ -121,18 +180,32 @@ def test_play_game(map_file, commands_file):
     """
     Play the game with given map.
     """
-
-    commands = read_commands(commands_file)
     state = get_start_state(map_file)
-
-    all_cards = get_cards_from_commands(commands)
-    if all_cards:
-        assign_cards_to_robots(all_cards, state)
-
-    apply_all_effects(state, registers=get_registers(commands))
-
     stop_fields = get_start_tiles(state._board, "stop")
 
+    commands = read_commands(commands_file)
+
+    assign_cards_to_robots(commands, state)
+    assign_prerequizites_to_robots(commands, state)
+
+    # for robot in state.robots:
+    #     print(robot.program)
+    #     print(robot.damages)
+    #     print(robot.flags)
+    #     print(robot.lives)
+    #     print(robot.power_down)
+
+    apply_all_effects(state, registers=get_registers(commands))
+    compare_results_with_robots(commands, state)
+
+    # for robot in state.robots:
+    #     print(robot.program)
+    #     print(robot.damages)
+    #     print(robot.flags)
+    #     print(robot.lives)
+    #     print(robot.power_down)
+
     for robot in state.robots:
-        assert robot.coordinates == stop_fields[(state.robots.index(robot) + 1)]["coordinates"]
-        assert robot.direction == stop_fields[(state.robots.index(robot) + 1)]["tile_direction"]
+        robot_field = state.robots.index(robot) + 1
+        assert robot.coordinates == stop_fields[robot_field]["coordinates"]
+        assert robot.direction == stop_fields[robot_field]["tile_direction"]
