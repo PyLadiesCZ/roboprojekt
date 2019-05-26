@@ -109,7 +109,7 @@ def create_card_pack():
         for i in range(cards_count):
             card_pack.append(RotationCard(first_number + i*5, rotation)) # [RotationCard(865, Rotation.LEFT)....]
     shuffle(card_pack)
-    print(card_pack)
+    #print(card_pack)
     return card_pack
 
 
