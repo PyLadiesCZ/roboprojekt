@@ -33,6 +33,7 @@ def test_start_state():
     assert isinstance(ss._board[0, 0][0], Tile)
 
 
+# I'd leave this test as regression test - uses robot.walk() method.
 @pytest.mark.parametrize(("input_coordinates", "input_direction", "distance", "output_coordinates"),
                          [((3, 3), Direction.N, 2, (3, 5)),
                           ((3, 3), Direction.E, 2, (3, 3)),
@@ -49,7 +50,7 @@ def test_robot_walk(input_coordinates, input_direction, distance, output_coordin
     robot.walk(distance, state, input_direction)
     assert robot.coordinates == output_coordinates
 
-
+# I'd leave this test as regression test - uses robot.move() method.
 @pytest.mark.parametrize(("input_coordinates", "input_direction", "distance", "output_coordinates"),
                          [((0, 1), Direction.N, 3, (0, 4)),
                           ((8, 1), Direction.N, 3, (8, 3)),
@@ -69,6 +70,7 @@ def test_robot_move(input_coordinates, input_direction, distance, output_coordin
     assert robot.coordinates == output_coordinates
 
 
+# I'd leave this test as regression test - uses robot.rotate() method.
 @pytest.mark.parametrize(("current_direction", "towards", "new_direction"),
                          [(Direction.N, Rotation.LEFT, Direction.W),
                          (Direction.S, Rotation.RIGHT, Direction.W),
@@ -80,38 +82,6 @@ def test_robot_change_direction(current_direction, towards, new_direction):
     robot = Robot(current_direction, None, "tester")
     robot.rotate(towards)
     assert robot.direction == new_direction
-
-
-def test_robot_and_tiles_shoot():
-    """
-    Robots are placed on a test_laser.json map.
-    There are some walls that stop their lasers on the way.
-    (In order to see the "human" version with arrows representing robots,
-    check test_shoot_human_view.json),
-    They should receive damages according to their and lasers' position.
-    """
-    board = get_board("maps/test_laser.json")
-
-    robots = [Robot(Direction.W, (2, 2), "tester"),
-              Robot(Direction.N, (1, 1), "tester"),
-              Robot(Direction.E, (0, 2), "tester"),
-              Robot(Direction.W, (1, 2), "tester"),
-              Robot(Direction.S, (1, 3), "tester"),
-              Robot(Direction.E, (0, 0), "tester"),
-              Robot(Direction.N, (2, 0), "tester"),
-              Robot(Direction.E, (3, 0), "tester"),
-              Robot(Direction.N, (2, 1), "tester"),
-              Robot(Direction.S, (3, 3), "tester"),
-              ]
-    for robot in robots:
-        robot.damages = 0
-
-    state = State(board, robots)
-    apply_all_effects(state, 1)
-    damages_list = [0, 4, 0, 2, 0, 0, 1, 1, 1, 4]
-
-    for robot in robots:
-        assert robot.damages == damages_list[robots.index(robot)]
 
 
 def test_power_down_robots_dont_shoot():
