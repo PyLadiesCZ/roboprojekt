@@ -4,7 +4,7 @@ from backend import create_robots, get_start_state, Robot, State, MovementCard
 from backend import RotationCard, apply_tile_effects, get_direction_from_coordinates
 from backend import apply_all_effects, get_robots_ordered_by_cards_priority
 from util import Direction, Rotation
-from tile import Tile, HoleTile, PusherTile, FlagTile
+from tile import Tile, HoleTile, PusherTile
 from loading import get_board
 
 
@@ -107,7 +107,7 @@ def test_robot_and_tiles_shoot():
         robot.damages = 0
 
     state = State(board, robots)
-    apply_tile_effects(state, 0, 1)
+    apply_all_effects(state, 1)
     damages_list = [0, 4, 0, 2, 0, 0, 1, 1, 1, 4]
 
     for robot in robots:
@@ -140,7 +140,7 @@ def test_power_down_robots_dont_shoot():
         robot.power_down = True
 
     state = State(board, robots)
-    apply_tile_effects(state, 0, 1)
+    apply_all_effects(state, 1)
     damages_list = [0, 4, 0, 0, 0, 0, 0, 0, 0, 4]
 
     for robot in robots:
@@ -214,7 +214,7 @@ def test_robot_is_damaged_by_laser(input_coordinates, damages_after):
     robot = Robot(Direction.W, input_coordinates, "tester")
     robot.damages = 0
     state = State(board, [robot_obstacle1, robot_obstacle2, robot])
-    apply_tile_effects(state, 0, 1)
+    apply_all_effects(state, 1)
     assert robot.damages == damages_after
 
 
@@ -257,7 +257,7 @@ def test_robot_is_pushed_to_the_correct_direction(tile, output_coordinates):
     """
     robot = Robot(Direction.S, (1, 1), "tester")
     state = State({(1, 0): [Tile(None, None, None)], (0, 1): [Tile(None, None, None)], (2, 1): [Tile(None, None, None)], (1, 2): [Tile(None, None, None)], (1, 1): [tile]}, [robot])
-    apply_tile_effects(state, 0, 1)
+    apply_all_effects(state, 1)
     assert robot.direction == Direction.S
     assert robot.coordinates == output_coordinates
 
@@ -328,7 +328,7 @@ def test_robot_movement_on_normal_belts(input_coordinates, output_coordinates):
     robot = Robot(Direction.N, input_coordinates, "tester")
     board = get_board("maps/test_belts.json")
     state = State(board, [robot])
-    apply_tile_effects(state, 0, 1)
+    apply_all_effects(state, 1)
     assert robot.coordinates == output_coordinates
 
 
@@ -347,7 +347,7 @@ def test_robot_movement_on_express_belts(input_coordinates, output_coordinates):
     robot = Robot(Direction.N, input_coordinates, "tester")
     board = get_board("maps/test_belts.json")
     state = State(board, [robot])
-    apply_tile_effects(state, 0, 1)
+    apply_all_effects(state, 1)
     assert robot.coordinates == output_coordinates
 
 
@@ -368,7 +368,7 @@ def test_robot_movement_on_connected_belts(input_coordinates, output_coordinates
     robot = Robot(Direction.N, input_coordinates, "tester")
     board = get_board("maps/test_belts.json")
     state = State(board, [robot])
-    apply_tile_effects(state, 0, 1)
+    apply_all_effects(state, 1)
     assert robot.coordinates == output_coordinates
 
 
@@ -393,7 +393,7 @@ def test_robot_movement_on_crossroad_belts(input_coordinates, output_coordinates
     robot = Robot(Direction.N, input_coordinates, "tester")
     board = get_board("maps/test_belts.json")
     state = State(board, [robot])
-    apply_tile_effects(state, 0, 1)
+    apply_all_effects(state, 1)
     assert robot.coordinates == output_coordinates
 
 
@@ -426,7 +426,7 @@ def test_change_of_robots_direction_on_rotating_belts(input_coordinates, output_
     robot = Robot(Direction.N, input_coordinates, "tester")
     board = get_board("maps/test_belts.json")
     state = State(board, [robot])
-    apply_tile_effects(state, 0, 1)
+    apply_all_effects(state, 1)
     assert robot.direction == output_direction
 
 
@@ -460,7 +460,7 @@ def test_robots_dont_change_direction_on_rotating_belts_after_move_card(input_co
     board = get_board("maps/test_belts.json")
     state = State(board, [robot])
     robot.program[0].apply_effect(robot, state)
-    apply_tile_effects(state, 0, 1)
+    apply_all_effects(state, 1)
     assert robot.direction == input_direction
 
 
@@ -479,7 +479,7 @@ def test_two_robots_movements_on_belts(input_coordinates_1, input_coordinates_2,
               ]
     board = get_board("maps/test_belts.json")
     state = State(board, robots)
-    apply_tile_effects(state, 0, 1)
+    apply_all_effects(state, 1)
     assert robots[0].coordinates == output_coordinates_1
     assert robots[1].coordinates == output_coordinates_2
 
@@ -498,7 +498,7 @@ def test_two_robots_movement_on_T_crossroad(input_coordinates_1, input_coordinat
               ]
     board = get_board("maps/test_belts.json")
     state = State(board, robots)
-    apply_tile_effects(state, 0, 1)
+    apply_all_effects(state, 1)
     assert robots[0].coordinates == output_coordinates_1
     assert robots[1].coordinates == output_coordinates_2
 
@@ -519,7 +519,7 @@ def test_robot_does_not_move_onto_another_robot(input_coordinates_1, input_coord
               ]
     board = get_board("maps/test_belts.json")
     state = State(board, robots)
-    apply_tile_effects(state, 0, 1)
+    apply_all_effects(state, 1)
     assert robots[0].coordinates == output_coordinates_1
     assert robots[1].coordinates == output_coordinates_2
 
@@ -536,7 +536,7 @@ def test_robots_cannot_swap_places(input_coordinates_1, input_coordinates_2):
               ]
     board = get_board("maps/test_belts.json")
     state = State(board, robots)
-    apply_tile_effects(state, 0, 1)
+    apply_all_effects(state, 1)
     assert robots[0].coordinates == input_coordinates_1
     assert robots[1].coordinates == input_coordinates_2
 
