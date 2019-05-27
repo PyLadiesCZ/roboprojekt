@@ -66,10 +66,12 @@ def get_registers(commands):
     If there are no actions (ergo we test only tile effects),
     number of registers is 1.
     """
-
-    try:
-        registers = len(commands["actions"][0])
-    except TypeError:
+    if commands:
+        try:
+            registers = len(commands["actions"][0])
+        except KeyError:
+            registers = 1
+    else:
         registers = 1
     return registers
 
@@ -83,7 +85,7 @@ def get_cards_from_commands(commands):
     try:
         actions = commands['actions']
 
-    except TypeError:
+    except KeyError:
         all_cards = None
 
     else:
@@ -109,9 +111,9 @@ def assign_cards_to_robots(commands, state):
     """
     if commands:
         all_cards = get_cards_from_commands(commands)
-
-        for cards_set, robot in zip(all_cards, state.robots):
-            robot.program = cards_set
+        if all_cards:
+            for cards_set, robot in zip(all_cards, state.robots):
+                robot.program = cards_set
 
 
 def get_prerequizites(commands):
