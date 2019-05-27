@@ -84,39 +84,6 @@ def test_robot_change_direction(current_direction, towards, new_direction):
     assert robot.direction == new_direction
 
 
-def test_power_down_robots_dont_shoot():
-    """
-    Robots are placed on a test_laser.json map.
-    There are some walls that stop their lasers on the way.
-    (In order to see the "human" version with arrows representing robots,
-    check test_shoot_human_view.json),
-    They shouldn't receive damage when they are under power-down.
-    """
-    board = get_board("maps/test_laser.json")
-
-    robots = [Robot(Direction.W, (2, 2), "tester"),
-              Robot(Direction.N, (1, 1), "tester"),
-              Robot(Direction.E, (0, 2), "tester"),
-              Robot(Direction.W, (1, 2), "tester"),
-              Robot(Direction.S, (1, 3), "tester"),
-              Robot(Direction.E, (0, 0), "tester"),
-              Robot(Direction.N, (2, 0), "tester"),
-              Robot(Direction.E, (3, 0), "tester"),
-              Robot(Direction.N, (2, 1), "tester"),
-              Robot(Direction.S, (3, 3), "tester"),
-              ]
-    for robot in robots:
-        robot.damages = 0
-        robot.power_down = True
-
-    state = State(board, robots)
-    apply_all_effects(state, 1)
-    damages_list = [0, 4, 0, 0, 0, 0, 0, 0, 0, 4]
-
-    for robot in robots:
-        assert robot.damages == damages_list[robots.index(robot)]
-
-
 # HoleTile hidden in walk method
 
 @pytest.mark.parametrize(("lives_before", "lives_after"),
