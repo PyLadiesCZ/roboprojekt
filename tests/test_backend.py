@@ -170,41 +170,6 @@ def test_robot_died(lives_before, lives_after):
     assert robot.coordinates is None
 
 
-# FlagTile
-
-@pytest.mark.parametrize(("flags_before", "tile", "flags_after"),
-                         [(3, FlagTile(None, None, {'number': 1}),  3),
-                         (3, FlagTile(None, None, {'number': 4}),  4),
-                         (3, FlagTile(None, None, {'number': 5}),  3),
-                          ])
-def test_robot_collected_flags(flags_before, tile, flags_after):
-    """
-    When a robot stands on FlagTile with appropriate number (+1 to his current flag count), he collects it.
-    He doesn't collect the flags with the other number than defined. They don't have any effect on him.
-    """
-    robot = Robot(Direction.N, (0, 0), "tester")
-    state = State({(0, 0): [tile]}, [robot])
-    robot.flags = flags_before
-    apply_tile_effects(state, 0, 1)
-    assert robot.flags == flags_after
-
-
-@pytest.mark.parametrize(("tile"),
-                         [(FlagTile(None, None, {'number': 1})),
-                         (FlagTile(None, None, {'number': 4})),
-                         (FlagTile(None, None, {'number': 5})),
-                          ])
-def test_robot_changed_coordinates(tile):
-    """
-    When a robot stands on FlagTile the start coordinates change to the tile's coordinates.
-    """
-    robot = Robot(Direction.N, (0, 0), "tester")
-    state = State({(0, 0): [tile]}, [robot])
-    robot.start_coordinates = (1, 1)
-    apply_tile_effects(state, 0, 1)
-    assert robot.start_coordinates == (0, 0)
-
-
 # WallTile
 
 @pytest.mark.parametrize(("input_coordinates", "output_coordinates"),

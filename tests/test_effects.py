@@ -1,12 +1,15 @@
 """
 Use the test maps to test particular tiles effects.
 Read commands from yaml file located in the same directory as test map,
-and convert them into robot's program.
+and convert them into robot's program. (The commands are not mandatory,
+if you want to test only the tile effects).
 Play the game with given cards, apply tile's effects and compare the result
 with the expected one.
+You can compare: coordinates and direction (drawn on map with stop tiles),
+as well as hidden attributes: flags, damages, lives, power_down,
+start_coordinates - they must be listed in commands file as prerequizites
+(initial setup) and results (to compare with).
 This file works with maps located in tests/.
-
-TODO: decoding the expected results.
 """
 
 from pathlib import Path
@@ -26,7 +29,8 @@ CARD_TYPES = {
 def get_paths_to_maps_and_commands():
     """
     Go through all 'tests/' folders and create tuples with paths to test files
-    (map.json, commands.yaml).
+    (map.json, commands.yaml). If there is no commands file, create tuple with
+    map file and None.
     Return the list of test file sets.
     """
     paths_to_maps_with_commands = []
@@ -132,6 +136,7 @@ def assign_prerequizites_to_robots(commands, state):
         prerequizites = get_prerequizites(commands)
         if prerequizites:
             for attribute, robot in zip(prerequizites, state.robots):
+                print("attribute", attribute)
                 if "damages" in attribute:
                     robot.damages = attribute["damages"]
                 if "flags" in attribute:
