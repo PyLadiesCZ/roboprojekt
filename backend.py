@@ -20,7 +20,7 @@ class Robot:
         self.program = []
         self.lives = 3
         self.flags = 0
-        self.damages = 4
+        self.damages = 0
         self.power_down = False
         self.name = name
 
