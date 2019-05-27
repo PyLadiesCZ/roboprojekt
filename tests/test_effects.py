@@ -194,22 +194,22 @@ def test_play_game(map_file, commands_file):
     assign_prerequizites_to_robots(commands, state)
 
     # for robot in state.robots:
-    # #     print(robot.program)
-    # #     print(robot.damages)
-    # #     print(robot.flags)
+    #     print(robot.program)
+    #     print(robot.damages)
+    #     print(robot.flags)
     #     print(robot.lives)
-    # #     print(robot.power_down)
+    #     print(robot.power_down)
     #     print(robot.start_coordinates)
 
     apply_all_effects(state, registers=get_registers(commands))
     compare_results_with_robots(commands, state)
 
     # for robot in state.robots:
-    # #     print(robot.program)
-    # #     print(robot.damages)
-    # #     print(robot.flags)
+    #     print(robot.program)
+    #     print(robot.damages)
+    #     print(robot.flags)
     #     print(robot.lives)
-    # #     print(robot.power_down)
+    #     print(robot.power_down)
     #     print(robot.start_coordinates)
 
     for robot in state.robots:

@@ -4,7 +4,7 @@ from backend import create_robots, get_start_state, Robot, State, MovementCard
 from backend import RotationCard, apply_tile_effects, get_direction_from_coordinates
 from backend import apply_all_effects, get_robots_ordered_by_cards_priority
 from util import Direction, Rotation
-from tile import Tile, HoleTile, PusherTile, RepairTile, FlagTile
+from tile import Tile, HoleTile, PusherTile, FlagTile
 from loading import get_board
 
 
@@ -574,47 +574,6 @@ def test_robots_cannot_swap_places(input_coordinates_1, input_coordinates_2):
     apply_tile_effects(state, 0, 1)
     assert robots[0].coordinates == input_coordinates_1
     assert robots[1].coordinates == input_coordinates_2
-
-
-@pytest.mark.parametrize(("direction", "card", "new_coordinates"),
-                         [(Direction.E, MovementCard(100, 1), (5, 7)),
-                         (Direction.E, MovementCard(100, 2), (6, 7)),
-                         (Direction.E, MovementCard(100, 3), (7, 7)),
-                         (Direction.E, MovementCard(100, -1), (3, 7)),
-                         (Direction.S, MovementCard(100, 1), (4, 6)),
-                         (Direction.S, MovementCard(100, 2), (4, 5)),
-                         (Direction.S, MovementCard(100, 3), (4, 4)),
-                         (Direction.S, MovementCard(100, -1), (4, 8)),
-                         (Direction.N, MovementCard(100, -1), (4, 6)),
-                         (Direction.W, MovementCard(100, -1), (5, 7)),
-                          ])
-def test_move_cards(direction, card, new_coordinates):
-    """
-    Give mock robot the MovementCard and check if he moved to the expected coordinates.
-    Check if the robot's direction remained the same.
-    """
-    robot = Robot(direction, (4, 7), "tester")
-    robot.program = [card]
-    state = get_start_state("maps/test_3.json")
-    card.apply_effect(robot, state)
-    assert robot.coordinates == new_coordinates
-    assert robot.direction == direction
-
-
-@pytest.mark.parametrize(("card", "new_direction"),
-                         [(RotationCard(100, Rotation.LEFT), Direction.W),
-                         (RotationCard(100, Rotation.RIGHT), Direction.E),
-                         (RotationCard(100, Rotation.U_TURN), Direction.S),
-                          ])
-def test_rotate_cards(card, new_direction):
-    """
-    Give mock robot the RotationCard and check if he's heading to the expected direction.
-    """
-    robot = Robot(Direction.N, None, "tester")
-    robot.program = [card]
-    state = get_start_state("maps/test_3.json")
-    card.apply_effect(robot, state)
-    assert robot.direction == new_direction
 
 
 def test_card_priorities():
