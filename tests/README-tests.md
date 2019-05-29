@@ -8,7 +8,7 @@ actions:
        value: for move types: -1, 1, 2, 3;
               for rotate types: -90, 90, 180
 
-prerequizites:
+prerequisites:
   -
      attribute: value
      attribute: value

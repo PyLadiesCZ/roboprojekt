@@ -7,7 +7,7 @@ Play the game with given cards, apply tile's effects and compare the result
 with the expected one.
 You can compare: coordinates and direction (drawn on map with stop tiles),
 as well as hidden attributes: flags, damages, lives, power_down,
-start_coordinates - they must be listed in commands file as prerequizites
+start_coordinates - they must be listed in commands file as prerequisites
 (initial setup) and results (to compare with).
 This file works with maps located in tests/.
 """
@@ -116,28 +116,28 @@ def assign_cards_to_robots(commands, state):
                 robot.program = cards_set
 
 
-def get_prerequizites(commands):
+def get_prerequisites(commands):
     """
-    Decode the prerequizites that are not visible on the map: robot's damages,
+    Decode the prerequisites that are not visible on the map: robot's damages,
     lives, flags, power_down state.
     Use for setup of start state of game.
     """
     try:
-        prerequizites = commands['prerequizites']
+        prerequisites = commands['prerequisites']
     except KeyError:
-        prerequizites = None
-    return prerequizites
+        prerequisites = None
+    return prerequisites
 
 
-def assign_prerequizites_to_robots(commands, state):
+def assign_prerequisites_to_robots(commands, state):
     """
     Take values for start state read from external file and
     assign them to the robots as their attributes.
     """
     if commands:
-        prerequizites = get_prerequizites(commands)
-        if prerequizites:
-            for attribute, robot in zip(prerequizites, state.robots):
+        prerequisites = get_prerequisites(commands)
+        if prerequisites:
+            for attribute, robot in zip(prerequisites, state.robots):
                 print("attribute", attribute)
                 if "damages" in attribute:
                     robot.damages = attribute["damages"]
@@ -198,7 +198,7 @@ def test_play_game(map_file, commands_file):
     commands = read_commands(commands_file)
 
     assign_cards_to_robots(commands, state)
-    assign_prerequizites_to_robots(commands, state)
+    assign_prerequisites_to_robots(commands, state)
 
     # for robot in state.robots:
     #     print(robot.program)

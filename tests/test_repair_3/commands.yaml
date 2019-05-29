@@ -21,7 +21,7 @@ actions:
       priority: 100
       value: -1
 
-prerequizites:
+prerequisites:
   -
     damages: 9
     lives: 2

@@ -28,7 +28,7 @@ actions:
       priority: 50
       value: 1
 
-prerequizites:
+prerequisites:
   -
     flags: 3
   -
