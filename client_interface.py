@@ -37,7 +37,7 @@ def on_text(text):
 
 def send_to_server(state):
     """
-    Send selected cards to server.
+    Client send selected cards to server.
     """
     msg = json.dumps(state.my_program)
     print(msg)
@@ -45,6 +45,9 @@ def send_to_server(state):
         asyncio.ensure_future(ws.send_str(msg))
 
 async def send_one():
+    """
+    Client connect to server and receive messages.
+    """
     global ws
     # create Session
     async with aiohttp.ClientSession() as session:
