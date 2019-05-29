@@ -1,5 +1,4 @@
 import pyglet
-import json
 
 
 MAX_CARDS_COUNT = 9
