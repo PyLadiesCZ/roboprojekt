@@ -18,17 +18,27 @@ ws = None
 
 @window.event
 def on_draw():
+    """
+    Draw the interface state.
+    """
     window.clear()
     draw_interface(state, window)
 
 
 @window.event
 def on_text(text):
+    """
+    Key listener.
+    Wait for user input on keyboard and react for it.
+    """
     handle_text(state, text)
     send_to_server(state)
 
 
 def send_to_server(state):
+    """
+    Send selected cards to server.
+    """
     msg = json.dumps(state.my_program)
     print(msg)
     if ws:
@@ -49,6 +59,9 @@ async def send_one():
 
 
 def tick_asyncio(dt):
+    """
+    Schedule an event loop.
+    """
     loop = asyncio.get_event_loop()
     loop.run_until_complete(asyncio.sleep(0))
 
