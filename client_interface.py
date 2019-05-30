@@ -50,7 +50,7 @@ async def send_one():
     global ws
     # create Session
     async with aiohttp.ClientSession() as session:
-        #create Websocket
+        # create Websocket
         async with session.ws_connect('http://localhost:8080/ws/') as ws:
             async for msg in ws:
                 # Cycle "for" is finished when client disconnect from server
