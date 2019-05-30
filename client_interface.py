@@ -2,7 +2,6 @@
 Client which send messages to server
 """
 import asyncio
-import sys
 import aiohttp
 import json
 import pyglet
