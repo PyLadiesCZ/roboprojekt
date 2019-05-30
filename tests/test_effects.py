@@ -26,25 +26,15 @@ CARD_TYPES = {
 }
 
 
-def get_paths_to_maps_and_commands():
+def get_test_names():
     """
-    Go through all 'tests/' folders and create tuples with paths to test files
-    (map.json, commands.yaml). If there is no commands file, create tuple with
-    map file and None.
-    Return the list of test file sets.
+    Go through all 'tests/' folders and get their names.
+    Yield the next folder name.
     """
-    paths_to_maps_with_commands = []
     source_path = Path("tests/")
     for path in source_path.glob("test_*"):
         if path.is_dir():
-            commands = None
-            for file in path.iterdir():
-                if file.name == "map.json":
-                    map = file
-                if file.name == "commands.yaml":
-                    commands = file
-            paths_to_maps_with_commands.append((map, commands))
-    return paths_to_maps_with_commands
+            yield path.name
 
 
 def read_commands(file):
@@ -55,7 +45,7 @@ def read_commands(file):
         with open(file) as commands_file:
             file = yaml.safe_load(commands_file)
     except TypeError:
-        file = None
+        file = {}
     return file
 
 
@@ -66,13 +56,8 @@ def get_registers(commands):
     If there are no actions (ergo we test only tile effects),
     number of registers is 1.
     """
-    if commands:
-        try:
-            registers = len(commands["actions"][0])
-        except KeyError:
-            registers = 1
-    else:
-        registers = 1
+    actions = commands.get("actions", [[1]])
+    registers = len(actions[0])
     return registers
 
 
@@ -116,26 +101,13 @@ def assign_cards_to_robots(commands, state):
                 robot.program = cards_set
 
 
-def get_prerequisites(commands):
-    """
-    Decode the prerequisites that are not visible on the map: robot's damages,
-    lives, flags, power_down state.
-    Use for setup of start state of game.
-    """
-    try:
-        prerequisites = commands['prerequisites']
-    except KeyError:
-        prerequisites = None
-    return prerequisites
-
-
 def assign_prerequisites_to_robots(commands, state):
     """
     Take values for start state read from external file and
     assign them to the robots as their attributes.
     """
     if commands:
-        prerequisites = get_prerequisites(commands)
+        prerequisites = commands.get('prerequisites', None)
         if prerequisites:
             for attribute, robot in zip(prerequisites, state.robots):
                 print("attribute", attribute)
@@ -149,26 +121,13 @@ def assign_prerequisites_to_robots(commands, state):
                     robot.power_down = attribute["power_down"]
 
 
-def get_results(commands):
-    """
-    Decode the results that are not visible on the map: robot's damages,
-    lives, flags, power_down state.
-    Use for comparing the expected state of game with the given one.
-    """
-    try:
-        results = commands['results']
-    except KeyError:
-        results = None
-    return results
-
-
 def compare_results_with_robots(commands, state):
     """
     Take results read from external file and compare the values
     with the values of robots attributes.
     """
     if commands:
-        results = get_results(commands)
+        results = commands.get("results", None)
         if results:
             print(results)
             for attribute, robot in zip(results, state.robots):
@@ -185,13 +144,18 @@ def compare_results_with_robots(commands, state):
 
 
 @pytest.mark.parametrize(
-        ("map_file", "commands_file"),
-        get_paths_to_maps_and_commands(),
+        ("test_name"),
+        get_test_names(),
         )
-def test_play_game(map_file, commands_file):
+def test_play_game(test_name):
     """
     Play the game with given map.
     """
+    map_file = Path("tests/") / test_name / "map.json"
+    commands_file = Path("tests/") / test_name / "commands.yaml"
+    if not commands_file.exists():
+        commands_file = None
+
     state = get_start_state(map_file)
     stop_fields = get_start_tiles(state._board, "stop")
 
@@ -200,6 +164,7 @@ def test_play_game(map_file, commands_file):
     assign_cards_to_robots(commands, state)
     assign_prerequisites_to_robots(commands, state)
 
+    # Leave it here for debugging purpose :)
     # for robot in state.robots:
     #     print(robot.program)
     #     print(robot.damages)
