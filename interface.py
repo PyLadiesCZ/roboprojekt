@@ -29,8 +29,8 @@ class InterfaceState:
         if self.indicator == False:
             if dealt_card_index >= len(self.dealt_cards):
                 return
-            if self.dealt_cards[dealt_card_index] not in self.my_program:
-                self.my_program[self.cursor_index] = dealt_cards[dealt_card_index]
+            if dealt_card_index not in self.my_program:
+                self.my_program[self.cursor_index] = dealt_card_index
                 self.cursor_index_plus() # After select a card Move with cursor to right
 
 
@@ -109,7 +109,7 @@ def create_card_pack():
         for i in range(cards_count):
             card_pack.append(RotationCard(first_number + i*5, rotation)) # [RotationCard(865, Rotation.LEFT)....]
     shuffle(card_pack)
-    print(card_pack)
+    #print(card_pack)
     return card_pack
 
 

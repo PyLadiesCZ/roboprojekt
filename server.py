@@ -38,7 +38,7 @@ async def websocket(request):
         # This message is sent only this (just connected) client
         await ws.send_str(json.dumps(state.as_dict(map_name)))
 
-        #Process messages from this cliend
+        #Process messages from this client
         async for msg in ws:
             if msg.type == aiohttp.WSMsgType.TEXT:
                 print(msg.data)
