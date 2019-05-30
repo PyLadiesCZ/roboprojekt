@@ -46,7 +46,7 @@ def send_to_server(state):
 
 async def send_one():
     """
-    Client connect to server and receive messages.
+    Client connects to server and receives messages.
     """
     global ws
     # create Session
