@@ -37,7 +37,7 @@ def on_text(text):
 
 def send_to_server(state):
     """
-    Client send selected cards to server.
+    Client sends selected cards to server.
     """
     msg = json.dumps(state.my_program)
     print(msg)
