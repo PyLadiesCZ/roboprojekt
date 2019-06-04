@@ -3,7 +3,6 @@ import pyglet
 from interface import get_interface_state
 
 
-
 interface_state = get_interface_state()
 MAX_CARDS_COUNT = 9
 MAX_LIVES_COUNT = 3
@@ -26,35 +25,43 @@ def get_sprite(img_path, x=0, y=0):
 
 
 # Interface element sprites
-interface_sprite = get_sprite('img/interface/png/interface.png', x=0, y=0) # All Interface background
+# Interface background
+interface_sprite = get_sprite('img/interface/png/interface.png', x=0, y=0)
 power_down_sprite = get_sprite('img/interface/png/power.png', x=186, y=854)
-indicator_green_sprite = get_sprite('img/interface/png/green.png',  x=688, y=864) # Time indicator
-indicator_red_sprite = get_sprite('img/interface/png/red.png',  x=688, y=864) # Time indicator
-card_background_sprite = get_sprite('img/interface/png/card_bg.png') # Universal cards background
-select_sprite = get_sprite('img/interface/png/card_cv.png') # Gray overlay on selected cards
-cursor_sprite = get_sprite('img/interface/png/card_sl.png') # Selection cursor
-my_robot_sprite = get_sprite('img/robots/png/' + interface_state.robot_data.name + '.png', x=74, y=888) # My Robot img
+# Time indicator
+indicator_green_sprite = get_sprite('img/interface/png/green.png', x=688, y=864)
+# Time indicator
+indicator_red_sprite = get_sprite('img/interface/png/red.png', x=688, y=864)
+# Universal cards background
+card_background_sprite = get_sprite('img/interface/png/card_bg.png')
+# Gray overlay on selected cards
+select_sprite = get_sprite('img/interface/png/card_cv.png')
+# Selection cursor
+cursor_sprite = get_sprite('img/interface/png/card_sl.png')
+# Test robot image
+my_robot_sprite = get_sprite('img/robots/png/' + interface_state.robot_data.name + '.png', x=74, y=888)
 
 
-lives_sprite = []
+lives_sprites = []
 for i in range(MAX_LIVES_COUNT):
     x = 354 + i * 46
     y = 864
-    lives_sprite.append(get_sprite('img/interface/png/life.png', x, y))
+    lives_sprites.append(get_sprite('img/interface/png/life.png', x, y))
 
-flags_sprite = []
+flags_sprites = []
 for i in range(MAX_FLAGS_COUNT):
     x = 332 + i * 48
     y = 928
-    flags_sprite.append(get_sprite('img/tiles/png/flag_{}.png'.format(i+1), x, y))
+    flags_sprites.append(get_sprite(f'img/tiles/png/flag_{i+1}.png', x, y))
 
-damages_tokens_sprite = [] # Tokens of damage
+# Tokens of damage
+damages_tokens_sprites = []
 for i in range(MAX_DAMAGES_COUNT):
     x = 676 + i * -70
     y = 768
-    damages_tokens_sprite.append(get_sprite('img/interface/png/token.png', x, y))
+    damages_tokens_sprites.append(get_sprite('img/interface/png/token.png', x, y))
 
-# Cards Sprites
+# Cards sprites
 cards_type_sprites = {
     'u_turn': get_sprite('img/interface/png/u_turn.png'),
     'back_up': get_sprite('img/interface/png/back.png'),
@@ -68,7 +75,8 @@ cards_type_sprites = {
 dealt_cards_coordinates = []
 for i in range(5):
     x, y = 47, 384
-    x = x + i * 144 # 144 space between cards
+    # 144 space between cards
+    x = x + i * 144
     dealt_cards_coordinates.append((x, y))
 for i in range(4):
     x, y = 120, 224
@@ -92,6 +100,7 @@ cards_type_names = {
     'move3': 'MOVE 3',
 }
 
+
 def draw_card(coordinate, card):
     """
     Draw one card
@@ -114,15 +123,28 @@ def draw_card(coordinate, card):
     # Draw card value
     x_priority = x + 70
     y_priority = y + 118
-    priority = pyglet.text.Label(text=str(card.priority), font_size=14, x=x_priority, y=y_priority, anchor_x='right')
+    priority = pyglet.text.Label(
+        text=str(card.priority),
+        font_size=14,
+        x=x_priority,
+        y=y_priority,
+        anchor_x='right',
+    )
     priority.draw()
 
     # Draw card name
     x_name = x + 50
     y_name = y + 20
     card_name = cards_type_names[card.name]
-    name = pyglet.text.Label(text=card_name, font_size=10, x=x_name, y=y_name, anchor_x='center')
+    name = pyglet.text.Label(
+        text=card_name,
+        font_size=10,
+        x=x_name,
+        y=y_name,
+        anchor_x='center',
+    )
     name.draw()
+
 
 def draw_interface(window):
     """
@@ -156,18 +178,21 @@ def draw_interface(window):
 
     # CARDS
     # Dealt cards
-    for coordinate, card in zip(dealt_cards_coordinates, interface_state.dealt_cards):
-        draw_card(coordinate, card) # draw_card(coordinate, card_type)
+    for coordinate, card in zip(
+            dealt_cards_coordinates,
+            interface_state.dealt_cards,
+            ):
+        draw_card(coordinate, card)
 
     # Cards hand
     for coordinate, card in zip(program_coordinates, interface_state.my_program):
-        if card != None: # if selected card exist
+        if card is not None:
             draw_card(coordinate, card)
 
     # Selected cards
     # if card is selected, selected card in dealt cards is gray
     for card in interface_state.my_program:
-        if card != None:
+        if card is not None:
             x, y = dealt_cards_coordinates[interface_state.dealt_cards.index(card)]
             select_sprite.x = x
             select_sprite.y = y
@@ -180,15 +205,14 @@ def draw_interface(window):
     cursor_sprite.draw()
 
     # Power Down
-    if interface_state.power_down == True:
+    if interface_state.power_down is True:
         power_down_sprite.draw()
 
     # Indicator
-    if interface_state.indicator == False:
+    if interface_state.indicator is False:
         indicator_green_sprite.draw()
     else:
         indicator_red_sprite.draw()
-
 
     pyglet.gl.glPopMatrix()
 
@@ -199,7 +223,7 @@ def on_draw():
     draw_interface(window)
 
 
-CARD_KEYS= ["q", "w", "e", "r", "t", "a","s", "d", "f"]
+CARD_KEYS = ["q", "w", "e", "r", "t", "a", "s", "d", "f"]
 
 
 @window.event
@@ -237,7 +261,5 @@ def on_text(text):
     # confirm selection of cards
     if text == 'k':
         interface_state.confirm_selection()
-
-
 
 pyglet.app.run()
