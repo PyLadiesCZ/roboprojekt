@@ -34,7 +34,6 @@ class InterfaceState:
                 # After select a card Move with cursor to right
                 self.cursor_index_plus()
 
-
     def return_card(self):
         """
         Return one selected card from your program back to the dealt cards.
@@ -79,13 +78,18 @@ class InterfaceState:
 
     def confirm_selection(self):
         """
-        When indicator is False the player can choose cards and switch Power Down
-        When is True the player ended the selection of cards
+        When indicator is False the player can choose cards and switch Power Down.
+        When is True the player ended the selection of cards.
         """
         self.indicator = True
 
 
 def create_card_pack():
+    """
+    Create pack of cards: 42 movement cards and 42 rotation cards
+    with different values and priorities.
+    Return shuffled card pack.
+    """
     movement_cards = [(-1, 6, 250),
                       (1, 18, 300),
                       (2, 12, 400),
@@ -107,7 +111,6 @@ def create_card_pack():
             # [RotationCard(865, Rotation.LEFT)....]
             card_pack.append(RotationCard(first_number + i*5, rotation))
     shuffle(card_pack)
-    #print(card_pack)
     return card_pack
 
 
@@ -115,8 +118,10 @@ card_pack = create_card_pack()
 
 
 def get_dealt_cards(card_pack):
-    # maximum number of cards is 9
-    # robot's damages reduces the count dealt cards
+    """
+    Maximum number of cards is 9.
+    Robot's damages reduces the count of dealt cards - each damage one card.
+    """
     dealt_cards_count = MAX_CARD_COUNT-robot_data.damages
     dealt_cards = card_pack[-dealt_cards_count:]
     del card_pack[-dealt_cards_count:]
@@ -127,5 +132,8 @@ dealt_cards = get_dealt_cards(card_pack)
 
 
 def get_interface_state():
+    """
+    Create interface state for given robot and his cards.
+    """
     interface_state = InterfaceState(dealt_cards, robot_data)
     return interface_state

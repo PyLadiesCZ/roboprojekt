@@ -144,7 +144,8 @@ def draw_card(coordinate, card):
 
 def draw_interface(interface_state, window):
     """
-    Draw the images of interface, react to user's resizing of window by scaling the interface.
+    Draw the images of given interface,
+    react to user's resizing of window by scaling the interface.
     """
     pyglet.gl.glPushMatrix()
     window.clear()
@@ -253,6 +254,6 @@ def handle_text(interface_state, text):
     if text == 'p':
         interface_state.switch_power_down()
 
-    # confirm selection of cards
+    # Confirm selection of cards
     if text == 'k':
         interface_state.confirm_selection()
