@@ -1,4 +1,4 @@
-Commands file structure (read by _test_effects.py_)
+`commands.yaml` file structure (read by _test_effects.py_)
 
 ```
 actions:
@@ -26,13 +26,15 @@ results:
 ```
 
 Possible _attributes_:
-damages: 0-9
-flags: 0-8
-lives: 0-3
-power_down: boolean
+
+ - damages: 0-9
+ - flags: 0-8
+ - lives: 0-3
+ - power_down: boolean
 
 Possible _results_:
-start: [0, 0]
+
+ - start: [0, 0]
 The rest is the same as _attributes_
 
 
