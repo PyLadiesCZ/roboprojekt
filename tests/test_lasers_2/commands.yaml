@@ -1,0 +1,35 @@
+prerequisites:
+  -
+    power_down: True
+  -
+    power_down: True
+  -
+    power_down: True
+  -
+    power_down: True
+  -
+    power_down: True
+  -
+    power_down: True
+  -
+    power_down: True
+  -
+    power_down: True
+
+results:
+  -
+    damages: 0
+  -
+    damages: 4
+  -
+    damages: 0
+  -
+    damages: 0
+  -
+    damages: 3
+  -
+    damages: 0
+  -
+    damages: 0
+  -
+    damages: 1

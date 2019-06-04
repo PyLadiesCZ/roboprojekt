@@ -1,0 +1,29 @@
+actions:
+  -
+    - type: move
+      priority: 100
+      value: 1
+  -
+    - type: move
+      priority: 100
+      value: 1
+  -
+    - type: move
+      priority: 100
+      value: 1
+
+prerequisites:
+  -
+    damages: 0
+  -
+    damages: 9
+  -
+    damages: 3
+
+results:
+  -
+    damages: 0
+  -
+    damages: 8
+  -
+    damages: 2

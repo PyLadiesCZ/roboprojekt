@@ -1,9 +1,6 @@
 import pyglet
 
-from interface import get_interface_state
 
-
-interface_state = get_interface_state()
 MAX_CARDS_COUNT = 9
 MAX_LIVES_COUNT = 3
 MAX_FLAGS_COUNT = 8
@@ -16,7 +13,6 @@ def create_window():
     """
     window = pyglet.window.Window(768, 1024, resizable=True)
     return window
-window = create_window()
 
 
 def get_sprite(img_path, x=0, y=0):
@@ -39,7 +35,7 @@ select_sprite = get_sprite('img/interface/png/card_cv.png')
 # Selection cursor
 cursor_sprite = get_sprite('img/interface/png/card_sl.png')
 # Test robot image
-my_robot_sprite = get_sprite('img/robots/png/' + interface_state.robot_data.name + '.png', x=74, y=888)
+my_robot_sprite = get_sprite('img/robots/png/mintbot.png', x=74, y=888)
 
 
 lives_sprites = []
@@ -146,7 +142,7 @@ def draw_card(coordinate, card):
     name.draw()
 
 
-def draw_interface(window):
+def draw_interface(interface_state, window):
     """
     Draw the images of interface, react to user's resizing of window by scaling the interface.
     """
@@ -185,14 +181,15 @@ def draw_interface(window):
         draw_card(coordinate, card)
 
     # Cards hand
-    for coordinate, card in zip(program_coordinates, interface_state.my_program):
-        if card is not None:
-            draw_card(coordinate, card)
+    for coordinate, card_index in zip(program_coordinates, interface_state.my_program):
+        if card_index is not None:
+            draw_card(coordinate, interface_state.dealt_cards[card_index])
 
     # Selected cards
     # if card is selected, selected card in dealt cards is gray
-    for card in interface_state.my_program:
-        if card is not None:
+    for card_index in interface_state.my_program:
+        if card_index is not None:
+            card = interface_state.dealt_cards[card_index]
             x, y = dealt_cards_coordinates[interface_state.dealt_cards.index(card)]
             select_sprite.x = x
             select_sprite.y = y
@@ -217,8 +214,7 @@ def draw_interface(window):
     pyglet.gl.glPopMatrix()
 
 
-@window.event
-def on_draw():
+def draw_window(interface_state, window):
     window.clear()
     draw_interface(window)
 
@@ -226,8 +222,7 @@ def on_draw():
 CARD_KEYS = ["q", "w", "e", "r", "t", "a", "s", "d", "f"]
 
 
-@window.event
-def on_text(text):
+def handle_text(interface_state, text):
     """
     Key listener
     Wait for user input on keyboard and react for it.
@@ -261,5 +256,3 @@ def on_text(text):
     # confirm selection of cards
     if text == 'k':
         interface_state.confirm_selection()
-
-pyglet.app.run()

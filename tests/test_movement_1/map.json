@@ -1,0 +1,55 @@
+{ "height":5,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+         "height":5,
+         "id":4,
+         "name":"ground",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":4,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[40, 0, 1610612778, 0, 0, 3221225513, 0, 2684354603, 0, 0, 1610612782, 3221225519, 2684354604, 0, 0, 0, 2684354605, 0, 0, 0],
+         "height":5,
+         "id":5,
+         "name":"start",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":4,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 3221225521, 0, 1610612786, 48, 0, 2684354611, 0, 1610612790, 0, 0, 0, 0, 0, 2684354612, 3221225527, 0, 0, 0, 2684354613],
+         "height":5,
+         "id":6,
+         "name":"stop",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":4,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":7,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.2.1",
+ "tileheight":64,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"..\/..\/maps\/development_tileset.json"
+        }],
+ "tilewidth":64,
+ "type":"map",
+ "version":1.2,
+ "width":4
+}

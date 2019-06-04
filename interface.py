@@ -29,10 +29,11 @@ class InterfaceState:
         if self.indicator is False:
             if dealt_card_index >= len(self.dealt_cards):
                 return
-            if self.dealt_cards[dealt_card_index] not in self.my_program:
-                self.my_program[self.cursor_index] = dealt_cards[dealt_card_index]
-                # After select a card move with cursor to right
+            if dealt_card_index not in self.my_program:
+                self.my_program[self.cursor_index] = dealt_card_index
+                # After select a card Move with cursor to right
                 self.cursor_index_plus()
+
 
     def return_card(self):
         """
@@ -106,7 +107,7 @@ def create_card_pack():
             # [RotationCard(865, Rotation.LEFT)....]
             card_pack.append(RotationCard(first_number + i*5, rotation))
     shuffle(card_pack)
-    print(card_pack)
+    #print(card_pack)
     return card_pack
 
 
