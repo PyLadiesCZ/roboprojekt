@@ -55,12 +55,13 @@ class Robot:
         direction = Direction(robot_description["direction"])
         coordinates = tuple(robot_description["coordinates"])
         name = robot_description["name"]
-        cls.lives = robot_description["lives"]
-        cls.flags = robot_description["flags"]
-        cls.damages = robot_description["damages"]
-        cls.power_down = robot_description["power down"]
-        cls.start_coordinates = robot_description["start coordinates"]
-        return cls(direction, coordinates, name)
+        robot = cls(direction, coordinates, name)
+        robot.lives = robot_description["lives"]
+        robot.flags = robot_description["flags"]
+        robot.damages = robot_description["damages"]
+        robot.power_down = robot_description["power down"]
+        robot.start_coordinates = robot_description["start coordinates"]
+        return robot
 
     def walk(self, distance, state, direction=None, push_others=True):
         """

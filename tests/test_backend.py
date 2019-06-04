@@ -705,9 +705,9 @@ def test_robot_from_dict():
     """
     Check if method Robot.from_dict returns robot from JSON.
     """
-    robot_description = {'name': 'crazybot', 'coordinates': [10, 1],
+    robot_description = {'name': 'crazybot', 'coordinates': (10, 1),
                          'lives': 5, 'flags': 8, 'damages': 5, 'power down': False,
-                         'direction': 90, 'start coordinates': [3, 1]}
+                         'direction': 90, 'start coordinates': (3, 1)}
     robot = Robot.from_dict(robot_description)
     assert robot.name == "crazybot"
     assert robot.coordinates == (10, 1)
