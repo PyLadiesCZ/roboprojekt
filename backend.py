@@ -20,7 +20,7 @@ class Robot:
         self.program = []
         self.lives = 3
         self.flags = 0
-        self.damages = 4
+        self.damages = 0
         self.power_down = False
         self.name = name
 
@@ -570,7 +570,7 @@ def get_direction_from_coordinates(start_coordinates, stop_coordinates):
             return direction
 
 
-def apply_tile_effects(state, register):
+def apply_tile_effects(state, register, registers):
     """
     Apply the effects according to game rules.
     The function name is not entirely exact: the whole register phase actions take place
@@ -606,7 +606,7 @@ def apply_tile_effects(state, register):
     for robot in state.get_active_robots():
         for tile in state.get_tiles(robot.coordinates):
             tile.collect_flag(robot)
-            tile.repair_robot(robot, state, register)
+            tile.repair_robot(robot, state, register, registers)
 
 
 def set_robots_for_new_turn(state):
@@ -684,4 +684,4 @@ def _apply_cards_and_tiles_effects(state, registers):
             print("No card on hand, continue to tile effects.")
             pass
 
-        apply_tile_effects(state, register)
+        apply_tile_effects(state, register, registers)

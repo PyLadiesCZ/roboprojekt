@@ -16,14 +16,27 @@ actions:
   -
     - type: move
       priority: 100
-      value: 1
+      value: -1
     - type: move
       priority: 100
-      value: 1
+      value: -1
+
+prerequisites:
   -
-    - type: move
-      priority: 100
-      value: 1
-    - type: move
-      priority: 100
-      value: 1
+    damages: 9
+    lives: 2
+  -
+    damages: 9
+  -
+    damages: 6
+
+results:
+  -
+    damages: 9
+    start: [1, 2]
+  -
+    damages: 8
+    start: [2, 1]
+  -
+    damages: 5
+    start: [2, 0]
