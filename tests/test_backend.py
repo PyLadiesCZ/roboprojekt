@@ -5,7 +5,7 @@ from backend import RotationCard, apply_tile_effects, get_direction_from_coordin
 from backend import apply_all_effects, get_robots_ordered_by_cards_priority
 from util import Direction, Rotation
 from tile import Tile, HoleTile, PusherTile, RepairTile, FlagTile
-from loading import get_board, get_tiles_properties
+from loading import get_board
 
 
 def test_robots_on_start_coordinates():
