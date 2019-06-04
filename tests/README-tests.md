@@ -31,11 +31,8 @@ Possible _attributes_:
  - flags: 0-8
  - lives: 0-3
  - power_down: boolean
+ - start: [0, 0] (use only for _results_)
 
-Possible _results_:
-
- - start: [0, 0]
-The rest is the same as _attributes_
 
 
 ## How to add new tests
