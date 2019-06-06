@@ -1,7 +1,7 @@
 # RoboProject
 *Advanced PyLadies CZ Course*
 
-This course was created primarilly for those who succesfully passed the PyLadies beginner courses and want to continue with Python via "real" project. It should show participants the process of software development from the very basics, and enable them to try it on their own. It is focused on team cooperation, using Python for real tasks, working with Git and GitHub, showing best practices and trying various useful tools. 
+This course was created primarilly for those who succesfully passed the PyLadies beginner courses and want to continue with Python via "real" project. It should show participants the process of software development from the very basics, and enable them to try it on their own. It is focused on team cooperation, using Python for real tasks, working with Git and GitHub, showing best practices and trying various useful tools.
 
 The assignment of this project is transforming board game RoboRally to computer version so the final result should be working playable computer game.
 
@@ -38,7 +38,7 @@ python game.py
 Each player has one robot which can be programmed by cards. The goal is to collect all flags on the board in the increasing order. The first robot who collects all flags wins.
 
 At the beginning of each round you get a random set of cards and by choosing cards for robot's slots you will set his moves for the round.
-There is a time limit for choosing the cards. During the "choosing cards" part you can also put your robot to `Power Down` mode which means they won't make any actions by their own but they can be affected by other robots' actions. 
+There is a time limit for choosing the cards. During the "choosing cards" part you can also put your robot to `Power Down` mode which means they won't make any actions by their own but they can be affected by other robots' actions.
 Once the "choosing cards" phase ends, the following steps will repeat 5 times:
 1. The robots' card actions are performed in order of priority
 2. The effects of tiles robots stand on are performed
@@ -50,16 +50,18 @@ After this phase is complete, the robots standing on the repair tile or in Power
 
 ### Tests
 
-Currently, the tests are divided into two separate files, `test_backend.py` and `test_loading.py`, covering respective modules. The second file also contains map validator (see map details below).
+Currently, the tests are places in `tests/` folder. They are divided into three separate files, `test_effects.py`, `test_backend.py` and `test_loading.py`, covering respective modules.
+`test_effects.py` reads the subfolders with test maps and commands. It executes the game on the background and asserts the robots performed the steps and their attributes were changed according to tile effects. For more details about testing framework see `tests/README-tests.md`.
+`test_loading.py` also contains map validator (see map details below).
 
-To run the tests, write the following command into the command line: `python -m pytest -v` 
+To run the tests, write the following command into the command line: `python -m pytest -v`
 
-If you want to run only one of the testing files, add the name of the file after the command above. 
+If you want to run only one of the testing files, add the name of the file after the command above.
 
 ### Create your own map
 
-Current maps were created in [Tiled](https://www.mapeditor.org/) map editor, version 1.2.1.. 
-You can create your own map with the prepared tileset `development_tileset.json`. 
+Current maps were created in [Tiled](https://www.mapeditor.org/) map editor, version 1.2.1..
+You can create your own map with the prepared tileset `development_tileset.json`.
 When creating multiple-layered tiles, keep the following order of layers:
 1. earth
 2. one of the following: hole, start, repair, belt, turn
@@ -70,7 +72,6 @@ Part of the test suite is a map validator which checks the order of tile layers.
 
 ### Automatic conversion from .SVG to .PNG
 
-This project also contains a program `export_img.py` for automatic conversion of images in .SVG format to .PNG format. 
+This project also contains a program `export_img.py` for automatic conversion of images in .SVG format to .PNG format.
 The current version of the program uses [Inkscape](https://inkscape.org/) vector graphic editor so if you want to use this program, you need to install Inkscape first.  
 To convert all images, run the `export_img.py` file from the root directory of the project. It will then export all images in .SVG to .PNG in all subdirectories.
-

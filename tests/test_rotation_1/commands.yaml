@@ -1,0 +1,43 @@
+actions:
+  -
+    - type: move
+      priority: 300
+      value: 1
+    - type: rotate
+      priority: 50
+      value: -90
+  -
+    - type: rotate
+      priority: 80
+      value: 180
+    - type: rotate
+      priority: 80
+      value: -90
+  -
+    - type: rotate
+      priority: 100
+      value: 90
+    - type: rotate
+      priority: 100
+      value: -90
+  -
+    - type: rotate
+      priority: 100
+      value: -90
+    - type: rotate
+      priority: 100
+      value: -90
+  -
+    - type: rotate
+      priority: 100
+      value: 180
+    - type: rotate
+      priority: 100
+      value: 180
+  -
+    - type: rotate
+      priority: 100
+      value: 90
+    - type: move
+      priority: 100
+      value: 1
