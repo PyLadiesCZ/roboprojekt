@@ -2,9 +2,9 @@ import pytest
 
 from backend import create_robots, get_start_state, Robot, State, MovementCard
 from backend import RotationCard, apply_tile_effects, get_direction_from_coordinates
-from backend import apply_all_effects, get_robots_ordered_by_cards_priority
+from backend import apply_all_effects, get_robots_ordered_by_cards_priority, get_robot_names
 from util import Direction, Rotation
-from tile import Tile, HoleTile, PusherTile, RepairTile, FlagTile
+from tile import Tile, HoleTile, PusherTile
 from loading import get_board
 
 
@@ -33,6 +33,7 @@ def test_start_state():
     assert isinstance(ss._board[0, 0][0], Tile)
 
 
+# I'd leave this test as regression test - uses robot.walk() method.
 @pytest.mark.parametrize(("input_coordinates", "input_direction", "distance", "output_coordinates"),
                          [((3, 3), Direction.N, 2, (3, 5)),
                           ((3, 3), Direction.E, 2, (3, 3)),
@@ -49,7 +50,7 @@ def test_robot_walk(input_coordinates, input_direction, distance, output_coordin
     robot.walk(distance, state, input_direction)
     assert robot.coordinates == output_coordinates
 
-
+# I'd leave this test as regression test - uses robot.move() method.
 @pytest.mark.parametrize(("input_coordinates", "input_direction", "distance", "output_coordinates"),
                          [((0, 1), Direction.N, 3, (0, 4)),
                           ((8, 1), Direction.N, 3, (8, 3)),
@@ -69,6 +70,7 @@ def test_robot_move(input_coordinates, input_direction, distance, output_coordin
     assert robot.coordinates == output_coordinates
 
 
+# I'd leave this test as regression test - uses robot.rotate() method.
 @pytest.mark.parametrize(("current_direction", "towards", "new_direction"),
                          [(Direction.N, Rotation.LEFT, Direction.W),
                          (Direction.S, Rotation.RIGHT, Direction.W),
@@ -80,124 +82,6 @@ def test_robot_change_direction(current_direction, towards, new_direction):
     robot = Robot(current_direction, None, "tester")
     robot.rotate(towards)
     assert robot.direction == new_direction
-
-
-def test_robot_and_tiles_shoot():
-    """
-    Robots are placed on a test_laser.json map.
-    There are some walls that stop their lasers on the way.
-    (In order to see the "human" version with arrows representing robots,
-    check test_shoot_human_view.json),
-    They should receive damages according to their and lasers' position.
-    """
-    board = get_board("maps/test_laser.json")
-
-    robots = [Robot(Direction.W, (2, 2), "tester"),
-              Robot(Direction.N, (1, 1), "tester"),
-              Robot(Direction.E, (0, 2), "tester"),
-              Robot(Direction.W, (1, 2), "tester"),
-              Robot(Direction.S, (1, 3), "tester"),
-              Robot(Direction.E, (0, 0), "tester"),
-              Robot(Direction.N, (2, 0), "tester"),
-              Robot(Direction.E, (3, 0), "tester"),
-              Robot(Direction.N, (2, 1), "tester"),
-              Robot(Direction.S, (3, 3), "tester"),
-              ]
-    for robot in robots:
-        robot.damages = 0
-
-    state = State(board, robots)
-    apply_tile_effects(state, 0)
-    damages_list = [0, 4, 0, 2, 0, 0, 1, 1, 1, 4]
-
-    for robot in robots:
-        assert robot.damages == damages_list[robots.index(robot)]
-
-
-def test_power_down_robots_dont_shoot():
-    """
-    Robots are placed on a test_laser.json map.
-    There are some walls that stop their lasers on the way.
-    (In order to see the "human" version with arrows representing robots,
-    check test_shoot_human_view.json),
-    They shouldn't receive damage when they are under power-down.
-    """
-    board = get_board("maps/test_laser.json")
-
-    robots = [Robot(Direction.W, (2, 2), "tester"),
-              Robot(Direction.N, (1, 1), "tester"),
-              Robot(Direction.E, (0, 2), "tester"),
-              Robot(Direction.W, (1, 2), "tester"),
-              Robot(Direction.S, (1, 3), "tester"),
-              Robot(Direction.E, (0, 0), "tester"),
-              Robot(Direction.N, (2, 0), "tester"),
-              Robot(Direction.E, (3, 0), "tester"),
-              Robot(Direction.N, (2, 1), "tester"),
-              Robot(Direction.S, (3, 3), "tester"),
-              ]
-    for robot in robots:
-        robot.damages = 0
-        robot.power_down = True
-
-    state = State(board, robots)
-    apply_tile_effects(state, 0)
-    damages_list = [0, 4, 0, 0, 0, 0, 0, 0, 0, 4]
-
-    for robot in robots:
-        assert robot.damages == damages_list[robots.index(robot)]
-
-
-# RepairTile
-
-@pytest.mark.parametrize(("damages_before", "tile", "damages_after"),
-                         [(0, RepairTile(None, None, {'new_start': True}), 0),
-                         (9, RepairTile(None, None, {'new_start': True}), 8),
-                         (3, RepairTile(None, None, {'new_start': True}), 2),
-                          ])
-def test_robot_is_repaired_after_5th_round(damages_before, tile, damages_after):
-    """
-    When robot is on RepairTile he is supposed to be repaired after the 5th register.
-    If he doesn't have any damages, the count remains the same as previous.
-    """
-    robot = Robot(Direction.N, (0, 0), "tester")
-    state = State({(0, 0): [tile]}, [robot])
-    robot.damages = damages_before
-    robot.program = [MovementCard(100, 0) for x in range(5)]
-    apply_all_effects(state)
-    assert robot.damages == damages_after
-
-
-@pytest.mark.parametrize(("damages", "tile", "current_register"),
-                         [(0, RepairTile(None, None, {'new_start': True}), 0),
-                         (9, RepairTile(None, None, {'new_start': True}), 1),
-                         (3, RepairTile(None, None, {'new_start': True}), 2),
-                         (5, RepairTile(None, None, {'new_start': True}), 3),
-                          ])
-def test_robot_is_not_repaired(damages, tile, current_register):
-    """
-    When robot is on RepairTile but the register phase is not 5, he is not yet repaired. His damage count doesn't change.
-    """
-    robot = Robot(Direction.N, (0, 0), "tester")
-    state = State({(0, 0): [tile]}, [robot])
-    robot.damages = damages
-    apply_tile_effects(state, current_register)
-    assert robot.damages == damages
-
-
-@pytest.mark.parametrize(("tile", "coordinates_after"),
-                         [(RepairTile(None, None, {'new_start': True}), (0, 0)),
-                         (RepairTile(None, None, {'new_start': False}), (1, 1)),
-                          ])
-def test_robot_changed_start_coordinates(tile, coordinates_after):
-    """
-    When robot is on RepairTile with special property, he changes his start coordinates to the tile coordinates.
-    On a normal RepairTile he doesn't change the start tile.
-    """
-    robot = Robot(Direction.N, (0, 0), "tester")
-    state = State({(0, 0): [tile]}, [robot])
-    robot.start_coordinates = (1, 1)
-    apply_tile_effects(state, 0)
-    assert robot.start_coordinates == coordinates_after
 
 
 # HoleTile hidden in walk method
@@ -221,41 +105,6 @@ def test_robot_died(lives_before, lives_after):
     assert robot.lives == lives_after
     assert robot.inactive is True
     assert robot.coordinates is None
-
-
-# FlagTile
-
-@pytest.mark.parametrize(("flags_before", "tile", "flags_after"),
-                         [(3, FlagTile(None, None, {'number': 1}),  3),
-                         (3, FlagTile(None, None, {'number': 4}),  4),
-                         (3, FlagTile(None, None, {'number': 5}),  3),
-                          ])
-def test_robot_collected_flags(flags_before, tile, flags_after):
-    """
-    When a robot stands on FlagTile with appropriate number (+1 to his current flag count), he collects it.
-    He doesn't collect the flags with the other number than defined. They don't have any effect on him.
-    """
-    robot = Robot(Direction.N, (0, 0), "tester")
-    state = State({(0, 0): [tile]}, [robot])
-    robot.flags = flags_before
-    apply_tile_effects(state, 0)
-    assert robot.flags == flags_after
-
-
-@pytest.mark.parametrize(("tile"),
-                         [(FlagTile(None, None, {'number': 1})),
-                         (FlagTile(None, None, {'number': 4})),
-                         (FlagTile(None, None, {'number': 5})),
-                          ])
-def test_robot_changed_coordinates(tile):
-    """
-    When a robot stands on FlagTile the start coordinates change to the tile's coordinates.
-    """
-    robot = Robot(Direction.N, (0, 0), "tester")
-    state = State({(0, 0): [tile]}, [robot])
-    robot.start_coordinates = (1, 1)
-    apply_tile_effects(state, 0)
-    assert robot.start_coordinates == (0, 0)
 
 
 # WallTile
@@ -302,7 +151,7 @@ def test_robot_is_damaged_by_laser(input_coordinates, damages_after):
     robot = Robot(Direction.W, input_coordinates, "tester")
     robot.damages = 0
     state = State(board, [robot_obstacle1, robot_obstacle2, robot])
-    apply_tile_effects(state, 0)
+    apply_all_effects(state, 1)
     assert robot.damages == damages_after
 
 
@@ -325,7 +174,7 @@ def test_robot_is_pushed_at_the_correct_round(register, tile, output_coordinates
     """
     robot = Robot(Direction.W, (1, 1), "tester")
     state = State({(1, 0): [Tile(None, None, None)], (1, 1): [tile]}, [robot])
-    apply_tile_effects(state, register)
+    apply_tile_effects(state, register, 1)
     assert robot.direction == Direction.W
     assert robot.coordinates == output_coordinates
 
@@ -345,7 +194,7 @@ def test_robot_is_pushed_to_the_correct_direction(tile, output_coordinates):
     """
     robot = Robot(Direction.S, (1, 1), "tester")
     state = State({(1, 0): [Tile(None, None, None)], (0, 1): [Tile(None, None, None)], (2, 1): [Tile(None, None, None)], (1, 2): [Tile(None, None, None)], (1, 1): [tile]}, [robot])
-    apply_tile_effects(state, 0)
+    apply_all_effects(state, 1)
     assert robot.direction == Direction.S
     assert robot.coordinates == output_coordinates
 
@@ -365,7 +214,7 @@ def test_robot_is_pushed_out_of_the_board(tile):
     """
     robot = Robot(Direction.S, (0, 0), "tester")
     state = State({(0, 0): [tile]}, [robot])
-    apply_tile_effects(state, 0)
+    apply_tile_effects(state, 0, 1)
     assert robot.lives == 2
     assert robot.inactive is True
     assert robot.coordinates is None
@@ -416,7 +265,7 @@ def test_robot_movement_on_normal_belts(input_coordinates, output_coordinates):
     robot = Robot(Direction.N, input_coordinates, "tester")
     board = get_board("maps/test_belts.json")
     state = State(board, [robot])
-    apply_tile_effects(state, 0)
+    apply_all_effects(state, 1)
     assert robot.coordinates == output_coordinates
 
 
@@ -435,7 +284,7 @@ def test_robot_movement_on_express_belts(input_coordinates, output_coordinates):
     robot = Robot(Direction.N, input_coordinates, "tester")
     board = get_board("maps/test_belts.json")
     state = State(board, [robot])
-    apply_tile_effects(state, 0)
+    apply_all_effects(state, 1)
     assert robot.coordinates == output_coordinates
 
 
@@ -456,7 +305,7 @@ def test_robot_movement_on_connected_belts(input_coordinates, output_coordinates
     robot = Robot(Direction.N, input_coordinates, "tester")
     board = get_board("maps/test_belts.json")
     state = State(board, [robot])
-    apply_tile_effects(state, 0)
+    apply_all_effects(state, 1)
     assert robot.coordinates == output_coordinates
 
 
@@ -481,7 +330,7 @@ def test_robot_movement_on_crossroad_belts(input_coordinates, output_coordinates
     robot = Robot(Direction.N, input_coordinates, "tester")
     board = get_board("maps/test_belts.json")
     state = State(board, [robot])
-    apply_tile_effects(state, 0)
+    apply_all_effects(state, 1)
     assert robot.coordinates == output_coordinates
 
 
@@ -514,7 +363,7 @@ def test_change_of_robots_direction_on_rotating_belts(input_coordinates, output_
     robot = Robot(Direction.N, input_coordinates, "tester")
     board = get_board("maps/test_belts.json")
     state = State(board, [robot])
-    apply_tile_effects(state, 0)
+    apply_all_effects(state, 1)
     assert robot.direction == output_direction
 
 
@@ -548,7 +397,7 @@ def test_robots_dont_change_direction_on_rotating_belts_after_move_card(input_co
     board = get_board("maps/test_belts.json")
     state = State(board, [robot])
     robot.program[0].apply_effect(robot, state)
-    apply_tile_effects(state, 0)
+    apply_all_effects(state, 1)
     assert robot.direction == input_direction
 
 
@@ -567,7 +416,7 @@ def test_two_robots_movements_on_belts(input_coordinates_1, input_coordinates_2,
               ]
     board = get_board("maps/test_belts.json")
     state = State(board, robots)
-    apply_tile_effects(state, 0)
+    apply_all_effects(state, 1)
     assert robots[0].coordinates == output_coordinates_1
     assert robots[1].coordinates == output_coordinates_2
 
@@ -586,7 +435,7 @@ def test_two_robots_movement_on_T_crossroad(input_coordinates_1, input_coordinat
               ]
     board = get_board("maps/test_belts.json")
     state = State(board, robots)
-    apply_tile_effects(state, 0)
+    apply_all_effects(state, 1)
     assert robots[0].coordinates == output_coordinates_1
     assert robots[1].coordinates == output_coordinates_2
 
@@ -607,7 +456,7 @@ def test_robot_does_not_move_onto_another_robot(input_coordinates_1, input_coord
               ]
     board = get_board("maps/test_belts.json")
     state = State(board, robots)
-    apply_tile_effects(state, 0)
+    apply_all_effects(state, 1)
     assert robots[0].coordinates == output_coordinates_1
     assert robots[1].coordinates == output_coordinates_2
 
@@ -624,50 +473,9 @@ def test_robots_cannot_swap_places(input_coordinates_1, input_coordinates_2):
               ]
     board = get_board("maps/test_belts.json")
     state = State(board, robots)
-    apply_tile_effects(state, 0)
+    apply_all_effects(state, 1)
     assert robots[0].coordinates == input_coordinates_1
     assert robots[1].coordinates == input_coordinates_2
-
-
-@pytest.mark.parametrize(("direction", "card", "new_coordinates"),
-                         [(Direction.E, MovementCard(100, 1), (5, 7)),
-                         (Direction.E, MovementCard(100, 2), (6, 7)),
-                         (Direction.E, MovementCard(100, 3), (7, 7)),
-                         (Direction.E, MovementCard(100, -1), (3, 7)),
-                         (Direction.S, MovementCard(100, 1), (4, 6)),
-                         (Direction.S, MovementCard(100, 2), (4, 5)),
-                         (Direction.S, MovementCard(100, 3), (4, 4)),
-                         (Direction.S, MovementCard(100, -1), (4, 8)),
-                         (Direction.N, MovementCard(100, -1), (4, 6)),
-                         (Direction.W, MovementCard(100, -1), (5, 7)),
-                          ])
-def test_move_cards(direction, card, new_coordinates):
-    """
-    Give mock robot the MovementCard and check if he moved to the expected coordinates.
-    Check if the robot's direction remained the same.
-    """
-    robot = Robot(direction, (4, 7), "tester")
-    robot.program = [card]
-    state = get_start_state("maps/test_3.json")
-    card.apply_effect(robot, state)
-    assert robot.coordinates == new_coordinates
-    assert robot.direction == direction
-
-
-@pytest.mark.parametrize(("card", "new_direction"),
-                         [(RotationCard(100, Rotation.LEFT), Direction.W),
-                         (RotationCard(100, Rotation.RIGHT), Direction.E),
-                         (RotationCard(100, Rotation.U_TURN), Direction.S),
-                          ])
-def test_rotate_cards(card, new_direction):
-    """
-    Give mock robot the RotationCard and check if he's heading to the expected direction.
-    """
-    robot = Robot(Direction.N, None, "tester")
-    robot.program = [card]
-    state = get_start_state("maps/test_3.json")
-    card.apply_effect(robot, state)
-    assert robot.direction == new_direction
 
 
 def test_card_priorities():
@@ -699,3 +507,49 @@ def test_card_priorities():
     robot_cards = get_robots_ordered_by_cards_priority(state, 1)
     assert robot_cards[0][0].program[1].priority == 350
     assert robot_cards[7][0].program[1].priority == 80
+
+
+def test_robot_from_dict():
+    """
+    Check if method Robot.from_dict returns robot from JSON.
+    """
+    robot_description = {'name': 'crazybot', 'coordinates': (10, 1),
+                         'lives': 5, 'flags': 8, 'damages': 5, 'power down': False,
+                         'direction': 90, 'start coordinates': (3, 1)}
+    robot = Robot.from_dict(robot_description)
+    assert robot.name == "crazybot"
+    assert robot.coordinates == (10, 1)
+    assert robot.lives == 5
+    assert robot.flags == 8
+    assert robot.damages == 5
+    assert robot.power_down == False
+    assert robot.direction == Direction.E
+    assert robot.start_coordinates == (3, 1)
+
+
+def test_state_from_dict():
+    """
+    Check if state.from_dict can load State from JSON.
+    """
+    data = {'board': {'height': 12, 'infinite': False, 'layers': [{'data': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], 'height': 12, 'id': 1, 'name': 'layer 1', 'opacity': 1, 'type': 'tilelayer', 'visible': True, 'width': 12, 'x': 0, 'y': 0}, {'data': [0, 2684354573, 0, 2684354573, 0, 2684354573, 2684354573, 0, 2684354573, 0, 2684354573, 38, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3221225485, 0, 0, 0, 2684354578, 0, 2684354578, 0, 38, 1610612754, 0, 0, 0, 13, 0, 2684354578, 33, 2684354578, 0, 2, 1610612754, 0, 1610612754, 0, 3221225485, 0, 0, 2, 2684354578, 0, 39, 30, 0, 1610612754, 0, 0, 0, 13, 0, 2684354578, 0, 2684354578, 0, 0, 1610612754, 32, 1610612754, 0, 3221225485, 0, 0, 31, 2684354578, 0, 2684354578, 0, 0, 1610612754, 2, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3221225485, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 41, 0, 42, 0, 43, 44, 0, 45, 0, 46, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 'height': 12, 'id': 2, 'name': 'layer 2', 'opacity': 1, 'type': 'tilelayer', 'visible': True, 'width': 12, 'x': 0, 'y': 0}, {'data': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354585, 0, 0, 24, 0, 2684354573, 0, 2684354573, 2684354573, 0, 2684354573, 0, 3221225496, 0, 0, 24, 13, 0, 0, 0, 0, 0, 0, 3221225485, 3221225496, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 3221225496, 0, 0, 24, 13, 0, 0, 0, 0, 0, 0, 3221225485, 3221225496, 0, 0, 24, 0, 1610612749, 0, 1610612749, 1610612749, 0, 1610612749, 0, 3221225496, 0, 0, 1610612761, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 3221225497, 0, 0, 0, 1610612749, 0, 1610612749, 0, 0, 1610612749, 13, 1610612749, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 13, 0, 13, 0, 13, 13, 13, 0, 13, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 'height': 12, 'id': 3, 'name': 'layer 3', 'opacity': 1, 'type': 'tilelayer', 'visible': True, 'width': 12, 'x': 0, 'y': 0}], 'nextlayerid': 5, 'nextobjectid': 1, 'orientation': 'orthogonal', 'renderorder': 'right-up', 'tiledversion': '1.2.1', 'tileheight': 64, 'tilesets': [{'firstgid': 1, 'source': 'development_tileset.json'}], 'tilewidth': 64, 'type': 'map', 'version': 1.2, 'width': 12}, 'robots': [{'name': 'hanka', 'coordinates': [0, 1], 'lives': 3, 'flags': 0, 'damages': 4, 'power down': False, 'direction': 0, 'start coordinates': [0, 1]}, {'name': 'ivet', 'coordinates': [1, 1], 'lives': 3, 'flags': 0, 'damages': 4, 'power down': False, 'direction': 0, 'start coordinates': [1, 1]}]}
+    state = State.from_dict(data)
+    assert state.robots[0].coordinates == (0, 1)
+    assert state.robots[1].damages == 4
+    assert state._board[0, 11][0].direction == Direction.N
+    assert state._board[2, 5][0].name == "ground"
+
+
+def test_get_robot_names():
+    """
+    Get_robot_names return correct robot names.
+    Names - names of the files with robots avatars.
+    """
+    robot_names = get_robot_names()
+    assert robot_names[0] == "hanka"
+    assert robot_names[1] == "ivet"
+    assert robot_names[2] == "ivet2"
+    assert robot_names[3] == "ivet3"
+    assert robot_names[4] == "katka"
+    assert robot_names[5] == "mintbot"
+    assert robot_names[6] == "terka"
+    assert robot_names[7] == "zuu"
