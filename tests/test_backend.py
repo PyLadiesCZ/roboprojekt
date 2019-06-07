@@ -2,7 +2,7 @@ import pytest
 
 from backend import create_robots, get_start_state, Robot, State, MovementCard
 from backend import RotationCard, apply_tile_effects, get_direction_from_coordinates
-from backend import apply_all_effects, get_robots_ordered_by_cards_priority
+from backend import apply_all_effects, get_robots_ordered_by_cards_priority, get_robot_names
 from util import Direction, Rotation
 from tile import Tile, HoleTile, PusherTile
 from loading import get_board
@@ -537,3 +537,19 @@ def test_state_from_dict():
     assert state.robots[1].damages == 4
     assert state._board[0, 11][0].direction == Direction.N
     assert state._board[2, 5][0].name == "ground"
+
+
+def test_get_robot_names():
+    """
+    Get_robot_names return correct robot names.
+    Names - names of the files with robots avatars.
+    """
+    robot_names = get_robot_names()
+    assert robot_names[0] == "hanka"
+    assert robot_names[1] == "ivet"
+    assert robot_names[2] == "ivet2"
+    assert robot_names[3] == "ivet3"
+    assert robot_names[4] == "katka"
+    assert robot_names[5] == "mintbot"
+    assert robot_names[6] == "terka"
+    assert robot_names[7] == "zuu"
