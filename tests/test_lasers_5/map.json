@@ -1,0 +1,67 @@
+{ "height":4,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+         "height":4,
+         "id":1,
+         "name":"ground",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":4,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[2684354605, 3221225515, 1610612782, 0, 0, 2684354607, 0, 0, 0, 2684354601, 0, 1610612780, 40, 42, 0, 0],
+         "height":4,
+         "id":2,
+         "name":"start",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":4,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[2684354613, 3221225523, 1610612790, 0, 0, 2684354615, 0, 0, 0, 2684354609, 0, 1610612788, 48, 50, 0, 0],
+         "height":4,
+         "id":3,
+         "name":"stop",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":4,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[2684354573, 3221225485, 1610612749, 0, 13, 0, 0, 0, 0, 0, 2684354573, 0, 0, 13, 0, 0],
+         "height":4,
+         "id":4,
+         "name":"walls",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":4,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":5,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.2.1",
+ "tileheight":64,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"..\/..\/maps\/development_tileset.json"
+        }],
+ "tilewidth":64,
+ "type":"map",
+ "version":1.2,
+ "width":4
+}
