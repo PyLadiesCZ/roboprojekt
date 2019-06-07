@@ -3,8 +3,8 @@ from random import shuffle
 from backend import Robot, MovementCard, RotationCard
 from util import Direction, Rotation
 
-
-robot_data = Robot(Direction.N, None, "mintbot") # a makeshift fictitious robot
+# exemplary robot to show the whole interface works
+robot_data = Robot(Direction.N, None, "mintbot")
 MAX_CARD_COUNT = 9
 
 
@@ -15,10 +15,10 @@ class InterfaceState:
         self.my_program = [None, None, None, None, None]
         self.power_down = False
         self.indicator = False
-        self.cursor_index = 0 # 0-4 number of positon
+        self.cursor_index = 0  # 0-4 number of positon
 
     def __repr__(self):
-        return "<InterfaceState Cards: {}, My Cards: {}, Power Down: {}, Robot: {}>".format(self.dealt_cards, self.my_program, self.power_down, self.robot_data)
+        return f"InterfaceState Cards: {self.dealt_cards}, My Cards: {self.my_program}, Power Down: {self.power_down,}, Robot: {self.robot_data}"
 
     def select_card(self, dealt_card_index):
         """
@@ -26,90 +26,91 @@ class InterfaceState:
         a place where selector is (in the robot program)
         and selector cursor moves to the next free place.
         """
-        if self.indicator == False:
+        if not self.indicator:
             if dealt_card_index >= len(self.dealt_cards):
                 return
             if dealt_card_index not in self.my_program:
                 self.my_program[self.cursor_index] = dealt_card_index
-                self.cursor_index_plus() # After select a card Move with cursor to right
-
+                # After select a card Move with cursor to right
+                self.cursor_index_plus()
 
     def return_card(self):
         """
         Return one selected card from your program back to the dealt cards.
         """
-        if self.indicator == False:
+        if not self.indicator:
             self.my_program[self.cursor_index] = None
-
 
     def return_cards(self):
         """
         Retrun all cards of your program back to the dealt cards.
         """
-        if self.indicator == False:
+        if not self.indicator:
             self.my_program = [None, None, None, None, None]
             self.cursor_index = 0
-
 
     def cursor_index_plus(self):
         """
         Change selecting cursor position to the next one.
         """
-        if self.indicator == False:
+        if not self.indicator:
             if self.cursor_index < 4:
                 self.cursor_index += 1
-
 
     def cursor_index_minus(self):
         """
         Change selecting cursor position to the previous one.
         """
-        if self.indicator == False:
+        if not self.indicator:
             if self.cursor_index > 0:
                 self.cursor_index -= 1
-
 
     def switch_power_down(self):
         """
         Switch power down status between True and False.
         When it is True the Robot doesn't play this round.
         """
-        if self.indicator == False:
-            if self.power_down == False:
+        if not self.indicator:
+            if not self.power_down:
                 self.power_down = True
             else:
                 self.power_down = False
 
-
     def confirm_selection(self):
         """
-        When indicator is False the player can choose cards and switch Power Down
-        When is True the player ended the selection of cards
+        When indicator is False the player can choose cards and switch Power Down.
+        When is True the player ended the selection of cards.
         """
         self.indicator = True
 
 
 def create_card_pack():
+    """
+    Create pack of cards: 42 movement cards and 42 rotation cards
+    with different values and priorities.
+    Return shuffled card pack.
+    """
     movement_cards = [(-1, 6, 250),
-                    (1, 18, 300),
-                    (2, 12, 400),
-                    (3, 6, 500),
-                    ]
+                      (1, 18, 300),
+                      (2, 12, 400),
+                      (3, 6, 500),
+                      ]
     rotation_cards = [(Rotation.U_TURN, 6, 50),
-                    (Rotation.LEFT, 18, 100),
-                    (Rotation.RIGHT, 18, 200),
-                    ]
+                      (Rotation.LEFT, 18, 100),
+                      (Rotation.RIGHT, 18, 200),
+                      ]
     card_pack = []
 
     for movement, cards_count, first_number in movement_cards:
         for i in range(cards_count):
-            card_pack.append(MovementCard(first_number + i*5, movement)) # [MovementCard(690, -1)...][]
+            # [MovementCard(690, -1)...][]
+            card_pack.append(MovementCard(first_number + i*5, movement))
 
     for rotation, cards_count, first_number in rotation_cards:
         for i in range(cards_count):
-            card_pack.append(RotationCard(first_number + i*5, rotation)) # [RotationCard(865, Rotation.LEFT)....]
+            # [RotationCard(865, Rotation.LEFT)....]
+            card_pack.append(RotationCard(first_number + i*5, rotation))
     shuffle(card_pack)
-    #print(card_pack)
     return card_pack
 
 
@@ -117,8 +118,10 @@ card_pack = create_card_pack()
 
 
 def get_dealt_cards(card_pack):
-    # maximum number of cards is 9
-    # robot's damages reduces the count dealt cards
+    """
+    Maximum number of cards is 9.
+    Robot's damages reduces the count of dealt cards - each damage one card.
+    """
     dealt_cards_count = MAX_CARD_COUNT-robot_data.damages
     dealt_cards = card_pack[-dealt_cards_count:]
     del card_pack[-dealt_cards_count:]
@@ -129,5 +132,8 @@ dealt_cards = get_dealt_cards(card_pack)
 
 
 def get_interface_state():
+    """
+    Create interface state for given robot and his cards.
+    """
     interface_state = InterfaceState(dealt_cards, robot_data)
     return interface_state
