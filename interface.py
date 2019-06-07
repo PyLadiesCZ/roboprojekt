@@ -26,7 +26,7 @@ class InterfaceState:
         a place where selector is (in the robot program)
         and selector cursor moves to the next free place.
         """
-        if self.indicator is False:
+        if not self.indicator:
             if dealt_card_index >= len(self.dealt_cards):
                 return
             if dealt_card_index not in self.my_program:
@@ -38,14 +38,14 @@ class InterfaceState:
         """
         Return one selected card from your program back to the dealt cards.
         """
-        if self.indicator is False:
+        if not self.indicator:
             self.my_program[self.cursor_index] = None
 
     def return_cards(self):
         """
         Retrun all cards of your program back to the dealt cards.
         """
-        if self.indicator is False:
+        if not self.indicator:
             self.my_program = [None, None, None, None, None]
             self.cursor_index = 0
 
@@ -53,7 +53,7 @@ class InterfaceState:
         """
         Change selecting cursor position to the next one.
         """
-        if self.indicator is False:
+        if not self.indicator:
             if self.cursor_index < 4:
                 self.cursor_index += 1
 
@@ -61,7 +61,7 @@ class InterfaceState:
         """
         Change selecting cursor position to the previous one.
         """
-        if self.indicator is False:
+        if not self.indicator:
             if self.cursor_index > 0:
                 self.cursor_index -= 1
 
@@ -70,8 +70,8 @@ class InterfaceState:
         Switch power down status between True and False.
         When it is True the Robot doesn't play this round.
         """
-        if self.indicator is False:
-            if self.power_down is False:
+        if not self.indicator:
+            if not self.power_down:
                 self.power_down = True
             else:
                 self.power_down = False

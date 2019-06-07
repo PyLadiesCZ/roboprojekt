@@ -162,15 +162,15 @@ def draw_interface(interface_state, window):
     my_robot_sprite.draw()
 
     # Flags
-    for sprite in flags_sprite[0:interface_state.robot_data.flags]:
+    for sprite in flags_sprites[0:interface_state.robot_data.flags]:
         sprite.draw()
 
     # Robot lives
-    for sprite in lives_sprite[0:interface_state.robot_data.lives]:
+    for sprite in lives_sprites[0:interface_state.robot_data.lives]:
         sprite.draw()
 
     # Damage Tokens
-    for sprite in damages_tokens_sprite[0:interface_state.robot_data.damages]:
+    for sprite in damages_tokens_sprites[0:interface_state.robot_data.damages]:
         sprite.draw()
 
     # CARDS
@@ -203,11 +203,11 @@ def draw_interface(interface_state, window):
     cursor_sprite.draw()
 
     # Power Down
-    if interface_state.power_down is True:
+    if interface_state.power_down:
         power_down_sprite.draw()
 
     # Indicator
-    if interface_state.indicator is False:
+    if not interface_state.indicator:
         indicator_green_sprite.draw()
     else:
         indicator_red_sprite.draw()
