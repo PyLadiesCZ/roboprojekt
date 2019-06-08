@@ -572,7 +572,7 @@ def get_direction_from_coordinates(start_coordinates, stop_coordinates):
             return direction
 
 
-def apply_tile_effects(state, register, registers):
+def apply_tile_effects(state, register):
     """
     Apply the effects according to game rules.
     The function name is not entirely exact: the whole register phase actions take place
@@ -608,7 +608,7 @@ def apply_tile_effects(state, register, registers):
     for robot in state.get_active_robots():
         for tile in state.get_tiles(robot.coordinates):
             tile.collect_flag(robot)
-            tile.repair_robot(robot, state, register, registers)
+            tile.set_new_start(robot, state)
 
 
 def set_robots_for_new_turn(state):
@@ -622,6 +622,8 @@ def set_robots_for_new_turn(state):
     # Delete robots with zero lives
     state.robots = [robot for robot in state.robots if robot.lives > 0]
     for robot in state.robots:
+        for tile in state.get_tiles(robot.coordinates):
+            tile.repair_robot(robot, state)
         # Robot will now ressurect at his start coordinates
         if robot.inactive:
             robot.coordinates = robot.start_coordinates
@@ -686,4 +688,4 @@ def _apply_cards_and_tiles_effects(state, registers):
             print("No card on hand, continue to tile effects.")
             pass
 
-        apply_tile_effects(state, register, registers)
+        apply_tile_effects(state, register)
