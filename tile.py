@@ -106,10 +106,15 @@ class Tile:
         """
         return robot
 
-    def repair_robot(self, robot, state, register, registers):
+    def repair_robot(self, robot, state):
         """
-        Repair one robot's damage. Change robot's start coordinates,
-        if possible by tile properties.
+        Repair one robot's damage.
+        """
+        return robot
+
+    def set_new_start(self, robot, state):
+        """
+        Change robot's start coordinates, if possible by tile properties.
         """
         return robot
 
@@ -273,11 +278,12 @@ class RepairTile(Tile):
         self.new_start = properties["new_start"]
         super().__init__(direction, name, properties)
 
-    def repair_robot(self, robot, state, register, registers):
-        if (register + 1) == registers:
-            # Remove one robot damage.
-            if robot.damages > 0:
-                robot.damages -= 1
+    def repair_robot(self, robot, state):
+        # Remove one robot damage.
+        if robot.damages > 0:
+            robot.damages -= 1
+
+    def set_new_start(self, robot, state):
         # Change start coordinates of robot, if it's a tile property.
         if self.new_start:
             robot.start_coordinates = robot.coordinates

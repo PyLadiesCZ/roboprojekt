@@ -119,9 +119,12 @@ card_pack = create_card_pack()
 
 def get_dealt_cards(card_pack):
     """
-    Maximum number of cards is 9.
-    Robot's damages reduces the count of dealt cards - each damage one card.
+    Deal the cards for robot - he gets one card less for every damage he's got.
+    Take and return the first cards from the card pack.
+    Delete the dealt cards from the card pack.
     """
+    # Maximum number of cards is 9.
+    # Robot's damages reduce the count of dealt cards - each damage one card.
     dealt_cards_count = MAX_CARD_COUNT-robot_data.damages
     dealt_cards = card_pack[-dealt_cards_count:]
     del card_pack[-dealt_cards_count:]

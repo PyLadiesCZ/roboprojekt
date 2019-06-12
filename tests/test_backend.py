@@ -174,7 +174,7 @@ def test_robot_is_pushed_at_the_correct_round(register, tile, output_coordinates
     """
     robot = Robot(Direction.W, (1, 1), "tester")
     state = State({(1, 0): [Tile(None, None, None)], (1, 1): [tile]}, [robot])
-    apply_tile_effects(state, register, 1)
+    apply_tile_effects(state, register)
     assert robot.direction == Direction.W
     assert robot.coordinates == output_coordinates
 
@@ -214,7 +214,7 @@ def test_robot_is_pushed_out_of_the_board(tile):
     """
     robot = Robot(Direction.S, (0, 0), "tester")
     state = State({(0, 0): [tile]}, [robot])
-    apply_tile_effects(state, 0, 1)
+    apply_tile_effects(state, 0)
     assert robot.lives == 2
     assert robot.inactive is True
     assert robot.coordinates is None
