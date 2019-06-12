@@ -38,7 +38,7 @@ def send_to_server(state):
     """
     Client sends selected cards to server.
     """
-    msg = json.dumps(state.my_program)
+    msg = json.dumps(state.program)
     print(msg)
     if ws:
         asyncio.ensure_future(ws.send_str(msg))

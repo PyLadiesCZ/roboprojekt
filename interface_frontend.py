@@ -182,13 +182,13 @@ def draw_interface(interface_state, window):
         draw_card(coordinate, card)
 
     # Cards hand
-    for coordinate, card_index in zip(program_coordinates, interface_state.my_program):
+    for coordinate, card_index in zip(program_coordinates, interface_state.program):
         if card_index is not None:
             draw_card(coordinate, interface_state.dealt_cards[card_index])
 
     # Selected cards
     # if card is selected, selected card in dealt cards is gray
-    for card_index in interface_state.my_program:
+    for card_index in interface_state.program:
         if card_index is not None:
             card = interface_state.dealt_cards[card_index]
             x, y = dealt_cards_coordinates[interface_state.dealt_cards.index(card)]

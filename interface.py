@@ -12,13 +12,13 @@ class InterfaceState:
     def __init__(self, dealt_cards, robot_data):
         self.dealt_cards = dealt_cards
         self.robot_data = robot_data
-        self.my_program = [None, None, None, None, None]
+        self.program = [None, None, None, None, None]
         self.power_down = False
         self.indicator = False
         self.cursor_index = 0  # 0-4 number of positon
 
     def __repr__(self):
-        return f"InterfaceState Cards: {self.dealt_cards}, My Cards: {self.my_program}, Power Down: {self.power_down,}, Robot: {self.robot_data}"
+        return f"InterfaceState Cards: {self.dealt_cards}, My Cards: {self.program}, Power Down: {self.power_down,}, Robot: {self.robot_data}"
 
     def select_card(self, dealt_card_index):
         """
@@ -29,8 +29,8 @@ class InterfaceState:
         if not self.indicator:
             if dealt_card_index >= len(self.dealt_cards):
                 return
-            if dealt_card_index not in self.my_program:
-                self.my_program[self.cursor_index] = dealt_card_index
+            if dealt_card_index not in self.program:
+                self.program[self.cursor_index] = dealt_card_index
                 # After select a card Move with cursor to right
                 self.cursor_index_plus()
 
@@ -39,14 +39,14 @@ class InterfaceState:
         Return one selected card from your program back to the dealt cards.
         """
         if not self.indicator:
-            self.my_program[self.cursor_index] = None
+            self.program[self.cursor_index] = None
 
     def return_cards(self):
         """
         Retrun all cards of your program back to the dealt cards.
         """
         if not self.indicator:
-            self.my_program = [None, None, None, None, None]
+            self.program = [None, None, None, None, None]
             self.cursor_index = 0
 
     def cursor_index_plus(self):
