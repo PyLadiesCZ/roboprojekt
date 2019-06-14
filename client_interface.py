@@ -15,6 +15,7 @@ window = create_window()
 
 ws = None
 
+
 @window.event
 def on_draw():
     """
@@ -43,6 +44,7 @@ def send_to_server(state):
     if ws:
         asyncio.ensure_future(ws.send_str(msg))
 
+
 async def send_one():
     """
     Client connects to server and receives messages.
@@ -51,12 +53,17 @@ async def send_one():
     # create Session
     async with aiohttp.ClientSession() as session:
         # create Websocket
-        async with session.ws_connect('http://localhost:8080/ws/') as ws:
+        async with session.ws_connect('http://localhost:8080/interface/') as ws:
             async for msg in ws:
                 # Cycle "for" is finished when client disconnect from server
                 if msg.type == aiohttp.WSMsgType.TEXT:
-                    message = msg.data
-                    print(message)
+                    if msg.data.startswith("robot"):
+                        robot = msg.data
+                        print(robot)
+                    if msg.data.startswith("cards"):
+                        cards = msg.data
+                        print(cards)
+
         ws = None
 
 
@@ -67,7 +74,7 @@ def tick_asyncio(dt):
     loop = asyncio.get_event_loop()
     loop.run_until_complete(asyncio.sleep(0))
 
+
 pyglet.clock.schedule_interval(tick_asyncio, 1/30)
 asyncio.ensure_future(send_one())
-
 pyglet.app.run()

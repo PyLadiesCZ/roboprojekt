@@ -215,11 +215,6 @@ def draw_interface(interface_state, window):
     pyglet.gl.glPopMatrix()
 
 
-def draw_window(interface_state, window):
-    window.clear()
-    draw_interface(window)
-
-
 CARD_KEYS = ["q", "w", "e", "r", "t", "a", "s", "d", "f"]
 
 
