@@ -15,14 +15,12 @@ class Receiver:
         self.window = None
         self.state = None
 
-
     def window_draw(self):
         """
         Draw the game state (board and robots).
         """
         self.window.clear()
         draw_state(self.state, self.window)
-
 
     async def client(self):
         window = None
