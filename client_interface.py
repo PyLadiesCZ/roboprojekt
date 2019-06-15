@@ -57,10 +57,10 @@ async def send_one():
             async for msg in ws:
                 # Cycle "for" is finished when client disconnect from server
                 if msg.type == aiohttp.WSMsgType.TEXT:
-                    if msg.data.startswith("robot"):
+                    if msg.data.startswith("Robot"):
                         robot = msg.data
                         print(robot)
-                    if msg.data.startswith("cards"):
+                    if msg.data.startswith("Dealt"):
                         cards = msg.data
                         print(cards)
 
