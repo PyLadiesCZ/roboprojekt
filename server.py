@@ -10,12 +10,14 @@ with argument(message) - "python client_sender.py Hello".
 """
 import sys
 import json
+import contextlib
 
 import aiohttp
 from aiohttp import web
 
-from backend import get_start_state, get_robot_names
-from interface import create_card_pack
+from backend import get_start_state, create_robots
+from interface import create_card_pack, get_dealt_cards
+from loading import get_board
 
 
 if len(sys.argv) == 1:
@@ -25,10 +27,11 @@ else:
 
 # Create state, will be edited
 state = get_start_state(map_name)
+board = get_board(map_name)
+robots = create_robots(board)
 
 card_pack = create_card_pack()
-card_pack = str(card_pack)
-robots = get_robot_names()
+dealt_cards = get_dealt_cards(card_pack)
 
 # A list of connected clients
 ws_receivers = []
@@ -37,14 +40,23 @@ ws_interfaces = []
 routes = web.RouteTableDef()
 
 
-@routes.get("/receiver/")
-async def receiver(request):
+@contextlib.asynccontextmanager
+async def ws_handler(request, ws_list):
     # Prepare WebSocket
     ws = web.WebSocketResponse()
     await ws.prepare(request)
     # WebSocket is added to a list
-    ws_receivers.append(ws)
+    ws_list.append(ws)
     try:
+        yield ws
+    finally:
+        # after disconnection client is removed from list
+        ws_list.remove(ws)
+
+
+@routes.get("/receiver/")
+async def receiver(request):
+    async with ws_handler(request, ws_receivers) as ws:
         # This message is sent only this (just connected) client
         # await ws.send_str(robots[0])
         await ws.send_json(state.as_dict(map_name), dumps=json.dumps)
@@ -60,24 +72,15 @@ async def receiver(request):
                     # send info about state
                     await client.send_str(json.dumps(state.as_dict(map_name)))
         return ws
-    finally:
-            # after disconnection client is removed from list
-            ws_receivers.remove(ws)
 
 
 @routes.get("/interface/")
 async def interface(request):
-    # Prepare WebSocket
-    ws = web.WebSocketResponse()
-    await ws.prepare(request)
-    # WebSocket is added to a list
-    ws_interfaces.append(ws)
-    try:
+    async with ws_handler(request, ws_interfaces) as ws:
         # This message is sent only this (just connected) client
-        await ws.send_str(f"robot, {robots[0]}")
+        await ws.send_str(f"Robot: {robots[0]}")
         # await ws.send_json(state.as_dict(map_name), dumps=json.dumps)
-        await ws.send_str(f"cards, {card_pack}")
-
+        await ws.send_str(f"Dealt cards: {dealt_cards}")
         # Process messages from this client
         async for msg in ws:
             if msg.type == aiohttp.WSMsgType.TEXT:
@@ -87,11 +90,7 @@ async def interface(request):
                 for client in ws_interfaces:
                     # send info about state
                     await client.send_str(json.dumps(state.as_dict(map_name)))
-
         return ws
-    finally:
-            # after disconnection client is removed from list
-            ws_interfaces.remove(ws)
 
 
 # aiohttp.web application
