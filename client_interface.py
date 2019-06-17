@@ -10,62 +10,65 @@ from interface_frontend import draw_interface, create_window, handle_text
 from interface import get_interface_state
 
 
-state = get_interface_state()
-window = create_window()
+#state = get_interface_state()
+#window = create_window()
 
-ws = None
-
-
-@window.event
-def on_draw():
-    """
-    Draw the interface state.
-    """
-    window.clear()
-    draw_interface(state, window)
+ws = None #????
 
 
-@window.event
-def on_text(text):
-    """
-    Key listener.
-    Wait for user input on keyboard and react for it.
-    """
-    handle_text(state, text)
-    send_to_server(state)
+class Interface:
+    def __init__(self):
+        self.window = None
+        self.state = None
 
+    def window_draw(self):
+        self.window.clear()
+        draw_interface(self.state, self.window)
 
-def send_to_server(state):
-    """
-    Client sends selected cards to server.
-    """
-    msg = json.dumps(state.my_program)
-    print(msg)
-    if ws:
-        asyncio.ensure_future(ws.send_str(msg))
+    def on_text(self, text):
+        """
+        Key listener.
+        Wait for user input on keyboard and react for it.
+        """
+        handle_text(self.state, self.text)
+        send_to_server(self.state)
 
+    def send_to_server(self, state):
+        """
+        Client sends selected cards to server.
+        """
+        msg = json.dumps(self.state.my_program)
+        print(msg)
+        if ws:
+            asyncio.ensure_future(ws.send_str(msg))
 
-async def send_one():
-    """
-    Client connects to server and receives messages.
-    """
-    global ws
-    # create Session
-    async with aiohttp.ClientSession() as session:
-        # create Websocket
-        async with session.ws_connect('http://localhost:8080/interface/') as ws:
-            async for msg in ws:
-                # Cycle "for" is finished when client disconnect from server
-                if msg.type == aiohttp.WSMsgType.TEXT:
-                    if msg.data.startswith("robot"):
-                        robot = msg.data
-                        print(robot)
-                    if msg.data.startswith("cards"):
-                        cards = msg.data
-                        print(cards)
+    async def send_one(self):
+        """
+        Client connects to server and receives messages.
+        """
+        window = None
 
-        ws = None
+        # create Session
+        async with aiohttp.ClientSession() as session:
+            # create Websocket
+            async with session.ws_connect('http://localhost:8080/interface/') as ws:
+                async for msg in ws:
+                    try:
+                        # Cycle "for" is finished when client disconnect from server
+                    self.state = ... # obdrží od serveru?
 
+                    if self.window is None:
+                        self.window = create_window(self.state)
+                        self.window.push_handlers(on_draw=self.window_draw, on_text=self.on_text)
+
+                    if msg.type == aiohttp.WSMsgType.TEXT:
+                        if msg.data.startswith("robot"):
+                            robot = msg.data
+                            print(robot)
+                        if msg.data.startswith("cards"):
+                            cards = msg.data
+                            print(cards)
+            ws = None
 
 def tick_asyncio(dt):
     """
@@ -75,6 +78,9 @@ def tick_asyncio(dt):
     loop.run_until_complete(asyncio.sleep(0))
 
 
+interface = Interface()
+
 pyglet.clock.schedule_interval(tick_asyncio, 1/30)
-asyncio.ensure_future(send_one())
+asyncio.ensure_future(interface.send_one())
+
 pyglet.app.run()
