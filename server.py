@@ -10,6 +10,7 @@ with argument(message) - "python client_sender.py Hello".
 """
 import sys
 import json
+import contextlib
 
 import aiohttp
 from aiohttp import web
@@ -37,14 +38,23 @@ ws_interfaces = []
 routes = web.RouteTableDef()
 
 
-@routes.get("/receiver/")
-async def receiver(request):
+@contextlib.asynccontextmanager
+async def ws_handler(request, ws_list):
     # Prepare WebSocket
     ws = web.WebSocketResponse()
     await ws.prepare(request)
     # WebSocket is added to a list
-    ws_receivers.append(ws)
+    ws_list.append(ws)
     try:
+        yield ws
+    finally:
+        # after disconnection client is removed from list
+        ws_list.remove(ws)
+
+
+@routes.get("/receiver/")
+async def receiver(request):
+    async with ws_handler(request, ws_receivers) as ws:
         # This message is sent only this (just connected) client
         # await ws.send_str(robots[0])
         await ws.send_json(state.as_dict(map_name), dumps=json.dumps)
@@ -60,24 +70,15 @@ async def receiver(request):
                     # send info about state
                     await client.send_str(json.dumps(state.as_dict(map_name)))
         return ws
-    finally:
-            # after disconnection client is removed from list
-            ws_receivers.remove(ws)
 
 
 @routes.get("/interface/")
 async def interface(request):
-    # Prepare WebSocket
-    ws = web.WebSocketResponse()
-    await ws.prepare(request)
-    # WebSocket is added to a list
-    ws_interfaces.append(ws)
-    try:
+    async with ws_handler(request, ws_interfaces) as ws:
         # This message is sent only this (just connected) client
         await ws.send_str(f"robot, {robots[0]}")
         # await ws.send_json(state.as_dict(map_name), dumps=json.dumps)
         await ws.send_str(f"cards, {card_pack}")
-
         # Process messages from this client
         async for msg in ws:
             if msg.type == aiohttp.WSMsgType.TEXT:
@@ -87,11 +88,7 @@ async def interface(request):
                 for client in ws_interfaces:
                     # send info about state
                     await client.send_str(json.dumps(state.as_dict(map_name)))
-
         return ws
-    finally:
-            # after disconnection client is removed from list
-            ws_interfaces.remove(ws)
 
 
 # aiohttp.web application
