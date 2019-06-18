@@ -46,19 +46,17 @@ class Interface:
         """
         Client connects to server and receives messages.
         """
-        window = None
-
+    
         # create Session
         async with aiohttp.ClientSession() as session:
             # create Websocket
             async with session.ws_connect('http://localhost:8080/interface/') as ws:
                 async for msg in ws:
-                    try:
-                        # Cycle "for" is finished when client disconnect from server
-                    self.state = ... # obdrží od serveru?
+                    # Cycle "for" is finished when client disconnect from server
+                    self.state = get_interface_state()
 
                     if self.window is None:
-                        self.window = create_window(self.state)
+                        self.window = create_window()
                         self.window.push_handlers(on_draw=self.window_draw, on_text=self.on_text)
 
                     if msg.type == aiohttp.WSMsgType.TEXT:
@@ -68,7 +66,7 @@ class Interface:
                         if msg.data.startswith("cards"):
                             cards = msg.data
                             print(cards)
-            ws = None
+    #    ws = None
 
 def tick_asyncio(dt):
     """
