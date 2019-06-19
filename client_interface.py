@@ -10,16 +10,12 @@ from interface_frontend import draw_interface, create_window, handle_text
 from interface import get_interface_state
 
 
-#state = get_interface_state()
-#window = create_window()
-
-ws = None #????
-
-
 class Interface:
     def __init__(self):
-        self.window = None
-        self.state = None
+        self.window = create_window()
+        self.window.push_handlers(on_draw=self.window_draw, on_text=self.on_text)
+        self.state = get_interface_state()
+        self.ws = None
 
     def window_draw(self):
         self.window.clear()
@@ -30,8 +26,8 @@ class Interface:
         Key listener.
         Wait for user input on keyboard and react for it.
         """
-        handle_text(self.state, self.text)
-        send_to_server(self.state)
+        handle_text(self.state, text)
+        self.send_to_server(self.state)
 
     def send_to_server(self, state):
         """
@@ -39,26 +35,19 @@ class Interface:
         """
         msg = json.dumps(self.state.my_program)
         print(msg)
-        if ws:
-            asyncio.ensure_future(ws.send_str(msg))
+        if self.ws:
+            asyncio.ensure_future(self.ws.send_str(msg))
 
     async def send_one(self):
         """
         Client connects to server and receives messages.
         """
-    
         # create Session
         async with aiohttp.ClientSession() as session:
             # create Websocket
-            async with session.ws_connect('http://localhost:8080/interface/') as ws:
-                async for msg in ws:
+            async with session.ws_connect('http://localhost:8080/interface/') as self.ws:
+                async for msg in self.ws:
                     # Cycle "for" is finished when client disconnect from server
-                    self.state = get_interface_state()
-
-                    if self.window is None:
-                        self.window = create_window()
-                        self.window.push_handlers(on_draw=self.window_draw, on_text=self.on_text)
-
                     if msg.type == aiohttp.WSMsgType.TEXT:
                         if msg.data.startswith("robot"):
                             robot = msg.data
@@ -66,7 +55,7 @@ class Interface:
                         if msg.data.startswith("cards"):
                             cards = msg.data
                             print(cards)
-    #    ws = None
+        self.ws = None
 
 def tick_asyncio(dt):
     """
