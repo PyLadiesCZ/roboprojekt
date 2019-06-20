@@ -20,9 +20,9 @@ class InterfaceState:
     def __repr__(self):
         return f"InterfaceState Cards: {self.dealt_cards}, My Cards: {self.my_program}, Power Down: {self.power_down,}, Robot: {self.robot_data}"
 
-    def to_server_as_dict(self):
+    def as_dict(self):
         """
-        Return data which sent client_interface to server"
+        Return dictionary about state of client_interface."
         """
         return {"my program": self.my_program, "power down": self.power_down, "indicator": self.indicator}
 
