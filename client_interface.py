@@ -48,22 +48,16 @@ class Interface:
             async with session.ws_connect('http://localhost:8080/interface/') as self.ws:
                 async for msg in self.ws:
                     # Cycle "for" is finished when client disconnect from server
-                    try:
-                        message = msg.json(loads=json.loads)
-                        game_state = State.from_dict(message)
-                        print("State is", game_state)
+                    if msg.type == aiohttp.WSMsgType.TEXT:
+                        if msg.data.startswith("robot"):
+                            robot = msg.data
+                            print(robot)
+                        if msg.data.startswith("cards"):
+                            cards = msg.data
+                            print(cards)
+                        else:
+                            print(msg.data)
 
-                        if msg.type == aiohttp.WSMsgType.TEXT:
-                            if msg.data.startswith("robot"):
-                                robot = msg.data
-                                print(robot)
-                            if msg.data.startswith("cards"):
-                                cards = msg.data
-                                print(cards)
-                        
-                    except json.decoder.JSONDecodeError:
-                        if msg.type == aiohttp.WSMsgType.TEXT:
-                            message = msg.data
 
         self.ws = None
 
