@@ -23,7 +23,6 @@ class Receiver:
         draw_state(self.state, self.window)
 
     async def client(self):
-        window = None
         async with aiohttp.ClientSession() as session:
             async with session.ws_connect('http://localhost:8080/receiver/') as ws:
                 # Waiting for message from server and print them
