@@ -10,6 +10,7 @@ from interface_frontend import draw_interface, create_window, handle_text
 from interface import get_interface_state
 from backend import State
 
+
 class Interface:
     def __init__(self):
         self.window = create_window()
@@ -57,6 +58,7 @@ class Interface:
                             print(cards)
                         else:
                             print(msg.data)
+
 
 
         self.ws = None
