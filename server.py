@@ -62,13 +62,7 @@ async def receiver(request):
 
         # Process messages from this client
         async for msg in ws:
-            if msg.type == aiohttp.WSMsgType.TEXT:
-                print(msg.data)
-
-                # Send messages to all connected clients
-                for client in ws_receivers:
-                    # send info about state
-                    await client.send_str(json.dumps(state.as_dict(map_name)))
+            pass
         return ws
 
 
@@ -85,7 +79,8 @@ async def interface(request):
                 print(msg.data)
 
                 # Send messages to all connected clients
-                for client in ws_interfaces:
+                ws_all = ws_receivers + ws_interfaces
+                for client in ws_all:
                     # send info about state
                     await client.send_str(json.dumps(state.as_dict(map_name)))
         return ws
