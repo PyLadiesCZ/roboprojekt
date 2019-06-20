@@ -59,8 +59,6 @@ class Interface:
                         else:
                             print(msg.data)
 
-
-
         self.ws = None
 
 def tick_asyncio(dt):
