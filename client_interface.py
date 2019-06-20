@@ -8,6 +8,7 @@ import pyglet
 
 from interface_frontend import draw_interface, create_window, handle_text
 from interface import get_interface_state
+from backend import State
 
 
 class Interface:
@@ -55,6 +56,9 @@ class Interface:
                         if msg.data.startswith("cards"):
                             cards = msg.data
                             print(cards)
+                        else:
+                            print(msg.data)
+
         self.ws = None
 
 def tick_asyncio(dt):

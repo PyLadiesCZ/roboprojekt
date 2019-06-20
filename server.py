@@ -56,19 +56,10 @@ async def ws_handler(request, ws_list):
 async def receiver(request):
     async with ws_handler(request, ws_receivers) as ws:
         # This message is sent only this (just connected) client
-        # await ws.send_str(robots[0])
         await ws.send_json(state.as_dict(map_name), dumps=json.dumps)
-        # await ws.send_str(card_pack)
-
         # Process messages from this client
         async for msg in ws:
-            if msg.type == aiohttp.WSMsgType.TEXT:
-                print(msg.data)
-
-                # Send messages to all connected clients
-                for client in ws_receivers:
-                    # send info about state
-                    await client.send_str(json.dumps(state.as_dict(map_name)))
+            pass
         return ws
 
 
@@ -76,18 +67,18 @@ async def receiver(request):
 async def interface(request):
     async with ws_handler(request, ws_interfaces) as ws:
         # This message is sent only this (just connected) client
-        await ws.send_str(f"robot, {robots[0]}")
-        # await ws.send_json(state.as_dict(map_name), dumps=json.dumps)
-        await ws.send_str(f"cards, {card_pack}")
+        await ws.send_json(robots[0], dumps=json.dumps)
+        await ws.send_json(state.as_dict(map_name), dumps=json.dumps)
+        await ws.send_json(card_pack, dumps=json.dumps)
         # Process messages from this client
         async for msg in ws:
             if msg.type == aiohttp.WSMsgType.TEXT:
                 print(msg.data)
-
                 # Send messages to all connected clients
-                for client in ws_interfaces:
+                ws_all = ws_receivers + ws_interfaces
+                for client in ws_all:
                     # send info about state
-                    await client.send_str(json.dumps(state.as_dict(map_name)))
+                    await client.send_json(state.as_dict(map_name), dumps=json.dumps)
         return ws
 
 
