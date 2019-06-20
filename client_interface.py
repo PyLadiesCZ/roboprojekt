@@ -33,7 +33,7 @@ class Interface:
         """
         Client sends selected cards to server.
         """
-        msg = json.dumps(self.state.my_program)
+        msg = json.dumps(self.state.to_server_as_dict())
         print(msg)
         if self.ws:
             asyncio.ensure_future(self.ws.send_str(msg))

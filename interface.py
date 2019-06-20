@@ -20,6 +20,12 @@ class InterfaceState:
     def __repr__(self):
         return f"InterfaceState Cards: {self.dealt_cards}, My Cards: {self.my_program}, Power Down: {self.power_down,}, Robot: {self.robot_data}"
 
+    def to_server_as_dict(self):
+        """
+        Return data which sent client_interface to server"
+        """
+        return {"my program": self.my_program, "power down": self.power_down, "indicator": self.indicator}
+
     def select_card(self, dealt_card_index):
         """
         Select a card from the dealt cards and put on
