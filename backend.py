@@ -270,7 +270,7 @@ class State:
     def __init__(self, board, robots):
         self._board = board
         self.robots = robots
-        self.tile_count = get_tile_count(board)
+        self.tile_count = self.get_tile_count()
 
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
@@ -308,6 +308,19 @@ class State:
         board = get_board(map_name)
         robots_start = create_robots(board)
         return cls(board, robots_start)
+
+    def get_tile_count(self):
+        """
+        From the board coordinates get the count of tiles in horizontal (x) and vertical (y) ax.
+        Takes board: result of get_board() from loading module.
+        """
+        x_set = set()
+        y_set = set()
+        for coordinate in self._board.keys():
+            x, y = coordinate
+            x_set.add(x)
+            y_set.add(y)
+        return len(x_set), len(y_set)
 
     def get_tiles(self, coordinates):
         """
@@ -403,20 +416,6 @@ def create_robots(board):
         robot = Robot(initial_direction, initial_coordinates, name)
         robots_on_start.append(robot)
     return robots_on_start
-
-
-def get_tile_count(board):
-    """
-    From the board coordinates get the count of tiles in horizontal (x) and vertical (y) ax.
-    Takes board: result of get_board() from loading module.
-    """
-    x_set = set()
-    y_set = set()
-    for coordinate in board.keys():
-        x, y = coordinate
-        x_set.add(x)
-        y_set.add(y)
-    return len(x_set), len(y_set)
 
 
 def check_the_absence_of_a_wall(coordinates, direction, state):
