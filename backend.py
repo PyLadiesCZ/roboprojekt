@@ -311,8 +311,8 @@ class State:
 
     def get_tile_count(self):
         """
-        From the board coordinates get the count of tiles in horizontal (x) and vertical (y) ax.
-        Takes board: result of get_board() from loading module.
+        From the board coordinates get the count of tiles
+        in horizontal (x) and vertical (y) ax.
         """
         x_set = set()
         y_set = set()
@@ -325,6 +325,7 @@ class State:
     def get_tiles(self, coordinates):
         """
         Get tiles on requested coordinates.
+
         coordinates: tuple of x and y coordinate
         Return a list of tiles or return hole tile if coordinates are out of the board.
         """
@@ -346,6 +347,7 @@ class State:
     def check_robot_in_the_way(self, coordinates):
         """
         Check if there are robot on the next coordinates.
+
         Return index of the robot on the way from given point.
         It there are no robots, return None.
         """
@@ -363,7 +365,6 @@ class State:
 
         coordinates: tuple of x and y coordinate
         direction: object of Direction class
-        state: object of State class
         Return a boolean.
         True - There isn't wall, robot can move.
         False - There is wall, robot can't move.
@@ -427,7 +428,6 @@ class State:
         Get all robot's next coordinates after move of certain type of conveyor belts.
 
         express_belts: a boolean, True - for express belts, False - for all belts.
-
         Return a dictionary of robots as keys and their next coordinates as values.
         """
         robots_next_coordinates = {}
@@ -448,8 +448,9 @@ class State:
     def apply_tile_effects(self, register):
         """
         Apply the effects according to game rules.
-        The function name is not entirely exact: the whole register phase actions take place
-        (both tiles and robot's effects).
+
+        The method name is not entirely exact: the whole register phase actions
+        take place (both tiles and robot's effects).
         """
         # Activate belts
         self.move_belts()
@@ -539,7 +540,7 @@ class State:
 
     def _apply_cards_and_tiles_effects(self, registers):
         """
-        Private function without ressurect mode - for testing purposes.
+        Private method without ressurect mode - for testing purposes.
         It is called within apply_all_effects. Do not call it separately.
         """
         for register in range(registers):
