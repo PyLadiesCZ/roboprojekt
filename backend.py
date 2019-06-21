@@ -302,9 +302,8 @@ class State:
         """
         Get start state of game.
 
-        map_name: path to map file. Currently works only for .json files from Tiled 1.2
-        Create board and robots on start tiles, initialize State object
-        containing board and robots.
+        map_name: path to map file. Create board and robots on start tiles,
+        initialize State object with them.
         """
         board = get_board(map_name)
         robots_start = create_robots(board)

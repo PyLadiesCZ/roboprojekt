@@ -1,6 +1,6 @@
 import pytest
 
-from backend import create_robots, get_start_state, Robot, State, MovementCard
+from backend import create_robots, Robot, State, MovementCard
 from backend import RotationCard, apply_tile_effects, get_direction_from_coordinates
 from backend import apply_all_effects, get_robots_ordered_by_cards_priority, get_robot_names
 from util import Direction, Rotation
@@ -24,7 +24,7 @@ def test_start_state():
     Assert that created start state (board and robots) contains
     the correct instances of objects.
     """
-    ss = get_start_state("maps/test_3.json")
+    ss = State.get_start_state("maps/test_3.json")
     assert isinstance(ss, State)
     assert isinstance(ss.robots, list)
     assert isinstance(ss.robots[0], Robot)
@@ -45,7 +45,7 @@ def test_robot_walk(input_coordinates, input_direction, distance, output_coordin
     Take robot's coordinates, direction and distance and assert robot walked
     to correct coordinates.
     """
-    state = get_start_state("maps/test_3.json")
+    state = State.get_start_state("maps/test_3.json")
     robot = Robot(input_direction, input_coordinates, "tester")
     robot.walk(distance, state, input_direction)
     assert robot.coordinates == output_coordinates
@@ -64,7 +64,7 @@ def test_robot_move(input_coordinates, input_direction, distance, output_coordin
     Take robot's coordinates, move's direction and distance and assert robot
     was moved to correct coordinates.
     """
-    state = get_start_state("maps/test_3.json")
+    state = State.get_start_state("maps/test_3.json")
     robot = Robot(Direction.N, input_coordinates, "tester")
     robot.move(input_direction, distance, state)
     assert robot.coordinates == output_coordinates
@@ -226,7 +226,7 @@ def test_robot_on_start_has_the_correct_direction():
     of start tile he stands on.
     Assert the direction is correcly initiated.
     """
-    state = get_start_state("maps/test_start_direction.json")
+    state = State.get_start_state("maps/test_start_direction.json")
     for robot in state.robots:
         tile_direction = state.get_tiles(robot.coordinates)[0].direction
         assert robot.direction == tile_direction
@@ -245,7 +245,7 @@ def test_robots_order_on_start(robot_index, expected_coordinates):
     Assert the list is correcly created.
     Test to check the behaviour in Python 3.5.
     """
-    state = get_start_state("maps/test_start_direction.json")
+    state = State.get_start_state("maps/test_start_direction.json")
     current_robot = state.robots[robot_index]
     assert current_robot.coordinates == expected_coordinates
 
@@ -483,7 +483,7 @@ def test_card_priorities():
     Check that robots are sorted according to their cards on hand.
     Assert first and last robot's on the list priority.
     """
-    state = get_start_state("maps/test_effects.json")
+    state = State.get_start_state("maps/test_effects.json")
     cards = [[MovementCard(100, 1), MovementCard(100, 1)],
              [RotationCard(120, Rotation.U_TURN), MovementCard(200, 2)],
              [MovementCard(150, -1), MovementCard(110, 1)],

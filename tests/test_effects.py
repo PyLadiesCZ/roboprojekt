@@ -17,7 +17,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from backend import get_start_state, get_start_tiles, apply_all_effects
+from backend import State, get_start_tiles, apply_all_effects
 from backend import MovementCard, RotationCard
 
 CARD_TYPES = {
@@ -156,7 +156,7 @@ def test_play_game(test_name):
     if not commands_file.exists():
         commands_file = None
 
-    state = get_start_state(map_file)
+    state = State.get_start_state(map_file)
     stop_fields = get_start_tiles(state._board, "stop")
 
     commands = read_commands(commands_file)
