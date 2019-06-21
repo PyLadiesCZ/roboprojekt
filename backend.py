@@ -445,6 +445,116 @@ class State:
                     robots_next_coordinates[robot] = robot.coordinates
         return robots_next_coordinates
 
+    def apply_tile_effects(self, register):
+        """
+        Apply the effects according to game rules.
+        The function name is not entirely exact: the whole register phase actions take place
+        (both tiles and robot's effects).
+        """
+        # Activate belts
+        self.move_belts()
+
+        # Activate pusher
+        for robot in self.get_active_robots():
+            for tile in self.get_tiles(robot.coordinates):
+                tile.push_robot(robot, self, register)
+                if robot.inactive:
+                    break
+
+        # Activate gear
+        for robot in self.get_active_robots():
+            for tile in self.get_tiles(robot.coordinates):
+                tile.rotate_robot(robot)
+
+        # Activate laser
+        for robot in self.get_active_robots():
+            for tile in self.get_tiles(robot.coordinates):
+                tile.shoot_robot(robot, self)
+                if robot.inactive:
+                    break
+
+        # Activate robot laser
+        for robot in self.get_active_robots():
+            robot.shoot(self)
+
+        # Collect flags, repair robots
+        for robot in self.get_active_robots():
+            for tile in self.get_tiles(robot.coordinates):
+                tile.collect_flag(robot)
+                tile.set_new_start(robot, self)
+
+    def set_robots_for_new_turn(self):
+        """
+        After 5th register there comes evaluation of the robots' state.
+        "Dead" robots who don't have any lives left, are deleted from the robot's lists.
+        "Inactive" robots who have lost one life during the round,
+        will reboot on start coordinates.
+        """
+        # Delete robots with zero lives
+        self.robots = [robot for robot in self.robots if robot.lives > 0]
+        for robot in self.robots:
+            for tile in self.get_tiles(robot.coordinates):
+                tile.repair_robot(robot, self)
+            # Robot will now ressurect at his start coordinates
+            if robot.inactive:
+                robot.coordinates = robot.start_coordinates
+                robot.damages = 0
+                robot.direction = Direction.N
+
+    def get_robots_ordered_by_cards_priority(self, register):
+        """
+        Get all the active robots, sort them according to the priority of their
+        current card.
+        If any of the robots misses the card, raise NoCardError.
+        """
+        try:
+            robot_cards = [(robot, robot.program[register])
+                           for robot in self.get_active_robots()]
+            robot_cards.sort(key=lambda item: item[1], reverse=True)
+            return robot_cards
+
+        except IndexError:
+            raise NoCardError
+
+    def apply_register(self, register):
+        """
+        For the given register sort the robot's list according to card's priorities.
+        Apply cards effects on the sorted robots.
+        """
+        robot_cards = self.get_robots_ordered_by_cards_priority(register)
+        for robot, card in robot_cards:
+            card.apply_effect(robot, self)
+
+    def apply_all_effects(self, registers=5):
+        """
+        Apply all game effects: for the given number of iterations
+        perform robot's cards effects and tile effects on a given game state.
+        At the end ressurect the inactive robots to their starting coordinates.
+        registers: default iterations count is 5, can be changed for testing purposes.
+        """
+        self._apply_cards_and_tiles_effects(registers)
+
+        # After last register ressurect the robots to their starting coordinates.
+        self.set_robots_for_new_turn()
+
+    def _apply_cards_and_tiles_effects(self, registers):
+        """
+        Private function without ressurect mode - for testing purposes.
+        It is called within apply_all_effects. Do not call it separately.
+        """
+        for register in range(registers):
+            # try -  except was introduced for devel purposes - it may happen that
+            # robots have no card on hand and we still want to try loading the game
+            try:
+                # Check the card's priority
+                self.apply_register(register)
+
+            except NoCardError:
+                print("No card on hand, continue to tile effects.")
+                pass
+
+            self.apply_tile_effects(register)
+
 
 class NoCardError(LookupError):
     """Raised when a robot doesn't have a card for the given register."""
@@ -568,122 +678,3 @@ def get_direction_from_coordinates(start_coordinates, stop_coordinates):
     for direction in list(Direction):
         if direction.coor_delta == delta:
             return direction
-
-
-def apply_tile_effects(state, register):
-    """
-    Apply the effects according to game rules.
-    The function name is not entirely exact: the whole register phase actions take place
-    (both tiles and robot's effects).
-    """
-    # Activate belts
-    state.move_belts()
-
-    # Activate pusher
-    for robot in state.get_active_robots():
-        for tile in state.get_tiles(robot.coordinates):
-            tile.push_robot(robot, state, register)
-            if robot.inactive:
-                break
-
-    # Activate gear
-    for robot in state.get_active_robots():
-        for tile in state.get_tiles(robot.coordinates):
-            tile.rotate_robot(robot)
-
-    # Activate laser
-    for robot in state.get_active_robots():
-        for tile in state.get_tiles(robot.coordinates):
-            tile.shoot_robot(robot, state)
-            if robot.inactive:
-                break
-
-    # Activate robot laser
-    for robot in state.get_active_robots():
-        robot.shoot(state)
-
-    # Collect flags, repair robots
-    for robot in state.get_active_robots():
-        for tile in state.get_tiles(robot.coordinates):
-            tile.collect_flag(robot)
-            tile.set_new_start(robot, state)
-
-
-def set_robots_for_new_turn(state):
-    """
-    After 5th register there comes evaluation of the robots' state.
-    "Dead" robots who don't have any lives left, are deleted from the robot's lists.
-    "Inactive" robots who have lost one life during the round,
-    will reboot on start coordinates.
-    """
-
-    # Delete robots with zero lives
-    state.robots = [robot for robot in state.robots if robot.lives > 0]
-    for robot in state.robots:
-        for tile in state.get_tiles(robot.coordinates):
-            tile.repair_robot(robot, state)
-        # Robot will now ressurect at his start coordinates
-        if robot.inactive:
-            robot.coordinates = robot.start_coordinates
-            robot.damages = 0
-            robot.direction = Direction.N
-
-
-def get_robots_ordered_by_cards_priority(state, register):
-    """
-    Get all the active robots, sort them according to the priority of their
-    current card.
-    If any of the robots misses the card, raise NoCardError.
-    """
-    try:
-        robot_cards = [(robot, robot.program[register])
-                        for robot in state.get_active_robots()]
-
-        robot_cards.sort(key=lambda item: item[1], reverse=True)
-
-        return robot_cards
-
-    except IndexError:
-        raise NoCardError
-
-
-def apply_register(state, register):
-    """
-    For the given register sort the robot's list according to card's priorities.
-    Apply cards effects on the sorted robots.
-    """
-    robot_cards = get_robots_ordered_by_cards_priority(state, register)
-    for robot, card in robot_cards:
-        card.apply_effect(robot, state)
-
-
-def apply_all_effects(state, registers=5):
-    """
-    Apply all game effects: for the given number of iterations
-    perform robot's cards effects and tile effects on a given game state.
-    At the end ressurect the inactive robots to their starting coordinates.
-    registers: default iterations count is 5, can be changed for testing purposes.
-    """
-    _apply_cards_and_tiles_effects(state, registers)
-
-    # After last register ressurect the robots to their starting coordinates.
-    set_robots_for_new_turn(state)
-
-
-def _apply_cards_and_tiles_effects(state, registers):
-    """
-    Private function without ressurect mode - for testing purposes.
-    It is called within apply_all_effects. Do not call it separately.
-    """
-    for register in range(registers):
-        # try -  except was introduced for devel purposes - it may happen that
-        # robots have no card on hand and we still want to try loading the game
-        try:
-            # Check the card's priority
-            apply_register(state, register)
-
-        except NoCardError:
-            print("No card on hand, continue to tile effects.")
-            pass
-
-        apply_tile_effects(state, register)

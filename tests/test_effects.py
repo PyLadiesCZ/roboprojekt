@@ -17,7 +17,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from backend import State, get_start_tiles, apply_all_effects
+from backend import State, get_start_tiles
 from backend import MovementCard, RotationCard
 
 CARD_TYPES = {
@@ -173,7 +173,7 @@ def test_play_game(test_name):
     #     print(robot.power_down)
     #     print(robot.start_coordinates)
 
-    apply_all_effects(state, registers=get_registers(commands))
+    state.apply_all_effects(registers=get_registers(commands))
     compare_results_with_robots(commands, state)
 
     # for robot in state.robots:
