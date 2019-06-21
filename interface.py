@@ -1,17 +1,15 @@
 from random import shuffle
 
-from backend import Robot, MovementCard, RotationCard
-from util import Direction, Rotation
+from backend import MovementCard, RotationCard
+from util import Rotation
 
-# exemplary robot to show the whole interface works
-robot_data = Robot(Direction.N, None, "mintbot")
 MAX_CARD_COUNT = 9
 
 
 class InterfaceState:
-    def __init__(self, dealt_cards, robot_data):
-        self.dealt_cards = dealt_cards
-        self.robot_data = robot_data
+    def __init__(self):
+        self.dealt_cards = []
+        self.robot_data = None
         self.my_program = [None, None, None, None, None]
         self.power_down = False
         self.indicator = False
@@ -120,9 +118,6 @@ def create_card_pack():
     return card_pack
 
 
-card_pack = create_card_pack()
-
-
 def get_dealt_cards(card_pack):
     """
     Deal the cards for robot - he gets one card less for every damage he's got.
@@ -135,14 +130,3 @@ def get_dealt_cards(card_pack):
     dealt_cards = card_pack[-dealt_cards_count:]
     del card_pack[-dealt_cards_count:]
     return dealt_cards
-
-
-dealt_cards = get_dealt_cards(card_pack)
-
-
-def get_interface_state():
-    """
-    Create interface state for given robot and his cards.
-    """
-    interface_state = InterfaceState(dealt_cards, robot_data)
-    return interface_state

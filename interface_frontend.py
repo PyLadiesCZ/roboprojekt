@@ -158,28 +158,30 @@ def draw_interface(interface_state, window):
     # Interface background
     interface_sprite.draw()
 
-    # Robot
-    my_robot_sprite.draw()
+    if interface_state.robot_data:
+        # Robot
+        my_robot_sprite.draw()
 
-    # Flags
-    for sprite in flags_sprites[0:interface_state.robot_data.flags]:
-        sprite.draw()
+        # Flags
+        for sprite in flags_sprites[0:interface_state.robot_data.flags]:
+            sprite.draw()
 
-    # Robot lives
-    for sprite in lives_sprites[0:interface_state.robot_data.lives]:
-        sprite.draw()
+        # Robot lives
+        for sprite in lives_sprites[0:interface_state.robot_data.lives]:
+            sprite.draw()
 
-    # Damage Tokens
-    for sprite in damages_tokens_sprites[0:interface_state.robot_data.damages]:
-        sprite.draw()
+        # Damage Tokens
+        for sprite in damages_tokens_sprites[0:interface_state.robot_data.damages]:
+            sprite.draw()
 
-    # CARDS
-    # Dealt cards
-    for coordinate, card in zip(
-            dealt_cards_coordinates,
-            interface_state.dealt_cards,
-            ):
-        draw_card(coordinate, card)
+    if interface_state.dealt_cards:
+        # CARDS
+        # Dealt cards
+        for coordinate, card in zip(
+                dealt_cards_coordinates,
+                interface_state.dealt_cards,
+                ):
+            draw_card(coordinate, card)
 
     # Cards hand
     for coordinate, card_index in zip(program_coordinates, interface_state.my_program):
