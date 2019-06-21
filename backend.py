@@ -88,7 +88,7 @@ class Robot:
                 # There is no wall. Get next coordinates.
                 next_coordinates = get_next_coordinates(self.coordinates, direction)
                 # Check robots on the next tile before moving.
-                robot_in_the_way = check_robot_in_the_way(state, next_coordinates)
+                robot_in_the_way = state.check_robot_in_the_way(next_coordinates)
 
                 # Move robot in the way.
                 if robot_in_the_way:
@@ -161,7 +161,7 @@ class Robot:
                 # Check if there is a robot on the next coordinates.
                 # Skip this if the shooting robot's current coordinates are checked
                 if next_coordinates != self.coordinates:
-                    robot_in_the_way = check_robot_in_the_way(state, next_coordinates)
+                    robot_in_the_way = state.check_robot_in_the_way(next_coordinates)
 
                     # There is a robot, shoot him and break the cycle (only one gets shot).
                     if robot_in_the_way:
@@ -343,6 +343,20 @@ class State:
             if not robot.inactive:
                 yield robot
 
+    def check_robot_in_the_way(self, coordinates):
+        """
+        Check if there are robot on the next coordinates.
+        Return index of the robot on the way from given point.
+        It there are no robots, return None.
+        """
+        # Check robots on the next tile.
+        for robot in self.robots:
+            if robot.coordinates == coordinates:
+                # Return robot that is in the way.
+                return robot
+
+        # There are no robots, return None
+        return None
 
 class NoCardError(LookupError):
     """Raised when a robot doesn't have a card for the given register."""
@@ -449,22 +463,6 @@ def check_the_absence_of_a_wall(coordinates, direction, state):
             return False
 
     return True
-
-
-def check_robot_in_the_way(state, coordinates):
-    """
-    Check if there are robot on the next coordinates.
-    Return index of the robot on the way from given point.
-    It there are no robots, return None.
-    """
-    # Check robots on the next tile.
-    for robot in state.robots:
-        if robot.coordinates == coordinates:
-            # Return robot that is in the way.
-            return robot
-
-    # There are no robots, return None
-    return None
 
 
 def move_belts(state):
