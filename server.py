@@ -29,7 +29,11 @@ state = get_start_state(map_name)
 
 card_pack = create_card_pack()
 card_pack = str(card_pack)
-robots = get_robot_names()
+
+available_robots = get_robot_names()
+# Dictionary {ws_interface: robot_name}
+assigned_robots = {}
+
 
 # A list of connected clients
 ws_receivers = []
@@ -45,6 +49,11 @@ async def ws_handler(request, ws_list):
     await ws.prepare(request)
     # WebSocket is added to a list
     ws_list.append(ws)
+    if ws_list == ws_interfaces:
+        assigned_robots[ws] = available_robots[0]
+        available_robots.pop(0)
+        print(assigned_robots)
+        print(available_robots)
     try:
         yield ws
     finally:
@@ -67,9 +76,9 @@ async def receiver(request):
 async def interface(request):
     async with ws_handler(request, ws_interfaces) as ws:
         # This message is sent only this (just connected) client
-        await ws.send_json(robots[0], dumps=json.dumps)
+        #await ws.send_json(robots[0], dumps=json.dumps)
         await ws.send_json(state.as_dict(map_name), dumps=json.dumps)
-        await ws.send_json(card_pack, dumps=json.dumps)
+        #await ws.send_json(card_pack, dumps=json.dumps)
         # Process messages from this client
         async for msg in ws:
             if msg.type == aiohttp.WSMsgType.TEXT:
