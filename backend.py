@@ -272,10 +272,13 @@ class State:
         self.robots = robots
         self.tile_count = get_tile_count(board)
 
+    def __repr__(self):
+        return "<State {} {}>".format(self._board, self.robots)
+
     @classmethod
     def from_dict(cls, data):
         """
-        Return State from JSON data received from server."
+        Create game state from JSON data received from server.
         """
         map_data = data["board"]
         board = board_from_data(map_data)
@@ -286,14 +289,26 @@ class State:
             robots.append(robot)
         return cls(board, robots)
 
-    def __repr__(self):
-        return "<State {} {}>".format(self._board, self.robots)
-
     def as_dict(self, map_name):
         """
-        Return state as dictionary for sending with server
+        Return state as dictionary for sending with server.
         """
-        return {"board": get_map_data(map_name), "robots": [robot.as_dict() for robot in self.robots]}
+        return {"game_state": {
+                "board": get_map_data(map_name),
+                "robots": [robot.as_dict() for robot in self.robots], }}
+
+    @classmethod
+    def get_start_state(cls, map_name):
+        """
+        Get start state of game.
+
+        map_name: path to map file. Currently works only for .json files from Tiled 1.2
+        Create board and robots on start tiles, initialize State object
+        containing board and robots.
+        """
+        board = get_board(map_name)
+        robots_start = create_robots(board)
+        return cls(board, robots_start)
 
     def get_tiles(self, coordinates):
         """
@@ -389,21 +404,6 @@ def create_robots(board):
         robot = Robot(initial_direction, initial_coordinates, name)
         robots_on_start.append(robot)
     return robots_on_start
-
-
-def get_start_state(map_name):
-    """
-    Get start state of game.
-
-    map_name: path to map file. Currently works only for .json files from Tiled 1.2
-    Create board and robots on start tiles, initialize State object
-    containing Tile and Robot object as well as the map size.
-    Return State object.
-    """
-    board = get_board(map_name)
-    robots_start = create_robots(board)
-    state = State(board, robots_start)
-    return state
 
 
 def get_tile_count(board):
