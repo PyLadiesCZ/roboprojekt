@@ -388,6 +388,63 @@ class State:
                 return False
         return True
 
+    def move_belts(self):
+        """
+        Move robots on conveyor belts.
+        """
+        # According to rules:
+        # First, express belts move robots by one tile (express attribute is set to True).
+        # Then all belts move robots by one tile (express attribute is set to False).
+        for express_belts in True, False:
+            # Get robots next coordinates after move of conveyor belts
+            robots_next_coordinates = self.get_next_coordinates_for_belts(express_belts)
+            # Solve blocked robots (colliding and swapping robots)
+            for blocked_func in get_colliding_robots, get_swapping_robots:
+                while True:
+                    blocked_robots = blocked_func(robots_next_coordinates)
+                    if not blocked_robots:
+                        break
+                    else:
+                        # For blocked robots set next coordinates to their current.
+                        for robot in blocked_robots:
+                            robots_next_coordinates[robot] = robot.coordinates
+
+            # All collision sorted, move robots to new coordinates
+            for robot in robots_next_coordinates:
+                if robot.coordinates != robots_next_coordinates[robot]:
+                    # Get direction of belt movement
+                    direction = get_direction_from_coordinates(
+                        robot.coordinates,
+                        robots_next_coordinates[robot]
+                    )
+                    # Check if the next tile is rotating belt.
+                    for tile in self.get_tiles(robots_next_coordinates[robot]):
+                        tile.rotate_robot_on_belt(robot, direction)
+                robot.coordinates = robots_next_coordinates[robot]
+
+    def get_next_coordinates_for_belts(self, express_belts):
+        """
+        Get all robot's next coordinates after move of certain type of conveyor belts.
+
+        express_belts: a boolean, True - for express belts, False - for all belts.
+
+        Return a dictionary of robots as keys and their next coordinates as values.
+        """
+        robots_next_coordinates = {}
+        for robot in self.robots:
+            for tile in self.get_tiles(robot.coordinates):
+                if tile.check_belts(express_belts):
+                    # Get next coordinates of robots on belts
+                    robots_next_coordinates[robot] = get_next_coordinates(
+                        robot.coordinates,
+                        tile.direction.get_new_direction(tile.direction_out)
+                    )
+                    break
+                else:
+                    # Other robots will have the same coordinates
+                    robots_next_coordinates[robot] = robot.coordinates
+        return robots_next_coordinates
+
 
 class NoCardError(LookupError):
     """Raised when a robot doesn't have a card for the given register."""
@@ -463,62 +520,6 @@ def create_robots(board):
     return robots_on_start
 
 
-
-
-
-def move_belts(state):
-    """
-    Move robots on conveyor belts.
-    """
-    # According to rules:
-    # First, express belts move robots by one tile (express attribute is set to True).
-    # Then all belts move robots by one tile (express attribute is set to False).
-    for express_belts in True, False:
-        # Get robots next coordinates after move of conveyor belts
-        robots_next_coordinates = get_next_coordinates_for_belts(state, express_belts)
-        # Solve blocked robots (colliding and swapping robots)
-        for blocked_func in get_colliding_robots, get_swapping_robots:
-            while True:
-                blocked_robots = blocked_func(robots_next_coordinates)
-                if not blocked_robots:
-                    break
-                else:
-                    # For blocked robots set next coordinates to their current.
-                    for robot in blocked_robots:
-                        robots_next_coordinates[robot] = robot.coordinates
-
-        # All collision sorted, move robots to new coordinates
-        for robot in robots_next_coordinates:
-            if robot.coordinates != robots_next_coordinates[robot]:
-                # Get direction of belt movement
-                direction = get_direction_from_coordinates(robot.coordinates, robots_next_coordinates[robot])
-                # Check if the next tile is rotating belt.
-                for tile in state.get_tiles(robots_next_coordinates[robot]):
-                    tile.rotate_robot_on_belt(robot, direction)
-            robot.coordinates = robots_next_coordinates[robot]
-
-
-def get_next_coordinates_for_belts(state, express_belts):
-    """
-    Get all robot's next coordinates after move of certain type of conveyor belts.
-
-    express_belts: a boolean, True - for express belts, False - for all belts.
-
-    Return a dictionary of robots as keys and their next coordinates as values.
-    """
-    robots_next_coordinates = {}
-    for robot in state.robots:
-        for tile in state.get_tiles(robot.coordinates):
-            if tile.check_belts(express_belts):
-                # Get next coordinates of robots on belts
-                robots_next_coordinates[robot] = get_next_coordinates(robot.coordinates, tile.direction.get_new_direction(tile.direction_out))
-                break
-            else:
-                # Other robots will have the same coordinates
-                robots_next_coordinates[robot] = robot.coordinates
-    return robots_next_coordinates
-
-
 def get_colliding_robots(robots):
     """
     Get a list of robots, who would collide during belt movement.
@@ -576,7 +577,7 @@ def apply_tile_effects(state, register):
     (both tiles and robot's effects).
     """
     # Activate belts
-    move_belts(state)
+    state.move_belts()
 
     # Activate pusher
     for robot in state.get_active_robots():
