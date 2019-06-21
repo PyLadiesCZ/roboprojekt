@@ -82,7 +82,7 @@ class Robot:
         else:
             for step in range(distance):
                 # Check the absence of a walls before moving.
-                if not check_the_absence_of_a_wall(self.coordinates, direction, state):
+                if not state.check_the_absence_of_a_wall(self.coordinates, direction):
                     break
 
                 # There is no wall. Get next coordinates.
@@ -169,7 +169,7 @@ class Robot:
                         break
 
                 # Check if there is a wall, if is: end of shot.
-                if not check_the_absence_of_a_wall(next_coordinates, self.direction, state):
+                if not state.check_the_absence_of_a_wall(next_coordinates, self.direction):
                     break
 
                 # No robots or walls on the coordinates, check one step further.
@@ -354,9 +354,40 @@ class State:
             if robot.coordinates == coordinates:
                 # Return robot that is in the way.
                 return robot
-
         # There are no robots, return None
         return None
+
+    def check_the_absence_of_a_wall(self, coordinates, direction):
+        """
+        Check the absence of a wall in the direction of the move.
+
+        coordinates: tuple of x and y coordinate
+        direction: object of Direction class
+        state: object of State class
+        Return a boolean.
+        True - There isn't wall, robot can move.
+        False - There is wall, robot can't move.
+        """
+        old_tiles = self.get_tiles(coordinates)
+        # Current tile: Check wall in the direction of next move.
+        for tile in old_tiles:
+            move_from = tile.can_move_from(direction)
+            if not move_from:
+                # Current tile: There is a wall in the direction of the move.
+                return False
+
+        # There is no wall, so get next coordinates.
+        next_coordinates = get_next_coordinates(coordinates, direction)
+        # Get new list of tiles.
+        new_tiles = self.get_tiles(next_coordinates)
+        # Check wall on the next tile in the direction of the move.
+        for tile in new_tiles:
+            move_to = tile.can_move_to(direction)
+            if not move_to:
+                # Next tile: There is a wall in the direction of the move.
+                return False
+        return True
+
 
 class NoCardError(LookupError):
     """Raised when a robot doesn't have a card for the given register."""
@@ -432,37 +463,7 @@ def create_robots(board):
     return robots_on_start
 
 
-def check_the_absence_of_a_wall(coordinates, direction, state):
-    """
-    Check the absence of a wall in the direction of the move.
 
-    coordinates: tuple of x and y coordinate
-    direction: object of Direction class
-    state: object of State class
-    Return a boolean.
-    True - There isn't wall, robot can move.
-    False - There is wall, robot can't move.
-    """
-    old_tiles = state.get_tiles(coordinates)
-    # Current tile: Check wall in the direction of next move.
-    for tile in old_tiles:
-        move_from = tile.can_move_from(direction)
-        if not move_from:
-            # Current tile: There is a wall in the direction of the move.
-            return False
-
-    # There is no wall, so get next coordinates.
-    next_coordinates = get_next_coordinates(coordinates, direction)
-    # Get new list of tiles.
-    new_tiles = state.get_tiles(next_coordinates)
-    # Check wall on the next tile in the direction of the move.
-    for tile in new_tiles:
-        move_to = tile.can_move_to(direction)
-        if not move_to:
-            # Next tile: There is a wall in the direction of the move.
-            return False
-
-    return True
 
 
 def move_belts(state):
