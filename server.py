@@ -31,7 +31,7 @@ card_pack = create_card_pack()
 card_pack = str(card_pack)
 
 available_robots = get_robot_names()
-# Dictionary {ws_interface: robot_name}
+# Dictionary {ws_interface: robot_name
 assigned_robots = {}
 
 
@@ -50,10 +50,9 @@ async def ws_handler(request, ws_list):
     # WebSocket is added to a list
     ws_list.append(ws)
     if ws_list == ws_interfaces:
-        assigned_robots[ws] = available_robots[0]
-        available_robots.pop(0)
+        assigned_robots[ws] = available_robots.pop(0)
         print(assigned_robots)
-        print(available_robots)
+
     try:
         yield ws
     finally:
