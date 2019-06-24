@@ -1,5 +1,5 @@
 """
-Client receive messages from server and print them
+Client receives game state from server and draws it.
 """
 import asyncio
 import aiohttp
@@ -28,17 +28,12 @@ class Receiver:
                 # Waiting for message from server and print them
                 async for msg in ws:
                     # Cycle "for" is finished when client disconnects from server
-                    try:
-                        message = msg.json(loads=json.loads)
-                        self.state = State.from_dict(message)
+                    message = msg.json(loads=json.loads)
+                    if message["game_state"]:
+                        self.state = State.from_dict(message["game_state"])
                         if self.window is None:
                             self.window = create_window(self.state)
                             self.window.push_handlers(on_draw=self.window_draw)
-                        print("state is", self.state)
-                    except json.decoder.JSONDecodeError:
-                        if msg.type == aiohttp.WSMsgType.TEXT:
-                            message = msg.data
-                            print("cards are", message)
 
 
 def tick_asyncio(dt):
@@ -50,12 +45,14 @@ def tick_asyncio(dt):
     # Run the loop until the "asyncio.sleep" task is complete
     loop.run_until_complete(asyncio.sleep(0))
 
+
 receiver = Receiver()
 
 pyglet.clock.schedule_interval(tick_asyncio, 1/30)
 
 # Schedule the "client" task
-# More about Futures - official documentation https://docs.python.org/3/library/asyncio-future.html
+# More about Futures - official documentation
+# https://docs.python.org/3/library/asyncio-future.html
 asyncio.ensure_future(receiver.client())
 
 
