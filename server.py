@@ -15,7 +15,7 @@ import contextlib
 import aiohttp
 from aiohttp import web
 
-from backend import get_start_state, get_robot_names
+from backend import get_start_state
 from interface import create_card_pack
 
 
@@ -30,8 +30,8 @@ state = get_start_state(map_name)
 card_pack = create_card_pack()
 card_pack = str(card_pack)
 
-available_robots = get_robot_names()
-# Dictionary {ws_interface: robot_name
+available_robots = state.robots
+# Dictionary {ws_interface: robot_name}
 assigned_robots = {}
 
 
