@@ -50,7 +50,8 @@ async def ws_handler(request, ws_list):
     # WebSocket is added to a list
     ws_list.append(ws)
     if ws_list == ws_interfaces:
-        assigned_robots[ws] = available_robots.pop(0)
+        name = available_robots[0].name
+        assigned_robots[name] = available_robots.pop(0)
         print(assigned_robots)
 
     try:
