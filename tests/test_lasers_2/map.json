@@ -14,10 +14,10 @@
          "y":0
         }, 
         {
-         "data":[0, 17, 0, 3221225475, 0, 17, 0, 3221225476, 0, 17, 0, 3221225476, 0, 16, 0, 3221225476],
+         "data":[0, 3221225516, 0, 0, 2684354602, 1610612779, 1610612776, 0, 0, 41, 0, 0, 2684354605, 0, 46, 2684354607],
          "height":4,
-         "id":2,
-         "name":"laser-vertical",
+         "id":6,
+         "name":"start",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
@@ -26,10 +26,10 @@
          "y":0
         }, 
         {
-         "data":[0, 3221225516, 0, 0, 2684354602, 1610612779, 1610612776, 0, 0, 41, 0, 0, 2684354605, 0, 46, 2684354607],
+         "data":[0, 17, 0, 3221225475, 0, 17, 0, 3221225476, 0, 17, 0, 3221225476, 0, 16, 0, 3221225476],
          "height":4,
-         "id":6,
-         "name":"start",
+         "id":2,
+         "name":"laser-vertical",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
@@ -77,7 +77,7 @@
  "nextobjectid":1,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.2.1",
+ "tiledversion":"1.2.4",
  "tileheight":64,
  "tilesets":[
         {

@@ -431,7 +431,7 @@ class State:
         Return a dictionary of robots as keys and their next coordinates as values.
         """
         robots_next_coordinates = {}
-        for robot in self.robots:
+        for robot in self.get_active_robots():
             for tile in self.get_tiles(robot.coordinates):
                 if tile.check_belts(express_belts):
                     # Get next coordinates of robots on belts

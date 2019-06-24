@@ -1,0 +1,17 @@
+actions:
+  -
+    - type: move
+      priority: 300
+      value: 2
+  -
+    - type: move
+      priority: 300
+      value: 2
+  -
+    - type: move
+      priority: 300
+      value: 2
+  -
+    - type: move
+      priority: 300
+      value: 2

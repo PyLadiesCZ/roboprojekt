@@ -19,8 +19,13 @@ from validator import check_tiles
 VALID_MAPS_PATHS = []
 for map_path in Path("maps/").glob("test_*.json"):
     VALID_MAPS_PATHS.append(map_path)
+# add test maps
+for map_path in Path("tests/").glob("test_*"):
+    if map_path.is_dir():
+        VALID_MAPS_PATHS.append(map_path / Path("map.json"))
 
 
+@pytest.mark.xfail
 @pytest.mark.parametrize("map_name", VALID_MAPS_PATHS)
 def test_map_is_valid(map_name):
     """
