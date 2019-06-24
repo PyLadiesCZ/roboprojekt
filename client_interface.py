@@ -7,7 +7,7 @@ import json
 import pyglet
 
 from interface_frontend import draw_interface, create_window, handle_text
-from interface import get_interface_state
+from interface import InterfaceState
 from backend import State
 
 
@@ -15,7 +15,7 @@ class Interface:
     def __init__(self):
         self.window = create_window()
         self.window.push_handlers(on_draw=self.window_draw, on_text=self.on_text)
-        self.state = get_interface_state()
+        self.state = InterfaceState()
         self.ws = None
 
     def window_draw(self):

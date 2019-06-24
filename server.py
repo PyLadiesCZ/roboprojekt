@@ -15,7 +15,7 @@ import contextlib
 import aiohttp
 from aiohttp import web
 
-from backend import get_start_state
+from backend import State
 from interface import create_card_pack
 
 
@@ -25,7 +25,7 @@ else:
     map_name = sys.argv[1]
 
 # Create state, will be edited
-state = get_start_state(map_name)
+state = State.get_start_state(map_name)
 
 card_pack = create_card_pack()
 card_pack = str(card_pack)
@@ -65,7 +65,7 @@ async def receiver(request):
     async with ws_handler(request, ws_receivers) as ws:
         # This message is sent only this (just connected) client
         await ws.send_json(state.as_dict(map_name), dumps=json.dumps)
-        # Process messages from this client
+        # For cycle keeps the connection with client alive
         async for msg in ws:
             pass
         return ws

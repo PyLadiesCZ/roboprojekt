@@ -7,7 +7,7 @@ The game module
 import pyglet
 import sys
 
-from backend import get_start_state, apply_all_effects
+from backend import State
 from frontend import create_window, draw_state
 
 
@@ -22,7 +22,7 @@ else:
     map_name = sys.argv[1]
 
 # Get start state of the game from the backend module.
-state = get_start_state(map_name)
+state = State.get_start_state(map_name)
 
 # Load pyglet graphic window from the frontend module.
 window = create_window(state)
@@ -43,7 +43,7 @@ def move_once(t):
     Move all robots according to mock cards on hand and perform tile effects.
     """
 
-    apply_all_effects(state)
+    state.apply_all_effects()
     print("After tile effects:")
     for robot in state.robots:
         print(robot)

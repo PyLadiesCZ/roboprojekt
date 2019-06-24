@@ -1,8 +1,8 @@
 import pytest
 
-from backend import create_robots, get_start_state, Robot, State, MovementCard
-from backend import RotationCard, apply_tile_effects, get_direction_from_coordinates
-from backend import apply_all_effects, get_robots_ordered_by_cards_priority, get_robot_names
+from backend import create_robots, Robot, State, MovementCard
+from backend import RotationCard, get_direction_from_coordinates
+from backend import get_robot_names
 from util import Direction, Rotation
 from tile import Tile, HoleTile, PusherTile
 from loading import get_board
@@ -24,7 +24,7 @@ def test_start_state():
     Assert that created start state (board and robots) contains
     the correct instances of objects.
     """
-    ss = get_start_state("maps/test_3.json")
+    ss = State.get_start_state("maps/test_3.json")
     assert isinstance(ss, State)
     assert isinstance(ss.robots, list)
     assert isinstance(ss.robots[0], Robot)
@@ -45,7 +45,7 @@ def test_robot_walk(input_coordinates, input_direction, distance, output_coordin
     Take robot's coordinates, direction and distance and assert robot walked
     to correct coordinates.
     """
-    state = get_start_state("maps/test_3.json")
+    state = State.get_start_state("maps/test_3.json")
     robot = Robot(input_direction, input_coordinates, "tester")
     robot.walk(distance, state, input_direction)
     assert robot.coordinates == output_coordinates
@@ -64,7 +64,7 @@ def test_robot_move(input_coordinates, input_direction, distance, output_coordin
     Take robot's coordinates, move's direction and distance and assert robot
     was moved to correct coordinates.
     """
-    state = get_start_state("maps/test_3.json")
+    state = State.get_start_state("maps/test_3.json")
     robot = Robot(Direction.N, input_coordinates, "tester")
     robot.move(input_direction, distance, state)
     assert robot.coordinates == output_coordinates
@@ -151,7 +151,7 @@ def test_robot_is_damaged_by_laser(input_coordinates, damages_after):
     robot = Robot(Direction.W, input_coordinates, "tester")
     robot.damages = 0
     state = State(board, [robot_obstacle1, robot_obstacle2, robot])
-    apply_all_effects(state, 1)
+    state.apply_all_effects(1)
     assert robot.damages == damages_after
 
 
@@ -174,7 +174,7 @@ def test_robot_is_pushed_at_the_correct_round(register, tile, output_coordinates
     """
     robot = Robot(Direction.W, (1, 1), "tester")
     state = State({(1, 0): [Tile(None, None, None)], (1, 1): [tile]}, [robot])
-    apply_tile_effects(state, register)
+    state.apply_tile_effects(register)
     assert robot.direction == Direction.W
     assert robot.coordinates == output_coordinates
 
@@ -194,7 +194,7 @@ def test_robot_is_pushed_to_the_correct_direction(tile, output_coordinates):
     """
     robot = Robot(Direction.S, (1, 1), "tester")
     state = State({(1, 0): [Tile(None, None, None)], (0, 1): [Tile(None, None, None)], (2, 1): [Tile(None, None, None)], (1, 2): [Tile(None, None, None)], (1, 1): [tile]}, [robot])
-    apply_all_effects(state, 1)
+    state.apply_all_effects(1)
     assert robot.direction == Direction.S
     assert robot.coordinates == output_coordinates
 
@@ -214,7 +214,7 @@ def test_robot_is_pushed_out_of_the_board(tile):
     """
     robot = Robot(Direction.S, (0, 0), "tester")
     state = State({(0, 0): [tile]}, [robot])
-    apply_tile_effects(state, 0)
+    state.apply_tile_effects(0)
     assert robot.lives == 2
     assert robot.inactive is True
     assert robot.coordinates is None
@@ -226,7 +226,7 @@ def test_robot_on_start_has_the_correct_direction():
     of start tile he stands on.
     Assert the direction is correcly initiated.
     """
-    state = get_start_state("maps/test_start_direction.json")
+    state = State.get_start_state("maps/test_start_direction.json")
     for robot in state.robots:
         tile_direction = state.get_tiles(robot.coordinates)[0].direction
         assert robot.direction == tile_direction
@@ -245,7 +245,7 @@ def test_robots_order_on_start(robot_index, expected_coordinates):
     Assert the list is correcly created.
     Test to check the behaviour in Python 3.5.
     """
-    state = get_start_state("maps/test_start_direction.json")
+    state = State.get_start_state("maps/test_start_direction.json")
     current_robot = state.robots[robot_index]
     assert current_robot.coordinates == expected_coordinates
 
@@ -265,7 +265,7 @@ def test_robot_movement_on_normal_belts(input_coordinates, output_coordinates):
     robot = Robot(Direction.N, input_coordinates, "tester")
     board = get_board("maps/test_belts.json")
     state = State(board, [robot])
-    apply_all_effects(state, 1)
+    state.apply_all_effects(1)
     assert robot.coordinates == output_coordinates
 
 
@@ -284,7 +284,7 @@ def test_robot_movement_on_express_belts(input_coordinates, output_coordinates):
     robot = Robot(Direction.N, input_coordinates, "tester")
     board = get_board("maps/test_belts.json")
     state = State(board, [robot])
-    apply_all_effects(state, 1)
+    state.apply_all_effects(1)
     assert robot.coordinates == output_coordinates
 
 
@@ -305,7 +305,7 @@ def test_robot_movement_on_connected_belts(input_coordinates, output_coordinates
     robot = Robot(Direction.N, input_coordinates, "tester")
     board = get_board("maps/test_belts.json")
     state = State(board, [robot])
-    apply_all_effects(state, 1)
+    state.apply_all_effects(1)
     assert robot.coordinates == output_coordinates
 
 
@@ -330,7 +330,7 @@ def test_robot_movement_on_crossroad_belts(input_coordinates, output_coordinates
     robot = Robot(Direction.N, input_coordinates, "tester")
     board = get_board("maps/test_belts.json")
     state = State(board, [robot])
-    apply_all_effects(state, 1)
+    state.apply_all_effects(1)
     assert robot.coordinates == output_coordinates
 
 
@@ -363,7 +363,7 @@ def test_change_of_robots_direction_on_rotating_belts(input_coordinates, output_
     robot = Robot(Direction.N, input_coordinates, "tester")
     board = get_board("maps/test_belts.json")
     state = State(board, [robot])
-    apply_all_effects(state, 1)
+    state.apply_all_effects(1)
     assert robot.direction == output_direction
 
 
@@ -397,7 +397,7 @@ def test_robots_dont_change_direction_on_rotating_belts_after_move_card(input_co
     board = get_board("maps/test_belts.json")
     state = State(board, [robot])
     robot.program[0].apply_effect(robot, state)
-    apply_all_effects(state, 1)
+    state.apply_all_effects(1)
     assert robot.direction == input_direction
 
 
@@ -416,7 +416,7 @@ def test_two_robots_movements_on_belts(input_coordinates_1, input_coordinates_2,
               ]
     board = get_board("maps/test_belts.json")
     state = State(board, robots)
-    apply_all_effects(state, 1)
+    state.apply_all_effects(1)
     assert robots[0].coordinates == output_coordinates_1
     assert robots[1].coordinates == output_coordinates_2
 
@@ -435,7 +435,7 @@ def test_two_robots_movement_on_T_crossroad(input_coordinates_1, input_coordinat
               ]
     board = get_board("maps/test_belts.json")
     state = State(board, robots)
-    apply_all_effects(state, 1)
+    state.apply_all_effects(1)
     assert robots[0].coordinates == output_coordinates_1
     assert robots[1].coordinates == output_coordinates_2
 
@@ -456,7 +456,7 @@ def test_robot_does_not_move_onto_another_robot(input_coordinates_1, input_coord
               ]
     board = get_board("maps/test_belts.json")
     state = State(board, robots)
-    apply_all_effects(state, 1)
+    state.apply_all_effects(1)
     assert robots[0].coordinates == output_coordinates_1
     assert robots[1].coordinates == output_coordinates_2
 
@@ -473,7 +473,7 @@ def test_robots_cannot_swap_places(input_coordinates_1, input_coordinates_2):
               ]
     board = get_board("maps/test_belts.json")
     state = State(board, robots)
-    apply_all_effects(state, 1)
+    state.apply_all_effects(1)
     assert robots[0].coordinates == input_coordinates_1
     assert robots[1].coordinates == input_coordinates_2
 
@@ -483,7 +483,7 @@ def test_card_priorities():
     Check that robots are sorted according to their cards on hand.
     Assert first and last robot's on the list priority.
     """
-    state = get_start_state("maps/test_effects.json")
+    state = State.get_start_state("maps/test_effects.json")
     cards = [[MovementCard(100, 1), MovementCard(100, 1)],
              [RotationCard(120, Rotation.U_TURN), MovementCard(200, 2)],
              [MovementCard(150, -1), MovementCard(110, 1)],
@@ -499,12 +499,12 @@ def test_card_priorities():
         robot.program = cards[i]
         i += 1
 
-    robot_cards = get_robots_ordered_by_cards_priority(state, 0)
+    robot_cards = state.get_robots_ordered_by_cards_priority(0)
     print(robot_cards[0])
     assert robot_cards[0][0].program[0].priority == 300
     assert robot_cards[7][0].program[0].priority == 55
 
-    robot_cards = get_robots_ordered_by_cards_priority(state, 1)
+    robot_cards = state.get_robots_ordered_by_cards_priority(1)
     assert robot_cards[0][0].program[1].priority == 350
     assert robot_cards[7][0].program[1].priority == 80
 

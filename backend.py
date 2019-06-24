@@ -82,13 +82,13 @@ class Robot:
         else:
             for step in range(distance):
                 # Check the absence of a walls before moving.
-                if not check_the_absence_of_a_wall(self.coordinates, direction, state):
+                if not state.check_the_absence_of_a_wall(self.coordinates, direction):
                     break
 
                 # There is no wall. Get next coordinates.
                 next_coordinates = get_next_coordinates(self.coordinates, direction)
                 # Check robots on the next tile before moving.
-                robot_in_the_way = check_robot_in_the_way(state, next_coordinates)
+                robot_in_the_way = state.check_robot_in_the_way(next_coordinates)
 
                 # Move robot in the way.
                 if robot_in_the_way:
@@ -161,7 +161,7 @@ class Robot:
                 # Check if there is a robot on the next coordinates.
                 # Skip this if the shooting robot's current coordinates are checked
                 if next_coordinates != self.coordinates:
-                    robot_in_the_way = check_robot_in_the_way(state, next_coordinates)
+                    robot_in_the_way = state.check_robot_in_the_way(next_coordinates)
 
                     # There is a robot, shoot him and break the cycle (only one gets shot).
                     if robot_in_the_way:
@@ -169,7 +169,7 @@ class Robot:
                         break
 
                 # Check if there is a wall, if is: end of shot.
-                if not check_the_absence_of_a_wall(next_coordinates, self.direction, state):
+                if not state.check_the_absence_of_a_wall(next_coordinates, self.direction):
                     break
 
                 # No robots or walls on the coordinates, check one step further.
@@ -270,12 +270,15 @@ class State:
     def __init__(self, board, robots):
         self._board = board
         self.robots = robots
-        self.tile_count = get_tile_count(board)
+        self.tile_count = self.get_tile_count()
+
+    def __repr__(self):
+        return "<State {} {}>".format(self._board, self.robots)
 
     @classmethod
     def from_dict(cls, data):
         """
-        Return State from JSON data received from server."
+        Create game state from JSON data received from server.
         """
         map_data = data["board"]
         board = board_from_data(map_data)
@@ -286,18 +289,43 @@ class State:
             robots.append(robot)
         return cls(board, robots)
 
-    def __repr__(self):
-        return "<State {} {}>".format(self._board, self.robots)
-
     def as_dict(self, map_name):
         """
-        Return state as dictionary for sending with server
+        Return state as dictionary for sending with server.
         """
-        return {"board": get_map_data(map_name), "robots": [robot.as_dict() for robot in self.robots]}
+        return {"game_state": {
+                "board": get_map_data(map_name),
+                "robots": [robot.as_dict() for robot in self.robots], }}
+
+    @classmethod
+    def get_start_state(cls, map_name):
+        """
+        Get start state of game.
+
+        map_name: path to map file. Create board and robots on start tiles,
+        initialize State object with them.
+        """
+        board = get_board(map_name)
+        robots_start = create_robots(board)
+        return cls(board, robots_start)
+
+    def get_tile_count(self):
+        """
+        From the board coordinates get the count of tiles
+        in horizontal (x) and vertical (y) ax.
+        """
+        x_set = set()
+        y_set = set()
+        for coordinate in self._board.keys():
+            x, y = coordinate
+            x_set.add(x)
+            y_set.add(y)
+        return len(x_set), len(y_set)
 
     def get_tiles(self, coordinates):
         """
         Get tiles on requested coordinates.
+
         coordinates: tuple of x and y coordinate
         Return a list of tiles or return hole tile if coordinates are out of the board.
         """
@@ -315,6 +343,218 @@ class State:
         for robot in self.robots:
             if not robot.inactive:
                 yield robot
+
+    def check_robot_in_the_way(self, coordinates):
+        """
+        Check if there are robot on the next coordinates.
+
+        Return index of the robot on the way from given point.
+        It there are no robots, return None.
+        """
+        # Check robots on the next tile.
+        for robot in self.robots:
+            if robot.coordinates == coordinates:
+                # Return robot that is in the way.
+                return robot
+        # There are no robots, return None
+        return None
+
+    def check_the_absence_of_a_wall(self, coordinates, direction):
+        """
+        Check the absence of a wall in the direction of the move.
+
+        coordinates: tuple of x and y coordinate
+        direction: object of Direction class
+        Return a boolean.
+        True - There isn't wall, robot can move.
+        False - There is wall, robot can't move.
+        """
+        old_tiles = self.get_tiles(coordinates)
+        # Current tile: Check wall in the direction of next move.
+        for tile in old_tiles:
+            move_from = tile.can_move_from(direction)
+            if not move_from:
+                # Current tile: There is a wall in the direction of the move.
+                return False
+
+        # There is no wall, so get next coordinates.
+        next_coordinates = get_next_coordinates(coordinates, direction)
+        # Get new list of tiles.
+        new_tiles = self.get_tiles(next_coordinates)
+        # Check wall on the next tile in the direction of the move.
+        for tile in new_tiles:
+            move_to = tile.can_move_to(direction)
+            if not move_to:
+                # Next tile: There is a wall in the direction of the move.
+                return False
+        return True
+
+    def move_belts(self):
+        """
+        Move robots on conveyor belts.
+        """
+        # According to rules:
+        # First, express belts move robots by one tile (express attribute is set to True).
+        # Then all belts move robots by one tile (express attribute is set to False).
+        for express_belts in True, False:
+            # Get robots next coordinates after move of conveyor belts
+            robots_next_coordinates = self.get_next_coordinates_for_belts(express_belts)
+            # Solve blocked robots (colliding and swapping robots)
+            for blocked_func in get_colliding_robots, get_swapping_robots:
+                while True:
+                    blocked_robots = blocked_func(robots_next_coordinates)
+                    if not blocked_robots:
+                        break
+                    else:
+                        # For blocked robots set next coordinates to their current.
+                        for robot in blocked_robots:
+                            robots_next_coordinates[robot] = robot.coordinates
+
+            # All collision sorted, move robots to new coordinates
+            for robot in robots_next_coordinates:
+                if robot.coordinates != robots_next_coordinates[robot]:
+                    # Get direction of belt movement
+                    direction = get_direction_from_coordinates(
+                        robot.coordinates,
+                        robots_next_coordinates[robot]
+                    )
+                    # Check if the next tile is rotating belt.
+                    for tile in self.get_tiles(robots_next_coordinates[robot]):
+                        tile.rotate_robot_on_belt(robot, direction)
+                robot.coordinates = robots_next_coordinates[robot]
+
+    def get_next_coordinates_for_belts(self, express_belts):
+        """
+        Get all robot's next coordinates after move of certain type of conveyor belts.
+
+        express_belts: a boolean, True - for express belts, False - for all belts.
+        Return a dictionary of robots as keys and their next coordinates as values.
+        """
+        robots_next_coordinates = {}
+        for robot in self.robots:
+            for tile in self.get_tiles(robot.coordinates):
+                if tile.check_belts(express_belts):
+                    # Get next coordinates of robots on belts
+                    robots_next_coordinates[robot] = get_next_coordinates(
+                        robot.coordinates,
+                        tile.direction.get_new_direction(tile.direction_out)
+                    )
+                    break
+                else:
+                    # Other robots will have the same coordinates
+                    robots_next_coordinates[robot] = robot.coordinates
+        return robots_next_coordinates
+
+    def apply_tile_effects(self, register):
+        """
+        Apply the effects according to game rules.
+
+        The method name is not entirely exact: the whole register phase actions
+        take place (both tiles and robot's effects).
+        """
+        # Activate belts
+        self.move_belts()
+
+        # Activate pusher
+        for robot in self.get_active_robots():
+            for tile in self.get_tiles(robot.coordinates):
+                tile.push_robot(robot, self, register)
+                if robot.inactive:
+                    break
+
+        # Activate gear
+        for robot in self.get_active_robots():
+            for tile in self.get_tiles(robot.coordinates):
+                tile.rotate_robot(robot)
+
+        # Activate laser
+        for robot in self.get_active_robots():
+            for tile in self.get_tiles(robot.coordinates):
+                tile.shoot_robot(robot, self)
+                if robot.inactive:
+                    break
+
+        # Activate robot laser
+        for robot in self.get_active_robots():
+            robot.shoot(self)
+
+        # Collect flags, repair robots
+        for robot in self.get_active_robots():
+            for tile in self.get_tiles(robot.coordinates):
+                tile.collect_flag(robot)
+                tile.set_new_start(robot, self)
+
+    def set_robots_for_new_turn(self):
+        """
+        After 5th register there comes evaluation of the robots' state.
+        "Dead" robots who don't have any lives left, are deleted from the robot's lists.
+        "Inactive" robots who have lost one life during the round,
+        will reboot on start coordinates.
+        """
+        # Delete robots with zero lives
+        self.robots = [robot for robot in self.robots if robot.lives > 0]
+        for robot in self.robots:
+            for tile in self.get_tiles(robot.coordinates):
+                tile.repair_robot(robot, self)
+            # Robot will now ressurect at his start coordinates
+            if robot.inactive:
+                robot.coordinates = robot.start_coordinates
+                robot.damages = 0
+                robot.direction = Direction.N
+
+    def get_robots_ordered_by_cards_priority(self, register):
+        """
+        Get all the active robots, sort them according to the priority of their
+        current card.
+        If any of the robots misses the card, raise NoCardError.
+        """
+        try:
+            robot_cards = [(robot, robot.program[register])
+                           for robot in self.get_active_robots()]
+            robot_cards.sort(key=lambda item: item[1], reverse=True)
+            return robot_cards
+
+        except IndexError:
+            raise NoCardError
+
+    def apply_register(self, register):
+        """
+        For the given register sort the robot's list according to card's priorities.
+        Apply cards effects on the sorted robots.
+        """
+        robot_cards = self.get_robots_ordered_by_cards_priority(register)
+        for robot, card in robot_cards:
+            card.apply_effect(robot, self)
+
+    def apply_all_effects(self, registers=5):
+        """
+        Apply all game effects: for the given number of iterations
+        perform robot's cards effects and tile effects on a given game state.
+        At the end ressurect the inactive robots to their starting coordinates.
+        registers: default iterations count is 5, can be changed for testing purposes.
+        """
+        self._apply_cards_and_tiles_effects(registers)
+
+        # After last register ressurect the robots to their starting coordinates.
+        self.set_robots_for_new_turn()
+
+    def _apply_cards_and_tiles_effects(self, registers):
+        """
+        Private method without ressurect mode - for testing purposes.
+        It is called within apply_all_effects. Do not call it separately.
+        """
+        for register in range(registers):
+            # try -  except was introduced for devel purposes - it may happen that
+            # robots have no card on hand and we still want to try loading the game
+            try:
+                # Check the card's priority
+                self.apply_register(register)
+
+            except NoCardError:
+                print("No card on hand, continue to tile effects.")
+                pass
+
+            self.apply_tile_effects(register)
 
 
 class NoCardError(LookupError):
@@ -391,137 +631,6 @@ def create_robots(board):
     return robots_on_start
 
 
-def get_start_state(map_name):
-    """
-    Get start state of game.
-
-    map_name: path to map file. Currently works only for .json files from Tiled 1.2
-    Create board and robots on start tiles, initialize State object
-    containing Tile and Robot object as well as the map size.
-    Return State object.
-    """
-    board = get_board(map_name)
-    robots_start = create_robots(board)
-    state = State(board, robots_start)
-    return state
-
-
-def get_tile_count(board):
-    """
-    From the board coordinates get the count of tiles in horizontal (x) and vertical (y) ax.
-    Takes board: result of get_board() from loading module.
-    """
-    x_set = set()
-    y_set = set()
-    for coordinate in board.keys():
-        x, y = coordinate
-        x_set.add(x)
-        y_set.add(y)
-    return len(x_set), len(y_set)
-
-
-def check_the_absence_of_a_wall(coordinates, direction, state):
-    """
-    Check the absence of a wall in the direction of the move.
-
-    coordinates: tuple of x and y coordinate
-    direction: object of Direction class
-    state: object of State class
-    Return a boolean.
-    True - There isn't wall, robot can move.
-    False - There is wall, robot can't move.
-    """
-    old_tiles = state.get_tiles(coordinates)
-    # Current tile: Check wall in the direction of next move.
-    for tile in old_tiles:
-        move_from = tile.can_move_from(direction)
-        if not move_from:
-            # Current tile: There is a wall in the direction of the move.
-            return False
-
-    # There is no wall, so get next coordinates.
-    next_coordinates = get_next_coordinates(coordinates, direction)
-    # Get new list of tiles.
-    new_tiles = state.get_tiles(next_coordinates)
-    # Check wall on the next tile in the direction of the move.
-    for tile in new_tiles:
-        move_to = tile.can_move_to(direction)
-        if not move_to:
-            # Next tile: There is a wall in the direction of the move.
-            return False
-
-    return True
-
-
-def check_robot_in_the_way(state, coordinates):
-    """
-    Check if there are robot on the next coordinates.
-    Return index of the robot on the way from given point.
-    It there are no robots, return None.
-    """
-    # Check robots on the next tile.
-    for robot in state.robots:
-        if robot.coordinates == coordinates:
-            # Return robot that is in the way.
-            return robot
-
-    # There are no robots, return None
-    return None
-
-
-def move_belts(state):
-    """
-    Move robots on conveyor belts.
-    """
-    # According to rules:
-    # First, express belts move robots by one tile (express attribute is set to True).
-    # Then all belts move robots by one tile (express attribute is set to False).
-    for express_belts in True, False:
-        # Get robots next coordinates after move of conveyor belts
-        robots_next_coordinates = get_next_coordinates_for_belts(state, express_belts)
-        # Solve blocked robots (colliding and swapping robots)
-        for blocked_func in get_colliding_robots, get_swapping_robots:
-            while True:
-                blocked_robots = blocked_func(robots_next_coordinates)
-                if not blocked_robots:
-                    break
-                else:
-                    # For blocked robots set next coordinates to their current.
-                    for robot in blocked_robots:
-                        robots_next_coordinates[robot] = robot.coordinates
-
-        # All collision sorted, move robots to new coordinates
-        for robot in robots_next_coordinates:
-            if robot.coordinates != robots_next_coordinates[robot]:
-                # Get direction of belt movement
-                direction = get_direction_from_coordinates(robot.coordinates, robots_next_coordinates[robot])
-                # Check if the next tile is rotating belt.
-                for tile in state.get_tiles(robots_next_coordinates[robot]):
-                    tile.rotate_robot_on_belt(robot, direction)
-            robot.coordinates = robots_next_coordinates[robot]
-
-
-def get_next_coordinates_for_belts(state, express_belts):
-    """
-    Get all robot's next coordinates after move of certain type of conveyor belts.
-
-    express_belts: a boolean, True - for express belts, False - for all belts.
-
-    Return a dictionary of robots as keys and their next coordinates as values.
-    """
-    robots_next_coordinates = {}
-    for robot in state.robots:
-        for tile in state.get_tiles(robot.coordinates):
-            if tile.check_belts(express_belts):
-                # Get next coordinates of robots on belts
-                robots_next_coordinates[robot] = get_next_coordinates(robot.coordinates, tile.direction.get_new_direction(tile.direction_out))
-                break
-            else:
-                # Other robots will have the same coordinates
-                robots_next_coordinates[robot] = robot.coordinates
-    return robots_next_coordinates
-
-
 def get_colliding_robots(robots):
     """
     Get a list of robots, who would collide during belt movement.
@@ -570,122 +679,3 @@ def get_direction_from_coordinates(start_coordinates, stop_coordinates):
     for direction in list(Direction):
         if direction.coor_delta == delta:
             return direction
-
-
-def apply_tile_effects(state, register):
-    """
-    Apply the effects according to game rules.
-    The function name is not entirely exact: the whole register phase actions take place
-    (both tiles and robot's effects).
-    """
-    # Activate belts
-    move_belts(state)
-
-    # Activate pusher
-    for robot in state.get_active_robots():
-        for tile in state.get_tiles(robot.coordinates):
-            tile.push_robot(robot, state, register)
-            if robot.inactive:
-                break
-
-    # Activate gear
-    for robot in state.get_active_robots():
-        for tile in state.get_tiles(robot.coordinates):
-            tile.rotate_robot(robot)
-
-    # Activate laser
-    for robot in state.get_active_robots():
-        for tile in state.get_tiles(robot.coordinates):
-            tile.shoot_robot(robot, state)
-            if robot.inactive:
-                break
-
-    # Activate robot laser
-    for robot in state.get_active_robots():
-        robot.shoot(state)
-
-    # Collect flags, repair robots
-    for robot in state.get_active_robots():
-        for tile in state.get_tiles(robot.coordinates):
-            tile.collect_flag(robot)
-            tile.set_new_start(robot, state)
-
-
-def set_robots_for_new_turn(state):
-    """
-    After 5th register there comes evaluation of the robots' state.
-    "Dead" robots who don't have any lives left, are deleted from the robot's lists.
-    "Inactive" robots who have lost one life during the round,
-    will reboot on start coordinates.
-    """
-
-    # Delete robots with zero lives
-    state.robots = [robot for robot in state.robots if robot.lives > 0]
-    for robot in state.robots:
-        for tile in state.get_tiles(robot.coordinates):
-            tile.repair_robot(robot, state)
-        # Robot will now ressurect at his start coordinates
-        if robot.inactive:
-            robot.coordinates = robot.start_coordinates
-            robot.damages = 0
-            robot.direction = Direction.N
-
-
-def get_robots_ordered_by_cards_priority(state, register):
-    """
-    Get all the active robots, sort them according to the priority of their
-    current card.
-    If any of the robots misses the card, raise NoCardError.
-    """
-    try:
-        robot_cards = [(robot, robot.program[register])
-                        for robot in state.get_active_robots()]
-
-        robot_cards.sort(key=lambda item: item[1], reverse=True)
-
-        return robot_cards
-
-    except IndexError:
-        raise NoCardError
-
-
-def apply_register(state, register):
-    """
-    For the given register sort the robot's list according to card's priorities.
-    Apply cards effects on the sorted robots.
-    """
-    robot_cards = get_robots_ordered_by_cards_priority(state, register)
-    for robot, card in robot_cards:
-        card.apply_effect(robot, state)
-
-
-def apply_all_effects(state, registers=5):
-    """
-    Apply all game effects: for the given number of iterations
-    perform robot's cards effects and tile effects on a given game state.
-    At the end ressurect the inactive robots to their starting coordinates.
-    registers: default iterations count is 5, can be changed for testing purposes.
-    """
-    _apply_cards_and_tiles_effects(state, registers)
-
-    # After last register ressurect the robots to their starting coordinates.
-    set_robots_for_new_turn(state)
-
-
-def _apply_cards_and_tiles_effects(state, registers):
-    """
-    Private function without ressurect mode - for testing purposes.
-    It is called within apply_all_effects. Do not call it separately.
-    """
-    for register in range(registers):
-        # try -  except was introduced for devel purposes - it may happen that
-        # robots have no card on hand and we still want to try loading the game
-        try:
-            # Check the card's priority
-            apply_register(state, register)
-
-        except NoCardError:
-            print("No card on hand, continue to tile effects.")
-            pass
-
-        apply_tile_effects(state, register)
