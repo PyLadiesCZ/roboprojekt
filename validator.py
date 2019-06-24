@@ -1,5 +1,5 @@
 """
-This file is called by Pytest test_backend.py
+This file is called by Pytest test_loading.py
 It checks that the maps have correct structure
 Don't call it separately
 """
@@ -12,14 +12,15 @@ def get_order_tiles(text):
         'Tile': "A_ground",
         'HoleTile': "B_hole",
         'StartTile': "B_start_tile",
-        'StopTile': "B_stop_tile",
         'RepairTile': "B_repair",
         'BeltTile': "B_belt",
         'GearTile': "B_gear",
         'FlagTile': "C_flag",
         'PusherTile': "D_pusher",
         'LaserTile': "D_laser",
-        'WallTile': "D_wall"}
+        'WallTile': "D_wall",
+        'StopTile': "D_stop_tile",
+        }
     return order_tiles[text]
 
 

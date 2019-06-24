@@ -107,27 +107,6 @@ def test_robot_died(lives_before, lives_after):
     assert robot.coordinates is None
 
 
-# WallTile
-
-@pytest.mark.parametrize(("input_coordinates", "output_coordinates"),
-                         [((0, 0), (0, 0)),
-                         ((1, 0), (1, 0)),
-                         ((2, 0), (2, 1)),
-                         ((3, 0), (3, 1)),
-                          ])
-def test_robot_is_stopped_by_wall(input_coordinates, output_coordinates):
-    """
-    Take robot's coordinates, move's direction and distance and assert robot
-    was moved to correct coordinates.
-    A special map test_walls was created in order to test this feature.
-    """
-    board = get_board("maps/test_walls.json")
-    robot = Robot(Direction.N, input_coordinates, "tester")
-    state = State(board, [robot])
-    robot.move(Direction.N, 2, state)
-    assert robot.coordinates == output_coordinates
-
-
 # LaserTile
 
 @pytest.mark.parametrize(("input_coordinates", "damages_after"),
