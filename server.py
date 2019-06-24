@@ -30,7 +30,7 @@ state = State.get_start_state(map_name)
 card_pack = create_card_pack()
 card_pack = str(card_pack)
 
-available_robots = state.robots
+available_robots = list(state.robots)
 # Dictionary {ws_interface: robot_name}
 assigned_robots = {}
 
