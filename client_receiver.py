@@ -34,11 +34,6 @@ class Receiver:
                         if self.window is None:
                             self.window = create_window(self.state)
                             self.window.push_handlers(on_draw=self.window_draw)
-                    # print("state is", self.state)
-                    # we will probably not need this part as we send only state
-                    #     if msg.type == aiohttp.WSMsgType.TEXT:
-                    #         message = msg.data
-                    #         print("cards are", message)
 
 
 def tick_asyncio(dt):
