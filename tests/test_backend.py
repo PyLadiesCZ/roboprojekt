@@ -4,7 +4,7 @@ from backend import create_robots, Robot, State, MovementCard
 from backend import RotationCard, get_direction_from_coordinates
 from backend import get_robot_names
 from util import Direction, Rotation
-from tile import Tile, HoleTile, PusherTile
+from tile import Tile, PusherTile
 from loading import get_board
 
 
@@ -82,29 +82,6 @@ def test_robot_change_direction(current_direction, towards, new_direction):
     robot = Robot(current_direction, None, "tester")
     robot.rotate(towards)
     assert robot.direction == new_direction
-
-
-# HoleTile hidden in walk method
-
-@pytest.mark.parametrize(("lives_before", "lives_after"),
-                         [(3, 2),
-                         (2, 1),
-                         (1, 0),
-                          ])
-def test_robot_died(lives_before, lives_after):
-    """
-    When robot comes to a HoleTile (or goes / is pushed out of the game board),
-    he gets killed.
-    Check that his lives were lowered, he got inactive till the next game round
-    and his coordinates changed to the None.
-    """
-    robot = Robot(Direction.N, (0, 0), "tester")
-    state = State({(0, 1): [HoleTile(None, None, None)]}, [robot])
-    robot.lives = lives_before
-    robot.walk(1, state)
-    assert robot.lives == lives_after
-    assert robot.inactive is True
-    assert robot.coordinates is None
 
 
 # LaserTile
