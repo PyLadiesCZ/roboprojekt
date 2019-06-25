@@ -48,13 +48,14 @@ class Robot:
                  "lives": self.lives, "flags": self.flags,
                  "damages": self.damages, "power down": self.power_down,
                  "direction": self.direction.value,
-                 "start coordinates": self.start_coordinates, }}
+                 "start coordinates": self.start_coordinates}}
 
     @classmethod
     def from_dict(cls, robot_description):
         """
         Return robot from JSON data received from server."
         """
+        robot_description = robot_description["robot_data"]
         direction = Direction(robot_description["direction"])
         coordinates = tuple(robot_description["coordinates"])
         name = robot_description["name"]

@@ -472,7 +472,7 @@ def test_robot_from_dict():
     robot_description = {"robot_data": {'name': 'crazybot', 'coordinates': (10, 1),
                          'lives': 5, 'flags': 8, 'damages': 5, 'power down': False,
                          'direction': 90, 'start coordinates': (3, 1)}}
-    robot = Robot.from_dict(robot_description["robot_data"])
+    robot = Robot.from_dict(robot_description)
     assert robot.name == "crazybot"
     assert robot.coordinates == (10, 1)
     assert robot.lives == 5
