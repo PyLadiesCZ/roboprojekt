@@ -16,7 +16,6 @@ import aiohttp
 from aiohttp import web
 
 from backend import State
-from interface import create_card_pack
 
 
 if len(sys.argv) == 1:
@@ -26,9 +25,6 @@ else:
 
 # Create state, will be edited
 state = State.get_start_state(map_name)
-
-card_pack = create_card_pack()
-card_pack = str(card_pack)
 
 available_robots = list(state.robots)
 # Dictionary {robot_name: ws_interface}
@@ -51,7 +47,7 @@ async def ws_handler(request, ws_list):
     ws_list.append(ws)
     if ws_list == ws_interfaces:
         name = available_robots[0].name
-        assigned_robots[name] = available_robots.pop(0)
+        assigned_robots[name] = ws
         print(assigned_robots)
 
     try:
@@ -76,9 +72,11 @@ async def receiver(request):
 async def interface(request):
     async with ws_handler(request, ws_interfaces) as ws:
         # This message is sent only this (just connected) client
-        #await ws.send_json(robots[0], dumps=json.dumps)
+        # await ws.send_json(robots[0], dumps=json.dumps)
         await ws.send_json(state.as_dict(map_name), dumps=json.dumps)
-        #await ws.send_json(card_pack, dumps=json.dumps)
+        # print(state.as_dict(map_name))
+        await ws.send_json(state.cards_as_dict(), dumps=json.dumps)
+        # print(state.cards_as_dict())
         # Process messages from this client
         async for msg in ws:
             if msg.type == aiohttp.WSMsgType.TEXT:

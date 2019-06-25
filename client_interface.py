@@ -14,7 +14,9 @@ from backend import State
 class Interface:
     def __init__(self):
         self.window = create_window()
-        self.window.push_handlers(on_draw=self.window_draw, on_text=self.on_text)
+        self.window.push_handlers(
+            on_draw=self.window_draw,
+            on_text=self.on_text, )
         self.state = InterfaceState()
         self.ws = None
 
@@ -39,7 +41,7 @@ class Interface:
         if self.ws:
             asyncio.ensure_future(self.ws.send_str(msg))
 
-    async def send_one(self):
+    async def get_messages(self):
         """
         Client connects to server and receives messages.
         """
@@ -49,17 +51,19 @@ class Interface:
             async with session.ws_connect('http://localhost:8080/interface/') as self.ws:
                 async for msg in self.ws:
                     # Cycle "for" is finished when client disconnect from server
-                    if msg.type == aiohttp.WSMsgType.TEXT:
-                        if msg.data.startswith("robot"):
-                            robot = msg.data
-                            print(robot)
-                        if msg.data.startswith("cards"):
-                            cards = msg.data
-                            print(cards)
-                        else:
-                            print(msg.data)
+                    message = msg.json(loads=json.loads)
+                    # print(message)
+                    if message["game_state"]:
+                        state_for_client = State.from_dict(message)
+                        print(state_for_client)
+                    elif message["all_cards"]:
+                        cards = state_for_client.cards_from_dict(message["all_cards"])
+                        print(cards)
+                    else:
+                        print(message)
 
         self.ws = None
+
 
 def tick_asyncio(dt):
     """
@@ -72,6 +76,6 @@ def tick_asyncio(dt):
 interface = Interface()
 
 pyglet.clock.schedule_interval(tick_asyncio, 1/30)
-asyncio.ensure_future(interface.send_one())
+asyncio.ensure_future(interface.get_messages())
 
 pyglet.app.run()
