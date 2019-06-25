@@ -22,7 +22,8 @@ class InterfaceState:
         """
         Return dictionary about state of client_interface."
         """
-        return {"my program": self.my_program, "power down": self.power_down, "indicator": self.indicator}
+        return {"interface_data": {"my program": self.my_program,
+                "power down": self.power_down, "indicator": self.indicator}}
 
     def select_card(self, dealt_card_index):
         """
