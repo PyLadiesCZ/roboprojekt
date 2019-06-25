@@ -43,15 +43,16 @@ class Robot:
         """
         Return robot´s info as dictionary for sending with server.
         """
-        return {"name": self.name, "coordinates": self.coordinates, "lives": self.lives,
+        return {"robot_data": {"name": self.name, "coordinates": self.coordinates, "lives": self.lives,
                 "flags": self.flags, "damages": self.damages, "power down": self.power_down,
-                "direction": self.direction.value, "start coordinates": self.start_coordinates}
+                "direction": self.direction.value, "start coordinates": self.start_coordinates}}
 
     @classmethod
     def from_dict(cls, robot_description):
         """
         Return robot from JSON data received from server."
         """
+        robot_description = robot_description["robot_data"]
         direction = Direction(robot_description["direction"])
         coordinates = tuple(robot_description["coordinates"])
         name = robot_description["name"]
@@ -280,11 +281,11 @@ class State:
         """
         Create game state from JSON data received from server.
         """
-        map_data = data["board"]
+        map_data = data["game_state"]["board"]
         board = board_from_data(map_data)
         # list of robot objects
         robots = []
-        for robot_description in data["robots"]:
+        for robot_description in data["game_state"]["robots"]:
             robot = Robot.from_dict(robot_description)
             robots.append(robot)
         return cls(board, robots)

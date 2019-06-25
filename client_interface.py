@@ -8,7 +8,7 @@ import pyglet
 
 from interface_frontend import draw_interface, create_window, handle_text
 from interface import InterfaceState
-from backend import State
+from backend import State, Robot
 
 
 class Interface:
@@ -39,7 +39,7 @@ class Interface:
         if self.ws:
             asyncio.ensure_future(self.ws.send_str(msg))
 
-    async def send_one(self):
+    async def get_messages(self):
         """
         Client connects to server and receives messages.
         """
@@ -49,15 +49,13 @@ class Interface:
             async with session.ws_connect('http://localhost:8080/interface/') as self.ws:
                 async for msg in self.ws:
                     # Cycle "for" is finished when client disconnect from server
-                    if msg.type == aiohttp.WSMsgType.TEXT:
-                        if msg.data.startswith("robot"):
-                            robot = msg.data
-                            print(robot)
-                        if msg.data.startswith("cards"):
-                            cards = msg.data
-                            print(cards)
-                        else:
-                            print(msg.data)
+                    message = msg.json(loads=json.loads)
+                    if "game_state" in message.keys():
+                        state_for_client = State.from_dict(message)
+                        print(state_for_client)
+                    if "robot_data" in message.keys():
+                        robot_data = Robot.from_dict(message)
+                        print(robot_data)
 
         self.ws = None
 
@@ -72,6 +70,6 @@ def tick_asyncio(dt):
 interface = Interface()
 
 pyglet.clock.schedule_interval(tick_asyncio, 1/30)
-asyncio.ensure_future(interface.send_one())
+asyncio.ensure_future(interface.get_messages())
 
 pyglet.app.run()
