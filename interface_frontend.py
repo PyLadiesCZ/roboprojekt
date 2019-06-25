@@ -1,4 +1,5 @@
 import pyglet
+from pathlib import Path
 
 
 MAX_CARDS_COUNT = 9
@@ -34,8 +35,11 @@ card_background_sprite = get_sprite('img/interface/png/card_bg.png')
 select_sprite = get_sprite('img/interface/png/card_cv.png')
 # Selection cursor
 cursor_sprite = get_sprite('img/interface/png/card_sl.png')
-# Test robot image
-my_robot_sprite = get_sprite('img/robots/png/mintbot.png', x=74, y=888)
+# Loading of robots images
+loaded_robots_images = {}
+for image_path in Path('./img/robots_map/png').iterdir():
+    loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
+my_robot_sprite = get_sprite('img/robots/png/hanka.png', x=74, y=888)
 
 
 lives_sprites = []
@@ -160,6 +164,7 @@ def draw_interface(interface_state, window):
 
     if interface_state.robot:
         # Robot
+        my_robot_sprite.img = loaded_robots_images[interface_state.robot.name]
         my_robot_sprite.draw()
 
         # Flags
