@@ -9,14 +9,14 @@ MAX_CARD_COUNT = 9
 class InterfaceState:
     def __init__(self):
         self.dealt_cards = []
-        self.robot_data = None
+        self.robot = None
         self.my_program = [None, None, None, None, None]
         self.power_down = False
         self.indicator = False
         self.cursor_index = 0  # 0-4 number of positon
 
     def __repr__(self):
-        return f"InterfaceState Cards: {self.dealt_cards}, My Cards: {self.my_program}, Power Down: {self.power_down,}, Robot: {self.robot_data}"
+        return f"InterfaceState Cards: {self.dealt_cards}, My Cards: {self.my_program}, Power Down: {self.power_down,}, Robot: {self.robot}"
 
     def as_dict(self):
         """
@@ -126,7 +126,7 @@ def get_dealt_cards(card_pack):
     """
     # Maximum number of cards is 9.
     # Robot's damages reduce the count of dealt cards - each damage one card.
-    dealt_cards_count = MAX_CARD_COUNT-robot_data.damages
+    dealt_cards_count = MAX_CARD_COUNT-robot.damages
     dealt_cards = card_pack[-dealt_cards_count:]
     del card_pack[-dealt_cards_count:]
     return dealt_cards

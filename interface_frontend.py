@@ -158,20 +158,20 @@ def draw_interface(interface_state, window):
     # Interface background
     interface_sprite.draw()
 
-    if interface_state.robot_data:
+    if interface_state.robot:
         # Robot
         my_robot_sprite.draw()
 
         # Flags
-        for sprite in flags_sprites[0:interface_state.robot_data.flags]:
+        for sprite in flags_sprites[0:interface_state.robot.flags]:
             sprite.draw()
 
         # Robot lives
-        for sprite in lives_sprites[0:interface_state.robot_data.lives]:
+        for sprite in lives_sprites[0:interface_state.robot.lives]:
             sprite.draw()
 
         # Damage Tokens
-        for sprite in damages_tokens_sprites[0:interface_state.robot_data.damages]:
+        for sprite in damages_tokens_sprites[0:interface_state.robot.damages]:
             sprite.draw()
 
     if interface_state.dealt_cards:
