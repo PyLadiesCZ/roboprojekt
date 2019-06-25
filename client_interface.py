@@ -54,8 +54,8 @@ class Interface:
                         state_for_client = State.from_dict(message)
                         print(state_for_client)
                     if "robot_data" in message.keys():
-                        robot_data = Robot.from_dict(message)
-                        print(robot_data)
+                        robot = Robot.from_dict(message)
+                        print(robot)
 
         self.ws = None
 
