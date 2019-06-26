@@ -35,7 +35,7 @@ select_sprite = get_sprite('img/interface/png/card_cv.png')
 # Selection cursor
 cursor_sprite = get_sprite('img/interface/png/card_sl.png')
 # Test robot image
-my_robot_sprite = get_sprite('img/robots/png/mintbot.png', x=74, y=888)
+my_robot_sprite = get_sprite('img/robots/png/bender.png', x=74, y=888)
 
 
 lives_sprites = []
