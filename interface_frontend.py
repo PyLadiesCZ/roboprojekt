@@ -37,8 +37,9 @@ select_sprite = get_sprite('img/interface/png/card_cv.png')
 cursor_sprite = get_sprite('img/interface/png/card_sl.png')
 # Loading of robots images
 loaded_robots_images = {}
-for image_path in Path('./img/robots_map/png').iterdir():
+for image_path in Path('./img/robots/png').iterdir():
     loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
+
 my_robot_sprite = get_sprite('img/robots/png/hanka.png', x=74, y=888)
 
 
