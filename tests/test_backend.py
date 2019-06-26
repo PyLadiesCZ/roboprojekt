@@ -114,11 +114,11 @@ def test_robot_is_damaged_by_laser(input_coordinates, damages_after):
 # PusherTile
 
 @pytest.mark.parametrize(("register", "tile", "output_coordinates"),
-                         [(0, PusherTile(Direction.N, None, {'register': 1}), (1, 0)),
-                         (1, PusherTile(Direction.N, None, {'register': 1}), (1, 1)),
-                         (2, PusherTile(Direction.N, None, {'register': 0}), (1, 1)),
-                         (3, PusherTile(Direction.N, None, {'register': 0}), (1, 0)),
-                         (4, PusherTile(Direction.N, None, {'register': 1}), (1, 0)),
+                         [(0, PusherTile(Direction.N, None, None, {'register': 1}), (1, 0)),
+                         (1, PusherTile(Direction.N, None, None, {'register': 1}), (1, 1)),
+                         (2, PusherTile(Direction.N, None, None, {'register': 0}), (1, 1)),
+                         (3, PusherTile(Direction.N, None, None, {'register': 0}), (1, 0)),
+                         (4, PusherTile(Direction.N, None, None, {'register': 1}), (1, 0)),
                           ])
 def test_robot_is_pushed_at_the_correct_round(register, tile, output_coordinates):
     """
@@ -129,17 +129,17 @@ def test_robot_is_pushed_at_the_correct_round(register, tile, output_coordinates
     to the value on the tile.
     """
     robot = Robot(Direction.W, (1, 1), "tester")
-    state = State({(1, 0): [Tile(None, None, None)], (1, 1): [tile]}, [robot])
+    state = State({(1, 0): [Tile(None, None, None, None)], (1, 1): [tile]}, [robot])
     state.apply_tile_effects(register)
     assert robot.direction == Direction.W
     assert robot.coordinates == output_coordinates
 
 
 @pytest.mark.parametrize(("tile", "output_coordinates"),
-                         [(PusherTile(Direction.N, None, {'register': 1}), (1, 0)),
-                         (PusherTile(Direction.S, None, {'register': 1}), (1, 2)),
-                         (PusherTile(Direction.E, None, {'register': 1}), (0, 1)),
-                         (PusherTile(Direction.W, None, {'register': 1}), (2, 1)),
+                         [(PusherTile(Direction.N, None, None, {'register': 1}), (1, 0)),
+                         (PusherTile(Direction.S, None, None, {'register': 1}), (1, 2)),
+                         (PusherTile(Direction.E, None, None, {'register': 1}), (0, 1)),
+                         (PusherTile(Direction.W, None, None, {'register': 1}), (2, 1)),
                           ])
 def test_robot_is_pushed_to_the_correct_direction(tile, output_coordinates):
     """
@@ -149,17 +149,21 @@ def test_robot_is_pushed_to_the_correct_direction(tile, output_coordinates):
     The test asserts the coordinates change to a correct ones (in a correct direction).
     """
     robot = Robot(Direction.S, (1, 1), "tester")
-    state = State({(1, 0): [Tile(None, None, None)], (0, 1): [Tile(None, None, None)], (2, 1): [Tile(None, None, None)], (1, 2): [Tile(None, None, None)], (1, 1): [tile]}, [robot])
+    state = State({(1, 0): [Tile(None, None, None, None)],
+                   (0, 1): [Tile(None, None, None, None)],
+                   (2, 1): [Tile(None, None, None, None)],
+                   (1, 2): [Tile(None, None, None, None)],
+                   (1, 1): [tile]}, [robot])
     state.apply_all_effects(1)
     assert robot.direction == Direction.S
     assert robot.coordinates == output_coordinates
 
 
 @pytest.mark.parametrize(("tile"),
-                         [(PusherTile(Direction.N, None, {'register': 1})),
-                         (PusherTile(Direction.S, None, {'register': 1})),
-                         (PusherTile(Direction.E, None, {'register': 1})),
-                         (PusherTile(Direction.W, None, {'register': 1})),
+                         [(PusherTile(Direction.N, None, None, {'register': 1})),
+                         (PusherTile(Direction.S, None, None, {'register': 1})),
+                         (PusherTile(Direction.E, None, None, {'register': 1})),
+                         (PusherTile(Direction.W, None, None, {'register': 1})),
                           ])
 def test_robot_is_pushed_out_of_the_board(tile):
     """
