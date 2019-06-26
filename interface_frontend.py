@@ -165,7 +165,7 @@ def draw_interface(interface_state, window):
 
     if interface_state.robot:
         # Robot
-        my_robot_sprite.img = loaded_robots_images[interface_state.robot.name]
+        my_robot_sprite.image = loaded_robots_images[interface_state.robot.name]
         my_robot_sprite.draw()
 
         # Flags
