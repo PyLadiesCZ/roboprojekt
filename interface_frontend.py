@@ -1,6 +1,5 @@
 import pyglet
 from pathlib import Path
-from interface import InterfaceState
 
 MAX_CARDS_COUNT = 9
 MAX_LIVES_COUNT = 3
