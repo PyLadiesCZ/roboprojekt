@@ -39,9 +39,8 @@ cursor_sprite = get_sprite('img/interface/png/card_sl.png')
 loaded_robots_images = {}
 for image_path in Path('./img/robots/png').iterdir():
     loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
-
-my_robot_sprite = get_sprite('img/robots/png/hanka.png', x=74, y=888)
-
+    
+my_robot_sprite = get_sprite('img/robots/png/bender.png', x=74, y=888)
 
 lives_sprites = []
 for i in range(MAX_LIVES_COUNT):
