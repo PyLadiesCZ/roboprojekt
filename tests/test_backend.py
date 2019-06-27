@@ -505,11 +505,11 @@ def test_get_robot_names():
     Names - names of the files with robots avatars.
     """
     robot_names = get_robot_names()
-    assert robot_names[0] == "hanka"
-    assert robot_names[1] == "ivet"
-    assert robot_names[2] == "ivet2"
-    assert robot_names[3] == "ivet3"
-    assert robot_names[4] == "katka"
+    assert robot_names[0] == "bender"
+    assert robot_names[1] == "bishop"
+    assert robot_names[2] == "cyberbot"
+    assert robot_names[3] == "kitt"
+    assert robot_names[4] == "marvin"
     assert robot_names[5] == "mintbot"
-    assert robot_names[6] == "terka"
-    assert robot_names[7] == "zuu"
+    assert robot_names[6] == "robbie"
+    assert robot_names[7] == "rusty"
