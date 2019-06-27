@@ -8,7 +8,7 @@ import pyglet
 
 from interface_frontend import draw_interface, create_window, handle_text
 from interface import InterfaceState
-from backend import State, Robot
+from backend import State, Robot, cards_from_dict
 
 
 class Interface:
@@ -59,9 +59,8 @@ class Interface:
                         robot = Robot.from_dict(message)
                         self.state.robot = robot
                         print(robot)
-                    if message["all_cards"]:
-                        cards = state_for_client.cards_from_dict(message["all_cards"])
-                        print(cards)
+                    if "dealt_cards" in message:
+                        print(message["dealt_cards"])
                     else:
                         print(message)
 

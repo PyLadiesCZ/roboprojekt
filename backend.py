@@ -11,6 +11,7 @@ from loading import get_board, get_map_data, board_from_data
 
 
 MAX_DAMAGE_VALUE = 10
+MAX_CARD_COUNT = 9
 
 
 class Robot:
@@ -624,18 +625,18 @@ class State:
         shuffle(self.new_card_pack)
         return self.new_card_pack
 
-    def cards_as_dict(self):
-        card_pack = []
-        for card in self.new_card_pack:
-            card_pack.append(card.as_dict())
-        return {"all_cards": card_pack}
-
-    def cards_from_dict(self, cards):
-        card_pack = []
-        for card in cards:
-            card_pack.append(card.from_dict())
-        print(self.new_card_pack)
-        return self.new_card_pack
+    def get_dealt_cards(self, robot):
+        """
+        Deal the cards for robot - he gets one card less for every damage he's got.
+        Take and return the first cards from the card pack.
+        Delete the dealt cards from the card pack.
+        """
+        # Maximum number of cards is 9.
+        # Robot's damages reduce the count of dealt cards - each damage one card.
+        dealt_cards_count = MAX_CARD_COUNT-robot.damages
+        dealt_cards = self.new_card_pack[-dealt_cards_count:]
+        del self.new_card_pack[-dealt_cards_count:]
+        return dealt_cards
 
 
 class NoCardError(LookupError):
@@ -757,3 +758,17 @@ def get_direction_from_coordinates(start_coordinates, stop_coordinates):
     for direction in list(Direction):
         if direction.coor_delta == delta:
             return direction
+
+
+def cards_as_dict(cards):
+    card_pack = []
+    for card in cards:
+        card_pack.append(card.as_dict())
+    return {"dealt_cards": card_pack}
+
+
+def cards_from_dict(cards):
+    card_pack = []
+    for card in cards:
+        card_pack.append(Card.from_dict(card))
+    return card_pack

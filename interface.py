@@ -1,6 +1,3 @@
-MAX_CARD_COUNT = 9
-
-
 class InterfaceState:
     def __init__(self):
         self.dealt_cards = []
@@ -82,17 +79,3 @@ class InterfaceState:
         When is True the player ended the selection of cards.
         """
         self.indicator = True
-
-
-def get_dealt_cards(card_pack):
-    """
-    Deal the cards for robot - he gets one card less for every damage he's got.
-    Take and return the first cards from the card pack.
-    Delete the dealt cards from the card pack.
-    """
-    # Maximum number of cards is 9.
-    # Robot's damages reduce the count of dealt cards - each damage one card.
-    dealt_cards_count = MAX_CARD_COUNT-robot.damages
-    dealt_cards = card_pack[-dealt_cards_count:]
-    del card_pack[-dealt_cards_count:]
-    return dealt_cards
