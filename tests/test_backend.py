@@ -114,11 +114,11 @@ def test_robot_is_damaged_by_laser(input_coordinates, damages_after):
 # PusherTile
 
 @pytest.mark.parametrize(("register", "tile", "output_coordinates"),
-                         [(0, PusherTile(Direction.N, None, {'register': 1}), (1, 0)),
-                         (1, PusherTile(Direction.N, None, {'register': 1}), (1, 1)),
-                         (2, PusherTile(Direction.N, None, {'register': 0}), (1, 1)),
-                         (3, PusherTile(Direction.N, None, {'register': 0}), (1, 0)),
-                         (4, PusherTile(Direction.N, None, {'register': 1}), (1, 0)),
+                         [(0, PusherTile(Direction.N, None, None, {'register': 1}), (1, 0)),
+                         (1, PusherTile(Direction.N, None, None, {'register': 1}), (1, 1)),
+                         (2, PusherTile(Direction.N, None, None, {'register': 0}), (1, 1)),
+                         (3, PusherTile(Direction.N, None, None, {'register': 0}), (1, 0)),
+                         (4, PusherTile(Direction.N, None, None, {'register': 1}), (1, 0)),
                           ])
 def test_robot_is_pushed_at_the_correct_round(register, tile, output_coordinates):
     """
@@ -129,17 +129,17 @@ def test_robot_is_pushed_at_the_correct_round(register, tile, output_coordinates
     to the value on the tile.
     """
     robot = Robot(Direction.W, (1, 1), "tester")
-    state = State({(1, 0): [Tile(None, None, None)], (1, 1): [tile]}, [robot])
+    state = State({(1, 0): [Tile(None, None, None, None)], (1, 1): [tile]}, [robot])
     state.apply_tile_effects(register)
     assert robot.direction == Direction.W
     assert robot.coordinates == output_coordinates
 
 
 @pytest.mark.parametrize(("tile", "output_coordinates"),
-                         [(PusherTile(Direction.N, None, {'register': 1}), (1, 0)),
-                         (PusherTile(Direction.S, None, {'register': 1}), (1, 2)),
-                         (PusherTile(Direction.E, None, {'register': 1}), (0, 1)),
-                         (PusherTile(Direction.W, None, {'register': 1}), (2, 1)),
+                         [(PusherTile(Direction.N, None, None, {'register': 1}), (1, 0)),
+                         (PusherTile(Direction.S, None, None, {'register': 1}), (1, 2)),
+                         (PusherTile(Direction.E, None, None, {'register': 1}), (0, 1)),
+                         (PusherTile(Direction.W, None, None, {'register': 1}), (2, 1)),
                           ])
 def test_robot_is_pushed_to_the_correct_direction(tile, output_coordinates):
     """
@@ -149,17 +149,21 @@ def test_robot_is_pushed_to_the_correct_direction(tile, output_coordinates):
     The test asserts the coordinates change to a correct ones (in a correct direction).
     """
     robot = Robot(Direction.S, (1, 1), "tester")
-    state = State({(1, 0): [Tile(None, None, None)], (0, 1): [Tile(None, None, None)], (2, 1): [Tile(None, None, None)], (1, 2): [Tile(None, None, None)], (1, 1): [tile]}, [robot])
+    state = State({(1, 0): [Tile(None, None, None, None)],
+                   (0, 1): [Tile(None, None, None, None)],
+                   (2, 1): [Tile(None, None, None, None)],
+                   (1, 2): [Tile(None, None, None, None)],
+                   (1, 1): [tile]}, [robot])
     state.apply_all_effects(1)
     assert robot.direction == Direction.S
     assert robot.coordinates == output_coordinates
 
 
 @pytest.mark.parametrize(("tile"),
-                         [(PusherTile(Direction.N, None, {'register': 1})),
-                         (PusherTile(Direction.S, None, {'register': 1})),
-                         (PusherTile(Direction.E, None, {'register': 1})),
-                         (PusherTile(Direction.W, None, {'register': 1})),
+                         [(PusherTile(Direction.N, None, None, {'register': 1})),
+                         (PusherTile(Direction.S, None, None, {'register': 1})),
+                         (PusherTile(Direction.E, None, None, {'register': 1})),
+                         (PusherTile(Direction.W, None, None, {'register': 1})),
                           ])
 def test_robot_is_pushed_out_of_the_board(tile):
     """
@@ -469,9 +473,9 @@ def test_robot_from_dict():
     """
     Check if method Robot.from_dict returns robot from JSON.
     """
-    robot_description = {'name': 'crazybot', 'coordinates': (10, 1),
+    robot_description = {"robot_data": {'name': 'crazybot', 'coordinates': (10, 1),
                          'lives': 5, 'flags': 8, 'damages': 5, 'power down': False,
-                         'direction': 90, 'start coordinates': (3, 1)}
+                         'direction': 90, 'start coordinates': (3, 1)}}
     robot = Robot.from_dict(robot_description)
     assert robot.name == "crazybot"
     assert robot.coordinates == (10, 1)
@@ -487,7 +491,7 @@ def test_state_from_dict():
     """
     Check if state.from_dict can load State from JSON.
     """
-    data = {'board': {'height': 12, 'infinite': False, 'layers': [{'data': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], 'height': 12, 'id': 1, 'name': 'layer 1', 'opacity': 1, 'type': 'tilelayer', 'visible': True, 'width': 12, 'x': 0, 'y': 0}, {'data': [0, 2684354573, 0, 2684354573, 0, 2684354573, 2684354573, 0, 2684354573, 0, 2684354573, 38, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3221225485, 0, 0, 0, 2684354578, 0, 2684354578, 0, 38, 1610612754, 0, 0, 0, 13, 0, 2684354578, 33, 2684354578, 0, 2, 1610612754, 0, 1610612754, 0, 3221225485, 0, 0, 2, 2684354578, 0, 39, 30, 0, 1610612754, 0, 0, 0, 13, 0, 2684354578, 0, 2684354578, 0, 0, 1610612754, 32, 1610612754, 0, 3221225485, 0, 0, 31, 2684354578, 0, 2684354578, 0, 0, 1610612754, 2, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3221225485, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 41, 0, 42, 0, 43, 44, 0, 45, 0, 46, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 'height': 12, 'id': 2, 'name': 'layer 2', 'opacity': 1, 'type': 'tilelayer', 'visible': True, 'width': 12, 'x': 0, 'y': 0}, {'data': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354585, 0, 0, 24, 0, 2684354573, 0, 2684354573, 2684354573, 0, 2684354573, 0, 3221225496, 0, 0, 24, 13, 0, 0, 0, 0, 0, 0, 3221225485, 3221225496, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 3221225496, 0, 0, 24, 13, 0, 0, 0, 0, 0, 0, 3221225485, 3221225496, 0, 0, 24, 0, 1610612749, 0, 1610612749, 1610612749, 0, 1610612749, 0, 3221225496, 0, 0, 1610612761, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 3221225497, 0, 0, 0, 1610612749, 0, 1610612749, 0, 0, 1610612749, 13, 1610612749, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 13, 0, 13, 0, 13, 13, 13, 0, 13, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 'height': 12, 'id': 3, 'name': 'layer 3', 'opacity': 1, 'type': 'tilelayer', 'visible': True, 'width': 12, 'x': 0, 'y': 0}], 'nextlayerid': 5, 'nextobjectid': 1, 'orientation': 'orthogonal', 'renderorder': 'right-up', 'tiledversion': '1.2.1', 'tileheight': 64, 'tilesets': [{'firstgid': 1, 'source': 'development_tileset.json'}], 'tilewidth': 64, 'type': 'map', 'version': 1.2, 'width': 12}, 'robots': [{'name': 'hanka', 'coordinates': [0, 1], 'lives': 3, 'flags': 0, 'damages': 4, 'power down': False, 'direction': 0, 'start coordinates': [0, 1]}, {'name': 'ivet', 'coordinates': [1, 1], 'lives': 3, 'flags': 0, 'damages': 4, 'power down': False, 'direction': 0, 'start coordinates': [1, 1]}]}
+    data = {"game_state": {'board': {'height': 12, 'infinite': False, 'layers': [{'data': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], 'height': 12, 'id': 1, 'name': 'layer 1', 'opacity': 1, 'type': 'tilelayer', 'visible': True, 'width': 12, 'x': 0, 'y': 0}, {'data': [0, 2684354573, 0, 2684354573, 0, 2684354573, 2684354573, 0, 2684354573, 0, 2684354573, 38, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3221225485, 0, 0, 0, 2684354578, 0, 2684354578, 0, 38, 1610612754, 0, 0, 0, 13, 0, 2684354578, 33, 2684354578, 0, 2, 1610612754, 0, 1610612754, 0, 3221225485, 0, 0, 2, 2684354578, 0, 39, 30, 0, 1610612754, 0, 0, 0, 13, 0, 2684354578, 0, 2684354578, 0, 0, 1610612754, 32, 1610612754, 0, 3221225485, 0, 0, 31, 2684354578, 0, 2684354578, 0, 0, 1610612754, 2, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3221225485, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 41, 0, 42, 0, 43, 44, 0, 45, 0, 46, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 'height': 12, 'id': 2, 'name': 'layer 2', 'opacity': 1, 'type': 'tilelayer', 'visible': True, 'width': 12, 'x': 0, 'y': 0}, {'data': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354585, 0, 0, 24, 0, 2684354573, 0, 2684354573, 2684354573, 0, 2684354573, 0, 3221225496, 0, 0, 24, 13, 0, 0, 0, 0, 0, 0, 3221225485, 3221225496, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 3221225496, 0, 0, 24, 13, 0, 0, 0, 0, 0, 0, 3221225485, 3221225496, 0, 0, 24, 0, 1610612749, 0, 1610612749, 1610612749, 0, 1610612749, 0, 3221225496, 0, 0, 1610612761, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 3221225497, 0, 0, 0, 1610612749, 0, 1610612749, 0, 0, 1610612749, 13, 1610612749, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 13, 0, 13, 0, 13, 13, 13, 0, 13, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 'height': 12, 'id': 3, 'name': 'layer 3', 'opacity': 1, 'type': 'tilelayer', 'visible': True, 'width': 12, 'x': 0, 'y': 0}], 'nextlayerid': 5, 'nextobjectid': 1, 'orientation': 'orthogonal', 'renderorder': 'right-up', 'tiledversion': '1.2.1', 'tileheight': 64, 'tilesets': [{'firstgid': 1, 'source': 'development_tileset.json'}], 'tilewidth': 64, 'type': 'map', 'version': 1.2, 'width': 12}, 'robots': [{'robot_data': {'name': 'hanka', 'coordinates': (0, 1), 'lives': 3, 'flags': 0, 'damages': 0, 'power down': False, 'direction': 0, 'start coordinates': (0, 1)}}, {'robot_data': {'name': 'ivet', 'coordinates': (1, 1), 'lives': 3, 'flags': 0, 'damages': 4, 'power down': False, 'direction': 0, 'start coordinates': (1, 1)}}]}}
     state = State.from_dict(data)
     assert state.robots[0].coordinates == (0, 1)
     assert state.robots[1].damages == 4
@@ -501,11 +505,11 @@ def test_get_robot_names():
     Names - names of the files with robots avatars.
     """
     robot_names = get_robot_names()
-    assert robot_names[0] == "hanka"
-    assert robot_names[1] == "ivet"
-    assert robot_names[2] == "ivet2"
-    assert robot_names[3] == "ivet3"
-    assert robot_names[4] == "katka"
+    assert robot_names[0] == "bender"
+    assert robot_names[1] == "bishop"
+    assert robot_names[2] == "cyberbot"
+    assert robot_names[3] == "kitt"
+    assert robot_names[4] == "marvin"
     assert robot_names[5] == "mintbot"
-    assert robot_names[6] == "terka"
-    assert robot_names[7] == "zuu"
+    assert robot_names[6] == "robbie"
+    assert robot_names[7] == "rusty"

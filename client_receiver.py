@@ -30,7 +30,7 @@ class Receiver:
                     # Cycle "for" is finished when client disconnects from server
                     message = msg.json(loads=json.loads)
                     if message["game_state"]:
-                        self.state = State.from_dict(message["game_state"])
+                        self.state = State.from_dict(message)
                         if self.window is None:
                             self.window = create_window(self.state)
                             self.window.push_handlers(on_draw=self.window_draw)
