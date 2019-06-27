@@ -36,7 +36,7 @@ select_sprite = get_sprite('img/interface/png/card_cv.png')
 # Selection cursor
 cursor_sprite = get_sprite('img/interface/png/card_sl.png')
 # Other robot card
-#players_background = get_sprite('img/interface/png/')
+players_background = get_sprite('img/interface/png/player.png')
 # Loading of robots images
 loaded_robots_images = {}
 for image_path in Path('./img/robots/png').iterdir():
@@ -189,6 +189,13 @@ def draw_interface(interface_state, window):
                 interface_state.dealt_cards,
                 ):
             draw_card(coordinate, card)
+
+    # Other robots background
+    for i in range(len(interface_state.players) - 1):
+        x = 50 + i * 98
+        y = 50
+        players_background = get_sprite('img/interface/png/player.png', x, y)
+        players_background.draw()
 
     # Other robots
     if interface_state.players:
