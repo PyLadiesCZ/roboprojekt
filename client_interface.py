@@ -53,6 +53,7 @@ class Interface:
                     if "game_state" in message.keys():
                         state_for_client = State.from_dict(message)
                         print(state_for_client)
+                        self.state.players = State.from_dict(message).robots
                     if "robot_data" in message.keys():
                         robot = Robot.from_dict(message)
                         self.state.robot = robot
