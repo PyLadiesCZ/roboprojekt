@@ -210,7 +210,9 @@ def draw_interface(interface_state, window):
             robot_sprites.append(get_sprite(image, x, y))
 
         for sprite in robot_sprites:
-            sprite.draw()
+            for robot in interface_state.players:
+                if robot.name in players_sprites.keys():
+                    sprite.draw()
 
     # Cards hand
     for coordinate, card_index in zip(program_coordinates, interface_state.my_program):
