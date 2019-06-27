@@ -1,4 +1,5 @@
 import pyglet
+from pathlib import Path
 
 
 MAX_CARDS_COUNT = 9
@@ -34,9 +35,12 @@ card_background_sprite = get_sprite('img/interface/png/card_bg.png')
 select_sprite = get_sprite('img/interface/png/card_cv.png')
 # Selection cursor
 cursor_sprite = get_sprite('img/interface/png/card_sl.png')
-# Test robot image
+# Loading of robots images
+loaded_robots_images = {}
+for image_path in Path('./img/robots/png').iterdir():
+    loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
+    
 my_robot_sprite = get_sprite('img/robots/png/bender.png', x=74, y=888)
-
 
 lives_sprites = []
 for i in range(MAX_LIVES_COUNT):
@@ -158,20 +162,21 @@ def draw_interface(interface_state, window):
     # Interface background
     interface_sprite.draw()
 
-    if interface_state.robot_data:
+    if interface_state.robot:
         # Robot
+        my_robot_sprite.image = loaded_robots_images[interface_state.robot.name]
         my_robot_sprite.draw()
 
         # Flags
-        for sprite in flags_sprites[0:interface_state.robot_data.flags]:
+        for sprite in flags_sprites[0:interface_state.robot.flags]:
             sprite.draw()
 
         # Robot lives
-        for sprite in lives_sprites[0:interface_state.robot_data.lives]:
+        for sprite in lives_sprites[0:interface_state.robot.lives]:
             sprite.draw()
 
         # Damage Tokens
-        for sprite in damages_tokens_sprites[0:interface_state.robot_data.damages]:
+        for sprite in damages_tokens_sprites[0:interface_state.robot.damages]:
             sprite.draw()
 
     if interface_state.dealt_cards:
