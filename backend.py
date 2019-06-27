@@ -223,6 +223,18 @@ class Card:
         else:
             return False
 
+    @classmethod
+    def from_dict(cls, card_description):
+        """
+        Return a card instance according to the given type.
+        """
+        if "MovementCard" in card_description:
+            return MovementCard.from_dict(card_description)
+        elif "RotationCard" in card_description:
+            return RotationCard.from_dict(card_description)
+        else:
+            raise CardNotKnownError
+
 
 class MovementCard(Card):
     def __init__(self, priority, value):
@@ -251,12 +263,13 @@ class MovementCard(Card):
         """
         return {"MovementCard":
                 {"priority": self.priority,
-                 "distance": self.distance, }}
+                 "distance": self.distance,
+                 }}
 
     @classmethod
     def from_dict(cls, card_description):
         """
-        Return card from JSON data received from server."
+        Return MovementCard from data received from server.
         """
         priority = card_description["MovementCard"]["priority"]
         distance = card_description["MovementCard"]["distance"]
@@ -294,12 +307,13 @@ class RotationCard(Card):
         """
         return {"RotationCard":
                 {"priority": self.priority,
-                 "rotation": self.rotation.value, }}
+                 "rotation": self.rotation.value,
+                 }}
 
     @classmethod
     def from_dict(cls, card_description):
         """
-        Return card from JSON data received from server."
+        Return RotationCard from data received from server.
         """
         priority = card_description["RotationCard"]["priority"]
         rotation = card_description["RotationCard"]["rotation"]
@@ -638,9 +652,31 @@ class State:
         del self.new_card_pack[-dealt_cards_count:]
         return dealt_cards
 
+    def cards_as_dict(self, cards):
+        """
+        Take a list of cards instances and return them as dictionary.
+        """
+        card_pack = []
+        for card in cards:
+            card_pack.append(card.as_dict())
+        return {"dealt_cards": card_pack}
+
+    def cards_from_dict(self, cards):
+        """
+        Create a list of card instances from dictionary given as an argument.
+        """
+        card_pack = []
+        for card in cards["dealt_cards"]:
+            card_pack.append(Card.from_dict(card))
+        return card_pack
+
 
 class NoCardError(LookupError):
     """Raised when a robot doesn't have a card for the given register."""
+
+
+class CardNotKnownError(LookupError):
+    """Raised when a card doesn't belong to any known type."""
 
 
 def get_robot_names():
@@ -758,17 +794,3 @@ def get_direction_from_coordinates(start_coordinates, stop_coordinates):
     for direction in list(Direction):
         if direction.coor_delta == delta:
             return direction
-
-
-def cards_as_dict(cards):
-    card_pack = []
-    for card in cards:
-        card_pack.append(card.as_dict())
-    return {"dealt_cards": card_pack}
-
-
-def cards_from_dict(cards):
-    card_pack = []
-    for card in cards:
-        card_pack.append(Card.from_dict(card))
-    return card_pack

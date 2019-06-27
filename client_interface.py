@@ -8,7 +8,7 @@ import pyglet
 
 from interface_frontend import draw_interface, create_window, handle_text
 from interface import InterfaceState
-from backend import State, Robot, cards_from_dict
+from backend import State, Robot
 
 
 class Interface:
@@ -53,14 +53,15 @@ class Interface:
                     # Cycle "for" is finished when client disconnect from server
                     message = msg.json(loads=json.loads)
                     if "game_state" in message:
-                        state_for_client = State.from_dict(message)
-                        print(state_for_client)
-                    if "robot_data" in message:
+                        self.game_state = State.from_dict(message)
+                        # print(self.game_state)
+                    elif "robot_data" in message:
                         robot = Robot.from_dict(message)
                         self.state.robot = robot
                         print(robot)
-                    if "dealt_cards" in message:
-                        print(message["dealt_cards"])
+                    elif "dealt_cards" in message:
+                        self.state.dealt_cards = self.game_state.cards_from_dict(message)
+                        print(self.state.dealt_cards)
                     else:
                         print(message)
 

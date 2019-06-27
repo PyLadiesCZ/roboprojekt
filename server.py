@@ -15,7 +15,7 @@ import contextlib
 import aiohttp
 from aiohttp import web
 
-from backend import State, cards_as_dict, Robot
+from backend import State
 
 
 if len(sys.argv) == 1:
@@ -75,10 +75,9 @@ async def interface(request):
         robot = available_robots.pop(0)
         await ws.send_json(robot.as_dict(), dumps=json.dumps)
         await ws.send_json(state.as_dict(map_name), dumps=json.dumps)
-        # print(state.as_dict(map_name))
-        dealt_cards = state.get_dealt_cards(assigned_robots[ws])
-        await ws.send_json(cards_as_dict(dealt_cards), dumps=json.dumps)
-        # print(state.cards_as_dict())
+        dealt_cards = state.cards_as_dict(state.get_dealt_cards(robot))
+        await ws.send_json(dealt_cards, dumps=json.dumps)
+
         # Process messages from this client
         async for msg in ws:
             if msg.type == aiohttp.WSMsgType.TEXT:
