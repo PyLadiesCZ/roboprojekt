@@ -1,0 +1,57 @@
+actions:
+  -
+    - type: rotate
+      priority: 300
+      value: -90
+    - type: move
+      priority: 220
+      value: 1
+  -
+    - type: rotate
+      priority: 200
+      value: -90
+    - type: move
+      priority: 220
+      value: 1
+  -
+    - type: rotate
+      priority: 100
+      value: -90
+    - type: move
+      priority: 220
+      value: 1
+  -
+    - type: rotate
+      priority: 50
+      value: -90
+    - type: move
+      priority: 220
+      value: 1
+  -
+    - type: move
+      priority: 220
+      value: 1
+    - type: rotate
+      priority: 50
+      value: -90
+  -
+    - type: move
+      priority: 350
+      value: 1
+    - type: rotate
+      priority: 50
+      value: -90
+  -
+    - type: move
+      priority: 210
+      value: 1
+    - type: rotate
+      priority: 50
+      value: -90
+  -
+    - type: move
+      priority: 100
+      value: 1
+    - type: rotate
+      priority: 50
+      value: -90
