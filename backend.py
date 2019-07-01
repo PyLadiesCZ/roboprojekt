@@ -3,6 +3,7 @@ Backend file contains functions for the game logic.
 """
 from pathlib import Path
 from collections import OrderedDict
+from random import shuffle
 
 from util import Direction, Rotation, get_next_coordinates
 from tile import HoleTile
@@ -10,6 +11,7 @@ from loading import get_board, get_map_data, board_from_data
 
 
 MAX_DAMAGE_VALUE = 10
+MAX_CARD_COUNT = 9
 
 
 class Robot:
@@ -48,7 +50,7 @@ class Robot:
                  "lives": self.lives, "flags": self.flags,
                  "damages": self.damages, "power down": self.power_down,
                  "direction": self.direction.value,
-                 "start coordinates": self.start_coordinates}}
+                 "start coordinates": self.start_coordinates, }}
 
     @classmethod
     def from_dict(cls, robot_description):
@@ -221,6 +223,18 @@ class Card:
         else:
             return False
 
+    @classmethod
+    def from_dict(cls, card_description):
+        """
+        Return a card instance according to the given type.
+        """
+        if "MovementCard" in card_description:
+            return MovementCard.from_dict(card_description)
+        elif "RotationCard" in card_description:
+            return RotationCard.from_dict(card_description)
+        else:
+            raise CardNotKnownError
+
 
 class MovementCard(Card):
     def __init__(self, priority, value):
@@ -242,6 +256,24 @@ class MovementCard(Card):
         Card calls robot's method walk.
         """
         robot.walk(self.distance, state)
+
+    def as_dict(self):
+        """
+        Return card´s info as dictionary for sending with server.
+        """
+        return {"MovementCard":
+                {"priority": self.priority,
+                 "distance": self.distance,
+                 }}
+
+    @classmethod
+    def from_dict(cls, card_description):
+        """
+        Return MovementCard from data received from server.
+        """
+        priority = card_description["MovementCard"]["priority"]
+        distance = card_description["MovementCard"]["distance"]
+        return MovementCard(priority, distance)
 
 
 class RotationCard(Card):
@@ -269,12 +301,31 @@ class RotationCard(Card):
         """
         robot.rotate(self.rotation)
 
+    def as_dict(self):
+        """
+        Return card´s info as dictionary for sending with server.
+        """
+        return {"RotationCard":
+                {"priority": self.priority,
+                 "rotation": self.rotation.value,
+                 }}
+
+    @classmethod
+    def from_dict(cls, card_description):
+        """
+        Return RotationCard from data received from server.
+        """
+        priority = card_description["RotationCard"]["priority"]
+        rotation = card_description["RotationCard"]["rotation"]
+        return RotationCard(priority, Rotation(rotation))
+
 
 class State:
     def __init__(self, board, robots):
         self._board = board
         self.robots = robots
         self.tile_count = self.get_tile_count()
+        self.new_card_pack = self.create_card_pack()
 
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
@@ -560,9 +611,72 @@ class State:
 
             self.apply_tile_effects(register)
 
+    def create_card_pack(self):
+        """
+        Create and shuffle pack of cards: 42 movement and 42 rotation cards
+        with different values and priorities.
+        """
+        movement_cards = [(-1, 6, 250),
+                          (1, 18, 300),
+                          (2, 12, 400),
+                          (3, 6, 500),
+                          ]
+        rotation_cards = [(Rotation.U_TURN, 6, 50),
+                          (Rotation.LEFT, 18, 100),
+                          (Rotation.RIGHT, 18, 200),
+                          ]
+        self.new_card_pack = []
+
+        for movement, cards_count, first_number in movement_cards:
+            for i in range(cards_count):
+                # [MovementCard(690, -1)...][]
+                self.new_card_pack.append(MovementCard(first_number + i*5, movement))
+
+        for rotation, cards_count, first_number in rotation_cards:
+            for i in range(cards_count):
+                # [RotationCard(865, Rotation.LEFT)....]
+                self.new_card_pack.append(RotationCard(first_number + i*5, rotation))
+        shuffle(self.new_card_pack)
+        return self.new_card_pack
+
+    def get_dealt_cards(self, robot):
+        """
+        Deal the cards for robot - he gets one card less for every damage he's got.
+        Take and return the first cards from the card pack.
+        Delete the dealt cards from the card pack.
+        """
+        # Maximum number of cards is 9.
+        # Robot's damages reduce the count of dealt cards - each damage one card.
+        dealt_cards_count = MAX_CARD_COUNT-robot.damages
+        dealt_cards = self.new_card_pack[-dealt_cards_count:]
+        del self.new_card_pack[-dealt_cards_count:]
+        return dealt_cards
+
+    def cards_as_dict(self, cards):
+        """
+        Take a list of cards instances and return them as dictionary.
+        """
+        card_pack = []
+        for card in cards:
+            card_pack.append(card.as_dict())
+        return {"dealt_cards": card_pack}
+
+    def cards_from_dict(self, cards):
+        """
+        Create a list of card instances from dictionary given as an argument.
+        """
+        card_pack = []
+        for card in cards["dealt_cards"]:
+            card_pack.append(Card.from_dict(card))
+        return card_pack
+
 
 class NoCardError(LookupError):
     """Raised when a robot doesn't have a card for the given register."""
+
+
+class CardNotKnownError(LookupError):
+    """Raised when a card doesn't belong to any known type."""
 
 
 def get_robot_names():

@@ -14,7 +14,9 @@ from backend import State, Robot
 class Interface:
     def __init__(self):
         self.window = create_window()
-        self.window.push_handlers(on_draw=self.window_draw, on_text=self.on_text)
+        self.window.push_handlers(
+            on_draw=self.window_draw,
+            on_text=self.on_text, )
         self.state = InterfaceState()
         self.ws = None
 
@@ -50,15 +52,21 @@ class Interface:
                 async for msg in self.ws:
                     # Cycle "for" is finished when client disconnect from server
                     message = msg.json(loads=json.loads)
-                    if "game_state" in message.keys():
-                        state_for_client = State.from_dict(message)
-                        print(state_for_client)
-                    if "robot_data" in message.keys():
+                    if "game_state" in message:
+                        self.game_state = State.from_dict(message)
+                        # print(self.game_state)
+                    elif "robot_data" in message:
                         robot = Robot.from_dict(message)
                         self.state.robot = robot
                         print(robot)
+                    elif "dealt_cards" in message:
+                        self.state.dealt_cards = self.game_state.cards_from_dict(message)
+                        print(self.state.dealt_cards)
+                    else:
+                        print(message)
 
         self.ws = None
+
 
 def tick_asyncio(dt):
     """
