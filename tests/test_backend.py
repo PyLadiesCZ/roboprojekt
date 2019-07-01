@@ -141,64 +141,6 @@ def test_robots_order_on_start(robot_index, expected_coordinates):
     assert current_robot.coordinates == expected_coordinates
 
 
-@pytest.mark.parametrize(("input_coordinates", "output_coordinates"),
-                         [((1, 7), (2, 8)),
-                         ((2, 6), (2, 8)),
-                         ((3, 7), (4, 6)),
-                         ((4, 8), (4, 6)),
-                         ((5, 7), (6, 6)),
-                         ((7, 7), (6, 6)),
-                         ((1, 1), (2, 2)),
-                         ((2, 0), (2, 2)),
-                         ((3, 1), (4, 0)),
-                         ((4, 2), (4, 0)),
-                         ((5, 1), (6, 0)),
-                         ((7, 1), (6, 0)),
-                          ])
-def test_robot_movement_on_crossroad_belts(input_coordinates, output_coordinates):
-    """
-    Test movement of robots on crossroads from different directions.
-    """
-    robot = Robot(Direction.N, input_coordinates, "tester")
-    board = get_board("maps/test_belts.json")
-    state = State(board, [robot])
-    state.apply_all_effects(1)
-    assert robot.coordinates == output_coordinates
-
-
-@pytest.mark.parametrize(("input_coordinates", "output_direction"),
-                         [((1, 10), Direction.W),
-                         ((1, 9), Direction.E),
-                         ((1, 4), Direction.W),
-                         ((1, 3), Direction.E),
-                         ((1, 7), Direction.W),
-                         ((2, 6), Direction.N),
-                         ((3, 7), Direction.E),
-                         ((4, 8), Direction.N),
-                         ((5, 7), Direction.E),
-                         ((7, 7), Direction.W),
-                         ((1, 1), Direction.W),
-                         ((2, 0), Direction.N),
-                         ((3, 1), Direction.E),
-                         ((4, 2), Direction.N),
-                         ((5, 1), Direction.E),
-                         ((7, 1), Direction.W),
-                         ((10, 0), Direction.W),
-                         ((9, 1), Direction.E),
-                         ((11, 2), Direction.E),
-                          ])
-def test_change_of_robots_direction_on_rotating_belts(input_coordinates, output_direction):
-    """
-    Test change of robot's direction after he is moved by conveyor belt to
-    rotating conveyor belt.
-    """
-    robot = Robot(Direction.N, input_coordinates, "tester")
-    board = get_board("maps/test_belts.json")
-    state = State(board, [robot])
-    state.apply_all_effects(1)
-    assert robot.direction == output_direction
-
-
 @pytest.mark.parametrize(("start_coordinates", "stop_coordinates", "output_direction"),
                          [((0, 0), (0, 1), Direction.N),
                          ((0, 1), (0, 0), Direction.S),
@@ -291,23 +233,6 @@ def test_robot_does_not_move_onto_another_robot(input_coordinates_1, input_coord
     state.apply_all_effects(1)
     assert robots[0].coordinates == output_coordinates_1
     assert robots[1].coordinates == output_coordinates_2
-
-
-@pytest.mark.parametrize(("input_coordinates_1", "input_coordinates_2"),
-                         [((0, 11), (0, 10)),
-                          ])
-def test_robots_cannot_swap_places(input_coordinates_1, input_coordinates_2):
-    """
-    Test robots cannot swap places on belts that go against each other.
-    """
-    robots = [Robot(Direction.N, input_coordinates_1, "tester1"),
-              Robot(Direction.N, input_coordinates_2, "tester2"),
-              ]
-    board = get_board("maps/test_belts.json")
-    state = State(board, robots)
-    state.apply_all_effects(1)
-    assert robots[0].coordinates == input_coordinates_1
-    assert robots[1].coordinates == input_coordinates_2
 
 
 def test_card_priorities():
