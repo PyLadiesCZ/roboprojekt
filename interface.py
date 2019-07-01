@@ -1,11 +1,3 @@
-from random import shuffle
-
-from backend import MovementCard, RotationCard
-from util import Rotation
-
-MAX_CARD_COUNT = 9
-
-
 class InterfaceState:
     def __init__(self):
         self.dealt_cards = []
@@ -88,47 +80,3 @@ class InterfaceState:
         When is True the player ended the selection of cards.
         """
         self.indicator = True
-
-
-def create_card_pack():
-    """
-    Create pack of cards: 42 movement cards and 42 rotation cards
-    with different values and priorities.
-    Return shuffled card pack.
-    """
-    movement_cards = [(-1, 6, 250),
-                      (1, 18, 300),
-                      (2, 12, 400),
-                      (3, 6, 500),
-                      ]
-    rotation_cards = [(Rotation.U_TURN, 6, 50),
-                      (Rotation.LEFT, 18, 100),
-                      (Rotation.RIGHT, 18, 200),
-                      ]
-    card_pack = []
-
-    for movement, cards_count, first_number in movement_cards:
-        for i in range(cards_count):
-            # [MovementCard(690, -1)...][]
-            card_pack.append(MovementCard(first_number + i*5, movement))
-
-    for rotation, cards_count, first_number in rotation_cards:
-        for i in range(cards_count):
-            # [RotationCard(865, Rotation.LEFT)....]
-            card_pack.append(RotationCard(first_number + i*5, rotation))
-    shuffle(card_pack)
-    return card_pack
-
-
-def get_dealt_cards(card_pack):
-    """
-    Deal the cards for robot - he gets one card less for every damage he's got.
-    Take and return the first cards from the card pack.
-    Delete the dealt cards from the card pack.
-    """
-    # Maximum number of cards is 9.
-    # Robot's damages reduce the count of dealt cards - each damage one card.
-    dealt_cards_count = MAX_CARD_COUNT-robot.damages
-    dealt_cards = card_pack[-dealt_cards_count:]
-    del card_pack[-dealt_cards_count:]
-    return dealt_cards
