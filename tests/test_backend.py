@@ -84,33 +84,6 @@ def test_robot_change_direction(current_direction, towards, new_direction):
     assert robot.direction == new_direction
 
 
-# LaserTile
-
-@pytest.mark.parametrize(("input_coordinates", "damages_after"),
-                         [((1, 2), 0),
-                         ((3, 1), 0),
-                         ((2, 1), 0),
-                         ((0, 1), 2),
-                         ((3, 3), 4),
-                         ((2, 3), 3),
-                          ])
-def test_robot_is_damaged_by_laser(input_coordinates, damages_after):
-    """
-    When robot stands on laser tile, he is damaged according to the laser strength,
-    but only if there is no obstacle in the way.
-    If there are obstacles, damage count changes accordingly.
-    A special map test_laser was created in order to test this feature.
-    """
-    board = get_board("maps/test_laser.json")
-    robot_obstacle1 = Robot(Direction.S, (1, 1), "tester")
-    robot_obstacle2 = Robot(Direction.E, (3, 2), "tester")
-    robot = Robot(Direction.W, input_coordinates, "tester")
-    robot.damages = 0
-    state = State(board, [robot_obstacle1, robot_obstacle2, robot])
-    state.apply_all_effects(1)
-    assert robot.damages == damages_after
-
-
 def test_robot_on_start_has_the_correct_direction():
     """
     When robot is created, his direction shoud be the same as the direction
