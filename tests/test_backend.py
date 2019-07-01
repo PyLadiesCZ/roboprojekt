@@ -142,65 +142,6 @@ def test_robots_order_on_start(robot_index, expected_coordinates):
 
 
 @pytest.mark.parametrize(("input_coordinates", "output_coordinates"),
-                         [((3, 10), (3, 11)),
-                         ((2, 10), (2, 11)),
-                         ((2, 9), (2, 8)),
-                         ((2, 7), (2, 8)),
-                         ((4, 7), (4, 6)),
-                         ((6, 7), (6, 6)),
-                          ])
-def test_robot_movement_on_normal_belts(input_coordinates, output_coordinates):
-    """
-    Test movement of robots on normal conveyor belts - 6 types of tiles.
-    """
-    robot = Robot(Direction.N, input_coordinates, "tester")
-    board = get_board("maps/test_belts.json")
-    state = State(board, [robot])
-    state.apply_all_effects(1)
-    assert robot.coordinates == output_coordinates
-
-
-@pytest.mark.parametrize(("input_coordinates", "output_coordinates"),
-                         [((5, 9), (5, 10)),
-                         ((6, 9), (7, 9)),
-                         ((8, 9), (7, 9)),
-                         ((10, 9), (9, 9)),
-                         ((9, 8), (10, 8)),
-                         ((10, 7), (10, 6)),
-                          ])
-def test_robot_movement_on_express_belts(input_coordinates, output_coordinates):
-    """
-    Test movement of robots on express conveyor belts - 6 types of tiles.
-    """
-    robot = Robot(Direction.N, input_coordinates, "tester")
-    board = get_board("maps/test_belts.json")
-    state = State(board, [robot])
-    state.apply_all_effects(1)
-    assert robot.coordinates == output_coordinates
-
-
-@pytest.mark.parametrize(("input_coordinates", "output_coordinates"),
-                         [((1, 10), (2, 11)),
-                         ((1, 9), (2, 8)),
-                         ((1, 4), (2, 5)),
-                         ((1, 3), (2, 2)),
-                         ((4, 4), (5, 4)),
-                         ((6, 4), (7, 4)),
-                          ])
-def test_robot_movement_on_connected_belts(input_coordinates, output_coordinates):
-    """
-    Test movement of robots on all conveyor belts expect for crossroads.
-    Belts are connected together to test movement of express belts followed up
-    by movement of all belts (according to game rules).
-    """
-    robot = Robot(Direction.N, input_coordinates, "tester")
-    board = get_board("maps/test_belts.json")
-    state = State(board, [robot])
-    state.apply_all_effects(1)
-    assert robot.coordinates == output_coordinates
-
-
-@pytest.mark.parametrize(("input_coordinates", "output_coordinates"),
                          [((1, 7), (2, 8)),
                          ((2, 6), (2, 8)),
                          ((3, 7), (4, 6)),
