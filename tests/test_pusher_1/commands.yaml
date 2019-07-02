@@ -1,0 +1,33 @@
+actions:
+  -
+    - type: move
+      priority: 300
+      value: 1
+  -
+    - type: move
+      priority: 200
+      value: 1
+  -
+    - type: move
+      priority: 100
+      value: 1
+  -
+    - type: move
+      priority: 50
+      value: 1
+  -
+    - type: move
+      priority: 220
+      value: 1
+  -
+    - type: move
+      priority: 350
+      value: 1
+  -
+    - type: move
+      priority: 210
+      value: 1
+  -
+    - type: move
+      priority: 100
+      value: 1
