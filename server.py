@@ -77,10 +77,7 @@ async def interface(request):
         await ws.send_json(state.as_dict(map_name), dumps=json.dumps)
 
         dealt_cards = state.get_dealt_cards(robot)
-        dealt_cards_dict = {}
-        for card in dealt_cards:
-            dealt_cards_dict[dealt_cards.index(card)] = card
-        print(dealt_cards_dict)
+        print(dealt_cards)
         await ws.send_json(state.cards_as_dict(dealt_cards), dumps=json.dumps)
 
         # Process messages from this client
@@ -93,7 +90,7 @@ async def interface(request):
                     if card_index is None:
                         robot.program.append(None)
                     else:
-                        robot.program.append(dealt_cards_dict[card_index])
+                        robot.program.append(dealt_cards[card_index])
 
                 print(robot.program)
                 print(message)
