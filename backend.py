@@ -326,7 +326,9 @@ class State:
         self._board = board
         self.robots = robots
         self.tile_count = self.get_tile_count()
-        self.new_card_pack = self.create_card_pack()
+        self.new_cards_pack = self.create_card_pack()
+        self.used_cards_pack = []
+        self.game_register = 0
 
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
@@ -626,19 +628,19 @@ class State:
                           (Rotation.LEFT, 18, 100),
                           (Rotation.RIGHT, 18, 200),
                           ]
-        self.new_card_pack = []
+        self.new_cards_pack = []
 
         for movement, cards_count, first_number in movement_cards:
             for i in range(cards_count):
                 # [MovementCard(690, -1)...][]
-                self.new_card_pack.append(MovementCard(first_number + i*5, movement))
+                self.new_cards_pack.append(MovementCard(first_number + i*5, movement))
 
         for rotation, cards_count, first_number in rotation_cards:
             for i in range(cards_count):
                 # [RotationCard(865, Rotation.LEFT)....]
-                self.new_card_pack.append(RotationCard(first_number + i*5, rotation))
-        shuffle(self.new_card_pack)
-        return self.new_card_pack
+                self.new_cards_pack.append(RotationCard(first_number + i*5, rotation))
+        shuffle(self.new_cards_pack)
+        return self.new_cards_pack
 
     def get_dealt_cards(self, robot):
         """
@@ -649,9 +651,20 @@ class State:
         # Maximum number of cards is 9.
         # Robot's damages reduce the count of dealt cards - each damage one card.
         dealt_cards_count = MAX_CARD_COUNT-robot.damages
-        dealt_cards = self.new_card_pack[-dealt_cards_count:]
-        del self.new_card_pack[-dealt_cards_count:]
+
+        # If there is less cards than needed, join them with used cards.
+        if dealt_cards_count <= len(self.new_cards_pack):
+            self.new_cards_pack += self.used_cards_pack
+            shuffle(self.new_cards_pack)
+        dealt_cards = self.new_cards_pack[-dealt_cards_count:]
+        del self.new_cards_pack[-dealt_cards_count:]
         return dealt_cards
+
+    def get_used_cards(self, cards):
+        """
+        Update the list of used cards with given list of cards.
+        """
+        self.used_cards_pack += cards
 
     def cards_as_dict(self, cards):
         """
@@ -660,7 +673,7 @@ class State:
         card_pack = []
         for card in cards:
             card_pack.append(card.as_dict())
-        return {"dealt_cards": card_pack}
+        return {"cards": card_pack}
 
     def cards_from_dict(self, cards):
         """
