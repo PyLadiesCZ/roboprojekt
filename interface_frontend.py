@@ -39,8 +39,9 @@ players_background = get_sprite('img/interface/png/player.png')
 # Loading of robots images
 loaded_robots_images = {}
 for image_path in Path('./img/robots/png').iterdir():
-    loaded_robots_images[image_path.stem] = image_path
-    
+    loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
+
+player_sprite = get_sprite('img/robots/png/bender.png')
 my_robot_sprite = get_sprite('img/robots/png/bender.png', x=74, y=888)
 
 lives_sprites = []
@@ -165,7 +166,7 @@ def draw_interface(interface_state, window):
 
     if interface_state.robot:
         # Robot
-        my_robot_sprite.image = pyglet.image.load(loaded_robots_images[interface_state.robot.name])
+        my_robot_sprite.image = loaded_robots_images[interface_state.robot.name]
         my_robot_sprite.draw()
 
         # Flags
@@ -189,29 +190,26 @@ def draw_interface(interface_state, window):
                 ):
             draw_card(coordinate, card)
 
-    # Other robots background
-    for i in range(len(interface_state.players) - 1):
-        x = 50 + i * 98
-        y = 50
-        players_background = get_sprite('img/interface/png/player.png', x, y)
-        players_background.draw()
-
-    # Other robots
     if interface_state.players:
-        players_sprites = dict(loaded_robots_images)
-        if interface_state.robot.name in players_sprites.keys():
-            del players_sprites[interface_state.robot.name]
+        # Other robots background
+        for i in range(len(interface_state.players) - 1):
+            players_background.x = 50 + i * 98
+            players_background.y = 50
+            players_background.draw()
 
-        robot_sprites = []
-        for robot, key in zip(interface_state.players, players_sprites.keys()):
-            if robot.name == key:
-                for image, i in zip(players_sprites.values(), range(len(interface_state.players) - 1)):
-                    x = 60 + i * 98
-                    y = 85
-                    robot_sprites.append(get_sprite(image, x, y))
+        # Other robots
+        image_coordinates = []
+        for i in range(len(interface_state.players) - 1):
+            x = 60 + i * 98
+            y = 85
+            image_coordinates.append((x, y))
 
-        for sprite in robot_sprites:
-            sprite.draw()
+        for robot, (x, y) in zip(interface_state.players, image_coordinates):
+            if robot.name in loaded_robots_images.keys():
+                player_sprite.image = loaded_robots_images[robot.name]
+            player_sprite.x = x
+            player_sprite.y = y
+            player_sprite.draw()
 
     # Cards hand
     for coordinate, card_index in zip(program_coordinates, interface_state.my_program):
