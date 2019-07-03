@@ -192,14 +192,14 @@ def draw_interface(interface_state, window):
 
     if interface_state.players:
         # Other robots background
-        for i in range(len(interface_state.players) - 1):
+        for i in range(len(interface_state.players)):
             players_background.x = 50 + i * 98
             players_background.y = 50
             players_background.draw()
 
         # Other robots
         image_coordinates = []
-        for i in range(len(interface_state.players) - 1):
+        for i in range(len(interface_state.players)):
             x = 60 + i * 98
             y = 85
             image_coordinates.append((x, y))
