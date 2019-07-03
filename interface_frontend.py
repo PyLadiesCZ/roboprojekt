@@ -199,7 +199,7 @@ def draw_interface(interface_state, window):
 
         # Other robots
         for i, robot in enumerate(interface_state.players):
-            if robot.name in loaded_robots_images.keys():
+            if robot.name in loaded_robots_images:
                 player_sprite.image = loaded_robots_images[robot.name]
                 player_sprite.x = 60 + i * 98
                 player_sprite.y = 85
