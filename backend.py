@@ -48,9 +48,9 @@ class Robot:
         return {"robot_data":
                 {"name": self.name, "coordinates": self.coordinates,
                  "lives": self.lives, "flags": self.flags,
-                 "damages": self.damages, "power down": self.power_down,
+                 "damages": self.damages, "power_down": self.power_down,
                  "direction": self.direction.value,
-                 "start coordinates": self.start_coordinates, }}
+                 "start_coordinates": self.start_coordinates, }}
 
     @classmethod
     def from_dict(cls, robot_description):
@@ -65,8 +65,8 @@ class Robot:
         robot.lives = robot_description["lives"]
         robot.flags = robot_description["flags"]
         robot.damages = robot_description["damages"]
-        robot.power_down = robot_description["power down"]
-        robot.start_coordinates = robot_description["start coordinates"]
+        robot.power_down = robot_description["power_down"]
+        robot.start_coordinates = robot_description["start_coordinates"]
         return robot
 
     def walk(self, distance, state, direction=None, push_others=True):

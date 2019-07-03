@@ -75,17 +75,28 @@ async def interface(request):
         robot = available_robots.pop(0)
         await ws.send_json(robot.as_dict(), dumps=json.dumps)
         await ws.send_json(state.as_dict(map_name), dumps=json.dumps)
-        dealt_cards = state.cards_as_dict(state.get_dealt_cards(robot))
-        await ws.send_json(dealt_cards, dumps=json.dumps)
+
+        dealt_cards = state.get_dealt_cards(robot)
+        await ws.send_json(state.cards_as_dict(dealt_cards), dumps=json.dumps)
 
         # Process messages from this client
         async for msg in ws:
-            if msg.type == aiohttp.WSMsgType.TEXT:
-                print(msg.data)
+            message = msg.json(loads=json.loads)
+            if "interface_data" in message:
+                robot.power_down = message["interface_data"]["power_down"]
+                robot.program = []
+                for card_index in message["interface_data"]["my_program"]:
+                    if card_index is None:
+                        robot.program.append(None)
+                    else:
+                        robot.program.append(dealt_cards[card_index])
+
+                print(robot.program)
+                print(message)
                 # Send messages to all connected clients
                 ws_all = ws_receivers + ws_interfaces
                 for client in ws_all:
-                    # send info about state
+                # send info about state
                     await client.send_json(state.as_dict(map_name), dumps=json.dumps)
         return ws
 
