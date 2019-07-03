@@ -227,6 +227,7 @@ class Card:
     def from_dict(cls, card_description):
         """
         Return a card instance according to the given type.
+        In case type is not known raise CardNotKnownError.
         """
         if "MovementCard" in card_description:
             return MovementCard.from_dict(card_description)
