@@ -40,7 +40,7 @@ players_background = get_sprite('img/interface/png/player.png')
 loaded_robots_images = {}
 for image_path in Path('./img/robots/png').iterdir():
     loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
-# Player_sprite and my_robot_sprite are random images, lower replaced with correct image
+# Player_sprite and my_robot_sprite use fake images just to create sprites, below replaced with the actual ones.
 player_sprite = get_sprite('img/robots/png/bender.png')
 my_robot_sprite = get_sprite('img/robots/png/bender.png', x=74, y=888)
 
