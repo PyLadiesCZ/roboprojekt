@@ -198,18 +198,13 @@ def draw_interface(interface_state, window):
             players_background.draw()
 
         # Other robots
-        image_coordinates = []
-        for i in range(len(interface_state.players)):
-            x = 60 + i * 98
-            y = 85
-            image_coordinates.append((x, y))
-
-        for robot, (x, y) in zip(interface_state.players, image_coordinates):
+        for i, robot in enumerate(interface_state.players):
             if robot.name in loaded_robots_images.keys():
                 player_sprite.image = loaded_robots_images[robot.name]
-            player_sprite.x = x
-            player_sprite.y = y
-            player_sprite.draw()
+                player_sprite.x = 60 + i * 98
+                player_sprite.y = 85
+                player_sprite.draw()
+
 
     # Cards hand
     for coordinate, card_index in zip(program_coordinates, interface_state.my_program):
