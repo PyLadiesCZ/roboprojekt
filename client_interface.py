@@ -54,7 +54,13 @@ class Interface:
                     message = msg.json(loads=json.loads)
                     if "game_state" in message:
                         self.game_state = State.from_dict(message)
-                        # print(self.game_state)
+                        self.state.players = self.game_state.robots
+                        for robot in self.state.players:
+                            if robot.name == self.state.robot.name:
+                                index = self.state.players.index(robot)
+                                del self.state.players[index]
+                        print(self.state.players)
+
                     elif "robot_data" in message:
                         robot = Robot.from_dict(message)
                         self.state.robot = robot

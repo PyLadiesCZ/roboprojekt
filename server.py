@@ -19,7 +19,7 @@ from backend import State
 
 
 if len(sys.argv) == 1:
-    map_name = "maps/test_3.json"
+    map_name = "maps/test_2.json"
 else:
     map_name = sys.argv[1]
 

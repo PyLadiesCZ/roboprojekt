@@ -1,7 +1,6 @@
 import pyglet
 from pathlib import Path
 
-
 MAX_CARDS_COUNT = 9
 MAX_LIVES_COUNT = 3
 MAX_FLAGS_COUNT = 8
@@ -35,11 +34,14 @@ card_background_sprite = get_sprite('img/interface/png/card_bg.png')
 select_sprite = get_sprite('img/interface/png/card_cv.png')
 # Selection cursor
 cursor_sprite = get_sprite('img/interface/png/card_sl.png')
+# Other robot card
+players_background = get_sprite('img/interface/png/player.png')
 # Loading of robots images
 loaded_robots_images = {}
 for image_path in Path('./img/robots/png').iterdir():
     loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
-    
+# Player_sprite and my_robot_sprite use fake images just to create sprites, below replaced with the actual ones.
+player_sprite = get_sprite('img/robots/png/bender.png')
 my_robot_sprite = get_sprite('img/robots/png/bender.png', x=74, y=888)
 
 lives_sprites = []
@@ -187,6 +189,22 @@ def draw_interface(interface_state, window):
                 interface_state.dealt_cards,
                 ):
             draw_card(coordinate, card)
+
+    if interface_state.players:
+        # Other robots background
+        for i in range(len(interface_state.players)):
+            players_background.x = 50 + i * 98
+            players_background.y = 50
+            players_background.draw()
+
+        # Other robots
+        for i, robot in enumerate(interface_state.players):
+            if robot.name in loaded_robots_images:
+                player_sprite.image = loaded_robots_images[robot.name]
+                player_sprite.x = 60 + i * 98
+                player_sprite.y = 85
+                player_sprite.draw()
+
 
     # Cards hand
     for coordinate, card_index in zip(program_coordinates, interface_state.my_program):

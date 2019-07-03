@@ -6,6 +6,7 @@ class InterfaceState:
         self.power_down = False
         self.indicator = False
         self.cursor_index = 0  # 0-4 number of positon
+        self.players = []
 
     def __repr__(self):
         return f"InterfaceState Cards: {self.dealt_cards}, My Cards: {self.my_program}, Power Down: {self.power_down,}, Robot: {self.robot}"
