@@ -83,21 +83,29 @@ async def interface(request):
         async for msg in ws:
             message = msg.json(loads=json.loads)
             if "interface_data" in message:
-                robot.power_down = message["interface_data"]["power_down"]
-                robot.program = []
-                for card_index in message["interface_data"]["my_program"]:
-                    if card_index is None:
-                        robot.program.append(None)
-                    else:
-                        robot.program.append(dealt_cards[card_index])
+                # it is still possible to choose cards
+                # TODO: not only by pressing key but also with time up
+                if not message["interface_data"]["blocked"]:
+                    robot.power_down = message["interface_data"]["power_down"]
+                    robot.program = []
+                    for card_index in message["interface_data"]["my_program"]:
+                        if card_index is None:
+                            robot.program.append(None)
+                        else:
+                            robot.program.append(dealt_cards[card_index])
+                # choice of cards was blocked by the player
+                else:
+                    # Add the rest of the cards to used cards pack
+                    for card in robot.program:
+                        if card is not None:
+                            dealt_cards.remove(card)
+                    state.add_to_used_cards(dealt_cards)
 
-                print(robot.program)
-                print(message)
-                # Send messages to all connected clients
-                ws_all = ws_receivers + ws_interfaces
-                for client in ws_all:
-                # send info about state
-                    await client.send_json(state.as_dict(map_name), dumps=json.dumps)
+                    # Send messages to all connected clients
+                    ws_all = ws_receivers + ws_interfaces
+                    for client in ws_all:
+                        # send info about state
+                        await client.send_json(state.as_dict(map_name), dumps=json.dumps)
         return ws
 
 
