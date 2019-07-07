@@ -65,7 +65,7 @@ class Interface:
                         robot = Robot.from_dict(message)
                         self.state.robot = robot
                         print(robot)
-                    elif "dealt_cards" in message:
+                    elif "cards" in message:
                         self.state.dealt_cards = self.game_state.cards_from_dict(message)
                         print(self.state.dealt_cards)
                     else:

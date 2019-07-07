@@ -653,18 +653,20 @@ class State:
         dealt_cards_count = MAX_CARD_COUNT-robot.damages
 
         # If there is less cards than needed, join them with used cards.
-        if dealt_cards_count <= len(self.new_cards_pack):
+        if dealt_cards_count >= len(self.new_cards_pack):
             self.new_cards_pack += self.used_cards_pack
             shuffle(self.new_cards_pack)
         dealt_cards = self.new_cards_pack[-dealt_cards_count:]
         del self.new_cards_pack[-dealt_cards_count:]
         return dealt_cards
 
-    def get_used_cards(self, cards):
+    def add_to_used_cards(self, cards):
         """
         Update the list of used cards with given list of cards.
         """
         self.used_cards_pack += cards
+
+
 
     def cards_as_dict(self, cards):
         """
@@ -680,7 +682,7 @@ class State:
         Create a list of card instances from dictionary given as an argument.
         """
         card_pack = []
-        for card in cards["dealt_cards"]:
+        for card in cards["cards"]:
             card_pack.append(Card.from_dict(card))
         return card_pack
 
