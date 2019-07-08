@@ -327,7 +327,7 @@ class State:
         self.robots = robots
         self.tile_count = self.get_tile_count()
         self.new_cards_pack = self.create_card_pack()
-        self.used_cards_pack = []
+        self.used_cards_pack = set()
         self.game_register = 0
 
     def __repr__(self):
@@ -662,11 +662,10 @@ class State:
 
     def add_to_used_cards(self, cards):
         """
-        Update the list of used cards with given list of cards.
+        Update the set of used cards with given list of cards.
         """
-        self.used_cards_pack += cards
-
-
+        for card in cards:
+            self.used_cards_pack.add(card)
 
     def cards_as_dict(self, cards):
         """
