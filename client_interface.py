@@ -30,7 +30,7 @@ class Interface:
         Wait for user input on keyboard and react for it.
         """
         handle_text(self.state, text)
-        if text == "k":
+        if self.state.selection_confirmed:
             self.send_to_server({"end": True})
         else:
             self.send_to_server(self.state.as_dict())
