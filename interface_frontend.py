@@ -233,7 +233,7 @@ def draw_interface(interface_state, window):
         power_down_sprite.draw()
 
     # Indicator
-    if not interface_state.is_blocked:
+    if not interface_state.selection_confirmed:
         indicator_green_sprite.draw()
     else:
         indicator_red_sprite.draw()
