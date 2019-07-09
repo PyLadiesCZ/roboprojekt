@@ -82,20 +82,19 @@ async def interface(request):
         # Process messages from this client
         async for msg in ws:
             message = msg.json(loads=json.loads)
-            if "interface_data" in message:
-                # it is still possible to choose cards
-                # TODO: not only by pressing key but also with time up
-                if not message["interface_data"]["confirmed"]:
-                    robot.power_down = message["interface_data"]["power_down"]
-                    robot.program = []
-                    for card_index in message["interface_data"]["my_program"]:
-                        if card_index is None:
-                            robot.program.append(None)
-                        else:
-                            robot.program.append(dealt_cards[card_index])
-                    print(robot.program)
-                # choice of cards was blocked by the player
-            elif "end" in message:
+            # it is still possible to choose cards
+            # TODO: not only by pressing key but also with time up
+            if not message["interface_data"]["confirmed"]:
+                robot.power_down = message["interface_data"]["power_down"]
+                robot.program = []
+                for card_index in message["interface_data"]["my_program"]:
+                    if card_index is None:
+                        robot.program.append(None)
+                    else:
+                        robot.program.append(dealt_cards[card_index])
+                    # print(robot.program)
+            # choice of cards was blocked by the player
+            else:
                 # Add the rest of the cards to used cards pack
                 for card in robot.program:
                     if card is not None:

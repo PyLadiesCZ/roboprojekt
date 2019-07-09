@@ -30,19 +30,15 @@ class Interface:
         Wait for user input on keyboard and react for it.
         """
         handle_text(self.state, text)
-        if self.state.selection_confirmed:
-            self.send_to_server({"end": True})
-        else:
-            self.send_to_server(self.state.as_dict())
+        self.send_to_server(self.state.as_dict())
 
     def send_to_server(self, message):
         """
         Client sends messages to server.
         """
-        message = json.dumps(message)
         print(message)
         if self.ws:
-            asyncio.ensure_future(self.ws.send_str(message))
+            asyncio.ensure_future(self.ws.send_json(message, dumps=json.dumps))
 
     async def get_messages(self):
         """
