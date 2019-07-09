@@ -102,8 +102,8 @@ async def interface(request):
                             dealt_cards.remove(card)
                         except ValueError:
                             break
-                state.add_to_used_cards(dealt_cards)
-                print("used", state.used_cards_pack)
+                state.add_to_past_deck(dealt_cards)
+                print("used", state.past_deck)
             # Send messages to all connected clients
             ws_all = ws_receivers + ws_interfaces
             for client in ws_all:

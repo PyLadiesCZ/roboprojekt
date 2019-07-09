@@ -326,8 +326,8 @@ class State:
         self._board = board
         self.robots = robots
         self.tile_count = self.get_tile_count()
-        self.new_cards_pack = self.create_card_pack()
-        self.used_cards_pack = set()
+        self.present_deck = self.create_card_pack()
+        self.past_deck = set()
         self.game_round = 0
 
     def __repr__(self):
@@ -628,19 +628,19 @@ class State:
                           (Rotation.LEFT, 18, 100),
                           (Rotation.RIGHT, 18, 200),
                           ]
-        self.new_cards_pack = []
+        present_deck = []
 
         for movement, cards_count, first_number in movement_cards:
             for i in range(cards_count):
                 # [MovementCard(690, -1)...][]
-                self.new_cards_pack.append(MovementCard(first_number + i*5, movement))
+                present_deck.append(MovementCard(first_number + i*5, movement))
 
         for rotation, cards_count, first_number in rotation_cards:
             for i in range(cards_count):
                 # [RotationCard(865, Rotation.LEFT)....]
-                self.new_cards_pack.append(RotationCard(first_number + i*5, rotation))
-        shuffle(self.new_cards_pack)
-        return self.new_cards_pack
+                present_deck.append(RotationCard(first_number + i*5, rotation))
+        shuffle(present_deck)
+        return present_deck
 
     def get_dealt_cards(self, robot):
         """
@@ -653,19 +653,19 @@ class State:
         dealt_cards_count = MAX_CARD_COUNT-robot.damages
 
         # If there is less cards than needed, join them with used cards.
-        if dealt_cards_count >= len(self.new_cards_pack):
-            self.new_cards_pack.extend(self.used_cards_pack)
-            shuffle(self.new_cards_pack)
-        dealt_cards = self.new_cards_pack[-dealt_cards_count:]
-        del self.new_cards_pack[-dealt_cards_count:]
+        if dealt_cards_count >= len(self.present_deck):
+            self.present_deck.extend(self.past_deck)
+            shuffle(self.present_deck)
+        dealt_cards = self.present_deck[-dealt_cards_count:]
+        del self.present_deck[-dealt_cards_count:]
         return dealt_cards
 
-    def add_to_used_cards(self, cards):
+    def add_to_past_deck(self, cards):
         """
         Update the set of used cards with given list of cards.
         """
         for card in cards:
-            self.used_cards_pack.add(card)
+            self.past_deck.add(card)
 
     def cards_as_dict(self, cards):
         """
