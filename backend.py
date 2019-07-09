@@ -328,7 +328,7 @@ class State:
         self.tile_count = self.get_tile_count()
         self.new_cards_pack = self.create_card_pack()
         self.used_cards_pack = set()
-        self.game_register = 0
+        self.game_round = 0
 
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
@@ -654,7 +654,7 @@ class State:
 
         # If there is less cards than needed, join them with used cards.
         if dealt_cards_count >= len(self.new_cards_pack):
-            self.new_cards_pack += self.used_cards_pack
+            self.new_cards_pack.extend(self.used_cards_pack)
             shuffle(self.new_cards_pack)
         dealt_cards = self.new_cards_pack[-dealt_cards_count:]
         del self.new_cards_pack[-dealt_cards_count:]
