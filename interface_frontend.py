@@ -40,7 +40,9 @@ players_background = get_sprite('img/interface/png/player.png')
 loaded_robots_images = {}
 for image_path in Path('./img/robots/png').iterdir():
     loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
-# Player_sprite and my_robot_sprite use fake images just to create sprites, below replaced with the actual ones.
+
+# Player_sprite and my_robot_sprite use fake images just to create sprites,
+# below replaced with the actual ones.
 player_sprite = get_sprite('img/robots/png/bender.png')
 my_robot_sprite = get_sprite('img/robots/png/bender.png', x=74, y=888)
 
@@ -205,8 +207,7 @@ def draw_interface(interface_state, window):
                 player_sprite.y = 85
                 player_sprite.draw()
 
-
-    # Cards hand
+    # Cards on hand
     for coordinate, card_index in zip(program_coordinates, interface_state.my_program):
         if card_index is not None:
             draw_card(coordinate, interface_state.dealt_cards[card_index])
@@ -232,7 +233,7 @@ def draw_interface(interface_state, window):
         power_down_sprite.draw()
 
     # Indicator
-    if not interface_state.indicator:
+    if not interface_state.selection_confirmed:
         indicator_green_sprite.draw()
     else:
         indicator_red_sprite.draw()

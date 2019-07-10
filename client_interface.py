@@ -30,16 +30,15 @@ class Interface:
         Wait for user input on keyboard and react for it.
         """
         handle_text(self.state, text)
-        self.send_to_server(self.state)
+        self.send_to_server(self.state.as_dict())
 
-    def send_to_server(self, state):
+    def send_to_server(self, message):
         """
-        Client sends selected cards to server.
+        Client sends messages to server.
         """
-        msg = json.dumps(self.state.as_dict())
-        print(msg)
+        print(message)
         if self.ws:
-            asyncio.ensure_future(self.ws.send_str(msg))
+            asyncio.ensure_future(self.ws.send_json(message, dumps=json.dumps))
 
     async def get_messages(self):
         """
@@ -53,25 +52,32 @@ class Interface:
                     # Cycle "for" is finished when client disconnect from server
                     message = msg.json(loads=json.loads)
                     if "game_state" in message:
-                        self.game_state = State.from_dict(message)
-                        self.state.players = self.game_state.robots
-                        for robot in self.state.players:
-                            if robot.name == self.state.robot.name:
-                                index = self.state.players.index(robot)
-                                del self.state.players[index]
-                        print(self.state.players)
-
+                        self.set_game_state(message)
                     elif "robot_data" in message:
-                        robot = Robot.from_dict(message)
-                        self.state.robot = robot
-                        print(robot)
-                    elif "dealt_cards" in message:
-                        self.state.dealt_cards = self.game_state.cards_from_dict(message)
-                        print(self.state.dealt_cards)
+                        self.set_robot_data(message)
+                    elif "cards" in message:
+                        self.set_dealt_cards(message)
                     else:
                         print(message)
-
         self.ws = None
+
+    def set_game_state(self, message):
+        self.game_state = State.from_dict(message)
+        self.state.players = self.game_state.robots
+        for robot in self.state.players:
+            if robot.name == self.state.robot.name:
+                index = self.state.players.index(robot)
+                del self.state.players[index]
+        # print(self.state.players)
+
+    def set_robot_data(self, message):
+        robot = Robot.from_dict(message)
+        self.state.robot = robot
+        # print(robot)
+
+    def set_dealt_cards(self, message):
+        self.state.dealt_cards = self.game_state.cards_from_dict(message)
+        # print(self.state.dealt_cards)
 
 
 def tick_asyncio(dt):

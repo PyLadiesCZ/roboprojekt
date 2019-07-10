@@ -4,7 +4,7 @@ class InterfaceState:
         self.robot = None
         self.my_program = [None, None, None, None, None]
         self.power_down = False
-        self.indicator = False
+        self.selection_confirmed = False
         self.cursor_index = 0  # 0-4 number of positon
         self.players = []
 
@@ -16,7 +16,7 @@ class InterfaceState:
         Return dictionary about state of client_interface."
         """
         return {"interface_data": {"my_program": self.my_program,
-                "power_down": self.power_down, "indicator": self.indicator}}
+                "power_down": self.power_down, "confirmed": self.selection_confirmed}}
 
     def select_card(self, dealt_card_index):
         """
@@ -24,7 +24,7 @@ class InterfaceState:
         a place where selector is (in the robot program)
         and selector cursor moves to the next free place.
         """
-        if not self.indicator:
+        if not self.selection_confirmed:
             if dealt_card_index >= len(self.dealt_cards):
                 return
             if dealt_card_index not in self.my_program:
@@ -36,14 +36,14 @@ class InterfaceState:
         """
         Return one selected card from your program back to the dealt cards.
         """
-        if not self.indicator:
+        if not self.selection_confirmed:
             self.my_program[self.cursor_index] = None
 
     def return_cards(self):
         """
         Retrun all cards of your program back to the dealt cards.
         """
-        if not self.indicator:
+        if not self.selection_confirmed:
             self.my_program = [None, None, None, None, None]
             self.cursor_index = 0
 
@@ -51,7 +51,7 @@ class InterfaceState:
         """
         Change selecting cursor position to the next one.
         """
-        if not self.indicator:
+        if not self.selection_confirmed:
             if self.cursor_index < 4:
                 self.cursor_index += 1
 
@@ -59,7 +59,7 @@ class InterfaceState:
         """
         Change selecting cursor position to the previous one.
         """
-        if not self.indicator:
+        if not self.selection_confirmed:
             if self.cursor_index > 0:
                 self.cursor_index -= 1
 
@@ -68,7 +68,7 @@ class InterfaceState:
         Switch power down status between True and False.
         When it is True the Robot doesn't play this round.
         """
-        if not self.indicator:
+        if not self.selection_confirmed:
             if not self.power_down:
                 self.power_down = True
             else:
@@ -79,4 +79,4 @@ class InterfaceState:
         When indicator is False the player can choose cards and switch Power Down.
         When is True the player ended the selection of cards.
         """
-        self.indicator = True
+        self.selection_confirmed = True
