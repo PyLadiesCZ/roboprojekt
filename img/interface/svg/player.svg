@@ -29,7 +29,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="3.8262313"
-     inkscape:cx="65.15586"
+     inkscape:cx="26.08347"
      inkscape:cy="70.863304"
      inkscape:document-units="mm"
      inkscape:current-layer="layer4"
@@ -56,7 +56,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -98,7 +98,7 @@
     <g
        style="display:inline"
        id="g15801-6"
-       transform="matrix(0.35042401,0,0,0.35079247,29.324902,-73.484116)"
+       transform="matrix(0.35042401,0,0,0.35079247,25.091566,-73.484116)"
        inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/interface/png/interface.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96">
@@ -148,7 +148,7 @@
     </g>
     <g
        style="font-style:normal;font-weight:normal;font-size:medium;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2378006"
-       transform="matrix(0.30899915,0,0,0.28018288,-21.244247,-33.027773)"
+       transform="matrix(0.24723045,0,0,0.23473667,-12.871429,-21.970056)"
        id="g16852-1"
        inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/interface/png/interface.png"
        inkscape:export-xdpi="96"
