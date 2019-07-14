@@ -19,7 +19,7 @@ from backend import State
 
 
 if len(sys.argv) == 1:
-    map_name = "maps/test_2.json"
+    map_name = "maps/test_game.json"
 else:
     map_name = sys.argv[1]
 
@@ -92,7 +92,7 @@ async def interface(request):
                         robot.program.append(None)
                     else:
                         robot.program.append(dealt_cards[card_index])
-                    # print(robot.program)
+
             # choice of cards was blocked by the player
             else:
                 # Add the rest of the cards to used cards pack
@@ -103,7 +103,11 @@ async def interface(request):
                         except ValueError:
                             break
                 state.add_to_past_deck(dealt_cards)
-                print("used", state.past_deck)
+
+                state.apply_all_effects()
+
+                dealt_cards = state.get_dealt_cards(robot)
+                await ws.send_json(state.cards_as_dict(dealt_cards), dumps=json.dumps)
             # Send messages to all connected clients
             ws_all = ws_receivers + ws_interfaces
             for client in ws_all:
