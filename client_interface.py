@@ -44,7 +44,6 @@ class Interface:
         """
         Client connects to server and receives messages.
         """
-        global robot_name
         # create Session
         async with aiohttp.ClientSession() as session:
             # create Websocket
@@ -53,7 +52,7 @@ class Interface:
                     # Cycle "for" is finished when client disconnect from server
                     message = msg.json(loads=json.loads)
                     if "game_state" in message:
-                        self.set_game_state(message)
+                        self.set_game_state(message, robot_name)
                     elif "robot_name" in message:
                         robot_name = message["robot_name"]
                     elif "cards" in message:
@@ -62,7 +61,7 @@ class Interface:
                         print(message)
         self.ws = None
 
-    def set_game_state(self, message):
+    def set_game_state(self, message, robot_name):
         self.game_state = State.from_dict(message)
         self.state.players = self.game_state.robots
         for robot in self.state.players:
