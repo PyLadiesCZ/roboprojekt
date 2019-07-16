@@ -66,8 +66,8 @@ for i in range(MAX_DAMAGES_COUNT):
     damages_tokens_sprites.append(get_sprite('img/interface/png/token.png', x, y))
 
 number_sprites = []
-for i in range(-1, 9):
-    number_sprites.append(get_sprite(f'img/interface/png/number_{i+1}.png'))
+for i in range(10):
+    number_sprites.append(get_sprite(f'img/interface/png/number_{i}.png'))
 
 # Cards sprites
 cards_type_sprites = {
