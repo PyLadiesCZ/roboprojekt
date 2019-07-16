@@ -51,11 +51,11 @@ class Interface:
                 async for msg in self.ws:
                     # Cycle "for" is finished when client disconnect from server
                     message = msg.json(loads=json.loads)
+                    if "robot_name" in message:
+                        robot_name = message["robot_name"]
                     if "game_state" in message:
                         self.set_game_state(message, robot_name)
-                    elif "robot_name" in message:
-                        robot_name = message["robot_name"]
-                    elif "cards" in message:
+                    if "cards" in message:
                         self.set_dealt_cards(message)
                     else:
                         print(message)
