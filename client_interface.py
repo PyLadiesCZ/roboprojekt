@@ -3,12 +3,11 @@ Client which send messages to server
 """
 import asyncio
 import aiohttp
-import json
 import pyglet
 
 from interface_frontend import draw_interface, create_window, handle_text
 from interface import InterfaceState
-from backend import State, Robot
+from backend import State
 
 
 class Interface:
@@ -38,7 +37,7 @@ class Interface:
         """
         print(message)
         if self.ws:
-            asyncio.ensure_future(self.ws.send_json(message, dumps=json.dumps))
+            asyncio.ensure_future(self.ws.send_json(message))
 
     async def get_messages(self):
         """
@@ -50,7 +49,7 @@ class Interface:
             async with session.ws_connect('http://localhost:8080/interface/') as self.ws:
                 async for msg in self.ws:
                     # Cycle "for" is finished when client disconnect from server
-                    message = msg.json(loads=json.loads)
+                    message = msg.json()
                     if "robot_name" in message:
                         robot_name = message["robot_name"]
                     if "game_state" in message:
