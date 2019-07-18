@@ -90,7 +90,11 @@ async def interface(request):
                     if card_index is None:
                         robot.program.append(None)
                     else:
+<<<<<<< HEAD
                         robot.program.append(robot.dealt_cards[card_index])
+=======
+                        robot.program.append(dealt_cards[card_index])
+>>>>>>> 46e5c517938f19ddcb959ecf9d3ad16e68b2ab90
 
             # choice of cards was blocked by the player
             else:
@@ -101,8 +105,19 @@ async def interface(request):
                             robot.dealt_cards.remove(card)
                         except ValueError:
                             break
+<<<<<<< HEAD
                 state.add_to_past_deck(robot.dealt_cards)
                 await play_round(state)
+=======
+                state.add_to_past_deck(dealt_cards)
+                print(robot.program)
+
+                state.apply_all_effects()
+
+                dealt_cards = state.get_dealt_cards(robot)
+                await ws.send_json(state.cards_as_dict(dealt_cards), dumps=json.dumps)
+
+>>>>>>> 46e5c517938f19ddcb959ecf9d3ad16e68b2ab90
             # Send messages to all connected clients
             ws_all = ws_receivers + ws_interfaces
             for client in ws_all:
