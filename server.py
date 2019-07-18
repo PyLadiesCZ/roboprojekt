@@ -18,7 +18,7 @@ from backend import State
 
 
 if len(sys.argv) == 1:
-    map_name = "maps/test_2.json"
+    map_name = "maps/test_game.json"
 else:
     map_name = sys.argv[1]
 
@@ -75,8 +75,8 @@ async def interface(request):
         await ws.send_json({"robot_name": robot.name}, dumps=json.dumps)
         await ws.send_json(state.as_dict(map_name), dumps=json.dumps)
 
-        dealt_cards = state.get_dealt_cards(robot)
-        await ws.send_json(state.cards_as_dict(dealt_cards), dumps=json.dumps)
+        robot.dealt_cards = state.get_dealt_cards(robot)
+        await ws.send_json(state.cards_as_dict(robot.dealt_cards), dumps=json.dumps)
 
         # Process messages from this client
         async for msg in ws:
@@ -90,19 +90,19 @@ async def interface(request):
                     if card_index is None:
                         robot.program.append(None)
                     else:
-                        robot.program.append(dealt_cards[card_index])
+                        robot.program.append(robot.dealt_cards[card_index])
+
             # choice of cards was blocked by the player
             else:
                 # Add the rest of the cards to used cards pack
                 for card in robot.program:
                     if card is not None:
                         try:
-                            dealt_cards.remove(card)
+                            robot.dealt_cards.remove(card)
                         except ValueError:
                             break
-                state.add_to_past_deck(dealt_cards)
-                print(robot.program)
-
+                state.add_to_past_deck(robot.dealt_cards)
+                await play_round(state)
             # Send messages to all connected clients
             ws_all = ws_receivers + ws_interfaces
             for client in ws_all:
@@ -110,6 +110,22 @@ async def interface(request):
                 await client.send_json(state.as_dict(map_name), dumps=json.dumps)
         return ws
 
+async def play_round(state):
+    all_selected = True
+    for robot in state.robots:
+        if len(robot.program) < 5:
+            all_selected = False
+        if None in robot.program:
+            all_selected = False
+    if all_selected:
+        state.apply_all_effects()
+
+        for robot in state.robots:
+            robot.dealt_cards = state.get_dealt_cards(robot)
+            ws = assigned_robots[robot.name]
+            await ws.send_json(state.cards_as_dict(robot.dealt_cards), dumps=json.dumps)
+            for robot in state.robots:
+                robot.program = []
 
 # aiohttp.web application
 def get_app(argv=None):

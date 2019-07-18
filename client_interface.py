@@ -71,8 +71,9 @@ class Interface:
                 del self.state.players[index]
 
     def set_dealt_cards(self, message):
+        self.state.selection_confirmed = False
         self.state.dealt_cards = self.game_state.cards_from_dict(message)
-
+        self.state.return_cards()
 
 def tick_asyncio(dt):
     """
