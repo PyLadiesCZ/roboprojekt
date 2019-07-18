@@ -51,33 +51,27 @@ class Interface:
                 async for msg in self.ws:
                     # Cycle "for" is finished when client disconnect from server
                     message = msg.json(loads=json.loads)
+                    if "robot_name" in message:
+                        robot_name = message["robot_name"]
                     if "game_state" in message:
-                        self.set_game_state(message)
-                    elif "robot_data" in message:
-                        self.set_robot_data(message)
-                    elif "cards" in message:
+                        self.set_game_state(message, robot_name)
+                    if "cards" in message:
                         self.set_dealt_cards(message)
                     else:
                         print(message)
         self.ws = None
 
-    def set_game_state(self, message):
+    def set_game_state(self, message, robot_name):
         self.game_state = State.from_dict(message)
         self.state.players = self.game_state.robots
         for robot in self.state.players:
-            if robot.name == self.state.robot.name:
+            if robot.name == robot_name:
+                self.state.robot = robot
                 index = self.state.players.index(robot)
                 del self.state.players[index]
-        # print(self.state.players)
-
-    def set_robot_data(self, message):
-        robot = Robot.from_dict(message)
-        self.state.robot = robot
-        # print(robot)
 
     def set_dealt_cards(self, message):
         self.state.dealt_cards = self.game_state.cards_from_dict(message)
-        # print(self.state.dealt_cards)
 
 
 def tick_asyncio(dt):

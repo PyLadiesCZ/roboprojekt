@@ -4,9 +4,8 @@ More info about creating server and client -
 https://aiohttp.readthedocs.io/en/stable/index.html
 
 Run server.py in command line, in new command line run client_receiver.py,
-it will receive messages from server. You can send one message to server,
-which will be displayed - in another command line open client_sender.py
-with argument(message) - "python client_sender.py Hello".
+it will display the playing area. If you want to play, run also
+client_interface.py in another command line.
 """
 import sys
 import json
@@ -73,7 +72,7 @@ async def interface(request):
         print(assigned_robots)
 
         robot = available_robots.pop(0)
-        await ws.send_json(robot.as_dict(), dumps=json.dumps)
+        await ws.send_json({"robot_name": robot.name}, dumps=json.dumps)
         await ws.send_json(state.as_dict(map_name), dumps=json.dumps)
 
         dealt_cards = state.get_dealt_cards(robot)
@@ -103,11 +102,13 @@ async def interface(request):
                         except ValueError:
                             break
                 state.add_to_past_deck(dealt_cards)
+                print(robot.program)
 
                 state.apply_all_effects()
 
                 dealt_cards = state.get_dealt_cards(robot)
                 await ws.send_json(state.cards_as_dict(dealt_cards), dumps=json.dumps)
+
             # Send messages to all connected clients
             ws_all = ws_receivers + ws_interfaces
             for client in ws_all:
