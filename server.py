@@ -8,10 +8,8 @@ it will display the playing area. If you want to play, run also
 client_interface.py in another command line.
 """
 import sys
-import json
 import contextlib
 
-import aiohttp
 from aiohttp import web
 
 from backend import State
@@ -116,7 +114,6 @@ else:
     map_name = sys.argv[1]
 
 server = Server(map_name)
-
 
 # aiohttp.web application
 def get_app(argv=None):
