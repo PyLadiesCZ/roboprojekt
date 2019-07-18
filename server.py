@@ -8,10 +8,8 @@ it will display the playing area. If you want to play, run also
 client_interface.py in another command line.
 """
 import sys
-import json
 import contextlib
 
-import aiohttp
 from aiohttp import web
 
 from backend import State
@@ -55,7 +53,7 @@ async def ws_handler(request, ws_list):
 async def receiver(request):
     async with ws_handler(request, ws_receivers) as ws:
         # This message is sent only this (just connected) client
-        await ws.send_json(state.as_dict(map_name), dumps=json.dumps)
+        await ws.send_json(state.as_dict(map_name))
         # For cycle keeps the connection with client alive
         async for msg in ws:
             pass
@@ -72,15 +70,15 @@ async def interface(request):
         print(assigned_robots)
 
         robot = available_robots.pop(0)
-        await ws.send_json({"robot_name": robot.name}, dumps=json.dumps)
-        await ws.send_json(state.as_dict(map_name), dumps=json.dumps)
+        await ws.send_json({"robot_name": robot.name})
+        await ws.send_json(state.as_dict(map_name))
 
         dealt_cards = state.get_dealt_cards(robot)
-        await ws.send_json(state.cards_as_dict(dealt_cards), dumps=json.dumps)
+        await ws.send_json(state.cards_and_game_round_as_dict(dealt_cards))
 
         # Process messages from this client
         async for msg in ws:
-            message = msg.json(loads=json.loads)
+            message = msg.json()
             # it is still possible to choose cards
             # TODO: not only by pressing key but also with time up
             if not message["interface_data"]["confirmed"]:
@@ -103,11 +101,18 @@ async def interface(request):
                 state.add_to_past_deck(dealt_cards)
                 print(robot.program)
 
+            # When all the clients have sent their cards, call apply_all_effects
+
+            # After applying all game effects increase the game number
+            state.increment_game_round()
+
+            # Send the new cards to all the clients
+
             # Send messages to all connected clients
             ws_all = ws_receivers + ws_interfaces
             for client in ws_all:
                 # send info about state
-                await client.send_json(state.as_dict(map_name), dumps=json.dumps)
+                await client.send_json(state.as_dict(map_name))
         return ws
 
 

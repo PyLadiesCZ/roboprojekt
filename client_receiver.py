@@ -3,7 +3,6 @@ Client receives game state from server and draws it.
 """
 import asyncio
 import aiohttp
-import json
 import pyglet
 
 from backend import State
@@ -28,7 +27,7 @@ class Receiver:
                 # Waiting for message from server and print them
                 async for msg in ws:
                     # Cycle "for" is finished when client disconnects from server
-                    message = msg.json(loads=json.loads)
+                    message = msg.json()
                     if message["game_state"]:
                         self.state = State.from_dict(message)
                         if self.window is None:
