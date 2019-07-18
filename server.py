@@ -101,6 +101,13 @@ async def interface(request):
                 state.add_to_past_deck(dealt_cards)
                 print(robot.program)
 
+            # When all the clients have sent their cards, call apply_all_effects
+
+            # After applying all game effects increase the game number
+            state.increment_game_round()
+
+            # Send the new cards to all the clients
+
             # Send messages to all connected clients
             ws_all = ws_receivers + ws_interfaces
             for client in ws_all:

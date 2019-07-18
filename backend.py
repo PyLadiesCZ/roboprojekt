@@ -685,6 +685,12 @@ class State:
             card_pack.append(Card.from_dict(card))
         return card_pack
 
+    def increment_game_round(self):
+        """
+        Raise game_round number by 1.
+        """
+        self.game_round += 1
+
 
 class NoCardError(LookupError):
     """Raised when a robot doesn't have a card for the given register."""
