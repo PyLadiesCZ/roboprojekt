@@ -55,7 +55,7 @@ class Server:
     async def receiver(self, request):
         async with self.ws_handler(request, self.ws_receivers) as ws:
             # This message is sent only this (just connected) client
-            await ws.send_json(self.state.as_dict(map_name), dumps=json.dumps)
+            await ws.send_json(self.state.as_dict(map_name))
             # For cycle keeps the connection with client alive
             async for msg in ws:
                 pass
@@ -70,11 +70,11 @@ class Server:
             print(self.assigned_robots)
 
             robot = self.available_robots.pop(0)
-            await ws.send_json({"robot_name": robot.name}, dumps=json.dumps)
-            await ws.send_json(self.state.as_dict(map_name), dumps=json.dumps)
+            await ws.send_json({"robot_name": robot.name})
+            await ws.send_json(self.state.as_dict(map_name))
 
             dealt_cards = self.state.get_dealt_cards(robot)
-            await ws.send_json(self.state.cards_as_dict(dealt_cards), dumps=json.dumps)
+            await ws.send_json(self.state.cards_and_game_round_as_dict(dealt_cards))
 
             # Process messages from this client
             async for msg in ws:
@@ -105,7 +105,7 @@ class Server:
                 ws_all = self.ws_receivers + self.ws_interfaces
                 for client in ws_all:
                     # send info about state
-                    await client.send_json(self.state.as_dict(map_name), dumps=json.dumps)
+                    await client.send_json(self.state.as_dict(map_name))
             return ws
 
 if len(sys.argv) == 1:
