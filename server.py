@@ -94,6 +94,8 @@ async def interface(request):
             # choice of cards was blocked by the player
             else:
                 # Add the rest of the cards to used cards pack
+                robot.selection_confirmed = True
+                
                 for card in robot.program:
                     if card is not None:
                         try:
