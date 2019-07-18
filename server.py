@@ -74,7 +74,7 @@ async def interface(request):
         await ws.send_json(state.as_dict(map_name))
 
         dealt_cards = state.get_dealt_cards(robot)
-        await ws.send_json(state.cards_as_dict(dealt_cards))
+        await ws.send_json(state.cards_and_game_round_as_dict(dealt_cards))
 
         # Process messages from this client
         async for msg in ws:

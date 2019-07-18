@@ -71,6 +71,9 @@ class Interface:
 
     def set_dealt_cards(self, message):
         self.state.dealt_cards = self.game_state.cards_from_dict(message)
+        # Set the game round for this client - it is changed only
+        # by message from server
+        self.state.my_game_round = message["current_game_round"]
 
 
 def tick_asyncio(dt):
