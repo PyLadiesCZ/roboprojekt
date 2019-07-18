@@ -38,6 +38,14 @@ routes = web.RouteTableDef()
 
 @contextlib.asynccontextmanager
 async def ws_handler(request, ws_list):
+    """
+    Context manager for server.
+
+    Set up the websocket and add connected client to the respective list,
+    depending on its role (interface or receiver).
+    Yield the prepared websocket.
+    When connection is disrupted, remove the client from the list.
+    """
     # Prepare WebSocket
     ws = web.WebSocketResponse()
     await ws.prepare(request)
