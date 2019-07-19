@@ -87,7 +87,9 @@ class Server:
         Maintain connection to the client until they disconnect.
         """
         async with self.ws_handler(request, self.ws_interfaces) as ws:
-            # SERVER PART ONE: communicate only with this client
+            ##################################################################
+            # SERVER PART ONE: communicate only with this client             #
+            ##################################################################
 
             # Get first data for connected client: robot and cards
             robot = self.assign_robot_to_client(ws)
@@ -100,18 +102,25 @@ class Server:
                                }
             # Send the message to the connected client
             await ws.send_json(welcome_message)
-
-            # SERVER PART TWO: Process messages from this client
+            ##################################################################
+            # SERVER PART TWO: Process messages from this client             #
+            # + Apply game effect = play the game round                      #
+            ##################################################################
 
             # React to the sent state of this client
             async for message in ws:
                 self.process_message(message, robot, cards)
 
-                # Send messages to all connected clients
-                ws_all = self.ws_receivers + self.ws_interfaces
-                for client in ws_all:
-                    # send info about state
-                    await client.send_json(self.state.as_dict(map_name))
+            # TODO: When all the clients have the cards, apply all effects
+
+            ##################################################################
+            # SERVER PART THREE: send updated state to all connected clients #
+            # + Send new cards to all interfaces                             #
+            ##################################################################
+
+                await self.send_state_to_all()
+            # TODO: Add sending the new cards to the interfaces
+            # TODO: Increment game round in the correct place
             return ws
 
     def assign_robot_to_client(self, ws):
@@ -161,6 +170,15 @@ class Server:
                     except ValueError:
                         break
             self.state.add_to_past_deck(cards)
+
+    async def send_state_to_all(self):
+        """
+        Send message with game state to all connected clients.
+        """
+        ws_all = self.ws_receivers + self.ws_interfaces
+        for client in ws_all:
+            # send info about state
+            await client.send_json(self.state.as_dict(map_name))
 
 
 # aiohttp.web application
