@@ -120,6 +120,7 @@ class Server:
             self.state.apply_all_effects()
 
             for robot in self.state.robots:
+                print(robot)
                 robot.dealt_cards = self.state.get_dealt_cards(robot)
                 ws = self.assigned_robots[robot.name]
                 await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))

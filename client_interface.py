@@ -68,7 +68,6 @@ class Interface:
                 self.state.robot = robot
                 index = self.state.players.index(robot)
                 del self.state.players[index]
-                print(self.state.players)
 
     def set_dealt_cards(self, message):
         self.state.selection_confirmed = False

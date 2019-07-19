@@ -328,7 +328,7 @@ class State:
         self.tile_count = self.get_tile_count()
         self.present_deck = self.create_card_pack()
         self.past_deck = set()
-        self.game_round = 0
+        self.game_round = 1
 
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
