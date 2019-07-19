@@ -3,7 +3,6 @@ Client receives game state from server and draws it.
 """
 import asyncio
 import aiohttp
-import json
 import pyglet
 
 from backend import State
@@ -28,7 +27,7 @@ class Receiver:
                 # Waiting for message from server and print them
                 async for msg in ws:
                     # Cycle "for" is finished when client disconnects from server
-                    message = msg.json(loads=json.loads)
+                    message = msg.json()
                     if message["game_state"]:
                         self.state = State.from_dict(message)
                         if self.window is None:
@@ -46,14 +45,16 @@ def tick_asyncio(dt):
     loop.run_until_complete(asyncio.sleep(0))
 
 
-receiver = Receiver()
+def main():
+    receiver = Receiver()
+    pyglet.clock.schedule_interval(tick_asyncio, 1/30)
 
-pyglet.clock.schedule_interval(tick_asyncio, 1/30)
-
-# Schedule the "client" task
-# More about Futures - official documentation
-# https://docs.python.org/3/library/asyncio-future.html
-asyncio.ensure_future(receiver.client())
+    # Schedule the "client" task
+    # More about Futures - official documentation
+    # https://docs.python.org/3/library/asyncio-future.html
+    asyncio.ensure_future(receiver.client())
 
 
-pyglet.app.run()
+if __name__ == "__main__":
+    main()
+    pyglet.app.run()
