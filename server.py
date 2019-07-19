@@ -74,7 +74,7 @@ class Server:
             # This message is sent only this (just connected) client
             await ws.send_json(self.state.as_dict(map_name))
             # For cycle keeps the connection with client alive
-            async for msg in ws:
+            async for message in ws:
                 pass
             return ws
 
@@ -87,43 +87,25 @@ class Server:
         Maintain connection to the client until they disconnect.
         """
         async with self.ws_handler(request, self.ws_interfaces) as ws:
-            # This message is sent only this (just connected) client
-            # Client_interface is added to dictionary (robot.name: ws)
-            name = self.available_robots[0].name
-            self.assigned_robots[name] = ws
-            print(self.assigned_robots)
+            # SERVER PART ONE: communicate only with this client
 
-            robot = self.available_robots.pop(0)
-            await ws.send_json({"robot_name": robot.name})
-            await ws.send_json(self.state.as_dict(map_name))
+            # Get first data for connected client: robot and cards
+            robot = self.assign_robot_to_client(ws)
+            cards = self.state.get_dealt_cards(robot)
 
-            dealt_cards = self.state.get_dealt_cards(robot)
-            await ws.send_json(self.state.cards_and_game_round_as_dict(dealt_cards))
+            # Prepare message to send: robot name, game state and cards
+            welcome_message = {"robot_name": robot.name,
+                               **self.state.as_dict(map_name),
+                               **self.state.cards_and_game_round_as_dict(cards),
+                               }
+            # Send the message to the connected client
+            await ws.send_json(welcome_message)
 
-            # Process messages from this client
-            async for msg in ws:
-                message = msg.json()
-                # it is still possible to choose cards
-                # TODO: not only by pressing key but also with time up
-                if not message["interface_data"]["confirmed"]:
-                    robot.power_down = message["interface_data"]["power_down"]
-                    robot.program = []
-                    for card_index in message["interface_data"]["my_program"]:
-                        if card_index is None:
-                            robot.program.append(None)
-                        else:
-                            robot.program.append(dealt_cards[card_index])
-                # choice of cards was blocked by the player
-                else:
-                    # Add the rest of the cards to used cards pack
-                    for card in robot.program:
-                        if card is not None:
-                            try:
-                                dealt_cards.remove(card)
-                            except ValueError:
-                                break
-                    self.state.add_to_past_deck(dealt_cards)
-                    print(robot.program)
+            # SERVER PART TWO: Process messages from this client
+
+            # React to the sent state of this client
+            async for message in ws:
+                self.process_message(message, robot, cards)
 
                 # Send messages to all connected clients
                 ws_all = self.ws_receivers + self.ws_interfaces
@@ -131,6 +113,54 @@ class Server:
                     # send info about state
                     await client.send_json(self.state.as_dict(map_name))
             return ws
+
+    def assign_robot_to_client(self, ws):
+        """
+        Assign the first available robots to the client.
+        Store the pair in a dictionary of assigned robots.
+        Return the assigned robot.
+        """
+        # Client_interface is added to dictionary (robot.name: ws)
+        name = self.available_robots[0].name
+        self.assigned_robots[name] = ws
+        # print(self.assigned_robots)
+        return self.available_robots.pop(0)
+
+    def process_message(self, message, robot, cards):
+        """
+        Process the data sent by interface: chosen cards,
+        confirmation of selected cards, power down state, played game round.
+        """
+        message = message.json()
+        # Set robot's attributes according to data in message
+        # While selection is not confirmed, it is still possible to choose cards
+        # TODO: not only by pressing key but also when time's up
+        if not message["interface_data"]["confirmed"]:
+            # TODO: this part only sets the POWER DOWN attribute,
+            # it doesn't affect anything else.
+            robot.power_down = message["interface_data"]["power_down"]
+
+            # Set robot's program with chosen cards
+            robot.program = []
+            for card_index in message["interface_data"]["my_program"]:
+                if card_index is None:
+                    robot.program.append(None)
+                else:
+                    robot.program.append(cards[card_index])
+
+        # choice of cards was blocked by the player
+        # TODO: this part needs rewriting.
+        # Currently it reacts to EVERY message sent by client - it should react
+        # only to first message with confirmed selection and ignore the next.
+        else:
+            # Add the rest of the cards to used cards pack
+            for card in robot.program:
+                if card is not None:
+                    try:
+                        cards.remove(card)
+                    except ValueError:
+                        break
+            self.state.add_to_past_deck(cards)
 
 
 # aiohttp.web application
