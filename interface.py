@@ -7,16 +7,27 @@ class InterfaceState:
         self.selection_confirmed = False
         self.cursor_index = 0  # 0-4 number of positon
         self.players = []
+        self.my_game_round = None
 
     def __repr__(self):
-        return f"InterfaceState Cards: {self.dealt_cards}, My Cards: {self.my_program}, Power Down: {self.power_down,}, Robot: {self.robot}"
+        return f"InterfaceState \
+                Cards: {self.dealt_cards}, \
+                My Cards: {self.my_program}, \
+                Power Down: {self.power_down,}, \
+                Robot: {self.robot}"
 
     def as_dict(self):
         """
         Return dictionary about state of client_interface."
         """
-        return {"interface_data": {"my_program": self.my_program,
-                "power_down": self.power_down, "confirmed": self.selection_confirmed}}
+        return {
+            "interface_data": {
+                "my_program": self.my_program,
+                "power_down": self.power_down,
+                "confirmed": self.selection_confirmed,
+                "my_game_round": self.my_game_round,
+                }
+            }
 
     def select_card(self, dealt_card_index):
         """
