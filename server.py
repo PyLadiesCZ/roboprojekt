@@ -78,7 +78,7 @@ class Server:
 
             # Process messages from this client
             async for msg in ws:
-                message = msg.json(loads=json.loads)
+                message = msg.json()
                 # it is still possible to choose cards
                 # TODO: not only by pressing key but also with time up
                 if not message["interface_data"]["confirmed"]:
