@@ -16,19 +16,31 @@ from backend import State
 
 
 class Server:
+    """
+    Rule the game and network connection logic.
+
+    To properly initialize, give desired map name as an argument.
+    Create game state, get all available robots to assign.
+
+    Maintain connection with receivers (showing the robots on board).
+    Send them game state so that they move on board.
+    Maintain connection with interfaces (one robot's control console).
+    Send them robots, cards and game state so that they control their robot.
+
+    Handle diconnection nicely - remove those clients from the list.
+    """
     def __init__(self, map_name):
+        # Attributes related to game logic
         self.map_name = map_name
         self.state = State.get_start_state(map_name)
-
         self.available_robots = list(self.state.robots)
         # Dictionary {robot_name: ws_interface}
         self.assigned_robots = {}
 
-        # A list of connected clients
+        # Attributes related to network connections
+        # List of connected clients
         self.ws_receivers = []
         self.ws_interfaces = []
-        # Routing table for aiohttp.web
-        self.routes = []
 
     @contextlib.asynccontextmanager
     async def ws_handler(self, request, ws_list):
@@ -45,14 +57,19 @@ class Server:
         await ws.prepare(request)
         # WebSocket is added to a list
         ws_list.append(ws)
-
         try:
             yield ws
         finally:
             # after disconnection client is removed from list
             ws_list.remove(ws)
 
-    async def receiver(self, request):
+    async def talk_to_receiver(self, request):
+        """
+        Communicate with websockets connected through `/receiver/` route.
+
+        Send them game state.
+        Maintain connection to the client until they disconnect.
+        """
         async with self.ws_handler(request, self.ws_receivers) as ws:
             # This message is sent only this (just connected) client
             await ws.send_json(self.state.as_dict(map_name))
@@ -61,7 +78,14 @@ class Server:
                 pass
             return ws
 
-    async def interface(self, request):
+    async def talk_to_interface(self, request):
+        """
+        Communicate with websockets connected through `/interface/` route.
+
+        Send them their robot name, game state and cards to choose.
+        React to the messages from interface: update game state accordingly.
+        Maintain connection to the client until they disconnect.
+        """
         async with self.ws_handler(request, self.ws_interfaces) as ws:
             # This message is sent only this (just connected) client
             # Client_interface is added to dictionary (robot.name: ws)
@@ -110,10 +134,10 @@ class Server:
 
 
 # aiohttp.web application
-def get_app(server, argv=None):
+def get_app(argv=None):
     app = web.Application()
-    app.add_routes([web.get("/receiver/", server.receiver),
-                   web.get("/interface/", server.interface), ],
+    app.add_routes([web.get("/receiver/", server.talk_to_receiver),
+                   web.get("/interface/", server.talk_to_interface), ],
                    )
     return app
 
@@ -125,5 +149,5 @@ if __name__ == '__main__':
         map_name = sys.argv[1]
 
     server = Server(map_name)
-    app = get_app(server)
+    app = get_app()
     web.run_app(app)
