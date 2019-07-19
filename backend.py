@@ -667,14 +667,14 @@ class State:
         for card in cards:
             self.past_deck.add(card)
 
-    def cards_as_dict(self, cards):
+    def cards_and_game_round_as_dict(self, cards):
         """
         Take a list of cards instances and return them as dictionary.
         """
         card_pack = []
         for card in cards:
             card_pack.append(card.as_dict())
-        return {"cards": card_pack}
+        return {"cards": card_pack, "current_game_round": self.game_round}
 
     def cards_from_dict(self, cards):
         """
@@ -684,6 +684,12 @@ class State:
         for card in cards["cards"]:
             card_pack.append(Card.from_dict(card))
         return card_pack
+
+    def increment_game_round(self):
+        """
+        Raise game_round number by 1.
+        """
+        self.game_round += 1
 
 
 class NoCardError(LookupError):
