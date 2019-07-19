@@ -84,9 +84,13 @@ def tick_asyncio(dt):
     loop.run_until_complete(asyncio.sleep(0))
 
 
-interface = Interface()
+def main():
+    interface = Interface()
 
-pyglet.clock.schedule_interval(tick_asyncio, 1/30)
-asyncio.ensure_future(interface.get_messages())
+    pyglet.clock.schedule_interval(tick_asyncio, 1/30)
+    asyncio.ensure_future(interface.get_messages())
 
-pyglet.app.run()
+
+if __name__ == "__main__":
+    main()
+    pyglet.app.run()

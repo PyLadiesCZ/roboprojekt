@@ -45,14 +45,16 @@ def tick_asyncio(dt):
     loop.run_until_complete(asyncio.sleep(0))
 
 
-receiver = Receiver()
+def main():
+    receiver = Receiver()
+    pyglet.clock.schedule_interval(tick_asyncio, 1/30)
 
-pyglet.clock.schedule_interval(tick_asyncio, 1/30)
-
-# Schedule the "client" task
-# More about Futures - official documentation
-# https://docs.python.org/3/library/asyncio-future.html
-asyncio.ensure_future(receiver.client())
+    # Schedule the "client" task
+    # More about Futures - official documentation
+    # https://docs.python.org/3/library/asyncio-future.html
+    asyncio.ensure_future(receiver.client())
 
 
-pyglet.app.run()
+if __name__ == "__main__":
+    main()
+    pyglet.app.run()
