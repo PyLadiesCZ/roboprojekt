@@ -595,6 +595,7 @@ class State:
 
         # After last register ressurect the robots to their starting coordinates.
         self.set_robots_for_new_turn()
+        self.increment_game_round()
 
     def _apply_cards_and_tiles_effects(self, registers):
         """
