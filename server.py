@@ -108,15 +108,9 @@ class Server:
                     await client.send_json(self.state.as_dict(map_name))
             return ws
 
-if len(sys.argv) == 1:
-    map_name = "maps/test_2.json"
-else:
-    map_name = sys.argv[1]
-
-server = Server(map_name)
 
 # aiohttp.web application
-def get_app(argv=None):
+def get_app(server, argv=None):
     app = web.Application()
     app.add_routes([web.get("/receiver/", server.receiver),
                    web.get("/interface/", server.interface), ],
@@ -125,5 +119,11 @@ def get_app(argv=None):
 
 
 if __name__ == '__main__':
-    app = get_app()
+    if len(sys.argv) == 1:
+        map_name = "maps/test_2.json"
+    else:
+        map_name = sys.argv[1]
+
+    server = Server(map_name)
+    app = get_app(server)
     web.run_app(app)
