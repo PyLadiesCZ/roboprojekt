@@ -121,13 +121,12 @@ class Server:
         if all_selected:
             self.state.apply_all_effects()
             self.state.increment_game_round()
+
             for robot in self.state.robots:
-                print(robot)
+                robot.program = [None, None, None, None, None]
                 robot.dealt_cards = self.state.get_dealt_cards(robot)
                 ws = self.assigned_robots[robot.name]
                 await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
-                for robot in self.state.robots:
-                    robot.program = []
 
 
 if len(sys.argv) == 1:
