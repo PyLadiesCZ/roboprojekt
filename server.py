@@ -113,12 +113,12 @@ class Server:
 
             # TODO: When all the clients have the cards, apply all effects
 
-            """
-            SERVER PART THREE: send updated state to all connected clients
-            + Send new cards to all interfaces
-            """
-
+                """
+                SERVER PART THREE: send updated state to all connected clients
+                + Send new cards to all interfaces
+                """
                 await self.send_state_to_all()
+
             # TODO: Add sending the new cards to the interfaces
             # TODO: Increment game round in the correct place
             return ws
@@ -163,6 +163,7 @@ class Server:
         # only to first message with confirmed selection and ignore the next.
         else:
             # Add the rest of the cards to used cards pack
+            robot.selection_confirmed = True
             for card in robot.program:
                 if card is not None:
                     try:

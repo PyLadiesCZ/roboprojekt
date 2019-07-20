@@ -25,6 +25,7 @@ class Robot:
         self.damages = 0
         self.power_down = False
         self.name = name
+        self.selection_confirmed = False
 
     @property
     # More info about @property decorator - official documentation:
@@ -37,9 +38,10 @@ class Robot:
         return self.coordinates is None
 
     def __repr__(self):
-        return "<Robot {} {} {} Lives: {} Flags: {} Damages: {}, Inactive: {}>".format(
-            self.name, self.direction, self.coordinates, self.lives, self.flags,
-            self.damages, self.inactive)
+        return "<Robot {} {} {} Lives: {} Flags: {} Damages: {} \
+                Inactive: {} Selection_confirmed: {}>".format(
+                self.name, self.direction, self.coordinates, self.lives, self.flags,
+                self.damages, self.inactive, self.selection_confirmed)
 
     def as_dict(self):
         """
@@ -50,7 +52,8 @@ class Robot:
                  "lives": self.lives, "flags": self.flags,
                  "damages": self.damages, "power_down": self.power_down,
                  "direction": self.direction.value,
-                 "start_coordinates": self.start_coordinates, }}
+                 "start_coordinates": self.start_coordinates,
+                 "selection_confirmed": self.selection_confirmed}}
 
     @classmethod
     def from_dict(cls, robot_description):
@@ -67,6 +70,7 @@ class Robot:
         robot.damages = robot_description["damages"]
         robot.power_down = robot_description["power_down"]
         robot.start_coordinates = robot_description["start_coordinates"]
+        robot.selection_confirmed = robot_description["selection_confirmed"]
         return robot
 
     def walk(self, distance, state, direction=None, push_others=True):
