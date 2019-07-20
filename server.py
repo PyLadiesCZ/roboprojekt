@@ -83,15 +83,15 @@ class Server:
                 # TODO: not only by pressing key but also with time up
                 if not message["interface_data"]["confirmed"]:
                     robot.power_down = message["interface_data"]["power_down"]
-                    robot.program = []
-                    for card_index in message["interface_data"]["my_program"]:
-                        if card_index is None:
-                            robot.program.append(None)
-                        else:
-                            robot.program.append(robot.dealt_cards[card_index])
+                    selection = message["interface_data"]["my_program"]
+                    for card_index in selection:
+                        if card_index != None:
+                            robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
+                            print(robot.program)
                 # choice of cards was blocked by the player
                 else:
                     # Add the rest of the cards to used cards pack
+                    print(robot.program)
                     for card in robot.program:
                         if card is not None:
                             try:
@@ -116,8 +116,6 @@ class Server:
         """
         all_selected = True
         for robot in self.state.robots:
-            if len(robot.program) < 5:
-                all_selected = False
             if None in robot.program:
                 all_selected = False
         if all_selected:

@@ -19,7 +19,7 @@ class Robot:
         self.direction = direction
         self.coordinates = coordinates
         self.start_coordinates = coordinates
-        self.program = []
+        self.program = [None, None, None, None, None]
         self.lives = 3
         self.flags = 0
         self.damages = 0
