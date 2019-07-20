@@ -91,6 +91,7 @@ class Server:
 
                 # choice of cards was blocked by the player
                 else:
+                    robot.selection_confirmed = True
                     # Add the rest of the cards to used cards pack
                     for card in robot.program:
                         if card is not None:
@@ -116,7 +117,7 @@ class Server:
         """
         all_selected = True
         for robot in self.state.robots:
-            if None in robot.program:
+            if robot.selection_confirmed == False:
                 all_selected = False
         if all_selected:
             self.state.apply_all_effects()
