@@ -93,14 +93,6 @@ class Server:
                 else:
                     # Add the rest of the cards to used cards pack
                     robot.selection_confirmed = True
-                    for card in robot.program:
-                        if card is not None:
-                            try:
-                                dealt_cards.remove(card)
-                            except ValueError:
-                                break
-                    self.state.add_to_past_deck(dealt_cards)
-                    print(robot.program)
 
                 # Send messages to all connected clients
                 ws_all = self.ws_receivers + self.ws_interfaces
@@ -108,6 +100,7 @@ class Server:
                     # send info about state
                     await client.send_json(self.state.as_dict(map_name))
             return ws
+
 
 if len(sys.argv) == 1:
     map_name = "maps/test_2.json"
