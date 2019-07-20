@@ -110,6 +110,10 @@ class Server:
 
 
     async def play_round(self, state):
+        """
+        If all robot have selected cars, server apply effects of cards and tiles.
+        New dealt cards are sent to all clients.
+        """
         all_selected = True
         for robot in self.state.robots:
             if len(robot.program) < 5:
