@@ -82,12 +82,13 @@ class Server:
                 # it is still possible to choose cards
                 # TODO: not only by pressing key but also with time up
                 if not message["interface_data"]["confirmed"]:
+                    robot.program = [None, None, None, None, None]
                     robot.power_down = message["interface_data"]["power_down"]
                     selection = message["interface_data"]["my_program"]
                     for card_index in selection:
                         if card_index != None:
                             robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
-                            print(robot.program)
+
                 # choice of cards was blocked by the player
                 else:
                     # Add the rest of the cards to used cards pack
@@ -128,6 +129,7 @@ class Server:
                 await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
                 for robot in self.state.robots:
                     robot.program = []
+            self.state.increment_game_round()
 
 
 if len(sys.argv) == 1:

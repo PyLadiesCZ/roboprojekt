@@ -19,7 +19,7 @@ class Robot:
         self.direction = direction
         self.coordinates = coordinates
         self.start_coordinates = coordinates
-        self.program = [None, None, None, None, None]
+        self.program = []
         self.lives = 3
         self.flags = 0
         self.damages = 0
@@ -595,7 +595,6 @@ class State:
 
         # After last register ressurect the robots to their starting coordinates.
         self.set_robots_for_new_turn()
-        self.increment_game_round()
 
     def _apply_cards_and_tiles_effects(self, registers):
         """
