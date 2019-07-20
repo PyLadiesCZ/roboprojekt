@@ -120,7 +120,7 @@ class Server:
                 all_selected = False
         if all_selected:
             self.state.apply_all_effects()
-
+            self.state.increment_game_round()
             for robot in self.state.robots:
                 print(robot)
                 robot.dealt_cards = self.state.get_dealt_cards(robot)
@@ -128,7 +128,6 @@ class Server:
                 await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
                 for robot in self.state.robots:
                     robot.program = []
-            self.state.increment_game_round()
 
 
 if len(sys.argv) == 1:
