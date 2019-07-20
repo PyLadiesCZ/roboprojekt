@@ -92,7 +92,6 @@ class Server:
                 # choice of cards was blocked by the player
                 else:
                     # Add the rest of the cards to used cards pack
-                    print(robot.program)
                     for card in robot.program:
                         if card is not None:
                             try:
@@ -139,6 +138,7 @@ else:
 
 
 server = Server(map_name)
+
 
 # aiohttp.web application
 def get_app(argv=None):
