@@ -117,7 +117,7 @@ class Server:
         """
         all_selected = True
         for robot in self.state.robots:
-            if robot.selection_confirmed == False:
+            if not robot.selection_confirmed:
                 all_selected = False
         if all_selected:
             self.state.apply_all_effects()
