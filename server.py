@@ -86,7 +86,7 @@ class Server:
                     robot.power_down = message["interface_data"]["power_down"]
                     selection = message["interface_data"]["my_program"]
                     for card_index in selection:
-                        if card_index != None:
+                        if card_index is not None:
                             robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
 
                 # choice of cards was blocked by the player
