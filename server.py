@@ -82,6 +82,7 @@ class Server:
                 # it is still possible to choose cards
                 # TODO: not only by pressing key but also with time up
                 if not message["interface_data"]["confirmed"]:
+                    robot.selection_confirmed = message["interface_data"]["confirmed"]
                     robot.program = [None, None, None, None, None]
                     robot.power_down = message["interface_data"]["power_down"]
                     selection = message["interface_data"]["my_program"]
