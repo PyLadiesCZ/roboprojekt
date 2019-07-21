@@ -70,6 +70,8 @@ class Server:
             print(self.assigned_robots)
 
             robot = self.available_robots.pop(0)
+            robot.program = [None, None, None, None, None]
+
             await ws.send_json({"robot_name": robot.name})
             await ws.send_json(self.state.as_dict(map_name))
 
@@ -82,14 +84,12 @@ class Server:
                 # it is still possible to choose cards
                 # TODO: not only by pressing key but also with time up
                 if not message["interface_data"]["confirmed"]:
-                    robot.selection_confirmed = message["interface_data"]["confirmed"]
-                    robot.program = [None, None, None, None, None]
                     robot.power_down = message["interface_data"]["power_down"]
                     selection = message["interface_data"]["my_program"]
                     for card_index in selection:
                         if card_index is not None:
                             robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
-
+                    print(robot.program)
                 # choice of cards was blocked by the player
                 else:
                     robot.selection_confirmed = True
@@ -123,12 +123,20 @@ class Server:
         if all_selected:
             self.state.apply_all_effects()
             self.state.increment_game_round()
+            self.clear_robots_attributes(self.state)
 
             for robot in self.state.robots:
-                robot.program = [None, None, None, None, None]
                 robot.dealt_cards = self.state.get_dealt_cards(robot)
                 ws = self.assigned_robots[robot.name]
                 await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
+
+    def clear_robots_attributes(self, state):
+        """
+        Clear robots attributes at the end of round.
+        """
+        for robot in self.state.robots:
+            robot.program = [None, None, None, None, None]
+            robot.selection_confirmed = False
 
 
 if len(sys.argv) == 1:
