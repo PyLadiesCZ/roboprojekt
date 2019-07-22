@@ -661,7 +661,9 @@ class State:
             self.present_deck.extend(self.past_deck)
             shuffle(self.present_deck)
         dealt_cards = self.present_deck[-dealt_cards_count:]
+        # Delete cards from present deck and add them to deck with used ones.
         del self.present_deck[-dealt_cards_count:]
+        self.add_to_past_deck(dealt_cards)
         return dealt_cards
 
     def add_to_past_deck(self, cards):

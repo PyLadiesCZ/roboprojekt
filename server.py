@@ -93,14 +93,6 @@ class Server:
                 # choice of cards was blocked by the player
                 else:
                     robot.selection_confirmed = True
-                    # Add the rest of the cards to used cards pack
-                    for card in robot.program:
-                        if card is not None:
-                            try:
-                                robot.dealt_cards.remove(card)
-                            except ValueError:
-                                break
-                    self.state.add_to_past_deck(robot.dealt_cards)
                     await self.play_round()
 
                 # Send messages to all connected clients
