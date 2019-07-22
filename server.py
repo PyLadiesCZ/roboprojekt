@@ -12,7 +12,7 @@ import contextlib
 
 from aiohttp import web
 
-from backend import State
+from backend import State, Robot
 
 
 class Server:
@@ -115,20 +115,13 @@ class Server:
         if all_selected:
             self.state.apply_all_effects()
             self.state.increment_game_round()
-            self.clear_robots_attributes()
 
             for robot in self.state.robots:
+                robot.clear_robot_attributes()
                 robot.dealt_cards = self.state.get_dealt_cards(robot)
                 ws = self.assigned_robots[robot.name]
                 await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
 
-    def clear_robots_attributes(self):
-        """
-        Clear robots attributes at the end of round.
-        """
-        for robot in self.state.robots:
-            robot.program = [None, None, None, None, None]
-            robot.selection_confirmed = False
 
 
 if len(sys.argv) == 1:
