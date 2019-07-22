@@ -115,14 +115,14 @@ class Server:
         if all_selected:
             self.state.apply_all_effects()
             self.state.increment_game_round()
-            self.clear_robots_attributes(self.state)
+            self.clear_robots_attributes()
 
             for robot in self.state.robots:
                 robot.dealt_cards = self.state.get_dealt_cards(robot)
                 ws = self.assigned_robots[robot.name]
                 await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
 
-    def clear_robots_attributes(self, state):
+    def clear_robots_attributes(self):
         """
         Clear robots attributes at the end of round.
         """
