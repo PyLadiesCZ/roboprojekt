@@ -101,7 +101,7 @@ class Server:
                             except ValueError:
                                 break
                     self.state.add_to_past_deck(robot.dealt_cards)
-                    await self.play_round(self.state)
+                    await self.play_round()
 
                 # Send messages to all connected clients
                 ws_all = self.ws_receivers + self.ws_interfaces
