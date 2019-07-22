@@ -111,7 +111,7 @@ class Server:
             return ws
 
 
-    async def play_round(self, state):
+    async def play_round(self):
         """
         If all robot have selected cars, server apply effects of cards and tiles.
         New dealt cards are sent to all clients.
