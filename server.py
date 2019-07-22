@@ -89,7 +89,7 @@ class Server:
                     for card_index in selection:
                         if card_index is not None:
                             robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
-                    print(robot.program)
+                    
                 # choice of cards was blocked by the player
                 else:
                     robot.selection_confirmed = True

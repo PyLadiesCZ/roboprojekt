@@ -201,6 +201,13 @@ class Robot:
             # Robot is damaged so much that laser kills it.
             self.die()
 
+    def clear_robot_attributes(self):
+        """
+        Clear robot attributes at the end of round.
+        """
+        self.program = [None, None, None, None, None]
+        self.selection_confirmed = False
+
     def get_distance_to_board_end(self, state):
         """
         Get the distance from the robot's coordinates to the end of the board in robot's direction.
