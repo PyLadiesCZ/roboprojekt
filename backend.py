@@ -704,6 +704,16 @@ class State:
         """
         self.game_round += 1
 
+    def all_selected(self):
+        """
+        Check if all robots confirmed their selection.
+        """
+        all_selected = True
+        for robot in self.robots:
+            if not robot.selection_confirmed:
+                all_selected = False
+        return all_selected
+
 
 class NoCardError(LookupError):
     """Raised when a robot doesn't have a card for the given register."""

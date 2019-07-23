@@ -173,10 +173,7 @@ class Server:
         If all robot have selected cars, server apply effects of cards and tiles.
         New dealt cards are sent to all clients.
         """
-        all_selected = True
-        for robot in self.state.robots:
-            if not robot.selection_confirmed:
-                all_selected = False
+        all_selected = self.state.all_selected()
         if all_selected:
             self.state.apply_all_effects()
             self.state.increment_game_round()
