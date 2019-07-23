@@ -93,12 +93,13 @@ class Server:
 
             # Get first data for connected client: robot and cards
             robot = self.assign_robot_to_client(ws)
-            cards = self.state.get_dealt_cards(robot)
+            robot.program = [None, None, None, None, None]
+            robot.dealt_cards = self.state.get_dealt_cards(robot)
 
             # Prepare message to send: robot name, game state and cards
             welcome_message = {"robot_name": robot.name,
                                **self.state.as_dict(map_name),
-                               **self.state.cards_and_game_round_as_dict(cards),
+                               **self.state.cards_and_game_round_as_dict(robot.dealt_cards),
                                }
             # Send the message to the connected client
             await ws.send_json(welcome_message)
@@ -109,7 +110,7 @@ class Server:
 
             # React to the sent state of this client
             async for message in ws:
-                self.process_message(message, robot, cards)
+                await self.process_message(message, robot)
 
             # TODO: When all the clients have the cards, apply all effects
 
@@ -119,8 +120,6 @@ class Server:
                 """
                 await self.send_state_to_all()
 
-            # TODO: Add sending the new cards to the interfaces
-            # TODO: Increment game round in the correct place
             return ws
 
     def assign_robot_to_client(self, ws):
@@ -135,7 +134,7 @@ class Server:
         # print(self.assigned_robots)
         return self.available_robots.pop(0)
 
-    def process_message(self, message, robot, cards):
+    async def process_message(self, message, robot):
         """
         Process the data sent by interface: chosen cards,
         confirmation of selected cards, power down state, played game round.
@@ -150,27 +149,16 @@ class Server:
             robot.power_down = message["interface_data"]["power_down"]
 
             # Set robot's program with chosen cards
-            robot.program = []
-            for card_index in message["interface_data"]["my_program"]:
-                if card_index is None:
-                    robot.program.append(None)
-                else:
-                    robot.program.append(cards[card_index])
+            selection = message["interface_data"]["my_program"]
+            for card_index in selection:
+                if card_index is not None:
+                    robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
 
         # choice of cards was blocked by the player
-        # TODO: this part needs rewriting.
-        # Currently it reacts to EVERY message sent by client - it should react
-        # only to first message with confirmed selection and ignore the next.
         else:
             # Add the rest of the cards to used cards pack
             robot.selection_confirmed = True
-            for card in robot.program:
-                if card is not None:
-                    try:
-                        cards.remove(card)
-                    except ValueError:
-                        break
-            self.state.add_to_past_deck(cards)
+            await self.play_round()
 
     async def send_state_to_all(self):
         """
@@ -180,6 +168,25 @@ class Server:
         for client in ws_all:
             # send info about state
             await client.send_json(self.state.as_dict(map_name))
+
+    async def play_round(self):
+        """
+        If all robot have selected cars, server apply effects of cards and tiles.
+        New dealt cards are sent to all clients.
+        """
+        all_selected = True
+        for robot in self.state.robots:
+            if not robot.selection_confirmed:
+                all_selected = False
+        if all_selected:
+            self.state.apply_all_effects()
+            self.state.increment_game_round()
+
+            for robot in self.state.robots:
+                robot.clear_robot_attributes()
+                robot.dealt_cards = self.state.get_dealt_cards(robot)
+                ws = self.assigned_robots[robot.name]
+                await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
 
 
 # aiohttp.web application
@@ -193,7 +200,7 @@ def get_app(argv=None):
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        map_name = "maps/test_2.json"
+        map_name = "maps/test_game.json"
     else:
         map_name = sys.argv[1]
 

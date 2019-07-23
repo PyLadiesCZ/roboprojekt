@@ -201,6 +201,13 @@ class Robot:
             # Robot is damaged so much that laser kills it.
             self.die()
 
+    def clear_robot_attributes(self):
+        """
+        Clear robot attributes at the end of round.
+        """
+        self.program = [None, None, None, None, None]
+        self.selection_confirmed = False
+
     def get_distance_to_board_end(self, state):
         """
         Get the distance from the robot's coordinates to the end of the board in robot's direction.
@@ -332,7 +339,7 @@ class State:
         self.tile_count = self.get_tile_count()
         self.present_deck = self.create_card_pack()
         self.past_deck = set()
-        self.game_round = 0
+        self.game_round = 1
 
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
@@ -661,7 +668,9 @@ class State:
             self.present_deck.extend(self.past_deck)
             shuffle(self.present_deck)
         dealt_cards = self.present_deck[-dealt_cards_count:]
+        # Delete cards from present deck and add them to deck with used ones.
         del self.present_deck[-dealt_cards_count:]
+        self.add_to_past_deck(dealt_cards)
         return dealt_cards
 
     def add_to_past_deck(self, cards):
