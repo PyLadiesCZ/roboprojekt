@@ -93,8 +93,6 @@ class Server:
 
             # Get first data for connected client: robot and cards
             robot = self.assign_robot_to_client(ws)
-            robot.program = [None, None, None, None, None]
-            robot.dealt_cards = self.state.get_dealt_cards(robot)
 
             # Prepare message to send: robot name, game state and cards
             welcome_message = {"robot_name": robot.name,
@@ -111,8 +109,6 @@ class Server:
             # React to the sent state of this client
             async for message in ws:
                 await self.process_message(message, robot)
-
-            # TODO: When all the clients have the cards, apply all effects
 
                 """
                 SERVER PART THREE: send updated state to all connected clients
@@ -132,7 +128,10 @@ class Server:
         name = self.available_robots[0].name
         self.assigned_robots[name] = ws
         # print(self.assigned_robots)
-        return self.available_robots.pop(0)
+        robot = self.available_robots.pop(0)
+        robot.clear_robot_attributes()
+        robot.dealt_cards = self.state.get_dealt_cards(robot)
+        return robot
 
     async def process_message(self, message, robot):
         """
