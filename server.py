@@ -72,7 +72,7 @@ class Server:
         """
         async with self.ws_handler(request, self.ws_receivers) as ws:
             # This message is sent only this (just connected) client
-            await ws.send_json(self.state.as_dict(map_name))
+            await ws.send_json(self.state.whole_as_dict(map_name))
             # For cycle keeps the connection with client alive
             async for message in ws:
                 pass
@@ -87,34 +87,22 @@ class Server:
         Maintain connection to the client until they disconnect.
         """
         async with self.ws_handler(request, self.ws_interfaces) as ws:
-            """
-            SERVER PART ONE: communicate only with this client
-            """
-
             # Get first data for connected client: robot and cards
+            # and assign it to client
             robot = self.assign_robot_to_client(ws)
 
             # Prepare message to send: robot name, game state and cards
             welcome_message = {"robot_name": robot.name,
-                               **self.state.as_dict(map_name),
+                               **self.state.whole_as_dict(map_name),
                                **self.state.cards_and_game_round_as_dict(robot.dealt_cards),
                                }
             # Send the message to the connected client
             await ws.send_json(welcome_message)
-            """
-            SERVER PART TWO: Process messages from this client
-            + Apply game effect = play the game round
-            """
 
-            # React to the sent state of this client
+            # React to the sent state of this client and send new state to all
             async for message in ws:
                 await self.process_message(message, robot)
-
-                """
-                SERVER PART THREE: send updated state to all connected clients
-                + Send new cards to all interfaces
-                """
-                await self.send_state_to_all()
+                await self.send_robots_state_to_all()
 
             return ws
 
@@ -159,14 +147,14 @@ class Server:
             robot.selection_confirmed = True
             await self.play_round()
 
-    async def send_state_to_all(self):
+    async def send_robots_state_to_all(self):
         """
-        Send message with game state to all connected clients.
+        Send message with robots' state to all connected clients.
         """
         ws_all = self.ws_receivers + self.ws_interfaces
         for client in ws_all:
             # send info about state
-            await client.send_json(self.state.as_dict(map_name))
+            await client.send_json(self.state.robots_as_dict())
 
     async def play_round(self):
         """

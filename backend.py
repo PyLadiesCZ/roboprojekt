@@ -345,7 +345,7 @@ class State:
         return "<State {} {}>".format(self._board, self.robots)
 
     @classmethod
-    def from_dict(cls, data):
+    def whole_from_dict(cls, data):
         """
         Create game state from JSON data received from server.
         """
@@ -358,13 +358,29 @@ class State:
             robots.append(robot)
         return cls(board, robots)
 
-    def as_dict(self, map_name):
+    def robots_from_dict(self, data):
         """
-        Return state as dictionary for sending with server.
+        Update robots in state with data sent from server.
+        """
+        robots = []
+        for robot_description in data["robots"]:
+            robot = Robot.from_dict(robot_description)
+            robots.append(robot)
+        self.robots = robots
+
+    def whole_as_dict(self, map_name):
+        """
+        Return whole state as dictionary for sending with server.
         """
         return {"game_state": {
                 "board": get_map_data(map_name),
-                "robots": [robot.as_dict() for robot in self.robots], }}
+                **self.robots_as_dict(), }}
+
+    def robots_as_dict(self):
+        """
+        Return robots from state as dictionary for sending with server.
+        """
+        return {"robots": [robot.as_dict() for robot in self.robots]}
 
     @classmethod
     def get_start_state(cls, map_name):
