@@ -665,6 +665,7 @@ class State:
         # If there is less cards than needed, join them with used cards.
         if dealt_cards_count >= len(self.present_deck):
             self.present_deck.extend(self.past_deck)
+            self.past_deck.clear()
             shuffle(self.present_deck)
         dealt_cards = self.present_deck[-dealt_cards_count:]
         # Delete cards from present deck and add them to deck with used ones.
