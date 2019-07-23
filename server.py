@@ -174,8 +174,11 @@ class Server:
                     ws = self.assigned_robots[robot.name]
                     await ws.send_json("Timer!")
                     time.sleep(30)
-                    self.state.all_selected()
+                    all selected = self.state.all_selected()
                     if not all_selected:
+                        for card in robot.program:
+                            if card is None:
+                                ...
                         # TODO random choice left dealt_cards to robot.program
                         # at the end all_selected = True
 
