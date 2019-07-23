@@ -503,15 +503,14 @@ class State:
         for robot in self.get_active_robots():
             for tile in self.get_tiles(robot.coordinates):
                 if tile.check_belts(express_belts):
-                    # Get next coordinates of robots on belts
-                    robots_next_coordinates[robot] = get_next_coordinates(
-                        robot.coordinates,
-                        tile.direction.get_new_direction(tile.direction_out)
-                    )
-                    break
-                else:
-                    # Other robots will have the same coordinates
-                    robots_next_coordinates[robot] = robot.coordinates
+                    belt_direction = tile.direction.get_new_direction(tile.direction_out)
+                    if self.check_the_absence_of_a_wall(robot.coordinates, belt_direction):
+                        # Get next coordinates of robots on belts
+                        robots_next_coordinates[robot] = get_next_coordinates(
+                            robot.coordinates, belt_direction)
+                        break
+                # Other robots will have the same coordinates
+                robots_next_coordinates[robot] = robot.coordinates
         return robots_next_coordinates
 
     def apply_tile_effects(self, register):
