@@ -9,6 +9,8 @@ client_interface.py in another command line.
 """
 import sys
 import contextlib
+import time
+import random
 
 from aiohttp import web
 
@@ -164,6 +166,19 @@ class Server:
         New dealt cards are sent to all clients.
         """
         all_selected = self.state.all_selected()
+
+        if not all_selected:
+            selection_number = self.state.selection_number()
+            if selection_number == len(self.state.robots) - 1:
+                for robot in self.state.robots:
+                    ws = self.assigned_robots[robot.name]
+                    await ws.send_json("Timer!")
+                    time.sleep(30)
+                    self.state.all_selected()
+                    if not all_selected:
+                        # TODO random choice left dealt_cards to robot.program
+                        # at the end all_selected = True
+
         if all_selected:
             self.state.apply_all_effects()
             self.state.increment_game_round()
