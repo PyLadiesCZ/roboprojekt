@@ -21,13 +21,12 @@ class Receiver:
         self.window.clear()
         draw_state(self.state, self.window)
 
-    async def client(self):
+    async def get_game_state(self):
         async with aiohttp.ClientSession() as session:
             async with session.ws_connect('http://localhost:8080/receiver/') as ws:
-                # Waiting for message from server and print them
-                async for msg in ws:
-                    # Cycle "for" is finished when client disconnects from server
-                    message = msg.json()
+                # Cycle "for" is finished when client disconnects from server
+                async for message in ws:
+                    message = message.json()
                     if message["game_state"]:
                         self.state = State.from_dict(message)
                         if self.window is None:
@@ -52,7 +51,7 @@ def main():
     # Schedule the "client" task
     # More about Futures - official documentation
     # https://docs.python.org/3/library/asyncio-future.html
-    asyncio.ensure_future(receiver.client())
+    asyncio.ensure_future(receiver.get_game_state())
 
 
 if __name__ == "__main__":

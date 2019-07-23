@@ -1,5 +1,7 @@
 """
-Client which send messages to server
+Game interface.
+Client which receives data about its robot, cards and state of the game from
+server. It sends messages with its state to server.
 """
 import asyncio
 import aiohttp
@@ -12,14 +14,21 @@ from backend import State
 
 class Interface:
     def __init__(self):
+        # Game attributes
         self.window = create_window()
         self.window.push_handlers(
             on_draw=self.window_draw,
             on_text=self.on_text, )
         self.state = InterfaceState()
+        self.game_state = None
+
+        # Connection attribute
         self.ws = None
 
     def window_draw(self):
+        """
+        Draw the window containing game interface with its current state.
+        """
         self.window.clear()
         draw_interface(self.state, self.window)
 
@@ -27,40 +36,46 @@ class Interface:
         """
         Key listener.
         Wait for user input on keyboard and react for it.
+        With every key press send interface state to server.
         """
         handle_text(self.state, text)
         self.send_to_server(self.state.as_dict())
 
     def send_to_server(self, message):
         """
-        Client sends messages to server.
+        Send messages to server.
         """
-        print(message)
+        # print(message)
         if self.ws:
             asyncio.ensure_future(self.ws.send_json(message))
 
     async def get_messages(self):
         """
-        Client connects to server and receives messages.
+        Connect to server and receive messages.
+        Process information from server: game state, robot and cards.
         """
         # create Session
         async with aiohttp.ClientSession() as session:
             # create Websocket
             async with session.ws_connect('http://localhost:8080/interface/') as self.ws:
-                async for msg in self.ws:
-                    # Cycle "for" is finished when client disconnect from server
-                    message = msg.json()
+                # Cycle "for" is finished when client disconnects from server
+                async for message in self.ws:
+                    message = message.json()
                     if "robot_name" in message:
                         robot_name = message["robot_name"]
                     if "game_state" in message:
                         self.set_game_state(message, robot_name)
                     if "cards" in message:
                         self.set_dealt_cards(message)
-                    else:
-                        print(message)
+                    # else:
+                    #     print(message)
         self.ws = None
 
     def set_game_state(self, message, robot_name):
+        """
+        Set game attributes using data from server message:
+        - create game state, set own robot and other players.
+        """
         self.game_state = State.from_dict(message)
         self.state.players = self.game_state.robots
         for robot in self.state.players:
@@ -70,6 +85,9 @@ class Interface:
                 del self.state.players[index]
 
     def set_dealt_cards(self, message):
+        """
+        Set dealt cards and game round using data from server message.
+        """
         self.state.selection_confirmed = False
         self.state.dealt_cards = self.game_state.cards_from_dict(message)
         self.state.return_cards()

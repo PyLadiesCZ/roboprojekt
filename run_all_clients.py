@@ -1,6 +1,9 @@
 """
-Run all clients for map - maps/test_game.json.
+Run clients with a single file.
+Depending on number of players on the map add another interfaces.
 Don´t forget to run server.py in another command line.
+
+For devel purposes.
 """
 import pyglet
 
