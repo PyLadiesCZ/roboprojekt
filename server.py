@@ -12,7 +12,7 @@ import contextlib
 
 from aiohttp import web
 
-from backend import State
+from backend import State, Robot
 
 
 class Server:
@@ -70,11 +70,13 @@ class Server:
             print(self.assigned_robots)
 
             robot = self.available_robots.pop(0)
+            robot.program = [None, None, None, None, None]
+
             await ws.send_json({"robot_name": robot.name})
             await ws.send_json(self.state.as_dict(map_name))
 
-            dealt_cards = self.state.get_dealt_cards(robot)
-            await ws.send_json(self.state.cards_and_game_round_as_dict(dealt_cards))
+            robot.dealt_cards = self.state.get_dealt_cards(robot)
+            await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
 
             # Process messages from this client
             async for msg in ws:
@@ -83,16 +85,15 @@ class Server:
                 # TODO: not only by pressing key but also with time up
                 if not message["interface_data"]["confirmed"]:
                     robot.power_down = message["interface_data"]["power_down"]
-                    robot.program = []
-                    for card_index in message["interface_data"]["my_program"]:
-                        if card_index is None:
-                            robot.program.append(None)
-                        else:
-                            robot.program.append(dealt_cards[card_index])
+                    selection = message["interface_data"]["my_program"]
+                    for card_index in selection:
+                        if card_index is not None:
+                            robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
+                    
                 # choice of cards was blocked by the player
                 else:
-                    # Add the rest of the cards to used cards pack
                     robot.selection_confirmed = True
+                    await self.play_round()
 
                 # Send messages to all connected clients
                 ws_all = self.ws_receivers + self.ws_interfaces
@@ -102,10 +103,32 @@ class Server:
             return ws
 
 
+    async def play_round(self):
+        """
+        If all robot have selected cars, server apply effects of cards and tiles.
+        New dealt cards are sent to all clients.
+        """
+        all_selected = True
+        for robot in self.state.robots:
+            if not robot.selection_confirmed:
+                all_selected = False
+        if all_selected:
+            self.state.apply_all_effects()
+            self.state.increment_game_round()
+
+            for robot in self.state.robots:
+                robot.clear_robot_attributes()
+                robot.dealt_cards = self.state.get_dealt_cards(robot)
+                ws = self.assigned_robots[robot.name]
+                await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
+
+
+
 if len(sys.argv) == 1:
-    map_name = "maps/test_2.json"
+    map_name = "maps/test_game.json"
 else:
     map_name = sys.argv[1]
+
 
 server = Server(map_name)
 

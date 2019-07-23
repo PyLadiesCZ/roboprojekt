@@ -214,7 +214,7 @@ def draw_interface(interface_state, window):
         # Other robots´flags
         for i, robot in enumerate(interface_state.players):
             for sprite in number_sprites:
-                if interface_state.robot.flags == number_sprites.index(sprite):
+                if robot.flags == number_sprites.index(sprite):
                     sprite.x = 85 + 98 * i
                     sprite.y = 53
                     sprite.draw()
@@ -222,7 +222,7 @@ def draw_interface(interface_state, window):
         # Other robots´damages
         for i, robot in enumerate(interface_state.players):
             for sprite in number_sprites:
-                if interface_state.robot.damages == number_sprites.index(sprite):
+                if robot.damages == number_sprites.index(sprite):
                     sprite.x = 107 + 98 * i
                     sprite.y = 153
                     sprite.draw()
@@ -230,7 +230,7 @@ def draw_interface(interface_state, window):
         # Other robots´lives
         for i, robot in enumerate(interface_state.players):
             for sprite in number_sprites:
-                if interface_state.robot.lives == number_sprites.index(sprite):
+                if robot.lives == number_sprites.index(sprite):
                     sprite.x = 65 + 98 * i
                     sprite.y = 153
                     sprite.draw()
