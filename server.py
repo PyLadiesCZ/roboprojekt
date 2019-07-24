@@ -9,8 +9,8 @@ client_interface.py in another command line.
 """
 import sys
 import contextlib
-import time
 import random
+import asyncio
 
 from aiohttp import web
 
@@ -182,15 +182,19 @@ class Server:
             if selection_number == len(self.state.robots) - 1:
                 for robot in self.state.robots:
                     ws = self.assigned_robots[robot.name]
-                    await ws.send_json("Timer!")
-                    time.sleep(30)
-                    all selected = self.state.all_selected()
+                    asyncio.create_task(timer())
+                    all_selected = self.state.all_selected()
                     if not all_selected:
-                        for card in robot.program:
+                        for i, card in enumerate(robot.program):
                             if card is None:
-                                ...
-                        # TODO random choice left dealt_cards to robot.program
-                        # at the end all_selected = True
+                                available_cards = []
+                                for card in robot.dealt_cards:
+                                    if card not in robot.program:
+                                        available_cards.append(card)
+                                card = random.choice(available_cards)
+                                robot.program[i] = card
+                        print(robot.program)
+                        all_selected = True
 
         if all_selected:
             self.state.apply_all_effects()
@@ -202,6 +206,9 @@ class Server:
                 ws = self.assigned_robots[robot.name]
                 await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
 
+
+async def timer():
+    await asyncio.sleep(15)
 
 # aiohttp.web application
 def get_app(argv=None):
