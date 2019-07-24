@@ -732,7 +732,7 @@ class State:
             if robot.selection_confirmed:
                 selection_number += 1
         return selection_number
-        
+
 
 class NoCardError(LookupError):
     """Raised when a robot doesn't have a card for the given register."""
