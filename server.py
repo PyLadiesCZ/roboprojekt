@@ -180,9 +180,9 @@ class Server:
         if not all_selected:
             selection_number = self.state.selection_number()
             if selection_number == len(self.state.robots) - 1:
+                asyncio.create_task(timer())
                 for robot in self.state.robots:
                     ws = self.assigned_robots[robot.name]
-                    asyncio.create_task(timer())
                     all_selected = self.state.all_selected()
                     if not all_selected:
                         for i, card in enumerate(robot.program):
@@ -208,7 +208,7 @@ class Server:
 
 
 async def timer():
-    await asyncio.sleep(15)
+    await asyncio.sleep(10)
 
 # aiohttp.web application
 def get_app(argv=None):
