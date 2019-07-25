@@ -33,7 +33,11 @@ class Receiver:
                             self.window = create_window(self.state)
                             self.window.push_handlers(on_draw=self.window_draw)
                     if "robots" in message:
+<<<<<<< HEAD
                         self.state.robots = self.state.robots_from_dict(message)
+=======
+                        self.state.robots_from_dict(message)
+>>>>>>> Divide sending game state into map and robot parts. (#310)
 
 
 def tick_asyncio(dt):

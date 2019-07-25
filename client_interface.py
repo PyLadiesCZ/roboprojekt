@@ -83,7 +83,11 @@ class Interface:
         """
         Set robots, players and self robot using data from sent message.
         """
+<<<<<<< HEAD
         self.game_state.robots = self.game_state.robots_from_dict(message)
+=======
+        self.game_state.robots_from_dict(message)
+>>>>>>> Divide sending game state into map and robot parts. (#310)
         self.state.players = self.game_state.robots
         for robot in self.state.players:
             if robot.name == robot_name:
