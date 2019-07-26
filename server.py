@@ -139,15 +139,17 @@ class Server:
         Process the data sent by interface: chosen cards,
         confirmation of selected cards, power down state, played game round.
         """
+        if robot.selection_confirmed:
+            return
         message = message.json()
         # Set robot's attributes according to data in message
         # While selection is not confirmed, it is still possible to choose cards
         # TODO: not only by pressing key but also when time's up
-        if not message["interface_data"]["confirmed"]:
-            # TODO: this part only sets the POWER DOWN attribute,
-            # it doesn't affect anything else.
-            robot.power_down = message["interface_data"]["power_down"]
+        # TODO: this part only sets the POWER DOWN attribute,
+        # it doesn't affect anything else.
+        robot.power_down = message["interface_data"]["power_down"]
 
+        if not message["interface_data"]["confirmed"]:
             # Set robot's program with chosen cards
             selection = message["interface_data"]["my_program"]
             for card_index in selection:
@@ -164,10 +166,11 @@ class Server:
                 print("selection_number", selection_number)
                 if selection_number == len(self.state.robots) - 1:
                     print("run timer")
-                    await self.timer()
+                    asyncio.create_task(self.timer(self.state.game_round))
             else:
                 selection_number = self.state.selection_number()
                 print("selection_number", selection_number)
+                await self.play_round()
 
     async def send_state_to_all(self):
         """
@@ -178,21 +181,27 @@ class Server:
             # send info about state
             await client.send_json(self.state.as_dict(map_name))
 
-    async def timer(self):
-        await asyncio.sleep(10)
+    async def timer(self, round):
+        game_round = round
+        await asyncio.sleep(30)
         print("end timer")
         all_selected = self.state.all_selected()
+
         if not all_selected:
-            for robot in self.state.robots:
-                for i, card in enumerate(robot.program):
-                    if card is None:
-                        available_cards = []
-                        for card in robot.dealt_cards:
-                            if card not in robot.program:
-                                available_cards.append(card)
-                        card = random.choice(available_cards)
-                        robot.program[i] = card
-        await self.play_round()
+            selection_number = self.state.selection_number()
+            print("selection_number", selection_number)
+            if selection_number == len(self.state.robots) - 1:
+                if game_round == self.state.game_round:
+                    for robot in self.state.robots:
+                        for i, card in enumerate(robot.program):
+                            if card is None:
+                                available_cards = []
+                                for card in robot.dealt_cards:
+                                    if card not in robot.program:
+                                        available_cards.append(card)
+                                card = random.choice(available_cards)
+                                robot.program[i] = card
+                    await self.play_round()
 
     async def play_round(self):
         """
