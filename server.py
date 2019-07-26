@@ -9,9 +9,8 @@ client_interface.py in another command line.
 """
 import sys
 import contextlib
-import random
 import asyncio
-
+import random
 from aiohttp import web
 
 from backend import State
@@ -149,8 +148,15 @@ class Server:
         else:
             # Add the rest of the cards to used cards pack
             robot.selection_confirmed = True
-            await self.all_robot_confirmed()
-
+            all_selected = self.state.all_selected()
+            if not all_selected:
+                selection_number = self.state.selection_number()
+                if selection_number != len(self.state.robots) - 1:
+                    pass
+                else:
+                    await self.timer()
+            else:
+                self.play_round()
 
     async def send_robots_state_to_all(self):
         """
@@ -161,36 +167,21 @@ class Server:
             # send info about state
             await client.send_json(self.state.robots_as_dict())
 
-    async def all_robot_confirmed(self):
-        all_selected = self.state.all_selected()
-
-        if not all_selected:
-            print("Není vybráno, timer")
-            selection_number = self.state.selection_number()
-            if selection_number == len(self.state.robots) - 1:
-                asyncio.create_task(self.timer())
-
-        if all_selected:
-            print("all_selected", all_selected)
-            print("všichni vybráno, hraju.")
-            await self.play_round()
-
     async def play_round(self):
         """
         If all robot have selected cars, server apply effects of cards and tiles.
         New dealt cards are sent to all clients.
         """
-        print("efekty:")
+        print("play_round")
         self.state.apply_all_effects()
+        print("efekty provedeny")
         self.state.increment_game_round()
-        print(self.state.game_round)
-
+        print("game_round", self.state.game_round)
         for robot in self.state.robots:
             robot.clear_robot_attributes()
             robot.dealt_cards = self.state.get_dealt_cards(robot)
             ws = self.assigned_robots[robot.name]
             await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
-        print("Poslany karty")
 
     async def timer(self):
         await asyncio.sleep(10)
@@ -206,8 +197,7 @@ class Server:
                         card = random.choice(available_cards)
                         robot.program[i] = card
                 print(robot.program)
-        all_selected = True
-
+        await self.play_round()
 
 # aiohttp.web application
 def get_app(argv=None):
