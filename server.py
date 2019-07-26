@@ -143,20 +143,26 @@ class Server:
             for card_index in selection:
                 if card_index is not None:
                     robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
-
+            print("not selected msg", message)
         # choice of cards was blocked by the player
         else:
             # Add the rest of the cards to used cards pack
+            print("selected msg", message)
             robot.selection_confirmed = True
             all_selected = self.state.all_selected()
+            print("all selected", all_selected)
             if not all_selected:
                 selection_number = self.state.selection_number()
+                print("selection_number", selection_number)
                 if selection_number != len(self.state.robots) - 1:
                     pass
                 else:
+                    print("run timer")
                     await self.timer()
             else:
-                self.play_round()
+                selection_number = self.state.selection_number()
+                print("selection_number", selection_number)
+                await self.play_round()
 
     async def send_robots_state_to_all(self):
         """
@@ -178,25 +184,34 @@ class Server:
         self.state.increment_game_round()
         print("game_round", self.state.game_round)
         for robot in self.state.robots:
+            print(robot)
             robot.clear_robot_attributes()
+            print("clear_atributes")
+            print(robot)
             robot.dealt_cards = self.state.get_dealt_cards(robot)
             ws = self.assigned_robots[robot.name]
             await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
+        print("poslane karty")
 
     async def timer(self):
         await asyncio.sleep(10)
+        print("end timer")
         all_selected = self.state.all_selected()
+        print("all_selected", all_selected)
         if not all_selected:
-            for robot in self.state.robots:
-                for i, card in enumerate(robot.program):
-                    if card is None:
-                        available_cards = []
-                        for card in robot.dealt_cards:
-                            if card not in robot.program:
-                                available_cards.append(card)
-                        card = random.choice(available_cards)
-                        robot.program[i] = card
-                print(robot.program)
+            selection_number = self.state.selection_number()
+            print("selection_number", selection_number)
+            if selection_number == len(self.state.robots) - 1:
+                for robot in self.state.robots:
+                    for i, card in enumerate(robot.program):
+                        if card is None:
+                            available_cards = []
+                            for card in robot.dealt_cards:
+                                if card not in robot.program:
+                                    available_cards.append(card)
+                            card = random.choice(available_cards)
+                            robot.program[i] = card
+                    print(robot.program)
         await self.play_round()
 
 # aiohttp.web application
