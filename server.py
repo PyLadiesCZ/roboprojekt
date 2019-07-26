@@ -153,11 +153,9 @@ class Server:
             for card_index in selection:
                 if card_index is not None:
                     robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
-            print("not selected msg", message)
         # choice of cards was blocked by the player
         else:
             # Add the rest of the cards to used cards pack
-            print("selected msg", message)
             robot.selection_confirmed = True
             all_selected = self.state.all_selected()
             print("all selected", all_selected)
@@ -172,7 +170,6 @@ class Server:
             else:
                 selection_number = self.state.selection_number()
                 print("selection_number", selection_number)
-                await self.play_round()
 
     async def send_state_to_all(self):
         """
@@ -192,25 +189,22 @@ class Server:
         self.state.apply_all_effects()
         print("efekty provedeny")
         self.state.increment_game_round()
-        print("game_round", self.state.game_round)
         for robot in self.state.robots:
-            print(robot)
             robot.clear_robot_attributes()
-            print("clear_atributes")
-            print(robot)
             robot.dealt_cards = self.state.get_dealt_cards(robot)
             ws = self.assigned_robots[robot.name]
             await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
         print("poslane karty")
+        print("game_round", self.state.game_round)
 
     async def timer(self):
         await asyncio.sleep(10)
         print("end timer")
         all_selected = self.state.all_selected()
-        print("all_selected", all_selected)
+        print("all_selected v timer", all_selected)
         if not all_selected:
             selection_number = self.state.selection_number()
-            print("selection_number", selection_number)
+            print("selection_number v timer", selection_number)
             if selection_number != len(self.state.robots) - 1:
                 pass
             if selection_number == len(self.state.robots) - 1:
@@ -224,7 +218,8 @@ class Server:
                             card = random.choice(available_cards)
                             robot.program[i] = card
                     print(robot.program)
-        print("stihl vyber")
+        if all_selected:
+            print("stihl výběr")
         await self.play_round()
 
 # aiohttp.web application
