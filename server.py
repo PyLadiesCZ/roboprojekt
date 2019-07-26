@@ -162,9 +162,7 @@ class Server:
             if not all_selected:
                 selection_number = self.state.selection_number()
                 print("selection_number", selection_number)
-                if selection_number != len(self.state.robots) - 1:
-                    pass
-                else:
+                if selection_number == len(self.state.robots) - 1:
                     print("run timer")
                     await self.timer()
             else:
@@ -180,47 +178,37 @@ class Server:
             # send info about state
             await client.send_json(self.state.as_dict(map_name))
 
+    async def timer(self):
+        await asyncio.sleep(10)
+        print("end timer")
+        all_selected = self.state.all_selected()
+        if not all_selected:
+            for robot in self.state.robots:
+                for i, card in enumerate(robot.program):
+                    if card is None:
+                        available_cards = []
+                        for card in robot.dealt_cards:
+                            if card not in robot.program:
+                                available_cards.append(card)
+                        card = random.choice(available_cards)
+                        robot.program[i] = card
+        await self.play_round()
+
     async def play_round(self):
         """
         If all robot have selected cars, server apply effects of cards and tiles.
         New dealt cards are sent to all clients.
         """
-        print("play_round")
+        print("apply_effect")
         self.state.apply_all_effects()
-        print("efekty provedeny")
         self.state.increment_game_round()
         for robot in self.state.robots:
             robot.clear_robot_attributes()
             robot.dealt_cards = self.state.get_dealt_cards(robot)
             ws = self.assigned_robots[robot.name]
             await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
-        print("poslane karty")
         print("game_round", self.state.game_round)
 
-    async def timer(self):
-        await asyncio.sleep(10)
-        print("end timer")
-        all_selected = self.state.all_selected()
-        print("all_selected v timer", all_selected)
-        if not all_selected:
-            selection_number = self.state.selection_number()
-            print("selection_number v timer", selection_number)
-            if selection_number != len(self.state.robots) - 1:
-                pass
-            if selection_number == len(self.state.robots) - 1:
-                for robot in self.state.robots:
-                    for i, card in enumerate(robot.program):
-                        if card is None:
-                            available_cards = []
-                            for card in robot.dealt_cards:
-                                if card not in robot.program:
-                                    available_cards.append(card)
-                            card = random.choice(available_cards)
-                            robot.program[i] = card
-                    print(robot.program)
-        if all_selected:
-            print("stihl výběr")
-        await self.play_round()
 
 # aiohttp.web application
 def get_app(argv=None):
