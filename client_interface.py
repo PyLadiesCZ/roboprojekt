@@ -67,10 +67,6 @@ class Interface:
                         self.set_game_state(message, robot_name)
                     if "cards" in message:
                         self.set_dealt_cards(message)
-                    if "Timer" in message:
-                        print(message)
-                    # else:
-                    #     print(message)
         self.ws = None
 
     def set_game_state(self, message, robot_name):
