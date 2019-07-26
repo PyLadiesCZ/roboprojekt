@@ -144,7 +144,6 @@ class Server:
         message = message.json()
         # Set robot's attributes according to data in message
         # While selection is not confirmed, it is still possible to choose cards
-        # TODO: not only by pressing key but also when time's up
         # TODO: this part only sets the POWER DOWN attribute,
         # it doesn't affect anything else.
         robot.power_down = message["interface_data"]["power_down"]
@@ -157,20 +156,16 @@ class Server:
                     robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
         # choice of cards was blocked by the player
         else:
-            # Add the rest of the cards to used cards pack
             robot.selection_confirmed = True
+            # Check if all robots selected cards.
             all_selected = self.state.all_selected()
-            print("all selected", all_selected)
             if not all_selected:
                 selection_number = self.state.selection_number()
-                print("selection_number", selection_number)
+                # If last robot doesnt selected his cards, the timer starts.
                 if selection_number == len(self.state.robots) - 1:
-                    print("run timer")
                     asyncio.create_task(self.timer(self.state.game_round))
             else:
-                selection_number = self.state.selection_number()
-                print("selection_number", selection_number)
-                await self.play_round()
+                await self.apply_effects()
 
     async def send_state_to_all(self):
         """
@@ -182,14 +177,17 @@ class Server:
             await client.send_json(self.state.as_dict(map_name))
 
     async def timer(self, round):
+        """
+        Run timer for 30s.
+        After the timer, it check if last robot confirmed his selection.
+        If not, server assigns random cards to his program.
+        It continues to apply_effects.
+        """
         game_round = round
         await asyncio.sleep(30)
-        print("end timer")
         all_selected = self.state.all_selected()
-
         if not all_selected:
             selection_number = self.state.selection_number()
-            print("selection_number", selection_number)
             if selection_number == len(self.state.robots) - 1:
                 if game_round == self.state.game_round:
                     for robot in self.state.robots:
@@ -201,14 +199,14 @@ class Server:
                                         available_cards.append(card)
                                 card = random.choice(available_cards)
                                 robot.program[i] = card
-                    await self.play_round()
+                    await self.apply_effects()
 
-    async def play_round(self):
+    async def apply_effects(self):
         """
-        If all robot have selected cars, server apply effects of cards and tiles.
+        If all robot have selected cards, server applies effects of cards and tiles.
+        Robots attribues are cleared.
         New dealt cards are sent to all clients.
         """
-        print("apply_effect")
         self.state.apply_all_effects()
         self.state.increment_game_round()
         for robot in self.state.robots:
@@ -216,7 +214,6 @@ class Server:
             robot.dealt_cards = self.state.get_dealt_cards(robot)
             ws = self.assigned_robots[robot.name]
             await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
-        print("game_round", self.state.game_round)
 
 
 # aiohttp.web application
