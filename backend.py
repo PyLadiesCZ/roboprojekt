@@ -351,22 +351,18 @@ class State:
         """
         map_data = data["game_state"]["board"]
         board = board_from_data(map_data)
-        # list of robot objects
-        robots = []
-        for robot_description in data["game_state"]["robots"]:
-            robot = Robot.from_dict(robot_description)
-            robots.append(robot)
+        robots = cls.robots_from_dict(cls, data["game_state"])
         return cls(board, robots)
 
     def robots_from_dict(self, data):
         """
-        Update robots in state with data sent from server.
+        Return list of robots with data sent from server.
         """
         robots = []
         for robot_description in data["robots"]:
             robot = Robot.from_dict(robot_description)
             robots.append(robot)
-        self.robots = robots
+        return robots
 
     def whole_as_dict(self, map_name):
         """
