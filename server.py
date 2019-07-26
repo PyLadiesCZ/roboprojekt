@@ -211,6 +211,8 @@ class Server:
         if not all_selected:
             selection_number = self.state.selection_number()
             print("selection_number", selection_number)
+            if selection_number != len(self.state.robots) - 1:
+                pass
             if selection_number == len(self.state.robots) - 1:
                 for robot in self.state.robots:
                     for i, card in enumerate(robot.program):
@@ -222,6 +224,7 @@ class Server:
                             card = random.choice(available_cards)
                             robot.program[i] = card
                     print(robot.program)
+        print("stihl vyber")
         await self.play_round()
 
 # aiohttp.web application
