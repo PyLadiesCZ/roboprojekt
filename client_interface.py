@@ -85,7 +85,7 @@ class Interface:
         """
         Set robots, players and self robot using data from sent message.
         """
-        self.game_state.robots_from_dict(message)
+        self.game_state.robots = self.game_state.robots_from_dict(message)
         self.state.players = self.game_state.robots
         for robot in self.state.players:
             if robot.name == robot_name:
