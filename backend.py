@@ -26,7 +26,6 @@ class Robot:
         self.power_down = False
         self.name = name
         self.selection_confirmed = False
-        self.winner = False
 
     @property
     # More info about @property decorator - official documentation:
