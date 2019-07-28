@@ -69,6 +69,12 @@ class Interface:
                         self.set_robots(message, robot_name)
                     if "cards" in message:
                         self.set_dealt_cards(message)
+                        self.state.timer = False
+                    if "timer_start" in message:
+                        self.state.timer = True
+                    if "timer_end" in message:
+                        self.state.timer = False
+                        self.state.selection_confirmed = True
         self.ws = None
 
     def set_game_state(self, message, robot_name):

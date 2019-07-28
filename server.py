@@ -88,8 +88,11 @@ class Server:
         Maintain connection to the client until they disconnect.
         """
         async with self.ws_handler(request, self.ws_interfaces) as ws:
+            """
+            SERVER PART ONE: communicate only with this client
+            """
+
             # Get first data for connected client: robot and cards
-            # and assign it to client
             robot = self.assign_robot_to_client(ws)
 
             # Prepare message to send: robot name, game state and cards
@@ -99,11 +102,20 @@ class Server:
                                }
             # Send the message to the connected client
             await ws.send_json(welcome_message)
+            """
+            SERVER PART TWO: Process messages from this client
+            + Apply game effect = play the game round
+            """
 
-            # React to the sent state of this client and send new state to all
+            # React to the sent state of this client
             async for message in ws:
                 await self.process_message(message, robot)
-                await self.send_robots_state_to_all()
+
+                """
+                SERVER PART THREE: send updated state to all connected clients
+                + Send new cards to all interfaces
+                """
+                await self.send_state_to_all()
 
             return ws
 
@@ -152,17 +164,18 @@ class Server:
                 # If last robot doesnt selected his cards, the timer starts.
                 if selection_number == len(self.state.robots) - 1:
                     asyncio.create_task(self.timer(self.state.game_round))
+                    await self.send_message("timer_start")
             else:
                 await self.apply_effects()
 
-    async def send_robots_state_to_all(self):
+    async def send_state_to_all(self):
         """
-        Send message with robots' state to all connected clients.
+        Send message with game state to all connected clients.
         """
         ws_all = self.ws_receivers + self.ws_interfaces
         for client in ws_all:
             # send info about state
-            await client.send_json(self.state.robots_as_dict())
+            await client.send_json(self.state.whole_as_dict(map_name))
 
     async def timer(self, round):
         """
@@ -173,6 +186,7 @@ class Server:
         """
         game_round = round
         await asyncio.sleep(30)
+        await self.send_message("timer_end")
         all_selected = self.state.all_selected()
         if not all_selected:
             selection_number = self.state.selection_number()
@@ -200,8 +214,12 @@ class Server:
         for robot in self.state.robots:
             robot.clear_robot_attributes()
             robot.dealt_cards = self.state.get_dealt_cards(robot)
+        await self.send_message(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
+
+    async def send_message(self, message):
+        for robot in self.state.robots:
             ws = self.assigned_robots[robot.name]
-            await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
+            await ws.send_json(message)
 
 
 # aiohttp.web application
