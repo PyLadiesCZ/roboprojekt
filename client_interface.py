@@ -65,8 +65,6 @@ class Interface:
                         robot_name = message["robot_name"]
                     if "game_state" in message:
                         self.set_game_state(message, robot_name)
-                    if "robots" in message:
-                        self.set_robots(message, robot_name)
                     if "cards" in message:
                         self.set_dealt_cards(message)
                         self.state.timer = False
@@ -83,18 +81,6 @@ class Interface:
         - create game state, set own robot and other players.
         """
         self.game_state = State.from_dict(message)
-        self.state.players = self.game_state.robots
-        for robot in self.state.players:
-            if robot.name == robot_name:
-                self.state.robot = robot
-                index = self.state.players.index(robot)
-                del self.state.players[index]
-
-    def set_robots(self, message, robot_name):
-        """
-        Set robots, players and self robot using data from sent message.
-        """
-        self.game_state.robots = self.game_state.robots_from_dict(message)
         self.state.players = self.game_state.robots
         for robot in self.state.players:
             if robot.name == robot_name:
