@@ -97,7 +97,7 @@ class Server:
 
             # Prepare message to send: robot name, game state and cards
             welcome_message = {"robot_name": robot.name,
-                               **self.state.whole_as_dict(map_name),
+                               **self.state.as_dict(map_name),
                                **self.state.cards_and_game_round_as_dict(robot.dealt_cards),
                                }
             # Send the message to the connected client
@@ -139,8 +139,6 @@ class Server:
         Process the data sent by interface: chosen cards,
         confirmation of selected cards, power down state, played game round.
         """
-        if robot.selection_confirmed:
-            return
         message = message.json()
         # Set robot's attributes according to data in message
         # While selection is not confirmed, it is still possible to choose cards
@@ -170,12 +168,12 @@ class Server:
 
     async def send_state_to_all(self):
         """
-        Send message with robots' state to all connected clients.
+        Send message with game state to all connected clients.
         """
         ws_all = self.ws_receivers + self.ws_interfaces
         for client in ws_all:
             # send info about state
-            await client.send_json(self.state.robots_as_dict())
+            await client.send_json(self.state.as_dict(map_name))
 
     async def timer(self, round):
         """
