@@ -26,6 +26,7 @@ class Robot:
         self.power_down = False
         self.name = name
         self.selection_confirmed = False
+        self.winner = False
 
     @property
     # More info about @property decorator - official documentation:
@@ -340,7 +341,8 @@ class State:
         self.present_deck = self.create_card_pack()
         self.past_deck = set()
         self.game_round = 1
-        self.number_flags = None
+        self.number_flags = 1
+        self.game_over = False
 
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)

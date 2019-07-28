@@ -75,6 +75,8 @@ class Interface:
                     if "timer_end" in message:
                         self.state.timer = False
                         self.state.selection_confirmed = True
+                    if "winner" in message:
+                        self.set_winner(message)
         self.ws = None
 
     def set_game_state(self, message, robot_name):
@@ -87,7 +89,7 @@ class Interface:
 
     def set_robots(self, message, robot_name):
         """
-        Set robots, players and self robot using data from sent message.
+        Set robots, players and self robot using data from received message.
         """
         self.game_state.robots = self.game_state.robots_from_dict(message)
         self.state.players = self.game_state.robots
@@ -108,6 +110,15 @@ class Interface:
         # by message from server
         self.state.my_game_round = message["current_game_round"]
 
+    def set_winner(self, message):
+        """
+        Set winner from received message.
+        """
+        winner = message["winner"]
+        if self.state.robot.name in winner:
+            self.state.winner = True
+
+        self.state.game_over = True
 
 def tick_asyncio(dt):
     """
