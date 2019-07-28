@@ -97,7 +97,7 @@ class Server:
 
             # Prepare message to send: robot name, game state and cards
             welcome_message = {"robot_name": robot.name,
-                               **self.state.as_dict(map_name),
+                               **self.state.whole_as_dict(map_name),
                                **self.state.cards_and_game_round_as_dict(robot.dealt_cards),
                                }
             # Send the message to the connected client
@@ -163,18 +163,19 @@ class Server:
                 selection_number = self.state.selection_number()
                 # If last robot doesnt selected his cards, the timer starts.
                 if selection_number == len(self.state.robots) - 1:
+                    await self.send_message("timer_start")
                     asyncio.create_task(self.timer(self.state.game_round))
             else:
                 await self.apply_effects()
 
     async def send_state_to_all(self):
         """
-        Send message with game state to all connected clients.
+        Send message with robots' state to all connected clients.
         """
         ws_all = self.ws_receivers + self.ws_interfaces
         for client in ws_all:
             # send info about state
-            await client.send_json(self.state.as_dict(map_name))
+            await client.send_json(self.state.robots_as_dict())
 
     async def timer(self, round):
         """
@@ -185,6 +186,7 @@ class Server:
         """
         game_round = round
         await asyncio.sleep(30)
+        await self.send_message("timer_end")
         all_selected = self.state.all_selected()
         if not all_selected:
             selection_number = self.state.selection_number()
@@ -212,9 +214,15 @@ class Server:
         for robot in self.state.robots:
             robot.clear_robot_attributes()
             robot.dealt_cards = self.state.get_dealt_cards(robot)
-            ws = self.assigned_robots[robot.name]
-            await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
+        await self.send_message(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
 
+    async def send_message(self, message):
+        """
+        Send message to all interface clients.
+        """
+        for robot in self.state.robots:
+            ws = self.assigned_robots[robot.name]
+            await ws.send_json(message)
 
 # aiohttp.web application
 def get_app(argv=None):
