@@ -218,6 +218,7 @@ class Server:
         """
         Check if robot gained all flags.
         """
+        print("Number flags", self.state.number_flags)
         for robot in self.state.robots:
             if robot.flags == self.state.number_flags:
                 winner = robot.name
