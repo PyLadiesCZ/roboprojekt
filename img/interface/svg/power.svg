@@ -15,8 +15,11 @@
    viewBox="0 0 210 297"
    version="1.1"
    id="svg7200"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="power.svg">
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="power.svg"
+   inkscape:export-filename="C:\pyladies\roboprojekt\img\interface\png\power.png"
+   inkscape:export-xdpi="60.595833"
+   inkscape:export-ydpi="60.595833">
   <defs
      id="defs7194">
     <linearGradient
@@ -59,15 +62,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.0787109"
-     inkscape:cx="210.88539"
+     inkscape:cx="342.997"
      inkscape:cy="558.60945"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g6742"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1016"
-     inkscape:window-x="0"
-     inkscape:window-y="27"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata7197">
@@ -77,7 +80,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -96,7 +99,10 @@
          style="display:inline;opacity:1;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:3.02036285;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:21.1607151;stroke-opacity:1;paint-order:markers stroke fill"
          d="m 60.05525,-44.450005 -9.918259,9.918258 v 14.03015 l 9.918259,9.918258 h 14.028083 l 9.920325,-9.920324 V -34.52968 l -9.920325,-9.920325 z"
          id="path6652"
-         inkscape:connector-curvature="0" />
+         inkscape:connector-curvature="0"
+         inkscape:export-filename="C:\pyladies\roboprojekt\img\interface\png\power.png"
+         inkscape:export-xdpi="61.279999"
+         inkscape:export-ydpi="61.279999" />
       <path
          inkscape:connector-curvature="0"
          id="path6684"
