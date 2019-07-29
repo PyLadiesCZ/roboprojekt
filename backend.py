@@ -704,17 +704,20 @@ class State:
         """
         self.game_round += 1
 
-    def all_selected(self):
+    def all_selection_confirmed(self):
         """
         Check if all robots confirmed their selection.
         """
-        all_selected = True
+        all_selection_confirmed = True
         for robot in self.robots:
             if not robot.selection_confirmed:
-                all_selected = False
-        return all_selected
+                all_selection_confirmed = False
+        return all_selection_confirmed
 
     def selection_number(self):
+        """
+        Return number of selection_confirmed.
+        """
         selection_number = 0
         for robot in self.robots:
             if robot.selection_confirmed:

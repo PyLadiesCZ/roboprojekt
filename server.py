@@ -73,7 +73,7 @@ class Server:
         """
         async with self.ws_handler(request, self.ws_receivers) as ws:
             # This message is sent only this (just connected) client
-            await ws.send_json(self.state.as_dict(map_name))
+            await ws.send_json(self.state.whole_as_dict(map_name))
             # For cycle keeps the connection with client alive
             async for message in ws:
                 pass
@@ -88,34 +88,22 @@ class Server:
         Maintain connection to the client until they disconnect.
         """
         async with self.ws_handler(request, self.ws_interfaces) as ws:
-            """
-            SERVER PART ONE: communicate only with this client
-            """
-
             # Get first data for connected client: robot and cards
+            # and assign it to client
             robot = self.assign_robot_to_client(ws)
 
             # Prepare message to send: robot name, game state and cards
             welcome_message = {"robot_name": robot.name,
-                               **self.state.as_dict(map_name),
+                               **self.state.whole_as_dict(map_name),
                                **self.state.cards_and_game_round_as_dict(robot.dealt_cards),
                                }
             # Send the message to the connected client
             await ws.send_json(welcome_message)
-            """
-            SERVER PART TWO: Process messages from this client
-            + Apply game effect = play the game round
-            """
 
-            # React to the sent state of this client
+            # React to the sent state of this client and send new state to all
             async for message in ws:
                 await self.process_message(message, robot)
-
-                """
-                SERVER PART THREE: send updated state to all connected clients
-                + Send new cards to all interfaces
-                """
-                await self.send_state_to_all()
+                await self.send_robots_state_to_all()
 
             return ws
 
@@ -139,6 +127,8 @@ class Server:
         Process the data sent by interface: chosen cards,
         confirmation of selected cards, power down state, played game round.
         """
+        if robot.selection_confirmed:
+            return
         message = message.json()
         # Set robot's attributes according to data in message
         # While selection is not confirmed, it is still possible to choose cards
@@ -156,8 +146,8 @@ class Server:
         else:
             robot.selection_confirmed = True
             # Check if all robots selected cards.
-            all_selected = self.state.all_selected()
-            if not all_selected:
+            all_selection_confirmed = self.state.all_selection_confirmed()
+            if not all_selection_confirmed:
                 selection_number = self.state.selection_number()
                 # If last robot doesnt selected his cards, the timer starts.
                 if selection_number == len(self.state.robots) - 1:
@@ -166,27 +156,28 @@ class Server:
             else:
                 await self.apply_effects()
 
-    async def send_state_to_all(self):
+    async def send_robots_state_to_all(self):
         """
-        Send message with game state to all connected clients.
+        Send message with robots' state to all connected clients.
         """
         ws_all = self.ws_receivers + self.ws_interfaces
         for client in ws_all:
             # send info about state
-            await client.send_json(self.state.as_dict(map_name))
+            await client.send_json(self.state.robots_as_dict())
 
     async def timer(self, round):
         """
         Run timer for 30s.
         After the timer, it check if last robot confirmed his selection.
-        If not, server assigns random cards to his program.
-        It continues to apply_effects.
+        If not, server check if game round matches,
+        then assigns random cards to his program.
+        It continues to apply effects.
         """
         game_round = round
         await asyncio.sleep(30)
         await self.send_message("timer_end")
-        all_selected = self.state.all_selected()
-        if not all_selected:
+        all_selection_confirmed = self.state.all_selection_confirmed()
+        if not all_selection_confirmed:
             selection_number = self.state.selection_number()
             if selection_number == len(self.state.robots) - 1:
                 if game_round == self.state.game_round:
@@ -208,11 +199,13 @@ class Server:
         New dealt cards are sent to all clients.
         """
         self.state.apply_all_effects()
-        self.state.increment_game_round()
-        for robot in self.state.robots:
-            robot.clear_robot_attributes()
-            robot.dealt_cards = self.state.get_dealt_cards(robot)
-        await self.send_message(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
+        await self.check_winner()
+        if not self.state.game_over:
+            self.state.increment_game_round()
+            for robot in self.state.robots:
+                robot.clear_robot_attributes()
+                robot.dealt_cards = self.state.get_dealt_cards(robot)
+            await self.send_message(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
 
     async def send_message(self, message):
         """
@@ -221,6 +214,20 @@ class Server:
         for robot in self.state.robots:
             ws = self.assigned_robots[robot.name]
             await ws.send_json(message)
+
+    async def check_winner(self):
+        """
+        Check if robot gained all flags.
+        """
+        winners = []
+        for i, robot in enumerate(self.state.robots):
+            if robot.flags == self.state.number_flags:
+                winner = f"{i}", robot.name
+                winners.append(winner)
+        if winners:
+            self.state.game_over = True
+            await self.send_message({"winner": winners})
+
 
 # aiohttp.web application
 def get_app(argv=None):
@@ -233,7 +240,7 @@ def get_app(argv=None):
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        map_name = "maps/test_game.json"
+        map_name = "maps/test_winner.json"
     else:
         map_name = sys.argv[1]
 
