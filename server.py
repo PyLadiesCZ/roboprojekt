@@ -199,7 +199,6 @@ class Server:
         New dealt cards are sent to all clients.
         """
         self.state.apply_all_effects()
-        await self.check_winner()
         if not self.state.game_over:
             self.state.increment_game_round()
             for robot in self.state.robots:
@@ -214,19 +213,6 @@ class Server:
         for robot in self.state.robots:
             ws = self.assigned_robots[robot.name]
             await ws.send_json(message)
-
-    async def check_winner(self):
-        """
-        Check if robot gained all flags.
-        """
-        winners = []
-        for i, robot in enumerate(self.state.robots):
-            if robot.flags == self.state.number_flags:
-                winner = f"{i}", robot.name
-                winners.append(winner)
-        if winners:
-            self.state.game_over = True
-            await self.send_message({"winner": winners})
 
 
 # aiohttp.web application
