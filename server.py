@@ -148,7 +148,7 @@ class Server:
             # Check if all robots selected cards.
             all_selection_confirmed = self.state.all_selection_confirmed()
             if not all_selection_confirmed:
-                selection_number = self.state.selection_number()
+                selection_number = self.state.count_selection_number()
                 # If last robot doesnt selected his cards, the timer starts.
                 if selection_number == len(self.state.robots) - 1:
                     await self.send_message("timer_start")
@@ -178,13 +178,13 @@ class Server:
         await self.send_message({"timer_end": {"game_round": round}})
         all_selection_confirmed = self.state.all_selection_confirmed()
         if not all_selection_confirmed:
-            selection_number = self.state.selection_number()
+            selection_number = self.state.count_selection_number()
             if selection_number == len(self.state.robots) - 1:
                 if game_round == self.state.game_round:
-                    self.random_card()
+                    self.choose_random_card()
                     await self.apply_effects()
 
-    def random_card(self):
+    def choose_random_card(self):
         """
         If robot didn´t complete his program during timer,
         it is completed with random cards.

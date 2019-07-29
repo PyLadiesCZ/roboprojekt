@@ -726,7 +726,7 @@ class State:
                 all_selection_confirmed = False
         return all_selection_confirmed
 
-    def selection_number(self):
+    def count_selection_number(self):
         """
         Return number of selection_confirmed.
         """
