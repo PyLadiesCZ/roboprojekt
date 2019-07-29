@@ -19,13 +19,14 @@ class Robot:
         self.direction = direction
         self.coordinates = coordinates
         self.start_coordinates = coordinates
-        self.program = []
+        self.program = [None, None, None, None, None]
         self.lives = 3
         self.flags = 0
         self.damages = 0
         self.power_down = False
         self.name = name
         self.selection_confirmed = False
+        self.unblocked_cards_count = 5
 
     @property
     # More info about @property decorator - official documentation:
@@ -53,7 +54,8 @@ class Robot:
                  "damages": self.damages, "power_down": self.power_down,
                  "direction": self.direction.value,
                  "start_coordinates": self.start_coordinates,
-                 "selection_confirmed": self.selection_confirmed}}
+                 "selection_confirmed": self.selection_confirmed,
+                 "unblocked_cards": self.unblocked_cards_count, }}
 
     @classmethod
     def from_dict(cls, robot_description):
@@ -71,6 +73,7 @@ class Robot:
         robot.power_down = robot_description["power_down"]
         robot.start_coordinates = robot_description["start_coordinates"]
         robot.selection_confirmed = robot_description["selection_confirmed"]
+        robot.unblocked_cards_count = robot_description["unblocked_cards"]
         return robot
 
     def walk(self, distance, state, direction=None, push_others=True):
@@ -205,7 +208,13 @@ class Robot:
         """
         Clear robot attributes at the end of round.
         """
-        self.program = [None, None, None, None, None]
+        if MAX_CARD_COUNT - self.damages < 5:
+            self.unblocked_cards_count = MAX_CARD_COUNT - self.damages
+        else:
+            self.unblocked_cards_count = 5
+        for i in reversed(range(self.unblocked_cards_count)):
+            self.program[i] = None
+        print("program", self.program)
         self.selection_confirmed = False
 
     def get_distance_to_board_end(self, state):
@@ -594,7 +603,7 @@ class State:
             robot_cards.sort(key=lambda item: item[1], reverse=True)
             return robot_cards
 
-        except IndexError:
+        except TypeError:
             raise NoCardError
 
     def apply_register(self, register):

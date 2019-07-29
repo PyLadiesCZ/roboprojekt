@@ -55,7 +55,10 @@ class InterfaceState:
         Retrun all cards of your program back to the dealt cards.
         """
         if not self.selection_confirmed:
-            self.my_program = [None, None, None, None, None]
+            for i in reversed(range(self.robot.unblocked_cards_count)):
+                self.my_program[i] = None
+            print("my program", self.my_program)
+            # self.my_program = [None, None, None, None, None]
             self.cursor_index = 0
 
     def cursor_index_plus(self):
