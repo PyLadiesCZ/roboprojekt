@@ -73,8 +73,7 @@ class Interface:
                     if "timer_start" in message:
                         self.state.timer = True
                     if "timer_end" in message:
-                        self.state.timer = False
-                        self.state.selection_confirmed = True
+                        self.set_timer_off(message)
         self.ws = None
 
     def set_game_state(self, message, robot_name):
@@ -108,6 +107,13 @@ class Interface:
         # by message from server
         self.state.my_game_round = message["current_game_round"]
 
+    def set_timer_off(self, message):
+        """
+        Set timer for client. It check game round for timer off.
+        """
+        round = message["timer_end"]["game_round"]
+        if round == self.state.my_game_round:
+            self.state.timer = False
 
 def tick_asyncio(dt):
     """

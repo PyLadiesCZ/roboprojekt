@@ -175,7 +175,7 @@ class Server:
         """
         game_round = round
         await asyncio.sleep(30)
-        await self.send_message("timer_end")
+        await self.send_message({"timer_end": {"game_round": round}})
         all_selection_confirmed = self.state.all_selection_confirmed()
         if not all_selection_confirmed:
             selection_number = self.state.selection_number()
