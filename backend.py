@@ -7,7 +7,7 @@ from random import shuffle
 
 from util import Direction, Rotation, get_next_coordinates
 from tile import HoleTile
-from loading import get_board, get_map_data, board_from_data
+from loading import get_board, get_map_data, board_from_data, get_tile_id
 
 
 MAX_DAMAGE_VALUE = 10
@@ -340,6 +340,8 @@ class State:
         self.present_deck = self.create_card_pack()
         self.past_deck = set()
         self.game_round = 1
+        self.number_flags = self.get_number_flags_from_map(map_name)
+        self.game_over = False
 
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
@@ -725,6 +727,24 @@ class State:
             if not robot.selection_confirmed:
                 all_selected = False
         return all_selected
+
+    def get_number_flags_from_map(self, map_name):
+        """
+        Return number of flags on the map.
+        """
+        map_data = get_map_data(map_name)
+        flags_id = [30, 31, 32, 33, 34, 35, 36, 37]
+        tiles_id = []
+        for layer in map_data['layers']:
+            for tile_number in layer['data']:
+                id = get_tile_id(tile_number)
+                tiles_id.append(id)
+
+        number_flags = 0
+        for flag in flags:
+            if flag in tiles_id:
+                number_flags += 1
+        return number_flags
 
 
 class NoCardError(LookupError):

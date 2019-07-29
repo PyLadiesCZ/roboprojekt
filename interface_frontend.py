@@ -34,6 +34,10 @@ card_background_sprite = get_sprite('img/interface/png/card_bg.png')
 select_sprite = get_sprite('img/interface/png/card_cv.png')
 # Selection cursor
 cursor_sprite = get_sprite('img/interface/png/card_sl.png')
+# Winner
+winner_sprite = get_sprite('img/interface/png/winner.png', x=160, y=290)
+# Game over
+game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=280)
 # Other robot card
 players_background = get_sprite('img/interface/png/player.png')
 # Loading of robots images
@@ -265,6 +269,13 @@ def draw_interface(interface_state, window):
         indicator_green_sprite.draw()
     else:
         indicator_red_sprite.draw()
+
+    # Game over
+    if interface_state.game_over:
+        if interface_state.winner:
+            winner_sprite.draw()
+        else:
+            game_over_sprite.draw()
 
     pyglet.gl.glPopMatrix()
 

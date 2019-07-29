@@ -166,14 +166,25 @@ class Server:
         all_selected = self.state.all_selected()
         if all_selected:
             self.state.apply_all_effects()
-            self.state.increment_game_round()
+            await self.check_winner()
+            if not self.state.game_over:
+                self.state.increment_game_round()
+                for robot in self.state.robots:
+                    robot.clear_robot_attributes()
+                    robot.dealt_cards = self.state.get_dealt_cards(robot)
+                    ws = self.assigned_robots[robot.name]
+                    await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
 
-            for robot in self.state.robots:
-                robot.clear_robot_attributes()
-                robot.dealt_cards = self.state.get_dealt_cards(robot)
-                ws = self.assigned_robots[robot.name]
-                await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
-
+    async def check_winner(self):
+        """
+        Check if robot gained all flags.
+        """
+        print("Number flags", self.state.number_flags)
+        for robot in self.state.robots:
+            if robot.flags == self.state.number_flags:
+                winner = robot.name
+                self.state.game_over = True
+                await self.send_message({"winner": winner})
 
 # aiohttp.web application
 def get_app(argv=None):
@@ -186,7 +197,7 @@ def get_app(argv=None):
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        map_name = "maps/test_game.json"
+        map_name = "maps/test_winner.json"
     else:
         map_name = sys.argv[1]
 
