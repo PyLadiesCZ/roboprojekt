@@ -176,7 +176,8 @@ class Server:
 
     async def check_winner(self):
         """
-        Check if robot gained all flags.
+        Check if somebody win(robot gained all flags).
+        Send winner to interface clients.
         """
         self.state.number_flags = self.state.get_number_flags_from_map(map_name)
         for robot in self.state.robots:
