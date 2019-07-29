@@ -172,19 +172,27 @@ class Server:
                 for robot in self.state.robots:
                     robot.clear_robot_attributes()
                     robot.dealt_cards = self.state.get_dealt_cards(robot)
-                    ws = self.assigned_robots[robot.name]
-                    await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
+                await self.send_message(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
 
     async def check_winner(self):
         """
         Check if robot gained all flags.
         """
-        print("Number flags", self.state.number_flags)
+        self.state.number_flags = self.state.get_number_flags_from_map(map_name)
         for robot in self.state.robots:
             if robot.flags == self.state.number_flags:
                 winner = robot.name
                 self.state.game_over = True
                 await self.send_message({"winner": winner})
+
+    async def send_message(self, message):
+        """
+        Send message to all interface clients.
+        """
+        for robot in self.state.robots:
+            ws = self.assigned_robots[robot.name]
+            await ws.send_json(message)
+
 
 # aiohttp.web application
 def get_app(argv=None):

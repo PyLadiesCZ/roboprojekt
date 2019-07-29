@@ -340,7 +340,7 @@ class State:
         self.present_deck = self.create_card_pack()
         self.past_deck = set()
         self.game_round = 1
-        self.number_flags = self.get_number_flags_from_map(map_name)
+        self.number_flags = None
         self.game_over = False
 
     def __repr__(self):
@@ -741,7 +741,7 @@ class State:
                 tiles_id.append(id)
 
         number_flags = 0
-        for flag in flags:
+        for flag in flags_id:
             if flag in tiles_id:
                 number_flags += 1
         return number_flags
