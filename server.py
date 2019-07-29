@@ -126,6 +126,8 @@ class Server:
         Process the data sent by interface: chosen cards,
         confirmation of selected cards, power down state, played game round.
         """
+        if robot.selection_confirmed:
+            return
         message = message.json()
         # Set robot's attributes according to data in message
         # While selection is not confirmed, it is still possible to choose cards
