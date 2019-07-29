@@ -199,12 +199,11 @@ class Server:
         New dealt cards are sent to all clients.
         """
         self.state.apply_all_effects()
-        if not self.state.game_over:
-            self.state.increment_game_round()
-            for robot in self.state.robots:
-                robot.clear_robot_attributes()
-                robot.dealt_cards = self.state.get_dealt_cards(robot)
-            await self.send_message(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
+        self.state.increment_game_round()
+        for robot in self.state.robots:
+            robot.clear_robot_attributes()
+            robot.dealt_cards = self.state.get_dealt_cards(robot)
+        await self.send_message(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
 
     async def send_message(self, message):
         """
