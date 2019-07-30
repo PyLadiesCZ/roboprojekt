@@ -182,9 +182,8 @@ class Server:
 
     def play_round(self):
         """
-        If all robot have selected cards, server applies effects of cards and tiles.
+        Apply effects of cards and tiles.
         Robots attribues are cleared.
-        New dealt cards are sent to all clients.
         """
         self.state.apply_all_effects()
         self.state.increment_game_round()
