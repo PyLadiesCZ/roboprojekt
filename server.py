@@ -172,7 +172,8 @@ class Server:
                 for robot in self.state.robots:
                     robot.clear_robot_attributes()
                     robot.dealt_cards = self.state.get_dealt_cards(robot)
-                await self.send_message(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
+                    ws = self.assigned_robots[robot.name]
+                    await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
 
     async def check_winner(self):
         """
@@ -180,11 +181,13 @@ class Server:
         Send winner to interface clients.
         """
         self.state.number_flags = self.state.get_number_flags_from_map(map_name)
+        winners = []
         for robot in self.state.robots:
             if robot.flags == self.state.number_flags:
-                winner = robot.name
-                self.state.game_over = True
-                await self.send_message({"winner": winner})
+                winners.append(robot.name)
+        if winners:
+            self.state.game_over = True
+            await self.send_message({"winner": winners})
 
     async def send_message(self, message):
         """
