@@ -3,6 +3,7 @@ Backend file contains functions for the game logic.
 """
 from pathlib import Path
 from collections import OrderedDict
+import random
 from random import shuffle
 
 from util import Direction, Rotation, get_next_coordinates
@@ -716,15 +717,30 @@ class State:
         """
         self.game_round += 1
 
-    def all_selected(self):
+    def selection_confirmed_number(self):
         """
-        Check if all robots confirmed their selection.
+        Return number of confirmed selections.
         """
-        all_selected = True
+        selection_confirmed_number = 0
         for robot in self.robots:
-            if not robot.selection_confirmed:
-                all_selected = False
-        return all_selected
+            if robot.selection_confirmed:
+                selection_confirmed_number += 1
+        return selection_confirmed_number
+
+    def choose_random_card(self):
+        """
+        If robot didn´t complete his program during timer,
+        it is completed with random cards.
+        """
+        for robot in self.robots:
+            for i, card in enumerate(robot.program):
+                if card is None:
+                    available_cards = []
+                    for card in robot.dealt_cards:
+                        if card not in robot.program:
+                            available_cards.append(card)
+                    card = random.choice(available_cards)
+                    robot.program[i] = card
 
 
 class NoCardError(LookupError):

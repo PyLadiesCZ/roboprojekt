@@ -9,6 +9,8 @@ client_interface.py in another command line.
 """
 import sys
 import contextlib
+import asyncio
+import random
 
 from aiohttp import web
 
@@ -147,7 +149,15 @@ class Server:
         else:
             # Add the rest of the cards to used cards pack
             robot.selection_confirmed = True
-            await self.play_round()
+            selection_confirmed_number = self.state.selection_confirmed_number()
+
+            if selection_confirmed_number == len(self.state.robots):
+                self.play_round()
+                await self.send_new_dealt_cards()
+            # If last robot doesnt selected his cards, the timer starts.
+            if selection_confirmed_number == len(self.state.robots) - 1:
+                await self.send_message("timer_start")
+                asyncio.create_task(self.timer(self.state.game_round))
 
     async def send_robots_state_to_all(self):
         """
@@ -158,22 +168,45 @@ class Server:
             # send info about state
             await client.send_json(self.state.robots_as_dict())
 
-    async def play_round(self):
+    async def timer(self, game_round):
         """
-        If all robot have selected cars, server apply effects of cards and tiles.
+        Run timer for 30s.
+        After the timer, it check if last robot confirmed his selection.
+        If not, server check if game round matches,
+        then assigns random cards to his program.
+        It continues to apply effects.
+        """
+        await asyncio.sleep(30)
+        await self.send_message({"timer_end": {"game_round": game_round}})
+        if game_round == self.state.game_round:
+            self.state.choose_random_card()
+            self.play_round()
+            await self.send_new_dealt_cards()
+
+    def play_round(self):
+        """
+        If all robot have selected cards, server applies effects of cards and tiles.
+        Robots attribues are cleared.
         New dealt cards are sent to all clients.
         """
-        all_selected = self.state.all_selected()
-        if all_selected:
-            self.state.apply_all_effects()
-            self.state.increment_game_round()
+        self.state.apply_all_effects()
+        self.state.increment_game_round()
+        for robot in self.state.robots:
+            robot.clear_robot_attributes()
 
-            for robot in self.state.robots:
-                robot.clear_robot_attributes()
-                robot.dealt_cards = self.state.get_dealt_cards(robot)
-                ws = self.assigned_robots[robot.name]
-                await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
+    async def send_new_dealt_cards(self):
+        for robot in self.state.robots:
+            robot.dealt_cards = self.state.get_dealt_cards(robot)
+            ws = self.assigned_robots[robot.name]
+            await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
 
+    async def send_message(self, message):
+        """
+        Send message to all interface clients.
+        """
+        for robot in self.state.robots:
+            ws = self.assigned_robots[robot.name]
+            await ws.send_json(message)
 
 # aiohttp.web application
 def get_app(argv=None):
