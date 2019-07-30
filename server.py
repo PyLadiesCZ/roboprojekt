@@ -210,7 +210,8 @@ class Server:
         for robot in self.state.robots:
             robot.clear_robot_attributes()
             robot.dealt_cards = self.state.get_dealt_cards(robot)
-        await self.send_message(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
+            ws = self.assigned_robots[robot.name]
+            await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
 
     async def send_message(self, message):
         """
