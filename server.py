@@ -133,11 +133,10 @@ class Server:
         message = message.json()
         # Set robot's attributes according to data in message
         # While selection is not confirmed, it is still possible to choose cards
-        # TODO: this part only sets the POWER DOWN attribute,
-        # it doesn't affect anything else.
-        robot.power_down = message["interface_data"]["power_down"]
-
         if not message["interface_data"]["confirmed"]:
+            # TODO: this part only sets the POWER DOWN attribute,
+            # it doesn't affect anything else.
+            robot.power_down = message["interface_data"]["power_down"]
             # Set robot's program with chosen cards
             selection = message["interface_data"]["my_program"]
             for card_index in selection:
