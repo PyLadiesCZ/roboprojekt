@@ -25,7 +25,7 @@ def get_sprite(img_path, x=0, y=0):
 interface_sprite = get_sprite('img/interface/png/interface.png', x=0, y=0)
 power_down_sprite = get_sprite('img/interface/png/power.png', x=210, y=900)
 # Timer
-timer_sprite = get_sprite('img/interface/png/timer_on.png', x=193, y=852.8)
+timer_sprite = get_sprite('img/interface/png/timer_on.png', x=193, y=852.9)
 # Time indicator
 indicator_green_sprite = get_sprite('img/interface/png/green.png', x=688, y=864)
 # Time indicator

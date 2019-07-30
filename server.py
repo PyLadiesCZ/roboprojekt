@@ -133,21 +133,18 @@ class Server:
         message = message.json()
         # Set robot's attributes according to data in message
         # While selection is not confirmed, it is still possible to choose cards
-        # TODO: not only by pressing key but also when time's up
-        if not message["interface_data"]["confirmed"]:
-            # TODO: this part only sets the POWER DOWN attribute,
-            # it doesn't affect anything else.
-            robot.power_down = message["interface_data"]["power_down"]
+        # TODO: this part only sets the POWER DOWN attribute,
+        # it doesn't affect anything else.
+        robot.power_down = message["interface_data"]["power_down"]
 
+        if not message["interface_data"]["confirmed"]:
             # Set robot's program with chosen cards
             selection = message["interface_data"]["my_program"]
             for card_index in selection:
                 if card_index is not None:
                     robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
-
         # choice of cards was blocked by the player
         else:
-            # Add the rest of the cards to used cards pack
             robot.selection_confirmed = True
             selection_confirmed_number = self.state.selection_confirmed_number()
 
@@ -195,6 +192,9 @@ class Server:
             robot.clear_robot_attributes()
 
     async def send_new_dealt_cards(self):
+        """
+        Send new dealt cards to robots.
+        """
         for robot in self.state.robots:
             robot.dealt_cards = self.state.get_dealt_cards(robot)
             ws = self.assigned_robots[robot.name]
