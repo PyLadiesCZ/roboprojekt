@@ -340,7 +340,6 @@ class State:
         self.present_deck = self.create_card_pack()
         self.past_deck = set()
         self.game_round = 1
-        self.number_flags = None
         self.game_over = False
 
     def __repr__(self):
@@ -728,24 +727,33 @@ class State:
                 all_selected = False
         return all_selected
 
-    def get_number_flags_from_map(self, map_name):
+    def get_number_flags_from_map(self):
         """
         Return number of flags on the map.
         """
-        map_data = get_map_data(map_name)
-        flags_id = [30, 31, 32, 33, 34, 35, 36, 37]
-        tiles_id = []
-        for layer in map_data['layers']:
-            for tile_number in layer['data']:
-                id = get_tile_id(tile_number)
-                tiles_id.append(id)
-
         number_flags = 0
-        for flag in flags_id:
-            if flag in tiles_id:
-                number_flags += 1
+        w, h = self.tile_count
+        for x in range(0, w):
+            for y in range(0, h):
+                tiles = self.get_tiles((x, y))
+                for tile in tiles:
+                    if tile.type == "flag":
+                        number_flags += 1
         return number_flags
 
+    def check_winner(self):
+        """
+        Check if somebody win(robot gained all flags).
+        Return list of winner(s).
+        """
+        number_flags = self.get_number_flags_from_map()
+        self.winners = []
+        for robot in self.robots:
+            if robot.flags == number_flags:
+                self.winners.append(robot.name)
+        if self.winners:
+            self.game_over = True
+        return self.winners
 
 class NoCardError(LookupError):
     """Raised when a robot doesn't have a card for the given register."""

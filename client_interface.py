@@ -113,7 +113,8 @@ class Interface:
         winner = message["winner"]
         if self.state.robot.name in winner:
             self.state.winner = True
-        self.state.game_over = True
+        else:
+            self.state.winner = False
 
 
 def tick_asyncio(dt):

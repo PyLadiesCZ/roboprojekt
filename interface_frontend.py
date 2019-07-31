@@ -270,12 +270,11 @@ def draw_interface(interface_state, window):
     else:
         indicator_red_sprite.draw()
 
-    # Game over
-    if interface_state.game_over:
-        if interface_state.winner:
-            winner_sprite.draw()
-        else:
-            game_over_sprite.draw()
+    # Winner
+    if interface_state.winner:
+        winner_sprite.draw()
+    if interface_state.winner == False:
+        game_over_sprite.draw()
 
     pyglet.gl.glPopMatrix()
 
