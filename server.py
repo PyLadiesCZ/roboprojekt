@@ -147,8 +147,10 @@ class Server:
         else:
             # Add the rest of the cards to used cards pack
             robot.selection_confirmed = True
-            await self.play_round()
-
+            robot_game_round = message["interface_data"]["my_game_round"]
+            if robot_game_round == self.state.game_round:
+                await self.play_round()
+            
     async def send_robots_state_to_all(self):
         """
         Send message with robots' state to all connected clients.
