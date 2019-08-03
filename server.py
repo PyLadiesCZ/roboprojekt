@@ -148,7 +148,7 @@ class Server:
             selection_confirmed_number = self.state.selection_confirmed_number()
 
             if selection_confirmed_number == len(self.state.robots):
-                self.play_round()
+                self.state.play_round()
                 await self.send_new_dealt_cards()
             # If last robot doesnt selected his cards, the timer starts.
             if selection_confirmed_number == len(self.state.robots) - 1:
@@ -175,18 +175,8 @@ class Server:
         await self.send_message({"timer_end": {"game_round": game_round}})
         if game_round == self.state.game_round:
             self.state.choose_random_card()
-            self.play_round()
+            self.state.play_round()
             await self.send_new_dealt_cards()
-
-    def play_round(self):
-        """
-        Apply effects of cards and tiles.
-        Robots attribues are cleared.
-        """
-        self.state.apply_all_effects()
-        self.state.increment_game_round()
-        for robot in self.state.robots:
-            robot.clear_robot_attributes()
 
     async def send_new_dealt_cards(self):
         """
