@@ -742,7 +742,17 @@ class State:
                     card = random.choice(available_cards)
                     robot.program[i] = card
 
-
+    def play_round(self):
+        """
+        Apply effects of cards and tiles.
+        Robots attribues are cleared.
+        """
+        self.apply_all_effects()
+        self.increment_game_round()
+        for robot in self.robots:
+            robot.clear_robot_attributes()
+                    
+                
 class NoCardError(LookupError):
     """Raised when a robot doesn't have a card for the given register."""
 
