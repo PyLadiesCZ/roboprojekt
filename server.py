@@ -167,8 +167,7 @@ class Server:
     async def timer(self, game_round):
         """
         Run timer for 30s.
-        After the timer, it check if last robot confirmed his selection.
-        If not, server check if game round matches,
+        After timer server check if game round matches,
         then assigns random cards to his program.
         It continues to apply effects.
         """
