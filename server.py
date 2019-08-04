@@ -129,25 +129,28 @@ class Server:
         if robot.selection_confirmed:
             return
         message = message.json()
+        robot_game_round = message["interface_data"]["my_game_round"]
+        if robot_game_round == self.state.game_round:
         # Set robot's attributes according to data in message
         # While selection is not confirmed, it is still possible to choose cards
         # TODO: not only by pressing key but also when time's up
-        if not message["interface_data"]["confirmed"]:
-            # TODO: this part only sets the POWER DOWN attribute,
-            # it doesn't affect anything else.
-            robot.power_down = message["interface_data"]["power_down"]
+            if not message["interface_data"]["confirmed"]:
+                # TODO: this part only sets the POWER DOWN attribute,
+                # it doesn't affect anything else.
+                robot.power_down = message["interface_data"]["power_down"]
 
-            # Set robot's program with chosen cards
-            selection = message["interface_data"]["my_program"]
-            for card_index in selection:
-                if card_index is not None:
-                    robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
+                # Set robot's program with chosen cards
+                selection = message["interface_data"]["my_program"]
 
-        # choice of cards was blocked by the player
-        else:
-            # Add the rest of the cards to used cards pack
-            robot.selection_confirmed = True
-            await self.play_round()
+                for card_index in selection:
+                    if card_index is not None:
+                        robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
+
+            # choice of cards was blocked by the player
+            else:
+                # Add the rest of the cards to used cards pack
+                robot.selection_confirmed = True
+                await self.play_round()
 
     async def play_round(self):
         """
