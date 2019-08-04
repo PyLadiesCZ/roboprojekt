@@ -131,6 +131,8 @@ class Server:
         if robot.selection_confirmed:
             return
         message = message.json()
+        robot_game_round = message["interface_data"]["my_game_round"]
+        if robot_game_round == self.state.game_round:
         # Set robot's attributes according to data in message
         # While selection is not confirmed, it is still possible to choose cards
         if not message["interface_data"]["confirmed"]:
