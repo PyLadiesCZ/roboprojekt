@@ -341,6 +341,7 @@ class State:
         self.present_deck = self.create_card_pack()
         self.past_deck = set()
         self.game_round = 1
+        self.game_over = False
 
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
@@ -751,8 +752,8 @@ class State:
         self.increment_game_round()
         for robot in self.robots:
             robot.clear_robot_attributes()
-                    
-                
+
+
 class NoCardError(LookupError):
     """Raised when a robot doesn't have a card for the given register."""
 
