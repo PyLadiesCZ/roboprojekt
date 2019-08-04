@@ -69,6 +69,8 @@ class Interface:
                         self.set_robots(message, robot_name)
                     if "cards" in message:
                         self.set_dealt_cards(message)
+                    if "winner" in message:
+                        self.set_winner(message)
                     # else:
                     #     print(message)
         self.ws = None
@@ -104,6 +106,14 @@ class Interface:
         # by message from server
         self.state.my_game_round = message["current_game_round"]
 
+    def set_winner(self, message):
+        """
+        Set winner from received message.
+        """
+        winner = message["winner"]
+        if self.state.robot.name in winner:
+            self.state.winner = True
+        self.state.game_over = True
 
 def tick_asyncio(dt):
     """

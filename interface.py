@@ -8,6 +8,8 @@ class InterfaceState:
         self.cursor_index = 0  # 0-4 number of positon
         self.players = []
         self.my_game_round = None
+        self.winner = False
+        self.game_over = False
 
     def __repr__(self):
         return f"InterfaceState \
