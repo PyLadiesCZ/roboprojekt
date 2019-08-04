@@ -732,7 +732,7 @@ class State:
         Return number of flags on the map.
         """
         number_flags = 0
-        w, h = self.tile_count
+        weight, height = self.tile_count
         for x in range(0, w):
             for y in range(0, h):
                 tiles = self.get_tiles((x, y))
