@@ -111,9 +111,7 @@ class Interface:
         Set winner from received message.
         """
         winner = message["winner"]
-        if self.state.robot.name in winner:
-            self.state.winner = True
-        self.state.game_over = True
+        self.state.winner = winner
 
 def tick_asyncio(dt):
     """
