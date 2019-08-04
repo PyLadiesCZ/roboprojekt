@@ -133,29 +133,29 @@ class Server:
         message = message.json()
         robot_game_round = message["interface_data"]["my_game_round"]
         if robot_game_round == self.state.game_round:
-        # Set robot's attributes according to data in message
-        # While selection is not confirmed, it is still possible to choose cards
-        if not message["interface_data"]["confirmed"]:
-            # TODO: this part only sets the POWER DOWN attribute,
-            # it doesn't affect anything else.
-            robot.power_down = message["interface_data"]["power_down"]
-            # Set robot's program with chosen cards
-            selection = message["interface_data"]["my_program"]
-            for card_index in selection:
-                if card_index is not None:
-                    robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
-        # choice of cards was blocked by the player
-        else:
-            robot.selection_confirmed = True
-            selection_confirmed_number = self.state.selection_confirmed_number()
+            # Set robot's attributes according to data in message
+            # While selection is not confirmed, it is still possible to choose cards
+            if not message["interface_data"]["confirmed"]:
+                # TODO: this part only sets the POWER DOWN attribute,
+                # it doesn't affect anything else.
+                robot.power_down = message["interface_data"]["power_down"]
+                # Set robot's program with chosen cards
+                selection = message["interface_data"]["my_program"]
+                for card_index in selection:
+                    if card_index is not None:
+                        robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
+            # choice of cards was blocked by the player
+            else:
+                robot.selection_confirmed = True
+                selection_confirmed_number = self.state.selection_confirmed_number()
 
-            if selection_confirmed_number == len(self.state.robots):
-                self.state.play_round()
-                await self.send_new_dealt_cards()
-            # If last robot doesnt selected his cards, the timer starts.
-            if selection_confirmed_number == len(self.state.robots) - 1:
-                await self.send_message("timer_start")
-                asyncio.create_task(self.timer(self.state.game_round))
+                if selection_confirmed_number == len(self.state.robots):
+                    self.state.play_round()
+                    await self.send_new_dealt_cards()
+                # If last robot doesnt selected his cards, the timer starts.
+                if selection_confirmed_number == len(self.state.robots) - 1:
+                    await self.send_message("timer_start")
+                    asyncio.create_task(self.timer(self.state.game_round))
 
     async def send_robots_state_to_all(self):
         """
