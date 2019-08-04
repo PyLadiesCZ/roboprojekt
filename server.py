@@ -102,7 +102,7 @@ class Server:
             # React to the sent state of this client and send new state to all
             async for message in ws:
                 await self.process_message(message, robot)
-                await self.send_robots_state_to_all()
+                await self.send_message(self.state.robots_as_dict())
 
             return ws
 
@@ -149,15 +149,6 @@ class Server:
             robot.selection_confirmed = True
             await self.play_round()
 
-    async def send_robots_state_to_all(self):
-        """
-        Send message with robots' state to all connected clients.
-        """
-        ws_all = self.ws_receivers + self.ws_interfaces
-        for client in ws_all:
-            # send info about state
-            await client.send_json(self.state.robots_as_dict())
-
     async def play_round(self):
         """
         If all robot have selected cars, server apply effects of cards and tiles.
@@ -166,13 +157,24 @@ class Server:
         all_selected = self.state.all_selected()
         if all_selected:
             self.state.apply_all_effects()
-            self.state.increment_game_round()
+            self.state.check_winner()
+            if not self.state.game_over:
+                self.state.increment_game_round()
+                for robot in self.state.robots:
+                    robot.clear_robot_attributes()
+                    robot.dealt_cards = self.state.get_dealt_cards(robot)
+                    ws = self.assigned_robots[robot.name]
+                    await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
+            else:
+                await self.send_message({"winner": self.state.winners})
 
-            for robot in self.state.robots:
-                robot.clear_robot_attributes()
-                robot.dealt_cards = self.state.get_dealt_cards(robot)
-                ws = self.assigned_robots[robot.name]
-                await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
+    async def send_message(self, message):
+        """
+        Send message to all clients.
+        """
+        ws_all = self.ws_receivers + self.ws_interfaces
+        for client in ws_all:
+            await client.send_json(message)
 
 
 # aiohttp.web application
@@ -186,7 +188,7 @@ def get_app(argv=None):
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        map_name = "maps/test_game.json"
+        map_name = "maps/test_winner.json"
     else:
         map_name = sys.argv[1]
 
