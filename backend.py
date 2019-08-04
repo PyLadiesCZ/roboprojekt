@@ -7,7 +7,7 @@ from random import shuffle
 
 from util import Direction, Rotation, get_next_coordinates
 from tile import HoleTile
-from loading import get_board, get_map_data, board_from_data, get_tile_id
+from loading import get_board, get_map_data, board_from_data 
 
 
 MAX_DAMAGE_VALUE = 10
@@ -732,7 +732,7 @@ class State:
         Return number of flags on the map.
         """
         number_flags = 0
-        w, h = self.tile_count
+        weight, height = self.tile_count
         for x in range(0, w):
             for y in range(0, h):
                 tiles = self.get_tiles((x, y))
