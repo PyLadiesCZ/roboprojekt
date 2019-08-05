@@ -762,7 +762,7 @@ class State:
         """
         self.apply_all_effects()
         self.check_winner()
-        if not self.state.game_over:
+        if not self.game_over:
             self.increment_game_round()
             for robot in self.robots:
                 robot.clear_robot_attributes()
