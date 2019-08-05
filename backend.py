@@ -761,7 +761,7 @@ class State:
         Robots attribues are cleared.
         """
         self.apply_all_effects()
-        self.state.check_winner()
+        self.check_winner()
         if not self.state.game_over:
             self.increment_game_round()
             for robot in self.robots:
