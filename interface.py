@@ -9,6 +9,7 @@ class InterfaceState:
         self.players = []
         self.my_game_round = None
         self.winner = None
+        self.timer = False
 
     def __repr__(self):
         return f"InterfaceState \
