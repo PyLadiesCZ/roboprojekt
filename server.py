@@ -153,6 +153,15 @@ class Server:
                 if selection_confirmed_number == len(self.state.robots):
                     await self.play_game_round()
 
+    async def send_new_dealt_cards(self):
+        """
+        Send new dealt cards to robots.
+        """
+        for robot in self.state.robots:
+            robot.dealt_cards = self.state.get_dealt_cards(robot)
+            ws = self.assigned_robots[robot.name]
+            await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
+            
     async def play_game_round(self):
         """
         Contain methods play_round, send_message(robots_as_dict),
