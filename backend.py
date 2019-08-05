@@ -733,8 +733,8 @@ class State:
         """
         number_flags = 0
         weight, height = self.tile_count
-        for x in range(0, w):
-            for y in range(0, h):
+        for x in range(0, weight):
+            for y in range(0, height):
                 tiles = self.get_tiles((x, y))
                 for tile in tiles:
                     if tile.type == "flag":
