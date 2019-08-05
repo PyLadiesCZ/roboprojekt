@@ -755,6 +755,19 @@ class State:
             self.game_over = True
         return self.winners
 
+    def play_round(self):
+        """
+        Apply effects of cards and tiles.
+        Robots attribues are cleared.
+        """
+        self.apply_all_effects()
+        self.state.check_winner()
+        if not self.state.game_over:
+            self.increment_game_round()
+            for robot in self.robots:
+                robot.clear_robot_attributes()
+                
+                
 class NoCardError(LookupError):
     """Raised when a robot doesn't have a card for the given register."""
 
