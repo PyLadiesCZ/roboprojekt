@@ -23,7 +23,9 @@ def get_sprite(img_path, x=0, y=0):
 # Interface element sprites
 # Interface background
 interface_sprite = get_sprite('img/interface/png/interface.png', x=0, y=0)
-power_down_sprite = get_sprite('img/interface/png/power.png', x=186, y=854)
+power_down_sprite = get_sprite('img/interface/png/power.png', x=210, y=900)
+# Timer
+timer_sprite = get_sprite('img/interface/png/timer_on.png', x=193, y=852.9)
 # Time indicator
 indicator_green_sprite = get_sprite('img/interface/png/green.png', x=688, y=864)
 # Time indicator
@@ -34,6 +36,10 @@ card_background_sprite = get_sprite('img/interface/png/card_bg.png')
 select_sprite = get_sprite('img/interface/png/card_cv.png')
 # Selection cursor
 cursor_sprite = get_sprite('img/interface/png/card_sl.png')
+# Winner
+winner_sprite = get_sprite('img/interface/png/winner.png', x=160, y=290)
+# Game over
+game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=280)
 # Other robot card
 players_background = get_sprite('img/interface/png/player.png')
 # Loading of robots images
@@ -260,12 +266,15 @@ def draw_interface(interface_state, window):
     if interface_state.power_down:
         power_down_sprite.draw()
 
+    # Timer
+    if interface_state.timer:
+        timer_sprite.draw()
+
     # Indicator
     if not interface_state.selection_confirmed:
         indicator_green_sprite.draw()
     else:
         indicator_red_sprite.draw()
-
     pyglet.gl.glPopMatrix()
 
 
