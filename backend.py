@@ -717,15 +717,15 @@ class State:
         """
         self.game_round += 1
 
-    def all_selected(self):
+    def selection_confirmed_number(self):
         """
-        Check if all robots confirmed their selection.
+        Return number of confirmed selections.
         """
-        all_selected = True
+        selection_confirmed_number = 0
         for robot in self.robots:
-            if not robot.selection_confirmed:
-                all_selected = False
-        return all_selected
+            if robot.selection_confirmed:
+                selection_confirmed_number += 1
+        return selection_confirmed_number
 
     def get_number_flags_from_map(self):
         """
