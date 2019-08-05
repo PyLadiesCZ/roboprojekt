@@ -190,15 +190,6 @@ class Server:
             ws = self.assigned_robots[robot.name]
             await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
 
-    async def play_game_round(self):
-        """
-        Contain methods play_round, send_message(robots_as_dict),
-        send_new_dealt_card.
-        """
-        self.state.play_round()
-        await self.send_message(self.state.robots_as_dict())
-        await self.send_new_dealt_cards()
-
     async def send_message(self, message):
         """
         Send message to all  clients.
