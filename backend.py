@@ -8,7 +8,7 @@ from random import shuffle
 
 from util import Direction, Rotation, get_next_coordinates
 from tile import HoleTile
-from loading import get_board, get_map_data, board_from_data 
+from loading import get_board, get_map_data, board_from_data
 
 
 MAX_DAMAGE_VALUE = 10
@@ -342,6 +342,7 @@ class State:
         self.past_deck = set()
         self.game_round = 1
         self.game_over = False
+        self.timer = False
 
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
@@ -782,8 +783,8 @@ class State:
             self.increment_game_round()
             for robot in self.robots:
                 robot.clear_robot_attributes()
-                
-                
+
+
 class NoCardError(LookupError):
     """Raised when a robot doesn't have a card for the given register."""
 

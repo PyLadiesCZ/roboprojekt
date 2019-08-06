@@ -21,6 +21,15 @@ for image_path in Path('./img/robots_map/png').iterdir():
     loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
 
 
+def get_sprite(img_path, x=0, y=0):
+    img = pyglet.image.load(img_path)
+    return pyglet.sprite.Sprite(img, x, y)
+
+# Game over
+game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=180)
+# Timer
+timer_sprite = get_sprite('img/interface/png/timer_on.png', x=630, y=780)
+
 def create_window(state):
     """
     Return a pyglet window for graphic output.
@@ -28,7 +37,7 @@ def create_window(state):
     state: State object containing game board, robots and map sizes
     """
     window = pyglet.window.Window(state.tile_count[0] * TILE_WIDTH,
-                                  state.tile_count[1] * TILE_HEIGHT, resizable=True)
+                                  state.tile_count[1] * TILE_HEIGHT + 50, resizable=True)
     return window
 
 
@@ -98,10 +107,6 @@ def create_robot_sprite(robot):
     robot_sprite.rotation = rotation
     return robot_sprite
 
-def create_game_over_sprite():
-    img = pyglet.image.load("img/interface/png/game_over.png")
-    game_over_sprite = pyglet.sprite.Sprite(img, x=140, y=180)
-    return game_over_sprite
 
 def draw_state(state, window):
     """
@@ -128,9 +133,9 @@ def draw_state(state, window):
         tile_sprite.draw()
 
     if state.game_over:
-        game_over_sprite = create_game_over_sprite()
         game_over_sprite.draw()
 
-
+    if state.timer:
+        timer_sprite.draw()
 
     pyglet.gl.glPopMatrix()
