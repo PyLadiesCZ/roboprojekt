@@ -131,46 +131,6 @@ def test_direction_from_coordinates(start_coordinates, stop_coordinates, output_
     assert direction == output_direction
 
 
-@pytest.mark.parametrize(("input_coordinates_1", "input_coordinates_2", "output_coordinates_1", "output_coordinates_2"),
-                         [((5, 7), (7, 7), (5, 7), (7, 7)),
-                          ])
-def test_two_robots_movement_on_T_crossroad(input_coordinates_1, input_coordinates_2, output_coordinates_1, output_coordinates_2):
-    """
-    Test movement of two robots on T crossroads. Robots are facing each other
-    across the crossroad. Both want to go through this crossroad, but none them
-    move.
-    """
-    robots = [Robot(Direction.N, input_coordinates_1, "tester"),
-              Robot(Direction.N, input_coordinates_2, "tester"),
-              ]
-    board = get_board("maps/test_belts.json")
-    state = State(board, robots)
-    state.apply_all_effects(1)
-    assert robots[0].coordinates == output_coordinates_1
-    assert robots[1].coordinates == output_coordinates_2
-
-
-@pytest.mark.parametrize(("input_coordinates_1", "input_coordinates_2", "output_coordinates_1", "output_coordinates_2"),
-                         [((3, 10), (3, 11), (3, 10), (3, 11)),
-                         ((6, 9), (7, 9), (6, 9), (7, 9)),
-                         ((4, 3), (5, 2), (5, 3), (5, 2)),
-                         ((2, 0), (2, 2), (2, 1), (2, 2)),
-                          ])
-def test_robot_does_not_move_onto_another_robot(input_coordinates_1, input_coordinates_2, output_coordinates_1, output_coordinates_2):
-    """
-    Test robot doesn't move to coordinates of other robot. Other robot stands
-    on the end of belt but on the ground tile.
-    """
-    robots = [Robot(Direction.N, input_coordinates_1, "tester"),
-              Robot(Direction.N, input_coordinates_2, "tester"),
-              ]
-    board = get_board("maps/test_belts.json")
-    state = State(board, robots)
-    state.apply_all_effects(1)
-    assert robots[0].coordinates == output_coordinates_1
-    assert robots[1].coordinates == output_coordinates_2
-
-
 def test_card_priorities():
     """
     Check that robots are sorted according to their cards on hand.
@@ -225,12 +185,14 @@ def test_state_from_dict():
     """
     Check if state.from_dict can load State from JSON.
     """
-    data = {"game_state": {'board': {'height': 12, 'infinite': False, 'layers': [{'data': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], 'height': 12, 'id': 1, 'name': 'layer 1', 'opacity': 1, 'type': 'tilelayer', 'visible': True, 'width': 12, 'x': 0, 'y': 0}, {'data': [0, 2684354573, 0, 2684354573, 0, 2684354573, 2684354573, 0, 2684354573, 0, 2684354573, 38, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3221225485, 0, 0, 0, 2684354578, 0, 2684354578, 0, 38, 1610612754, 0, 0, 0, 13, 0, 2684354578, 33, 2684354578, 0, 2, 1610612754, 0, 1610612754, 0, 3221225485, 0, 0, 2, 2684354578, 0, 39, 30, 0, 1610612754, 0, 0, 0, 13, 0, 2684354578, 0, 2684354578, 0, 0, 1610612754, 32, 1610612754, 0, 3221225485, 0, 0, 31, 2684354578, 0, 2684354578, 0, 0, 1610612754, 2, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3221225485, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 41, 0, 42, 0, 43, 44, 0, 45, 0, 46, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 'height': 12, 'id': 2, 'name': 'layer 2', 'opacity': 1, 'type': 'tilelayer', 'visible': True, 'width': 12, 'x': 0, 'y': 0}, {'data': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354584, 2684354585, 0, 0, 24, 0, 2684354573, 0, 2684354573, 2684354573, 0, 2684354573, 0, 3221225496, 0, 0, 24, 13, 0, 0, 0, 0, 0, 0, 3221225485, 3221225496, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 3221225496, 0, 0, 24, 13, 0, 0, 0, 0, 0, 0, 3221225485, 3221225496, 0, 0, 24, 0, 1610612749, 0, 1610612749, 1610612749, 0, 1610612749, 0, 3221225496, 0, 0, 1610612761, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 1610612760, 3221225497, 0, 0, 0, 1610612749, 0, 1610612749, 0, 0, 1610612749, 13, 1610612749, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 13, 0, 13, 0, 13, 13, 13, 0, 13, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 'height': 12, 'id': 3, 'name': 'layer 3', 'opacity': 1, 'type': 'tilelayer', 'visible': True, 'width': 12, 'x': 0, 'y': 0}], 'nextlayerid': 5, 'nextobjectid': 1, 'orientation': 'orthogonal', 'renderorder': 'right-up', 'tiledversion': '1.2.1', 'tileheight': 64, 'tilesets': [{'firstgid': 1, 'source': 'development_tileset.json'}], 'tilewidth': 64, 'type': 'map', 'version': 1.2, 'width': 12}, 'robots': [{'robot_data': {'name': 'hanka', 'coordinates': (0, 1), 'lives': 3, 'flags': 0, 'damages': 0, 'power_down': False, 'direction': 0, 'start_coordinates': (0, 1), 'selection_confirmed': False}}, {'robot_data': {'name': 'ivet', 'coordinates': (1, 1), 'lives': 3, 'flags': 0, 'damages': 4, 'power_down': False, 'direction': 0, 'start_coordinates': (1, 1), 'selection_confirmed': False}}]}}
-    state = State.whole_from_dict(data)
-    assert state.robots[0].coordinates == (0, 1)
-    assert state.robots[1].damages == 4
-    assert state._board[0, 11][0].direction == Direction.N
-    assert state._board[2, 5][0].name == "ground"
+    state = State.get_start_state("maps/test_3.json")
+    data = state.whole_as_dict("maps/test_3.json")
+    state_recovered = State.whole_from_dict(data)
+    
+    assert state_recovered.robots[0].coordinates == (0, 1)
+    assert state_recovered.robots[1].damages == 0
+    assert state_recovered._board[0, 11][0].direction == Direction.N
+    assert state_recovered._board[2, 5][0].name == "ground"
 
 
 def test_get_robot_names():
