@@ -34,7 +34,8 @@ def test_start_state():
 
 
 # I'd leave this test as regression test - uses robot.walk() method.
-@pytest.mark.parametrize(("input_coordinates", "input_direction", "distance", "output_coordinates"),
+@pytest.mark.parametrize(
+    ("input_coordinates", "input_direction", "distance", "output_coordinates"),
                          [((3, 3), Direction.N, 2, (3, 5)),
                           ((3, 3), Direction.E, 2, (3, 3)),
                           ((3, 3), Direction.S, 2, (3, 2)),
@@ -50,8 +51,10 @@ def test_robot_walk(input_coordinates, input_direction, distance, output_coordin
     robot.walk(distance, state, input_direction)
     assert robot.coordinates == output_coordinates
 
+
 # I'd leave this test as regression test - uses robot.move() method.
-@pytest.mark.parametrize(("input_coordinates", "input_direction", "distance", "output_coordinates"),
+@pytest.mark.parametrize(
+    ("input_coordinates", "input_direction", "distance", "output_coordinates"),
                          [((0, 1), Direction.N, 3, (0, 4)),
                           ((8, 1), Direction.N, 3, (8, 3)),
                           ((10, 1), Direction.N, 3, (10, 2)),
@@ -126,46 +129,6 @@ def test_direction_from_coordinates(start_coordinates, stop_coordinates, output_
     """
     direction = get_direction_from_coordinates(start_coordinates, stop_coordinates)
     assert direction == output_direction
-
-
-@pytest.mark.parametrize(("input_coordinates", "input_direction"),
-                         [((6, 8), Direction.N),
-                         ((5, 9), Direction.E),
-                         ((6, 10), Direction.S),
-                         ((7, 9), Direction.W),
-                          ])
-def test_robots_dont_change_direction_on_rotating_belts_after_move_card(input_coordinates, input_direction):
-    """
-    Test robot's direction isn't changed after he is moved by card to
-    rotating conveyor belt.
-    """
-    robot = Robot(input_direction, input_coordinates, "tester")
-    robot.program = [MovementCard(100, 1)]
-    board = get_board("maps/test_belts.json")
-    state = State(board, [robot])
-    robot.program[0].apply_effect(robot, state)
-    state.apply_all_effects(1)
-    assert robot.direction == input_direction
-
-
-@pytest.mark.parametrize(("input_coordinates_1", "input_coordinates_2", "output_coordinates_1", "output_coordinates_2"),
-                         [((1, 10), (2, 10), (2, 10), (2, 11)),
-                         ((6, 4), (7, 4), (7, 4), (7, 5)),
-                         ((2, 5), (2, 4), (2, 5), (2, 4)),
-                         ((2, 1), (2, 0), (2, 2), (2, 1)),
-                          ])
-def test_two_robots_movements_on_belts(input_coordinates_1, input_coordinates_2, output_coordinates_1, output_coordinates_2):
-    """
-    Test movement of two robots in a row on belts.
-    """
-    robots = [Robot(Direction.N, input_coordinates_1, "tester"),
-              Robot(Direction.N, input_coordinates_2, "tester"),
-              ]
-    board = get_board("maps/test_belts.json")
-    state = State(board, robots)
-    state.apply_all_effects(1)
-    assert robots[0].coordinates == output_coordinates_1
-    assert robots[1].coordinates == output_coordinates_2
 
 
 @pytest.mark.parametrize(("input_coordinates_1", "input_coordinates_2", "output_coordinates_1", "output_coordinates_2"),
