@@ -36,6 +36,7 @@ class Receiver:
                         self.state.robots = self.state.robots_from_dict(message)
                     if "winner" in message:
                         self.state.game_over = True
+                        self.state.winners = message["winner"]
                     if "timer_start" in message:
                         self.state.timer = True
 

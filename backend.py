@@ -343,6 +343,7 @@ class State:
         self.game_round = 1
         self.game_over = False
         self.timer = False
+        self.winners = None
 
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)

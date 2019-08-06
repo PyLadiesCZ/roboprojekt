@@ -30,6 +30,7 @@ game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=180)
 # Timer
 timer_sprite = get_sprite('img/interface/png/timer_on.png', x=630, y=780)
 
+
 def create_window(state):
     """
     Return a pyglet window for graphic output.
@@ -134,6 +135,9 @@ def draw_state(state, window):
 
     if state.game_over:
         game_over_sprite.draw()
+        name = state.winners
+        winner = pyglet.text.Label(text=str(name),font_size=20, x=50, y=780)
+        winner.draw()
 
     if state.timer:
         timer_sprite.draw()
