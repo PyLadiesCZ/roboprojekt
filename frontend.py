@@ -98,6 +98,10 @@ def create_robot_sprite(robot):
     robot_sprite.rotation = rotation
     return robot_sprite
 
+def create_game_over_sprite():
+    img = pyglet.image.load("img/interface/png/game_over.png")
+    game_over_sprite = pyglet.sprite.Sprite(img, x=140, y=180)
+    return game_over_sprite
 
 def draw_state(state, window):
     """
@@ -122,5 +126,11 @@ def draw_state(state, window):
 
     for tile_sprite in tile_sprites:
         tile_sprite.draw()
+
+    if state.game_over:
+        game_over_sprite = create_game_over_sprite()
+        game_over_sprite.draw()
+
+
 
     pyglet.gl.glPopMatrix()

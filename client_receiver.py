@@ -34,6 +34,8 @@ class Receiver:
                             self.window.push_handlers(on_draw=self.window_draw)
                     if "robots" in message:
                         self.state.robots = self.state.robots_from_dict(message)
+                    if "winner" in message:
+                        self.state.game_over = True
 
 
 def tick_asyncio(dt):
