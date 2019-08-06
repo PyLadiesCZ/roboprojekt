@@ -275,6 +275,14 @@ def draw_interface(interface_state, window):
         indicator_green_sprite.draw()
     else:
         indicator_red_sprite.draw()
+
+    # Winner/Game over
+    if interface_state.winner is not None:
+        if interface_state.robot.name in interface_state.winner:
+            winner_sprite.draw()
+        else:
+            game_over_sprite.draw()
+
     pyglet.gl.glPopMatrix()
 
 

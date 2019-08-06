@@ -70,6 +70,8 @@ class Interface:
                     if "cards" in message:
                         self.set_dealt_cards(message)
                         self.state.timer = False
+                    if "winner" in message:
+                        self.set_winner(message)
                     if "timer_start" in message:
                         self.state.timer = True
                     if "timer_end" in message:
@@ -107,6 +109,13 @@ class Interface:
         # by message from server
         self.state.my_game_round = message["current_game_round"]
 
+    def set_winner(self, message):
+        """
+        Set winner from received message.
+        """
+        winner = message["winner"]
+        self.state.winner = winner
+
     def set_timer_off(self, message):
         """
         Set timer for client. It check game round for timer off.
@@ -114,6 +123,7 @@ class Interface:
         state_game_round = message["timer_end"]["game_round"]
         if state_game_round == self.state.my_game_round:
             self.state.timer = False
+
 
 def tick_asyncio(dt):
     """

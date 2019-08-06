@@ -8,7 +8,7 @@ from random import shuffle
 
 from util import Direction, Rotation, get_next_coordinates
 from tile import HoleTile
-from loading import get_board, get_map_data, board_from_data
+from loading import get_board, get_map_data, board_from_data 
 
 
 MAX_DAMAGE_VALUE = 10
@@ -743,17 +743,47 @@ class State:
                     card = random.choice(available_cards)
                     robot.program[i] = card
 
+    def get_number_flags_from_map(self):
+        """
+        Return number of flags on the map.
+        """
+        number_flags = 0
+        weight, height = self.tile_count
+        for x in range(0, weight):
+            for y in range(0, height):
+                tiles = self.get_tiles((x, y))
+                for tile in tiles:
+                    if tile.type == "flag":
+                        number_flags += 1
+        return number_flags
+
+    def check_winner(self):
+        """
+        Check if somebody win(robot gained all flags).
+        Return list of winner(s).
+        """
+        number_flags = self.get_number_flags_from_map()
+        self.winners = []
+        for robot in self.robots:
+            if robot.flags == number_flags:
+                self.winners.append(robot.name)
+        if self.winners:
+            self.game_over = True
+        return self.winners
+
     def play_round(self):
         """
         Apply effects of cards and tiles.
         Robots attribues are cleared.
         """
         self.apply_all_effects()
-        self.increment_game_round()
-        for robot in self.robots:
-            robot.clear_robot_attributes()
-
-
+        self.check_winner()
+        if not self.game_over:
+            self.increment_game_round()
+            for robot in self.robots:
+                robot.clear_robot_attributes()
+                
+                
 class NoCardError(LookupError):
     """Raised when a robot doesn't have a card for the given register."""
 

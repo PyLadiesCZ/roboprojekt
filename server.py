@@ -155,6 +155,18 @@ class Server:
                 if selection_confirmed_number == len(self.state.robots) - 1:
                     await self.send_message("timer_start")
                     asyncio.create_task(self.timer(self.state.game_round))
+            
+    async def play_game_round(self):
+        """
+        Contain methods play_round, send_message(robots_as_dict),
+        send_new_dealt_card.
+        """
+        self.state.play_round()
+        await self.send_message(self.state.robots_as_dict())
+        if not self.state.game_over:
+            await self.send_new_dealt_cards()
+        else:
+            await self.send_message({"winner": self.state.winners})
 
     async def timer(self, game_round):
         """
@@ -177,15 +189,6 @@ class Server:
             robot.dealt_cards = self.state.get_dealt_cards(robot)
             ws = self.assigned_robots[robot.name]
             await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
-
-    async def play_game_round(self):
-        """
-        Contain methods play_round, send_message(robots_as_dict),
-        send_new_dealt_card.
-        """
-        self.state.play_round()
-        await self.send_message(self.state.robots_as_dict())
-        await self.send_new_dealt_cards()
 
     async def send_message(self, message):
         """
