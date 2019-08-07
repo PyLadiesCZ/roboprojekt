@@ -33,7 +33,7 @@ The goal is to have a game that is playable through network. Therefore it is div
 python server.py
 ```
 
-In order to see the game board with small player's avatars, use:
+In order to see the game board with small players' avatars, use:
 ```
 python client_receiver.py
 ```
