@@ -190,6 +190,7 @@ class Server:
             robot.dealt_cards = self.state.get_dealt_cards(robot)
             ws = self.assigned_robots[robot.name]
             await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
+            await ws.send_json(self.state.blocked_cards_as_dict(robot.blocked_cards))
 
     async def send_message(self, message):
         """

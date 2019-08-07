@@ -76,6 +76,9 @@ class Interface:
                         self.state.timer = True
                     if "timer_end" in message:
                         self.set_timer_off(message)
+                    if "blocked" in message:
+                        self.set_blocked_cards(message)
+
         self.ws = None
 
     def set_game_state(self, message, robot_name):
@@ -95,14 +98,23 @@ class Interface:
         for robot in self.state.players:
             if robot.name == robot_name:
                 self.state.robot = robot
+                unblocked_cards = self.state.robot.unblocked_cards
+                print("unblocked_cards", robot.unblocked_cards)
                 index = self.state.players.index(robot)
                 del self.state.players[index]
-        self.state.blocked_cards
 
-        for card_index in self.state.my_program:
-            if card_index is not None:
-                self.state.blocked_cards[self.state.my_program.index(card_index)] = self.state.dealt_cards[card_index]
-                print("blocked_cards",self.state.blocked_cards)
+        if unblocked_cards == 4:
+            del self.state.my_program[-1]
+        elif unblocked_cards == 3:
+            del self.state.my_program[-1, -2]
+        elif unblocked_cards == 2:
+            del self.state.my_program[-1, -2, -3]
+        elif unblocked_cards == 1:
+            del self.state.my_program[-1, -2, -3, -4]
+        else:
+            unblocked_cards == 5
+        print("interface_program", self.state.my_program)
+
 
     def set_dealt_cards(self, message):
         """
@@ -114,6 +126,10 @@ class Interface:
         # Set the game round for this client - it is changed only
         # by message from server
         self.state.my_game_round = message["current_game_round"]
+
+    def set_blocked_cards(self, message):
+        self.state.blocked_cards = self.game_state.blocked_cards_from_dict(message)
+        print("blocked cards", self.state.blocked_cards)
 
     def set_winner(self, message):
         """

@@ -28,6 +28,7 @@ class Robot:
         self.name = name
         self.selection_confirmed = False
         self.unblocked_cards = 5
+        self.blocked_cards = []
 
     @property
     # More info about @property decorator - official documentation:
@@ -57,7 +58,7 @@ class Robot:
                  "direction": self.direction.value,
                  "start_coordinates": self.start_coordinates,
                  "selection_confirmed": self.selection_confirmed,
-                 "unblocked_cards": self.unblocked_cards}}
+                 "unblocked_cards": self.unblocked_cards,}}
 
     @classmethod
     def from_dict(cls, robot_description):
@@ -218,7 +219,13 @@ class Robot:
             self.program[card] = None
         print("program backend", self.program)
 
+        for card in self.program:
+            if card is not None:
+                self.blocked_cards.append(card)
+        print("blocked cards backend", self.blocked_cards)
+
         self.selection_confirmed = False
+
 
 
     def get_distance_to_board_end(self, state):
@@ -715,12 +722,24 @@ class State:
             card_pack.append(card.as_dict())
         return {"cards": card_pack, "current_game_round": self.game_round}
 
+    def blocked_cards_as_dict(self, cards):
+        card_pack = []
+        for card in cards:
+            card_pack.append(card.as_dict())
+        return {"blocked": card_pack}
+
     def cards_from_dict(self, cards):
         """
         Create a list of card instances from dictionary given as an argument.
         """
         card_pack = []
         for card in cards["cards"]:
+            card_pack.append(Card.from_dict(card))
+        return card_pack
+
+    def blocked_cards_from_dict(self, cards):
+        card_pack = []
+        for card in cards["blocked"]:
             card_pack.append(Card.from_dict(card))
         return card_pack
 

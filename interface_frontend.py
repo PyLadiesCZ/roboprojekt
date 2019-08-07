@@ -246,6 +246,14 @@ def draw_interface(interface_state, window):
         if card_index is not None:
             draw_card(coordinate, interface_state.dealt_cards[card_index])
 
+    # Blocked cards
+    if interface_state.blocked_cards:
+        cislo = len(interface_state.blocked_cards)
+        blocked_cards_coordinates = program_coordinates[-cislo:]
+
+        for coordinate, card in zip(blocked_cards_coordinates, interface_state.blocked_cards):
+            draw_card(coordinate, card)
+
     # Selected cards
     # if card is selected, selected card in dealt cards is gray
     for card_index in interface_state.my_program:

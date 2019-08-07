@@ -3,7 +3,7 @@ class InterfaceState:
         self.dealt_cards = []
         self.robot = None
         self.my_program = [None, None, None, None, None]
-        self.blocked_cards= [None, None, None, None, None]
+        self.blocked_cards = []
         self.power_down = False
         self.selection_confirmed = False
         self.cursor_index = 0  # 0-4 number of positon
