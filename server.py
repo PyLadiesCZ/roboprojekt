@@ -144,6 +144,7 @@ class Server:
                 for card_index in selection:
                     if card_index is not None:
                         robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
+                print("program server", robot.program)
             # choice of cards was blocked by the player
             else:
                 robot.selection_confirmed = True
@@ -155,7 +156,7 @@ class Server:
                 if selection_confirmed_number == len(self.state.robots) - 1:
                     await self.send_message("timer_start")
                     asyncio.create_task(self.timer(self.state.game_round))
-            
+
     async def play_game_round(self):
         """
         Contain methods play_round, send_message(robots_as_dict),
@@ -197,7 +198,7 @@ class Server:
         ws_all = self.ws_receivers + self.ws_interfaces
         for client in ws_all:
             await client.send_json(message)
-            
+
 # aiohttp.web application
 def get_app(argv=None):
     app = web.Application()

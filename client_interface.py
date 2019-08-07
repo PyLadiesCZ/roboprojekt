@@ -97,6 +97,12 @@ class Interface:
                 self.state.robot = robot
                 index = self.state.players.index(robot)
                 del self.state.players[index]
+        self.state.blocked_cards
+
+        for card_index in self.state.my_program:
+            if card_index is not None:
+                self.state.blocked_cards[self.state.my_program.index(card_index)] = self.state.dealt_cards[card_index]
+                print("blocked_cards",self.state.blocked_cards)
 
     def set_dealt_cards(self, message):
         """

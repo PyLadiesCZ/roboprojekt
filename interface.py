@@ -3,6 +3,7 @@ class InterfaceState:
         self.dealt_cards = []
         self.robot = None
         self.my_program = [None, None, None, None, None]
+        self.blocked_cards= [None, None, None, None, None]
         self.power_down = False
         self.selection_confirmed = False
         self.cursor_index = 0  # 0-4 number of positon
@@ -57,7 +58,9 @@ class InterfaceState:
         Retrun all cards of your program back to the dealt cards.
         """
         if not self.selection_confirmed:
-            self.my_program = [None, None, None, None, None]
+            for card in range(self.robot.unblocked_cards):
+                self.my_program[card] = None
+            print("my program", self.my_program)
             self.cursor_index = 0
 
     def cursor_index_plus(self):

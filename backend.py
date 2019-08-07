@@ -8,7 +8,7 @@ from random import shuffle
 
 from util import Direction, Rotation, get_next_coordinates
 from tile import HoleTile
-from loading import get_board, get_map_data, board_from_data 
+from loading import get_board, get_map_data, board_from_data
 
 
 MAX_DAMAGE_VALUE = 10
@@ -20,13 +20,14 @@ class Robot:
         self.direction = direction
         self.coordinates = coordinates
         self.start_coordinates = coordinates
-        self.program = []
+        self.program = [None, None, None, None, None]
         self.lives = 3
         self.flags = 0
         self.damages = 0
         self.power_down = False
         self.name = name
         self.selection_confirmed = False
+        self.unblocked_cards = 5
 
     @property
     # More info about @property decorator - official documentation:
@@ -40,9 +41,10 @@ class Robot:
 
     def __repr__(self):
         return "<Robot {} {} {} Lives: {} Flags: {} Damages: {} \
-                Inactive: {} Selection_confirmed: {}>".format(
+                Inactive: {} Selection_confirmed: {} Unblocked_cards: {}>".format(
                 self.name, self.direction, self.coordinates, self.lives, self.flags,
-                self.damages, self.inactive, self.selection_confirmed)
+                self.damages, self.inactive, self.selection_confirmed,
+                self.unblocked_cards)
 
     def as_dict(self):
         """
@@ -54,7 +56,8 @@ class Robot:
                  "damages": self.damages, "power_down": self.power_down,
                  "direction": self.direction.value,
                  "start_coordinates": self.start_coordinates,
-                 "selection_confirmed": self.selection_confirmed}}
+                 "selection_confirmed": self.selection_confirmed,
+                 "unblocked_cards": self.unblocked_cards}}
 
     @classmethod
     def from_dict(cls, robot_description):
@@ -72,6 +75,7 @@ class Robot:
         robot.power_down = robot_description["power_down"]
         robot.start_coordinates = robot_description["start_coordinates"]
         robot.selection_confirmed = robot_description["selection_confirmed"]
+        robot.unblocked_cards = robot_description["unblocked_cards"]
         return robot
 
     def walk(self, distance, state, direction=None, push_others=True):
@@ -205,9 +209,17 @@ class Robot:
     def clear_robot_attributes(self):
         """
         Clear robot attributes at the end of round.
+        If robot has blocked cards, it is left in his program.
         """
-        self.program = [None, None, None, None, None]
+        if MAX_CARD_COUNT - self.damages < 5:
+            self.unblocked_cards = MAX_CARD_COUNT - self.damages
+
+        for card in range(self.unblocked_cards):
+            self.program[card] = None
+        print("program backend", self.program)
+
         self.selection_confirmed = False
+
 
     def get_distance_to_board_end(self, state):
         """
@@ -596,7 +608,7 @@ class State:
             robot_cards.sort(key=lambda item: item[1], reverse=True)
             return robot_cards
 
-        except IndexError:
+        except TypeError:
             raise NoCardError
 
     def apply_register(self, register):
@@ -782,8 +794,8 @@ class State:
             self.increment_game_round()
             for robot in self.robots:
                 robot.clear_robot_attributes()
-                
-                
+
+
 class NoCardError(LookupError):
     """Raised when a robot doesn't have a card for the given register."""
 
