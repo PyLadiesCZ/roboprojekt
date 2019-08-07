@@ -8,7 +8,7 @@ from random import shuffle
 
 from util import Direction, Rotation, get_next_coordinates
 from tile import HoleTile
-from loading import get_board, get_map_data, board_from_data 
+from loading import get_board, get_map_data, board_from_data
 
 
 MAX_DAMAGE_VALUE = 10
@@ -615,16 +615,6 @@ class State:
         At the end ressurect the inactive robots to their starting coordinates.
         registers: default iterations count is 5, can be changed for testing purposes.
         """
-        self._apply_cards_and_tiles_effects(registers)
-
-        # After last register ressurect the robots to their starting coordinates.
-        self.set_robots_for_new_turn()
-
-    def _apply_cards_and_tiles_effects(self, registers):
-        """
-        Private method without ressurect mode - for testing purposes.
-        It is called within apply_all_effects. Do not call it separately.
-        """
         for register in range(registers):
             # try -  except was introduced for devel purposes - it may happen that
             # robots have no card on hand and we still want to try loading the game
@@ -637,6 +627,9 @@ class State:
                 pass
 
             self.apply_tile_effects(register)
+
+        # After last register ressurect the robots to their starting coordinates.
+        self.set_robots_for_new_turn()
 
     def create_card_pack(self):
         """
@@ -782,8 +775,8 @@ class State:
             self.increment_game_round()
             for robot in self.robots:
                 robot.clear_robot_attributes()
-                
-                
+
+
 class NoCardError(LookupError):
     """Raised when a robot doesn't have a card for the given register."""
 

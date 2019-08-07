@@ -10,7 +10,6 @@ client_interface.py in another command line.
 import sys
 import contextlib
 import asyncio
-import random
 
 from aiohttp import web
 
@@ -155,7 +154,7 @@ class Server:
                 if selection_confirmed_number == len(self.state.robots) - 1:
                     await self.send_message("timer_start")
                     asyncio.create_task(self.timer(self.state.game_round))
-            
+
     async def play_game_round(self):
         """
         Contain methods play_round, send_message(robots_as_dict),
@@ -197,7 +196,7 @@ class Server:
         ws_all = self.ws_receivers + self.ws_interfaces
         for client in ws_all:
             await client.send_json(message)
-            
+
 # aiohttp.web application
 def get_app(argv=None):
     app = web.Application()
