@@ -11,7 +11,7 @@ You can follow the progress on our [blog](https://roboprojekt.pyladies.cz/).
 
 ### Requirements
 
-Python v.3.7
+Python v. 3.7
 We recommend to use virtual environment.
 
 To succesfully run the project, run the script below. It will install all the requirements including [pyglet](https://bitbucket.org/pyglet/pyglet/wiki/Home) and [asyncio](https://docs.python.org/3/library/asyncio.html) libraries.
@@ -28,10 +28,23 @@ python -m pip install pytest
 
 **How do you run the game?**
 
-To run the game you need to open the `game.py` module in the command line:
+The goal is to have a game that is playable through the network. Therefore it is divided into server and client parts. In order to play the game, you need to run the server first.
 ```
-python game.py
+python server.py
 ```
+
+In order to see the game board with small players' avatars, use:
+```
+python client_receiver.py
+```
+
+And if you want to play with your own robot, there is a prepared interface.
+```
+python client_interface.py
+```
+
+Note that currently, it is not possible to actually run the game on your own unless you play for all the players.
+In order to try the game, run as many interfaces as there are starting points on the map and at least one receiver.
 
 **How do you win and how does the game round look like?**
 
@@ -64,9 +77,13 @@ Current maps were created in [Tiled](https://www.mapeditor.org/) map editor, ver
 You can create your own map with the prepared tileset `development_tileset.json`.
 When creating multiple-layered tiles, keep the following order of layers:
 1. earth
-2. one of the following: hole, start, repair, belt, turn
+2. one of the following: hole, start, repair, belt, gear
 3. flag
-4. laser, wall, pusher
+4. laser (horizontal), wall (North)
+5. laser (vertical), wall (West)
+6. wall (South)
+7. wall (East)
+8. pusher
 
 Part of the test suite is a map validator which checks the order of tile layers.
 
