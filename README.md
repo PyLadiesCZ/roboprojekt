@@ -28,7 +28,7 @@ python -m pip install pytest
 
 **How do you run the game?**
 
-The goal is to have a game that is playable through network. Therefore it is divided into server and client parts. In order to play the game you need to run the server first.
+The goal is to have a game that is playable through the network. Therefore it is divided into server and client parts. In order to play the game, you need to run the server first.
 ```
 python server.py
 ```
