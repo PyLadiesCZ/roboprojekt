@@ -43,7 +43,7 @@ And if you want to play with your own robot, there is a prepared interface.
 python client_interface.py
 ```
 
-Note that currently it is not possible to actually run the game on your own unless you play for all the players.
+Note that currently, it is not possible to actually run the game on your own unless you play for all the players.
 In order to try the game, run as many interfaces as there are starting points on the map and at least one receiver.
 
 **How do you win and how does the game round look like?**
