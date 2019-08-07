@@ -38,7 +38,7 @@ In order to see the game board with small players' avatars, use:
 python client_receiver.py
 ```
 
-And if you want to play with your own robot, there is prepared interface.
+And if you want to play with your own robot, there is a prepared interface.
 ```
 python client_interface.py
 ```
