@@ -23,7 +23,7 @@ class Robot:
         self.program = [None, None, None, None, None]
         self.lives = 3
         self.flags = 0
-        self.damages = 0
+        self.damages = 4
         self.power_down = False
         self.name = name
         self.selection_confirmed = False
@@ -212,8 +212,9 @@ class Robot:
         Clear robot attributes at the end of round.
         If robot has blocked cards, it is left in his program.
         """
-        if MAX_CARD_COUNT - self.damages < 5:
+        if self.damages > 4:
             self.unblocked_cards = MAX_CARD_COUNT - self.damages
+        print("unblocked_cards",self.unblocked_cards)
 
         for card in range(self.unblocked_cards):
             self.program[card] = None
@@ -225,7 +226,7 @@ class Robot:
         print("blocked cards backend", self.blocked_cards)
 
         self.selection_confirmed = False
-
+        print("damages", self.damages)
 
 
     def get_distance_to_board_end(self, state):

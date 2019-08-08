@@ -78,6 +78,8 @@ class Interface:
                         self.set_timer_off(message)
                     if "blocked" in message:
                         self.set_blocked_cards(message)
+                    if "round_over" in message:
+                        self.state = self.set_new_state()
 
         self.ws = None
 
@@ -93,27 +95,22 @@ class Interface:
         """
         Set robots, players and self robot using data from sent message.
         """
+
         self.game_state.robots = self.game_state.robots_from_dict(message)
         self.state.players = self.game_state.robots
         for robot in self.state.players:
             if robot.name == robot_name:
                 self.state.robot = robot
-                unblocked_cards = self.state.robot.unblocked_cards
-                print("unblocked_cards", robot.unblocked_cards)
+                print(self.state.robot)
                 index = self.state.players.index(robot)
                 del self.state.players[index]
+                unblocked_cards = self.state.robot.unblocked_cards
 
-        if unblocked_cards == 4:
-            del self.state.my_program[-1]
-        elif unblocked_cards == 3:
-            del self.state.my_program[-1, -2]
-        elif unblocked_cards == 2:
-            del self.state.my_program[-1, -2, -3]
-        elif unblocked_cards == 1:
-            del self.state.my_program[-1, -2, -3, -4]
-        else:
-            unblocked_cards == 5
-        print("interface_program", self.state.my_program)
+                for i in range(5):
+                    if unblocked_cards == i:
+                        del self.state.my_program[i:]
+
+                print("interface_program", self.state.my_program)
 
 
     def set_dealt_cards(self, message):
@@ -146,6 +143,11 @@ class Interface:
         if state_game_round == self.state.my_game_round:
             self.state.timer = False
 
+    def set_new_state(self):
+        my_robot = self.state.robot
+        new_state = InterfaceState()
+        new_state.robot = my_robot
+        return new_state
 
 def tick_asyncio(dt):
     """
