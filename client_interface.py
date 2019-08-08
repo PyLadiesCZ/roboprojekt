@@ -75,7 +75,7 @@ class Interface:
                         self.state.timer = True
                     if "timer_end" in message:
                         self.set_timer_off(message)
-                    if "blocked" in message:
+                    if "blocked_cards" in message:
                         self.set_blocked_cards(message)
                     if "round_over" in message:
                         self.state = InterfaceState()
@@ -124,14 +124,17 @@ class Interface:
         Set dealt cards and game round using data from server message.
         """
         self.state.selection_confirmed = False
-        self.state.dealt_cards = self.game_state.cards_from_dict(message)
+        cards = message["cards"]
+        self.state.dealt_cards = self.game_state.cards_from_dict(cards)
+        print("dealt_cards", self.state.dealt_cards)
         self.state.return_cards()
         # Set the game round for this client - it is changed only
         # by message from server
         self.state.my_game_round = message["current_game_round"]
 
     def set_blocked_cards(self, message):
-        self.state.blocked_cards = self.game_state.blocked_cards_from_dict(message)
+        cards = message["blocked_cards"]
+        self.state.blocked_cards = self.game_state.cards_from_dict(cards)
         print("blocked cards", self.state.blocked_cards)
 
     def set_winner(self, message):

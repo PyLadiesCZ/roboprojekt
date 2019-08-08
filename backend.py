@@ -713,33 +713,26 @@ class State:
         for card in cards:
             self.past_deck.add(card)
 
-    def cards_and_game_round_as_dict(self, cards):
+    def cards_and_game_round_as_dict(self, cards, blocked):
         """
         Take a list of cards instances and return them as dictionary.
         """
         card_pack = []
         for card in cards:
             card_pack.append(card.as_dict())
-        return {"cards": card_pack, "current_game_round": self.game_round}
+        blocked_cards = []
+        for card in blocked:
+            blocked_cards.append(card.as_dict())
 
-    def blocked_cards_as_dict(self, cards):
-        card_pack = []
-        for card in cards:
-            card_pack.append(card.as_dict())
-        return {"blocked": card_pack}
+        return {"cards": card_pack, "blocked_cards": blocked_cards,
+                "current_game_round": self.game_round}
 
     def cards_from_dict(self, cards):
         """
         Create a list of card instances from dictionary given as an argument.
         """
         card_pack = []
-        for card in cards["cards"]:
-            card_pack.append(Card.from_dict(card))
-        return card_pack
-
-    def blocked_cards_from_dict(self, cards):
-        card_pack = []
-        for card in cards["blocked"]:
+        for card in cards:
             card_pack.append(Card.from_dict(card))
         return card_pack
 
