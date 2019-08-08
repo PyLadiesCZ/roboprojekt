@@ -140,6 +140,8 @@ class Robot:
         Robot is moved out of game board for the rest of the round.
         """
         self.lives -= 1
+        self.unblocked_cards = 5
+        self.blocked_cards = []
         self.coordinates = None
 
     def rotate(self, where_to):
@@ -220,6 +222,7 @@ class Robot:
             self.program[card] = None
         print("program backend", self.program)
 
+        self.blocked_cards = []
         for card in self.program:
             if card is not None:
                 self.blocked_cards.append(card)

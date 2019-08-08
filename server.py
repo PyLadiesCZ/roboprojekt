@@ -116,7 +116,6 @@ class Server:
         # Client_interface is added to dictionary (robot.name: ws)
         name = self.available_robots[0].name
         self.assigned_robots[name] = ws
-        # print(self.assigned_robots)
         robot = self.available_robots.pop(0)
         robot.clear_robot_attributes()
         robot.dealt_cards = self.state.get_dealt_cards(robot)
@@ -162,8 +161,8 @@ class Server:
         send_new_dealt_card.
         """
         self.state.play_round()
-        await self.send_message(self.state.robots_as_dict())
         await self.send_message("round_over")
+        await self.send_message(self.state.robots_as_dict())
         if not self.state.game_over:
             await self.send_new_dealt_cards()
         else:
@@ -188,6 +187,7 @@ class Server:
         """
         for robot in self.state.robots:
             robot.dealt_cards = self.state.get_dealt_cards(robot)
+            print(robot.damages, robot.dealt_cards)
             ws = self.assigned_robots[robot.name]
             await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
             await ws.send_json(self.state.blocked_cards_as_dict(robot.blocked_cards))

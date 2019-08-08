@@ -79,7 +79,7 @@ class Interface:
                     if "blocked" in message:
                         self.set_blocked_cards(message)
                     if "round_over" in message:
-                        self.state = self.set_new_state()
+                        self.state = InterfaceState()
 
         self.ws = None
 
@@ -95,7 +95,6 @@ class Interface:
         """
         Set robots, players and self robot using data from sent message.
         """
-
         self.game_state.robots = self.game_state.robots_from_dict(message)
         self.state.players = self.game_state.robots
         i_am_dead = True
@@ -119,6 +118,7 @@ class Interface:
             self.state.robot.lives = 0
             self.state.my_program = []
             self.state.dealt_cards = []
+            self.state.blocked_cards = []
 
     def set_dealt_cards(self, message):
         """
@@ -149,12 +149,6 @@ class Interface:
         state_game_round = message["timer_end"]["game_round"]
         if state_game_round == self.state.my_game_round:
             self.state.timer = False
-
-    def set_new_state(self):
-        my_robot = self.state.robot
-        new_state = InterfaceState()
-        new_state.robot = my_robot
-        return new_state
 
 def tick_asyncio(dt):
     """
