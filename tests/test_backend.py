@@ -168,7 +168,8 @@ def test_robot_from_dict():
     """
     robot_description = {"robot_data": {'name': 'crazybot', 'coordinates': (10, 1),
                          'lives': 5, 'flags': 8, 'damages': 5, 'power_down': False,
-                         'direction': 90, 'start_coordinates': (3, 1), 'selection_confirmed': False}}
+                         'direction': 90, 'start_coordinates': (3, 1),
+                         'selection_confirmed': False, "unblocked_cards": 3}}
     robot = Robot.from_dict(robot_description)
     assert robot.name == "crazybot"
     assert robot.coordinates == (10, 1)
@@ -179,6 +180,7 @@ def test_robot_from_dict():
     assert robot.direction == Direction.E
     assert robot.start_coordinates == (3, 1)
     assert robot.selection_confirmed is False
+    assert robot.unblocked_cards == 3
 
 
 def test_state_from_dict():
@@ -188,7 +190,7 @@ def test_state_from_dict():
     state = State.get_start_state("maps/test_3.json")
     data = state.whole_as_dict("maps/test_3.json")
     state_recovered = State.whole_from_dict(data)
-    
+
     assert state_recovered.robots[0].coordinates == (0, 1)
     assert state_recovered.robots[1].damages == 0
     assert state_recovered._board[0, 11][0].direction == Direction.N
