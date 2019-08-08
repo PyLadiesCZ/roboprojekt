@@ -10,7 +10,6 @@ client_interface.py in another command line.
 import sys
 import contextlib
 import asyncio
-import random
 
 from aiohttp import web
 

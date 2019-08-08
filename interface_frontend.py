@@ -114,6 +114,24 @@ cards_type_names = {
     'move3': 'MOVE 3',
 }
 
+priority_and_names_labels = {}
+
+def get_label(text, x, y, font_size, anchor_x):
+    """
+    Return text label for card´s name and priority.
+    """
+    if text in priority_and_names_labels:
+        label = priority_and_names_labels[text]
+    else:
+        label =  pyglet.text.Label()
+        priority_and_names_labels[text] = label
+    label.text = text
+    label.x = x
+    label.y = y
+    label.font_size = font_size
+    label.anchor_x = anchor_x
+    return label
+
 
 def draw_card(coordinate, card):
     """
@@ -137,27 +155,28 @@ def draw_card(coordinate, card):
     # Draw card value
     x_priority = x + 70
     y_priority = y + 118
-    priority = pyglet.text.Label(
-        text=str(card.priority),
-        font_size=14,
-        x=x_priority,
-        y=y_priority,
-        anchor_x='right',
+    priority_label = get_label(
+        str(card.priority),
+        x_priority,
+        y_priority,
+        14,
+        "right",
     )
-    priority.draw()
+    priority_label.draw()
 
     # Draw card name
     x_name = x + 50
     y_name = y + 20
     card_name = cards_type_names[card.name]
-    name = pyglet.text.Label(
-        text=card_name,
-        font_size=10,
-        x=x_name,
-        y=y_name,
-        anchor_x='center',
+
+    name_label = get_label(
+        card_name,
+        x_name,
+        y_name,
+        10,
+        "center",
     )
-    name.draw()
+    name_label.draw()
 
 
 def draw_interface(interface_state, window):
