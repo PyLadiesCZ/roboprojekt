@@ -139,10 +139,12 @@ class Robot:
         Robot lose life and skip rest of game round.
         Robot is moved out of game board for the rest of the round.
         """
+        print("robot died")
         self.lives -= 1
         self.unblocked_cards = 5
         self.blocked_cards = []
         self.coordinates = None
+        print(self)
 
     def rotate(self, where_to):
         """
@@ -214,22 +216,20 @@ class Robot:
         Clear robot attributes at the end of round.
         If robot has blocked cards, it is left in his program.
         """
+        print("clear_robot_attributes")
         if self.damages > 4:
             self.unblocked_cards = MAX_CARD_COUNT - self.damages
-        print("unblocked_cards",self.unblocked_cards)
 
         for card in range(self.unblocked_cards):
             self.program[card] = None
-        print("program backend", self.program)
 
         self.blocked_cards = []
         for card in self.program:
             if card is not None:
                 self.blocked_cards.append(card)
-        print("blocked cards backend", self.blocked_cards)
 
         self.selection_confirmed = False
-        print("damages", self.damages)
+        print(self)
 
 
     def get_distance_to_board_end(self, state):

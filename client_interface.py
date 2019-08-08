@@ -45,7 +45,6 @@ class Interface:
         """
         Send messages to server.
         """
-        # print(message)
         if self.ws:
             asyncio.ensure_future(self.ws.send_json(message))
 
