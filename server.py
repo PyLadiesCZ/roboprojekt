@@ -142,7 +142,7 @@ class Server:
                 for card_index in selection:
                     if card_index is not None:
                         robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
-                print("program server", robot.program)
+                print(robot.name, "program server", robot.program)
             # choice of cards was blocked by the player
             else:
                 robot.selection_confirmed = True
@@ -187,7 +187,7 @@ class Server:
         """
         for robot in self.state.robots:
             robot.dealt_cards = self.state.get_dealt_cards(robot)
-            print(robot.damages, robot.dealt_cards)
+            print(robot.name, robot.damages, robot.dealt_cards)
             ws = self.assigned_robots[robot.name]
             await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
             await ws.send_json(self.state.blocked_cards_as_dict(robot.blocked_cards))
