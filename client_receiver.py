@@ -37,8 +37,6 @@ class Receiver:
                     if "winner" in message:
                         self.state.game_over = True
                         self.state.winners = message["winner"]
-                    if "timer_start" in message:
-                        self.state.timer = True
 
 
 def tick_asyncio(dt):
