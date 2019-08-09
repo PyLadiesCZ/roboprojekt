@@ -28,7 +28,6 @@ class Robot:
         self.name = name
         self.selection_confirmed = False
         self.unblocked_cards = 5
-        self.blocked_cards = []
 
     @property
     # More info about @property decorator - official documentation:
@@ -142,7 +141,6 @@ class Robot:
         print("robot died")
         self.lives -= 1
         self.unblocked_cards = 5
-        self.blocked_cards = []
         self.coordinates = None
         print(self)
 
@@ -223,14 +221,18 @@ class Robot:
         for card in range(self.unblocked_cards):
             self.program[card] = None
 
-        self.blocked_cards = []
-        for card in self.program:
-            if card is not None:
-                self.blocked_cards.append(card)
-
         self.selection_confirmed = False
         print(self)
 
+    def select_blocked_cards_from_program(self):
+        """
+        Return a list of blocked cards from robot program.
+        """
+        blocked_cards = []
+        for card in self.program:
+            if card is not None:
+                blocked_cards.append(card)
+        return blocked_cards
 
     def get_distance_to_board_end(self, state):
         """
