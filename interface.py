@@ -55,12 +55,11 @@ class InterfaceState:
 
     def return_cards(self):
         """
-        Retrun all cards of your program back to the dealt cards.
+        Return all cards of your program back to the dealt cards.
         """
         if not self.selection_confirmed:
             for card in range(self.robot.unblocked_cards):
                 self.my_program[card] = None
-            print("my program", self.my_program)
             self.cursor_index = 0
 
     def cursor_index_plus(self):
@@ -68,7 +67,8 @@ class InterfaceState:
         Change selecting cursor position to the next one.
         """
         if not self.selection_confirmed:
-            if self.cursor_index < 4:
+            max_cursor_index = self.robot.unblocked_cards - 1
+            if self.cursor_index < max_cursor_index:
                 self.cursor_index += 1
 
     def cursor_index_minus(self):
