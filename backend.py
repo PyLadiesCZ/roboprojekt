@@ -342,7 +342,6 @@ class State:
         self.past_deck = set()
         self.game_round = 1
         self.game_over = False
-        self.timer = False
         self.winners = None
 
     def __repr__(self):

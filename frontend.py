@@ -27,8 +27,6 @@ def get_sprite(img_path, x=0, y=0):
 
 # Game over
 game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=180)
-# Timer
-timer_sprite = get_sprite('img/interface/png/timer_on.png', x=630, y=780)
 
 
 def create_window(state):
@@ -124,7 +122,7 @@ def draw_state(state, window):
 
     # Scaling ratio
     zoom = min(
-        window.height / (state.tile_count[1] * TILE_HEIGHT),
+        window.height / (state.tile_count[1] * TILE_HEIGHT + 50),
         window.width / (state.tile_count[0] * TILE_WIDTH)
     )
 
@@ -138,8 +136,5 @@ def draw_state(state, window):
         name = state.winners
         winner = pyglet.text.Label(text=str(name),font_size=20, x=50, y=780)
         winner.draw()
-
-    if state.timer:
-        timer_sprite.draw()
 
     pyglet.gl.glPopMatrix()
