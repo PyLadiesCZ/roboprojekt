@@ -114,17 +114,17 @@ cards_type_names = {
     'move3': 'MOVE 3',
 }
 
-priority_and_names_labels = {}
+labels = {}
 
 def get_label(text, x, y, font_size, anchor_x):
     """
     Return text label for card´s name and priority.
     """
-    if text in priority_and_names_labels:
-        label = priority_and_names_labels[text]
+    if text in labels:
+        label = labels[text]
     else:
         label =  pyglet.text.Label()
-        priority_and_names_labels[text] = label
+        labels[text] = label
     label.text = text
     label.x = x
     label.y = y

@@ -7,6 +7,8 @@ The frontend module
 import pyglet
 from pathlib import Path
 
+from interface_frontend import get_label
+
 # Constatnts for size of tile image in px
 TILE_WIDTH = 64
 TILE_HEIGHT = 64
@@ -28,22 +30,6 @@ def get_sprite(img_path, x=0, y=0):
 # Game over
 game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=180)
 
-winners = {}
-
-def get_label(text, x, y, font_size):
-    """
-    Return text label for card´s name and priority.
-    """
-    if text in winners:
-        label = winners[text]
-    else:
-        label =  pyglet.text.Label()
-        winners[text] = label
-    label.text = text
-    label.x = x
-    label.y = y
-    label.font_size = font_size
-    return label
 
 def create_window(state):
     """
@@ -149,11 +135,11 @@ def draw_state(state, window):
 
     if state.game_over:
         game_over_sprite.draw()
-        winner_label = get_label("WINNER", 50, 780, 20)
+        winner_label = get_label("WINNER", 150, 780, 20, "right")
         winner_label.draw()
 
         for i, name in enumerate(state.winners):
-            winner_name_label = get_label(str(name), 230 + 180 * i, 780, 20)
+            winner_name_label = get_label(str(name), 300 + 165 * i, 780, 20, "right")
             winner_name_label.draw()
 
     pyglet.gl.glPopMatrix()
