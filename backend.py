@@ -27,7 +27,7 @@ class Robot:
         self.power_down = False
         self.name = name
         self.selection_confirmed = False
-        self.unblocked_cards = 5
+        self.unblocked_cards = self.count_unblocked_cards()
 
     @property
     # More info about @property decorator - official documentation:
@@ -140,7 +140,7 @@ class Robot:
         """
         print("robot died")
         self.lives -= 1
-        self.unblocked_cards = 5
+        self.unblocked_cards = self.count_unblocked_cards()
         self.coordinates = None
         print(self)
 
@@ -209,20 +209,27 @@ class Robot:
             # Robot is damaged so much that laser kills it.
             self.die()
 
+    def count_unblocked_cards(self):
+        """
+        Count robot´s unblocked cards.
+        """
+        if self.damages > 4:
+            unblocked_cards = MAX_CARD_COUNT - self.damages
+        else:
+            unblocked_cards = 5
+        return unblocked_cards
+
     def clear_robot_attributes(self):
         """
         Clear robot attributes at the end of round.
         If robot has blocked cards, it is left in his program.
         """
-        print("clear_robot_attributes")
-        if self.damages > 4:
-            self.unblocked_cards = MAX_CARD_COUNT - self.damages
-
+        self.unblocked_cards = self.count_unblocked_cards()
         for card in range(self.unblocked_cards):
             self.program[card] = None
 
         self.selection_confirmed = False
-        print(self)
+        print("after clear attributes", self)
 
     def select_blocked_cards_from_program(self):
         """
