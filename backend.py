@@ -223,11 +223,17 @@ class Robot:
         """
         Clear robot attributes at the end of round.
         If robot has blocked cards, it is left in his program.
+        Dealt cards are add to deck with used cards.
         """
         self.unblocked_cards = self.count_unblocked_cards()
         for card in range(self.unblocked_cards):
             self.program[card] = None
 
+        for card in self.program:
+            if card in self.dealt_cards:
+                self.dealt_cards.remove(card)
+
+        state.add_to_past_deck(self.dealt_cards)
         self.selection_confirmed = False
         print("after clear attributes", self)
 
@@ -710,9 +716,8 @@ class State:
             dealt_cards = []
         else:
             dealt_cards = self.present_deck[-dealt_cards_count:]
-        # Delete cards from present deck and add them to deck with used ones.
+        # Delete cards from present deck
         del self.present_deck[-dealt_cards_count:]
-        self.add_to_past_deck(dealt_cards)
         return dealt_cards
 
     def add_to_past_deck(self, cards):
