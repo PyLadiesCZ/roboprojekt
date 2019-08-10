@@ -729,11 +729,11 @@ class State:
         card_pack = []
         for card in cards:
             card_pack.append(card.as_dict())
-        blocked_cards = []
+        blocked_cards_pack = []
         for card in blocked_cards:
-            blocked_cards.append(card.as_dict())
+            blocked_cards_pack.append(card.as_dict())
 
-        return {"cards": card_pack, "blocked_cards": blocked_cards,
+        return {"cards": card_pack, "blocked_cards": blocked_cards_pack,
                 "current_game_round": self.game_round}
 
     def cards_from_dict(self, cards):

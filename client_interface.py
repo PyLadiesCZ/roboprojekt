@@ -103,12 +103,7 @@ class Interface:
                 print(self.state.robot)
                 index = self.state.players.index(robot)
                 del self.state.players[index]
-                unblocked_cards = self.state.robot.unblocked_cards
-
-                for i in range(5):
-                    if unblocked_cards == i:
-                        del self.state.my_program[i:]
-
+                del self.state.my_program[self.state.robot.unblocked_cards:]
                 print("interface_program", self.state.my_program)
                 i_am_dead = False
         # If robot lost all lives, he is no longer part of the game state.

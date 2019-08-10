@@ -267,8 +267,7 @@ def draw_interface(interface_state, window):
 
     # Blocked cards
     if interface_state.blocked_cards:
-        cislo = len(interface_state.blocked_cards)
-        blocked_cards_coordinates = program_coordinates[-cislo:]
+        blocked_cards_coordinates = program_coordinates[-(len(interface_state.blocked_cards)):]
 
         for coordinate, card in zip(blocked_cards_coordinates, interface_state.blocked_cards):
             draw_card(coordinate, card)
