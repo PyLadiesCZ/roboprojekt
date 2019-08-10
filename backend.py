@@ -223,19 +223,13 @@ class Robot:
         """
         Clear robot attributes at the end of round.
         If robot has blocked cards, it is left in his program.
-        Dealt cards are add to deck with used cards.
+
         """
         self.unblocked_cards = self.count_unblocked_cards()
         for card in range(self.unblocked_cards):
             self.program[card] = None
 
-        for card in self.program:
-            if card in self.dealt_cards:
-                self.dealt_cards.remove(card)
-
-        state.add_to_past_deck(self.dealt_cards)
         self.selection_confirmed = False
-        print("after clear attributes", self)
 
     def select_blocked_cards_from_program(self):
         """
@@ -727,6 +721,14 @@ class State:
         for card in cards:
             self.past_deck.add(card)
 
+    def remove_blocked_cards_from_dealt_cards(self, robot):
+        """
+        Remove blocked cards from dealt cards.
+        """
+        for card in robot.program:
+            if card in robot.dealt_cards:
+                robot.dealt_cards.remove(card)
+
     def cards_and_game_round_as_dict(self, cards, blocked_cards):
         """
         Take a list of cards instances and return them as dictionary.
@@ -813,6 +815,7 @@ class State:
         """
         Apply effects of cards and tiles.
         Robots attribues are cleared.
+        Dealt cards are add to deck with used cards.
         """
         self.apply_all_effects()
         self.check_winner()
@@ -820,6 +823,8 @@ class State:
             self.increment_game_round()
             for robot in self.robots:
                 robot.clear_robot_attributes()
+                self.remove_blocked_cards_from_dealt_cards(robot)
+                self.add_to_past_deck(robot.dealt_cards)
 
 
 class NoCardError(LookupError):
