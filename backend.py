@@ -722,7 +722,7 @@ class State:
         for card in cards:
             self.past_deck.add(card)
 
-    def cards_and_game_round_as_dict(self, cards, blocked):
+    def cards_and_game_round_as_dict(self, cards, blocked_cards):
         """
         Take a list of cards instances and return them as dictionary.
         """
@@ -730,7 +730,7 @@ class State:
         for card in cards:
             card_pack.append(card.as_dict())
         blocked_cards = []
-        for card in blocked:
+        for card in blocked_cards:
             blocked_cards.append(card.as_dict())
 
         return {"cards": card_pack, "blocked_cards": blocked_cards,
