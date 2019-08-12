@@ -138,11 +138,9 @@ class Robot:
         Robot lose life and skip rest of game round.
         Robot is moved out of game board for the rest of the round.
         """
-        print("robot died")
         self.lives -= 1
         self.unblocked_cards = self.count_unblocked_cards()
         self.coordinates = None
-        print(self)
 
     def rotate(self, where_to):
         """
@@ -223,12 +221,9 @@ class Robot:
         """
         Clear robot attributes at the end of round.
         If robot has blocked cards, it is left in his program.
-
         """
-        self.unblocked_cards = self.count_unblocked_cards()
         for card in range(self.unblocked_cards):
             self.program[card] = None
-
         self.selection_confirmed = False
 
     def select_blocked_cards_from_program(self):
@@ -729,6 +724,14 @@ class State:
             if card in robot.dealt_cards:
                 robot.dealt_cards.remove(card)
 
+    def add_blocked_cards_to_past_deck(self, robot):
+        old_unblocked_cards_count = robot.unblocked_cards
+        robot.unblocked_cards = robot.count_unblocked_cards()
+        if old_unblocked_cards_count < robot.unblocked_cards:
+            for card in robot.program[old_unblocked_cards_count:robot.unblocked_cards]:
+                self.past_deck.add(card)
+            print("past_deck after add blocked_cards_to deck", self.past_deck)
+
     def cards_and_game_round_as_dict(self, cards, blocked_cards):
         """
         Take a list of cards instances and return them as dictionary.
@@ -822,9 +825,11 @@ class State:
         if not self.game_over:
             self.increment_game_round()
             for robot in self.robots:
+                self.add_blocked_cards_to_past_deck(robot)
                 robot.clear_robot_attributes()
                 self.remove_blocked_cards_from_dealt_cards(robot)
                 self.add_to_past_deck(robot.dealt_cards)
+            print("past_deck end round", self.past_deck)
 
 
 class NoCardError(LookupError):

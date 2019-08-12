@@ -117,7 +117,6 @@ class Server:
         name = self.available_robots[0].name
         self.assigned_robots[name] = ws
         robot = self.available_robots.pop(0)
-        robot.clear_robot_attributes()
         robot.dealt_cards = self.state.get_dealt_cards(robot)
         return robot
 
@@ -142,7 +141,6 @@ class Server:
                 for card_index in selection:
                     if card_index is not None:
                         robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
-                print(robot.name, "program server", robot.program)
             # choice of cards was blocked by the player
             else:
                 robot.selection_confirmed = True
@@ -163,6 +161,7 @@ class Server:
         self.state.play_round()
         await self.send_message("round_over")
         await self.send_message(self.state.robots_as_dict())
+
         if not self.state.game_over:
             await self.send_new_dealt_cards()
         else:

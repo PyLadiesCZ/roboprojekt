@@ -100,7 +100,6 @@ class Interface:
         for robot in self.state.players:
             if robot.name == robot_name:
                 self.state.robot = robot
-                print(self.state.robot)
                 index = self.state.players.index(robot)
                 del self.state.players[index]
                 del self.state.my_program[self.state.robot.unblocked_cards:]
@@ -121,7 +120,7 @@ class Interface:
         self.state.selection_confirmed = False
         cards = message["cards"]
         self.state.dealt_cards = self.game_state.cards_from_dict(cards)
-        print("dealt_cards", self.state.dealt_cards)
+        print(self.state.robot.name, "dealt_cards", self.state.dealt_cards)
         self.state.return_cards()
         # Set the game round for this client - it is changed only
         # by message from server
@@ -130,7 +129,7 @@ class Interface:
     def set_blocked_cards(self, message):
         cards = message["blocked_cards"]
         self.state.blocked_cards = self.game_state.cards_from_dict(cards)
-        print("blocked cards", self.state.blocked_cards)
+        print(self.state.robot.name, "blocked cards", self.state.blocked_cards)
 
     def set_winner(self, message):
         """
