@@ -709,11 +709,16 @@ class State:
         del self.present_deck[-dealt_cards_count:]
         return dealt_cards
 
-    def add_to_past_deck(self, cards):
+    def add_dealt_cards_to_past_deck(self, robot):
         """
-        Update the set of used cards with given list of cards.
+        Remove blocked cards from dealt cards.
+        Update the set of used cards with dealt cards.
         """
-        for card in cards:
+        for card in robot.program:
+            if card in robot.dealt_cards:
+                robot.dealt_cards.remove(card)
+
+        for card in robot.dealt_cards:
             self.past_deck.add(card)
 
     def remove_blocked_cards_from_dealt_cards(self, robot):
@@ -725,6 +730,11 @@ class State:
                 robot.dealt_cards.remove(card)
 
     def add_blocked_cards_to_past_deck(self, robot):
+        """
+        Compare number of unblocked cards against last game round.
+        If robot has more unblocked cards, blocked cards, which were
+        in blocked position, are added to used cards.
+        """
         old_unblocked_cards_count = robot.unblocked_cards
         robot.unblocked_cards = robot.count_unblocked_cards()
         if old_unblocked_cards_count < robot.unblocked_cards:
@@ -827,8 +837,7 @@ class State:
             for robot in self.robots:
                 self.add_blocked_cards_to_past_deck(robot)
                 robot.clear_robot_attributes()
-                self.remove_blocked_cards_from_dealt_cards(robot)
-                self.add_to_past_deck(robot.dealt_cards)
+                self.add_dealt_cards_to_past_deck(robot)
             print("past_deck end round", self.past_deck)
 
 
