@@ -96,7 +96,6 @@ class Interface:
         """
         self.game_state.robots = self.game_state.robots_from_dict(message)
         self.state.players = self.game_state.robots
-        i_am_dead = True
         for robot in self.state.players:
             if robot.name == robot_name:
                 self.state.robot = robot
@@ -104,14 +103,6 @@ class Interface:
                 del self.state.players[index]
                 del self.state.my_program[self.state.robot.unblocked_cards:]
                 print("interface_program", self.state.my_program)
-                i_am_dead = False
-        # If robot lost all lives, he is no longer part of the game state.
-        # If he is not in the robots' list, his attributes are emptied.
-        if i_am_dead:
-            self.state.robot.lives = 0
-            self.state.my_program = []
-            self.state.dealt_cards = []
-            self.state.blocked_cards = []
 
     def set_dealt_cards(self, message):
         """

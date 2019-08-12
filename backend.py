@@ -24,6 +24,7 @@ class Robot:
         self.lives = 3
         self.flags = 0
         self.damages = 0
+        self.permanent_damages = 0
         self.power_down = False
         self.name = name
         self.selection_confirmed = False
@@ -41,9 +42,10 @@ class Robot:
 
     def __repr__(self):
         return "<Robot {} {} {} Lives: {} Flags: {} Damages: {} \
-                Inactive: {} Selection_confirmed: {} Unblocked_cards: {}>".format(
+                Permanent_damages: {} Inactive: {} Selection_confirmed: {} \
+                Unblocked_cards: {}>".format(
                 self.name, self.direction, self.coordinates, self.lives, self.flags,
-                self.damages, self.inactive, self.selection_confirmed,
+                self.damages, self.permanent_damages, self.inactive, self.selection_confirmed,
                 self.unblocked_cards)
 
     def as_dict(self):
@@ -53,7 +55,9 @@ class Robot:
         return {"robot_data":
                 {"name": self.name, "coordinates": self.coordinates,
                  "lives": self.lives, "flags": self.flags,
-                 "damages": self.damages, "power_down": self.power_down,
+                 "damages": self.damages,
+                 "permanent_damages": self.permanent_damages,
+                 "power_down": self.power_down,
                  "direction": self.direction.value,
                  "start_coordinates": self.start_coordinates,
                  "selection_confirmed": self.selection_confirmed,
@@ -72,6 +76,7 @@ class Robot:
         robot.lives = robot_description["lives"]
         robot.flags = robot_description["flags"]
         robot.damages = robot_description["damages"]
+        robot.permanent_damages = robot_description["permanent_damages"]
         robot.power_down = robot_description["power_down"]
         robot.start_coordinates = robot_description["start_coordinates"]
         robot.selection_confirmed = robot_description["selection_confirmed"]
@@ -141,6 +146,13 @@ class Robot:
         self.lives -= 1
         self.unblocked_cards = self.count_unblocked_cards()
         self.coordinates = None
+
+    def set_permanent_damages(self):
+        """
+        If robot lost all 3 lives, he gets permanent damage.
+        """
+        self.permanent_damages += 1
+        self.lives = 0
 
     def rotate(self, where_to):
         """
@@ -596,12 +608,9 @@ class State:
     def set_robots_for_new_turn(self):
         """
         After 5th register there comes evaluation of the robots' state.
-        "Dead" robots who don't have any lives left, are deleted from the robot's lists.
         "Inactive" robots who have lost one life during the round,
         will reboot on start coordinates.
         """
-        # Delete robots with zero lives
-        self.robots = [robot for robot in self.robots if robot.lives > 0]
         for robot in self.robots:
             for tile in self.get_tiles(robot.coordinates):
                 tile.repair_robot(robot, self)
@@ -610,6 +619,8 @@ class State:
                 robot.coordinates = robot.start_coordinates
                 robot.damages = 0
                 robot.direction = Direction.N
+            if robot.lives <= 0:
+                robot.set_permanent_damages()
 
     def get_robots_ordered_by_cards_priority(self, register):
         """
