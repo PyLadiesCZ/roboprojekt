@@ -721,14 +721,6 @@ class State:
         for card in robot.dealt_cards:
             self.past_deck.add(card)
 
-    def remove_blocked_cards_from_dealt_cards(self, robot):
-        """
-        Remove blocked cards from dealt cards.
-        """
-        for card in robot.program:
-            if card in robot.dealt_cards:
-                robot.dealt_cards.remove(card)
-
     def add_blocked_cards_to_past_deck(self, robot):
         """
         Compare number of unblocked cards against last game round.
