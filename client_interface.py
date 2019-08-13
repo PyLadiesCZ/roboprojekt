@@ -97,7 +97,7 @@ class Interface:
                 self.state.robot = robot
                 index = self.state.players.index(robot)
                 del self.state.players[index]
-
+                print(robot)
     def set_dealt_cards(self, message):
         """
         Set dealt cards and game round using data from server message.

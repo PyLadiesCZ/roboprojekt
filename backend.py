@@ -23,8 +23,8 @@ class Robot:
         self.program = []
         self.lives = 1
         self.flags = 0
-        self.damages = 0
-        self.permanent_damages = 0
+        self.damages = 5
+        self.permanent_damages = 1
         self.power_down = False
         self.name = name
         self.selection_confirmed = False
@@ -149,7 +149,6 @@ class Robot:
             self.permanent_damages += 1
             self.lives = 0
 
-
     def rotate(self, where_to):
         """
         Rotate robot according to a given direction.
@@ -208,6 +207,9 @@ class Robot:
         By default it is 1 - the value of robot's laser.
         When the damage is performed by laser tile, there can be bigger number.
         """
+        if self.permanent_damages > 0:
+            MAX_DAMAGE_VALUE = MAX_DAMAGE_VALUE - self.permanent_damages
+
         if self.damages < (MAX_DAMAGE_VALUE - strength):
             # Laser won't kill robot, but it will damage robot.
             self.damages += strength
@@ -683,7 +685,7 @@ class State:
         """
         # Maximum number of cards is 9.
         # Robot's damages reduce the count of dealt cards - each damage one card.
-        dealt_cards_count = MAX_CARD_COUNT-robot.damages
+        dealt_cards_count = MAX_CARD_COUNT-robot.damages-robot.permanent_damages
 
         # If there is less cards than needed, join them with used cards.
         if dealt_cards_count >= len(self.present_deck):

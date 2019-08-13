@@ -71,6 +71,12 @@ for i in range(MAX_DAMAGES_COUNT):
     y = 768
     damages_tokens_sprites.append(get_sprite('img/interface/png/token.png', x, y))
 
+permanent_damages_sprites = []
+for i in range(MAX_DAMAGES_COUNT):
+    x = 676 + i * -70
+    y = 768
+    permanent_damages_sprites.append(get_sprite('img/interface/png/permanent.png', x, y))
+
 number_sprites = []
 for i in range(10):
     number_sprites.append(get_sprite(f'img/interface/png/number_{i}.png'))
@@ -209,7 +215,11 @@ def draw_interface(interface_state, window):
             sprite.draw()
 
         # Damage Tokens
-        for sprite in damages_tokens_sprites[0:interface_state.robot.damages]:
+        damages = interface_state.robot.damages + interface_state.robot.permanent_damages
+        for sprite in damages_tokens_sprites[0:damages]:
+            sprite.draw()
+
+        for sprite in permanent_damages_sprites[0:interface_state.robot.permanent_damages]:
             sprite.draw()
 
     if interface_state.dealt_cards:
