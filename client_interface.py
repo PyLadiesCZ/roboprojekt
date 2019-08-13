@@ -45,7 +45,6 @@ class Interface:
         """
         Send messages to server.
         """
-        # print(message)
         if self.ws:
             asyncio.ensure_future(self.ws.send_json(message))
 
@@ -76,6 +75,11 @@ class Interface:
                         self.state.timer = True
                     if "timer_end" in message:
                         self.set_timer_off(message)
+                    if "blocked_cards" in message:
+                        self.set_blocked_cards(message)
+                    if "round_over" in message:
+                        self.state = InterfaceState()
+
         self.ws = None
 
     def set_game_state(self, message, robot_name):
@@ -97,17 +101,30 @@ class Interface:
                 self.state.robot = robot
                 index = self.state.players.index(robot)
                 del self.state.players[index]
+<<<<<<< HEAD
                 print(robot)
+=======
+                del self.state.my_program[self.state.robot.unblocked_cards:]
+                print("interface_program", self.state.my_program)
+
+>>>>>>> 309b73644bab904e5bb77784a661440d64382640
     def set_dealt_cards(self, message):
         """
         Set dealt cards and game round using data from server message.
         """
         self.state.selection_confirmed = False
-        self.state.dealt_cards = self.game_state.cards_from_dict(message)
+        cards = message["cards"]
+        self.state.dealt_cards = self.game_state.cards_from_dict(cards)
+        print(self.state.robot.name, "dealt_cards", self.state.dealt_cards)
         self.state.return_cards()
         # Set the game round for this client - it is changed only
         # by message from server
         self.state.my_game_round = message["current_game_round"]
+
+    def set_blocked_cards(self, message):
+        cards = message["blocked_cards"]
+        self.state.blocked_cards = self.game_state.cards_from_dict(cards)
+        print(self.state.robot.name, "blocked cards", self.state.blocked_cards)
 
     def set_winner(self, message):
         """
@@ -123,7 +140,6 @@ class Interface:
         state_game_round = message["timer_end"]["game_round"]
         if state_game_round == self.state.my_game_round:
             self.state.timer = False
-
 
 def tick_asyncio(dt):
     """
