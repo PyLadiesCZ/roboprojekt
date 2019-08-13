@@ -23,12 +23,12 @@ class Robot:
         self.program = [None, None, None, None, None]
         self.lives = 3
         self.flags = 0
-        self.damages = 0
+        self.damages = 4
         self.permanent_damages = 0
         self.power_down = False
         self.name = name
         self.selection_confirmed = False
-        self.unblocked_cards = self.count_unblocked_cards()
+        self.selection = []
 
     @property
     # More info about @property decorator - official documentation:
@@ -80,8 +80,36 @@ class Robot:
         robot.power_down = robot_description["power_down"]
         robot.start_coordinates = robot_description["start_coordinates"]
         robot.selection_confirmed = robot_description["selection_confirmed"]
-        robot.unblocked_cards = robot_description["unblocked_cards"]
         return robot
+
+    def select_cards(self, state):
+        for program_index, dealt_card_index in enumerate(self.selection):
+            if self.program[program_index] == None and dealt_card_index != None:
+                card = self.dealt_cards[dealt_card_index]
+                self.dealt_cards[dealt_card_index] = None
+                self.program[program_index] = card
+        self.selection = []
+        print("program", self.program)
+
+        available_cards = []
+        while self.dealt_cards:
+            print(self.dealt_cards)
+            card = self.dealt_cards.pop()
+            if card is not None:
+                available_cards.append(card)
+        print("available", available_cards)
+
+        shuffle(available_cards)
+        for i, card in enumerate(self.program):
+            if card == None:
+                card = available_cards.pop()
+                self.program[i] = card
+        print("program", self.program)
+
+        state.past_deck.extend(available_cards)
+        available_cards.clear()
+        print("past", state.past_deck)
+
 
     def walk(self, distance, state, direction=None, push_others=True):
         """
@@ -144,7 +172,6 @@ class Robot:
         Robot is moved out of game board for the rest of the round.
         """
         self.lives -= 1
-        self.unblocked_cards = self.count_unblocked_cards()
         self.coordinates = None
 
     def set_permanent_damages(self):
@@ -219,22 +246,23 @@ class Robot:
             # Robot is damaged so much that laser kills it.
             self.die()
 
-    def count_unblocked_cards(self):
+    @property
+    def unblocked_cards(self):
         """
         Count robot´s unblocked cards.
         """
         if self.damages > 4:
-            unblocked_cards = MAX_CARD_COUNT - self.damages
+            return MAX_CARD_COUNT - self.damages
         else:
-            unblocked_cards = 5
-        return unblocked_cards
+            return 5
 
-    def clear_robot_attributes(self):
+    def clear_robot_attributes(self, state):
         """
         Clear robot attributes at the end of round.
         If robot has blocked cards, it is left in his program.
         """
         for card in range(self.unblocked_cards):
+            state.past_deck.append(card)
             self.program[card] = None
         self.selection_confirmed = False
 
@@ -378,7 +406,7 @@ class State:
         self.robots = robots
         self.tile_count = self.get_tile_count()
         self.present_deck = self.create_card_pack()
-        self.past_deck = set()
+        self.past_deck = []
         self.game_round = 1
         self.game_over = False
 
@@ -429,7 +457,10 @@ class State:
         """
         board = get_board(map_name)
         robots_start = create_robots(board)
-        return cls(board, robots_start)
+        state = cls(board, robots_start)
+        for robot in state.robots:
+            state.deal_cards(robot)
+        return state
 
     def get_tile_count(self):
         """
@@ -697,53 +728,23 @@ class State:
         shuffle(present_deck)
         return present_deck
 
-    def get_dealt_cards(self, robot):
+    def deal_cards(self, robot):
         """
         Deal the cards for robot - he gets one card less for every damage he's got.
-        Take and return the first cards from the card pack.
+        Take the first cards from the card pack.
         Delete the dealt cards from the card pack.
         """
         # Maximum number of cards is 9.
         # Robot's damages reduce the count of dealt cards - each damage one card.
-        dealt_cards_count = MAX_CARD_COUNT-robot.damages
 
-        # If there is less cards than needed, join them with used cards.
-        if dealt_cards_count >= len(self.present_deck):
-            self.present_deck.extend(self.past_deck)
-            self.past_deck.clear()
-            shuffle(self.present_deck)
-        if robot.damages == 9:
-            dealt_cards = []
-        else:
-            dealt_cards = self.present_deck[-dealt_cards_count:]
-        # Delete cards from present deck
-        del self.present_deck[-dealt_cards_count:]
-        return dealt_cards
+        robot.dealt_cards = []
+        for i in range(MAX_CARD_COUNT-robot.damages):
+            if not self.present_deck:
+                self.present_deck.extend(self.past_deck)
+                self.past_deck.clear()
+                shuffle(self.present_deck)
+            robot.dealt_cards.append(self.present_deck.pop())
 
-    def add_dealt_cards_to_past_deck(self, robot):
-        """
-        Remove blocked cards from dealt cards.
-        Update the set of used cards with dealt cards.
-        """
-        for card in robot.program:
-            if card in robot.dealt_cards:
-                robot.dealt_cards.remove(card)
-
-        for card in robot.dealt_cards:
-            self.past_deck.add(card)
-
-    def add_blocked_cards_to_past_deck(self, robot):
-        """
-        Compare number of unblocked cards against last game round.
-        If robot has more unblocked cards, blocked cards, which were
-        in blocked position, are added to used cards.
-        """
-        old_unblocked_cards_count = robot.unblocked_cards
-        robot.unblocked_cards = robot.count_unblocked_cards()
-        if old_unblocked_cards_count < robot.unblocked_cards:
-            for card in robot.program[old_unblocked_cards_count:robot.unblocked_cards]:
-                self.past_deck.add(card)
-            print("past_deck after add blocked_cards_to deck", self.past_deck)
 
     def cards_and_game_round_as_dict(self, cards, blocked_cards):
         """
@@ -784,21 +785,6 @@ class State:
                 selection_confirmed_number += 1
         return selection_confirmed_number
 
-    def choose_random_card(self):
-        """
-        If robot didn´t complete his program during timer,
-        it is completed with random cards.
-        """
-        for robot in self.robots:
-            for i, card in enumerate(robot.program):
-                if card is None:
-                    available_cards = []
-                    for card in robot.dealt_cards:
-                        if card not in robot.program:
-                            available_cards.append(card)
-                    card = random.choice(available_cards)
-                    robot.program[i] = card
-
     def get_number_flags_from_map(self):
         """
         Return number of flags on the map.
@@ -833,14 +819,15 @@ class State:
         Robots attribues are cleared.
         Dealt cards are add to deck with used cards.
         """
+        for robot in self.robots:
+            robot.select_cards(self)
         self.apply_all_effects()
         self.check_winner()
         if not self.game_over:
             self.increment_game_round()
             for robot in self.robots:
-                self.add_blocked_cards_to_past_deck(robot)
-                robot.clear_robot_attributes()
-                self.add_dealt_cards_to_past_deck(robot)
+                robot.clear_robot_attributes(self)
+                self.deal_cards(robot)
             print("past_deck end round", self.past_deck)
 
 

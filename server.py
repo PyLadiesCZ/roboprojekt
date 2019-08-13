@@ -117,7 +117,6 @@ class Server:
         name = self.available_robots[0].name
         self.assigned_robots[name] = ws
         robot = self.available_robots.pop(0)
-        robot.dealt_cards = self.state.get_dealt_cards(robot)
         return robot
 
     async def process_message(self, message, robot):
@@ -137,10 +136,10 @@ class Server:
                 # it doesn't affect anything else.
                 robot.power_down = message["interface_data"]["power_down"]
                 # Set robot's program with chosen cards
+
                 selection = message["interface_data"]["my_program"]
-                for card_index in selection:
-                    if card_index is not None:
-                        robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
+                robot.selection = selection
+
             # choice of cards was blocked by the player
             else:
                 robot.selection_confirmed = True
@@ -177,7 +176,6 @@ class Server:
         await asyncio.sleep(30)
         await self.send_message({"timer_end": {"game_round": game_round}})
         if game_round == self.state.game_round:
-            self.state.choose_random_card()
             await self.play_game_round()
 
     async def send_new_dealt_cards(self):
@@ -185,7 +183,6 @@ class Server:
         Send new dealt cards to robots.
         """
         for robot in self.state.robots:
-            robot.dealt_cards = self.state.get_dealt_cards(robot)
             ws = self.assigned_robots[robot.name]
             await ws.send_json(self.state.cards_and_game_round_as_dict(
                 robot.dealt_cards, robot.select_blocked_cards_from_program()))
