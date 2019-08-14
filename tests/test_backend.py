@@ -170,7 +170,7 @@ def test_robot_from_dict():
                          'lives': 5, 'flags': 8, 'damages': 5,
                          'permanent_damages': 1, 'power_down': False,
                          'direction': 90, 'start_coordinates': (3, 1),
-                         'selection_confirmed': False, "unblocked_cards": 3}}
+                         'selection_confirmed': False,}}
     robot = Robot.from_dict(robot_description)
     assert robot.name == "crazybot"
     assert robot.coordinates == (10, 1)

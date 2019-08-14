@@ -261,9 +261,10 @@ class Robot:
         Clear robot attributes at the end of round.
         If robot has blocked cards, it is left in his program.
         """
-        for card in range(self.unblocked_cards):
+        for index in range(self.unblocked_cards):
+            card = self.program[index]
             state.past_deck.append(card)
-            self.program[card] = None
+            self.program[index] = None
         self.selection_confirmed = False
 
     def select_blocked_cards_from_program(self):
