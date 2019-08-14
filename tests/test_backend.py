@@ -182,7 +182,6 @@ def test_robot_from_dict():
     assert robot.direction == Direction.E
     assert robot.start_coordinates == (3, 1)
     assert robot.selection_confirmed is False
-    assert robot.unblocked_cards == 3
 
 
 def test_state_from_dict():
