@@ -645,7 +645,7 @@ class State:
                 robot.damages = 0
                 robot.direction = Direction.N
             if robot.lives <= 0:
-                self.permanent_damages += 1
+                robot.permanent_damages += 1
 
     def get_robots_ordered_by_cards_priority(self, register):
         """
