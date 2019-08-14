@@ -83,33 +83,33 @@ class Robot:
         return robot
 
     def select_cards(self, state):
+        """
+        Set robot's program with chosen cards.
+        Left dealt cards are moved to available cards, which are shuffled
+        and if robot didn´t choose all cards to his program,
+        they are replaced by random cards.
+        """
         for program_index, dealt_card_index in enumerate(self.selection):
             if self.program[program_index] == None and dealt_card_index != None:
                 card = self.dealt_cards[dealt_card_index]
                 self.dealt_cards[dealt_card_index] = None
                 self.program[program_index] = card
         self.selection = []
-        print("program", self.program)
 
         available_cards = []
         while self.dealt_cards:
-            print(self.dealt_cards)
             card = self.dealt_cards.pop()
             if card is not None:
                 available_cards.append(card)
-        print("available", available_cards)
-
         shuffle(available_cards)
-        for i, card in enumerate(self.program):
+
+        for index, card in enumerate(self.program):
             if card == None:
                 card = available_cards.pop()
-                self.program[i] = card
-        print("program", self.program)
+                self.program[index] = card
 
         state.past_deck.extend(available_cards)
         available_cards.clear()
-        print("past", state.past_deck)
-
 
     def walk(self, distance, state, direction=None, push_others=True):
         """
@@ -809,8 +809,8 @@ class State:
     def play_round(self):
         """
         Apply effects of cards and tiles.
-        Robots attribues are cleared.
-        Dealt cards are add to deck with used cards.
+        Check if somebody win.
+        Robots attributes are cleared and new cards dealt.
         """
         for robot in self.robots:
             robot.select_cards(self)
