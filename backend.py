@@ -23,7 +23,7 @@ class Robot:
         self.program = [None, None, None, None, None]
         self.lives = 3
         self.flags = 0
-        self.damages = 4
+        self.damages = 0
         self.permanent_damages = 0
         self.power_down = False
         self.name = name
@@ -173,13 +173,6 @@ class Robot:
         """
         self.lives -= 1
         self.coordinates = None
-
-    def set_permanent_damages(self):
-        """
-        If robot lost all 3 lives, he gets permanent damage.
-        """
-        self.permanent_damages += 1
-        self.lives = 0
 
     def rotate(self, where_to):
         """
@@ -652,7 +645,7 @@ class State:
                 robot.damages = 0
                 robot.direction = Direction.N
             if robot.lives <= 0:
-                robot.set_permanent_damages()
+                self.permanent_damages += 1
 
     def get_robots_ordered_by_cards_priority(self, register):
         """
@@ -733,13 +726,12 @@ class State:
         """
         Deal the cards for robot - he gets one card less for every damage he's got.
         Take the first cards from the card pack.
-        Delete the dealt cards from the card pack.
         """
         # Maximum number of cards is 9.
         # Robot's damages reduce the count of dealt cards - each damage one card.
 
         robot.dealt_cards = []
-        for i in range(MAX_CARD_COUNT-robot.damages):
+        for number in range(MAX_CARD_COUNT-robot.damages):
             if not self.present_deck:
                 self.present_deck.extend(self.past_deck)
                 self.past_deck.clear()
