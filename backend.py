@@ -20,13 +20,15 @@ class Robot:
         self.direction = direction
         self.coordinates = coordinates
         self.start_coordinates = coordinates
-        self.program = []
+        self.program = [None, None, None, None, None]
         self.lives = 3
         self.flags = 0
-        self.damages = 0
+        self.damages = 2
+        self.permanent_damages = 1
         self.power_down = False
         self.name = name
         self.selection_confirmed = False
+        self.selection = []
 
     @property
     # More info about @property decorator - official documentation:
@@ -40,9 +42,11 @@ class Robot:
 
     def __repr__(self):
         return "<Robot {} {} {} Lives: {} Flags: {} Damages: {} \
-                Inactive: {} Selection_confirmed: {}>".format(
+                Permanent_damages: {} Inactive: {} Selection_confirmed: {} \
+                Unblocked_cards: {}>".format(
                 self.name, self.direction, self.coordinates, self.lives, self.flags,
-                self.damages, self.inactive, self.selection_confirmed)
+                self.damages, self.permanent_damages, self.inactive, self.selection_confirmed,
+                self.unblocked_cards)
 
     def as_dict(self):
         """
@@ -51,10 +55,13 @@ class Robot:
         return {"robot_data":
                 {"name": self.name, "coordinates": self.coordinates,
                  "lives": self.lives, "flags": self.flags,
-                 "damages": self.damages, "power_down": self.power_down,
+                 "damages": self.damages,
+                 "permanent_damages": self.permanent_damages,
+                 "power_down": self.power_down,
                  "direction": self.direction.value,
                  "start_coordinates": self.start_coordinates,
-                 "selection_confirmed": self.selection_confirmed}}
+                 "selection_confirmed": self.selection_confirmed,
+                 "unblocked_cards": self.unblocked_cards,}}
 
     @classmethod
     def from_dict(cls, robot_description):
@@ -69,10 +76,40 @@ class Robot:
         robot.lives = robot_description["lives"]
         robot.flags = robot_description["flags"]
         robot.damages = robot_description["damages"]
+        robot.permanent_damages = robot_description["permanent_damages"]
         robot.power_down = robot_description["power_down"]
         robot.start_coordinates = robot_description["start_coordinates"]
         robot.selection_confirmed = robot_description["selection_confirmed"]
         return robot
+
+    def select_cards(self, state):
+        """
+        Set robot's program with chosen cards.
+        Left dealt cards are moved to available cards, which are shuffled
+        and if robot didn´t choose all cards to his program,
+        they are replaced by random cards.
+        """
+        for program_index, dealt_card_index in enumerate(self.selection):
+            if self.program[program_index] == None and dealt_card_index != None:
+                card = self.dealt_cards[dealt_card_index]
+                self.dealt_cards[dealt_card_index] = None
+                self.program[program_index] = card
+        self.selection = []
+
+        available_cards = []
+        while self.dealt_cards:
+            card = self.dealt_cards.pop()
+            if card is not None:
+                available_cards.append(card)
+        shuffle(available_cards)
+
+        for index, card in enumerate(self.program):
+            if card == None:
+                card = available_cards.pop()
+                self.program[index] = card
+
+        state.past_deck.extend(available_cards)
+        available_cards.clear()
 
     def walk(self, distance, state, direction=None, push_others=True):
         """
@@ -136,6 +173,7 @@ class Robot:
         """
         self.lives -= 1
         self.coordinates = None
+        self.unblocked_cards
 
     def rotate(self, where_to):
         """
@@ -195,19 +233,46 @@ class Robot:
         By default it is 1 - the value of robot's laser.
         When the damage is performed by laser tile, there can be bigger number.
         """
-        if self.damages < (MAX_DAMAGE_VALUE - strength):
+        if self.permanent_damages > 0:
+            num_max_damage = MAX_DAMAGE_VALUE - self.permanent_damages
+
+        if self.damages < (num_max_damage - strength):
             # Laser won't kill robot, but it will damage robot.
             self.damages += strength
         else:
             # Robot is damaged so much that laser kills it.
             self.die()
 
-    def clear_robot_attributes(self):
+    @property
+    def unblocked_cards(self):
+        """
+        Count robot´s unblocked cards.
+        """
+        if self.damages > 4:
+            return MAX_CARD_COUNT - self.damages - self.permanent_damages
+        else:
+            return 5
+
+    def clear_robot_attributes(self, state):
         """
         Clear robot attributes at the end of round.
+        If robot has blocked cards, it is left in his program.
         """
-        self.program = [None, None, None, None, None]
+        for index in range(self.unblocked_cards):
+            card = self.program[index]
+            state.past_deck.append(card)
+            self.program[index] = None
         self.selection_confirmed = False
+
+    def select_blocked_cards_from_program(self):
+        """
+        Return a list of blocked cards from robot program.
+        """
+        blocked_cards = []
+        for card in self.program:
+            if card is not None:
+                blocked_cards.append(card)
+        return blocked_cards
 
     def get_distance_to_board_end(self, state):
         """
@@ -339,7 +404,7 @@ class State:
         self.robots = robots
         self.tile_count = self.get_tile_count()
         self.present_deck = self.create_card_pack()
-        self.past_deck = set()
+        self.past_deck = []
         self.game_round = 1
         self.game_over = False
 
@@ -390,7 +455,10 @@ class State:
         """
         board = get_board(map_name)
         robots_start = create_robots(board)
-        return cls(board, robots_start)
+        state = cls(board, robots_start)
+        for robot in state.robots:
+            state.deal_cards(robot)
+        return state
 
     def get_tile_count(self):
         """
@@ -569,12 +637,9 @@ class State:
     def set_robots_for_new_turn(self):
         """
         After 5th register there comes evaluation of the robots' state.
-        "Dead" robots who don't have any lives left, are deleted from the robot's lists.
         "Inactive" robots who have lost one life during the round,
         will reboot on start coordinates.
         """
-        # Delete robots with zero lives
-        self.robots = [robot for robot in self.robots if robot.lives > 0]
         for robot in self.robots:
             for tile in self.get_tiles(robot.coordinates):
                 tile.repair_robot(robot, self)
@@ -583,6 +648,8 @@ class State:
                 robot.coordinates = robot.start_coordinates
                 robot.damages = 0
                 robot.direction = Direction.N
+            if robot.lives <= 0:
+                robot.permanent_damages += 1
 
     def get_robots_ordered_by_cards_priority(self, register):
         """
@@ -596,7 +663,7 @@ class State:
             robot_cards.sort(key=lambda item: item[1], reverse=True)
             return robot_cards
 
-        except IndexError:
+        except TypeError:
             raise NoCardError
 
     def apply_register(self, register):
@@ -659,49 +726,42 @@ class State:
         shuffle(present_deck)
         return present_deck
 
-    def get_dealt_cards(self, robot):
+    def deal_cards(self, robot):
         """
         Deal the cards for robot - he gets one card less for every damage he's got.
-        Take and return the first cards from the card pack.
-        Delete the dealt cards from the card pack.
+        Take the first cards from the card pack.
         """
         # Maximum number of cards is 9.
         # Robot's damages reduce the count of dealt cards - each damage one card.
-        dealt_cards_count = MAX_CARD_COUNT-robot.damages
+        robot.dealt_cards = []
+        for number in range(MAX_CARD_COUNT-robot.damages-robot.permanent_damages):
+            if not self.present_deck:
+                self.present_deck.extend(self.past_deck)
+                self.past_deck.clear()
+                shuffle(self.present_deck)
+            robot.dealt_cards.append(self.present_deck.pop())
 
-        # If there is less cards than needed, join them with used cards.
-        if dealt_cards_count >= len(self.present_deck):
-            self.present_deck.extend(self.past_deck)
-            self.past_deck.clear()
-            shuffle(self.present_deck)
-        dealt_cards = self.present_deck[-dealt_cards_count:]
-        # Delete cards from present deck and add them to deck with used ones.
-        del self.present_deck[-dealt_cards_count:]
-        self.add_to_past_deck(dealt_cards)
-        return dealt_cards
 
-    def add_to_past_deck(self, cards):
-        """
-        Update the set of used cards with given list of cards.
-        """
-        for card in cards:
-            self.past_deck.add(card)
-
-    def cards_and_game_round_as_dict(self, cards):
+    def cards_and_game_round_as_dict(self, cards, blocked_cards):
         """
         Take a list of cards instances and return them as dictionary.
         """
         card_pack = []
         for card in cards:
             card_pack.append(card.as_dict())
-        return {"cards": card_pack, "current_game_round": self.game_round}
+        blocked_cards_pack = []
+        for card in blocked_cards:
+            blocked_cards_pack.append(card.as_dict())
+
+        return {"cards": card_pack, "blocked_cards": blocked_cards_pack,
+                "current_game_round": self.game_round}
 
     def cards_from_dict(self, cards):
         """
         Create a list of card instances from dictionary given as an argument.
         """
         card_pack = []
-        for card in cards["cards"]:
+        for card in cards:
             card_pack.append(Card.from_dict(card))
         return card_pack
 
@@ -720,21 +780,6 @@ class State:
             if robot.selection_confirmed:
                 selection_confirmed_number += 1
         return selection_confirmed_number
-
-    def choose_random_card(self):
-        """
-        If robot didn´t complete his program during timer,
-        it is completed with random cards.
-        """
-        for robot in self.robots:
-            for i, card in enumerate(robot.program):
-                if card is None:
-                    available_cards = []
-                    for card in robot.dealt_cards:
-                        if card not in robot.program:
-                            available_cards.append(card)
-                    card = random.choice(available_cards)
-                    robot.program[i] = card
 
     def get_number_flags_from_map(self):
         """
@@ -767,14 +812,18 @@ class State:
     def play_round(self):
         """
         Apply effects of cards and tiles.
-        Robots attribues are cleared.
+        Check if somebody win.
+        Robots attributes are cleared and new cards dealt.
         """
+        for robot in self.robots:
+            robot.select_cards(self)
         self.apply_all_effects()
         self.check_winner()
         if not self.game_over:
             self.increment_game_round()
             for robot in self.robots:
-                robot.clear_robot_attributes()
+                robot.clear_robot_attributes(self)
+                self.deal_cards(robot)
 
 
 class NoCardError(LookupError):
