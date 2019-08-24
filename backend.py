@@ -231,11 +231,11 @@ class Robot:
         By default it is 1 - the value of robot's laser.
         When the damage is performed by laser tile, there can be bigger number.
         """
-        MAX_DAMAGE_VALUE = 10
+        max_damage_value = 10
         if self.permanent_damages > 0:
-            MAX_DAMAGE_VALUE = MAX_DAMAGE_VALUE - self.permanent_damages
+            max_damage_value = max_damage_value - self.permanent_damages
 
-        if self.damages < (MAX_DAMAGE_VALUE - strength):
+        if self.damages < (max_damage_value - strength):
             # Laser won't kill robot, but it will damage robot.
             self.damages += strength
         else:
