@@ -167,14 +167,17 @@ def test_robot_from_dict():
     Check if method Robot.from_dict returns robot from JSON.
     """
     robot_description = {"robot_data": {'name': 'crazybot', 'coordinates': (10, 1),
-                         'lives': 5, 'flags': 8, 'damages': 5, 'power_down': False,
-                         'direction': 90, 'start_coordinates': (3, 1), 'selection_confirmed': False}}
+                         'lives': 5, 'flags': 8, 'damages': 5,
+                         'permanent_damages': 1, 'power_down': False,
+                         'direction': 90, 'start_coordinates': (3, 1),
+                         'selection_confirmed': False,}}
     robot = Robot.from_dict(robot_description)
     assert robot.name == "crazybot"
     assert robot.coordinates == (10, 1)
     assert robot.lives == 5
     assert robot.flags == 8
     assert robot.damages == 5
+    assert robot.permanent_damages == 1
     assert robot.power_down is False
     assert robot.direction == Direction.E
     assert robot.start_coordinates == (3, 1)
@@ -188,7 +191,7 @@ def test_state_from_dict():
     state = State.get_start_state("maps/test_3.json")
     data = state.whole_as_dict("maps/test_3.json")
     state_recovered = State.whole_from_dict(data)
-    
+
     assert state_recovered.robots[0].coordinates == (0, 1)
     assert state_recovered.robots[1].damages == 0
     assert state_recovered._board[0, 11][0].direction == Direction.N
