@@ -740,7 +740,6 @@ class State:
                 shuffle(self.present_deck)
             robot.dealt_cards.append(self.present_deck.pop())
 
-
     def cards_and_game_round_as_dict(self, cards, blocked_cards):
         """
         Take a list of cards instances and return them as dictionary.

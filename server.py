@@ -91,11 +91,11 @@ class Server:
             # Get first data for connected client: robot and cards
             # and assign it to client
             robot = self.assign_robot_to_client(ws)
-
             # Prepare message to send: robot name, game state and cards
             welcome_message = {"robot_name": robot.name,
                                **self.state.whole_as_dict(map_name),
-                               **self.state.cards_and_game_round_as_dict(robot.dealt_cards),
+                               **self.state.cards_and_game_round_as_dict(
+                               robot.dealt_cards, robot.select_blocked_cards_from_program()),
                                }
             # Send the message to the connected client
             await ws.send_json(welcome_message)
@@ -116,10 +116,7 @@ class Server:
         # Client_interface is added to dictionary (robot.name: ws)
         name = self.available_robots[0].name
         self.assigned_robots[name] = ws
-        # print(self.assigned_robots)
         robot = self.available_robots.pop(0)
-        robot.clear_robot_attributes()
-        robot.dealt_cards = self.state.get_dealt_cards(robot)
         return robot
 
     async def process_message(self, message, robot):
@@ -139,10 +136,10 @@ class Server:
                 # it doesn't affect anything else.
                 robot.power_down = message["interface_data"]["power_down"]
                 # Set robot's program with chosen cards
+
                 selection = message["interface_data"]["my_program"]
-                for card_index in selection:
-                    if card_index is not None:
-                        robot.program[selection.index(card_index)] = robot.dealt_cards[card_index]
+                robot.selection = selection
+
             # choice of cards was blocked by the player
             else:
                 robot.selection_confirmed = True
@@ -161,7 +158,9 @@ class Server:
         send_new_dealt_card.
         """
         self.state.play_round()
+        await self.send_message("round_over")
         await self.send_message(self.state.robots_as_dict())
+
         if not self.state.game_over:
             await self.send_new_dealt_cards()
         else:
@@ -177,7 +176,6 @@ class Server:
         await asyncio.sleep(30)
         await self.send_message({"timer_end": {"game_round": game_round}})
         if game_round == self.state.game_round:
-            self.state.choose_random_card()
             await self.play_game_round()
 
     async def send_new_dealt_cards(self):
@@ -185,9 +183,9 @@ class Server:
         Send new dealt cards to robots.
         """
         for robot in self.state.robots:
-            robot.dealt_cards = self.state.get_dealt_cards(robot)
             ws = self.assigned_robots[robot.name]
-            await ws.send_json(self.state.cards_and_game_round_as_dict(robot.dealt_cards))
+            await ws.send_json(self.state.cards_and_game_round_as_dict(
+                robot.dealt_cards, robot.select_blocked_cards_from_program()))
 
     async def send_message(self, message):
         """
