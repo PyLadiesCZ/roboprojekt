@@ -11,7 +11,6 @@ from tile import HoleTile
 from loading import get_board, get_map_data, board_from_data
 
 
-MAX_DAMAGE_VALUE = 10
 MAX_CARD_COUNT = 9
 
 
@@ -76,7 +75,6 @@ class Robot:
         robot.lives = robot_description["lives"]
         robot.flags = robot_description["flags"]
         robot.damages = robot_description["damages"]
-        robot.permanent_damages = robot_description["permanent_damages"]
         robot.power_down = robot_description["power_down"]
         robot.start_coordinates = robot_description["start_coordinates"]
         robot.selection_confirmed = robot_description["selection_confirmed"]
@@ -233,10 +231,11 @@ class Robot:
         By default it is 1 - the value of robot's laser.
         When the damage is performed by laser tile, there can be bigger number.
         """
+        MAX_DAMAGE_VALUE = 10
         if self.permanent_damages > 0:
-            num_max_damage = MAX_DAMAGE_VALUE - self.permanent_damages
+            MAX_DAMAGE_VALUE = MAX_DAMAGE_VALUE - self.permanent_damages
 
-        if self.damages < (num_max_damage - strength):
+        if self.damages < (MAX_DAMAGE_VALUE - strength):
             # Laser won't kill robot, but it will damage robot.
             self.damages += strength
         else:

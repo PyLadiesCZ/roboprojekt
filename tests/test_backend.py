@@ -188,7 +188,7 @@ def test_state_from_dict():
     state = State.get_start_state("maps/test_3.json")
     data = state.whole_as_dict("maps/test_3.json")
     state_recovered = State.whole_from_dict(data)
-    
+
     assert state_recovered.robots[0].coordinates == (0, 1)
     assert state_recovered.robots[1].damages == 0
     assert state_recovered._board[0, 11][0].direction == Direction.N
