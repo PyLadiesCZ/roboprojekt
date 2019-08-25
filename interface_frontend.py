@@ -25,7 +25,7 @@ def get_sprite(img_path, x=0, y=0):
 interface_sprite = get_sprite('img/interface/png/interface.png', x=0, y=0)
 power_down_sprite = get_sprite('img/interface/png/power.png', x=210, y=900)
 # Timer
-timer_sprite = get_sprite('img/interface/png/timer_on.png', x=193, y=852.9)
+timer_sprite = get_sprite('img/interface/png/timer_on.png', x=521, y=864)
 # Time indicator
 indicator_green_sprite = get_sprite('img/interface/png/green.png', x=688, y=864)
 # Time indicator
@@ -114,22 +114,23 @@ cards_type_names = {
     'move3': 'MOVE 3',
 }
 
-priority_and_names_labels = {}
+labels = {}
 
-def get_label(text, x, y, font_size, anchor_x):
+def get_label(text, x, y, font_size, anchor_x, color):
     """
     Return text label for card´s name and priority.
     """
-    if text in priority_and_names_labels:
-        label = priority_and_names_labels[text]
+    if text in labels:
+        label = labels[text]
     else:
         label =  pyglet.text.Label()
-        priority_and_names_labels[text] = label
+        labels[text] = label
     label.text = text
     label.x = x
     label.y = y
     label.font_size = font_size
     label.anchor_x = anchor_x
+    label.color = color
     return label
 
 
@@ -161,6 +162,7 @@ def draw_card(coordinate, card):
         y_priority,
         14,
         "right",
+        (255, 255, 255, 255)
     )
     priority_label.draw()
 
@@ -175,6 +177,7 @@ def draw_card(coordinate, card):
         y_name,
         10,
         "center",
+        (255, 255, 255, 255)
     )
     name_label.draw()
 
@@ -199,6 +202,9 @@ def draw_interface(interface_state, window):
         # Robot
         my_robot_sprite.image = loaded_robots_images[interface_state.robot.name]
         my_robot_sprite.draw()
+
+        robot_name = get_label(interface_state.robot.name, 250, 862, 20, "center", (0, 0, 0, 255))
+        robot_name.draw()
 
         # Flags
         for sprite in flags_sprites[0:interface_state.robot.flags]:
