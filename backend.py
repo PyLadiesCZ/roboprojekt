@@ -75,6 +75,7 @@ class Robot:
         robot.lives = robot_description["lives"]
         robot.flags = robot_description["flags"]
         robot.damages = robot_description["damages"]
+        robot.permanent_damages = robot_description["permanent_damages"]
         robot.power_down = robot_description["power_down"]
         robot.start_coordinates = robot_description["start_coordinates"]
         robot.selection_confirmed = robot_description["selection_confirmed"]
