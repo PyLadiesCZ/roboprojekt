@@ -206,7 +206,7 @@ def get_app(argv=None):
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        map_name = "maps/game_4.json"
+        map_name = "maps/test_winner.json"
     else:
         map_name = sys.argv[1]
 
