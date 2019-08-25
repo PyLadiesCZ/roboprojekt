@@ -248,8 +248,9 @@ class Robot:
         """
         Count robot´s unblocked cards.
         """
-        if self.damages > 4:
-            return MAX_CARD_COUNT - self.damages - self.permanent_damages
+        damages = self.damages + self.permanent_damages
+        if damages > 4:
+            return MAX_CARD_COUNT - damages
         else:
             return 5
 
