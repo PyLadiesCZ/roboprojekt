@@ -798,10 +798,11 @@ class State:
         Return list of winner(s).
         """
         number_flags = self.get_number_flags_from_map()
-        self.winners = []
-        for robot in self.robots:
-            if robot.flags == number_flags:
-                self.winners.append(robot.name)
+        if not self.game_over:
+            self.winners = []
+            for robot in self.robots:
+                if robot.flags == number_flags:
+                    self.winners.append(robot.name)
         if self.winners:
             self.game_over = True
         return self.winners
@@ -816,12 +817,10 @@ class State:
             robot.select_cards(self)
         self.apply_all_effects()
         self.check_winner()
-        if not self.game_over:
-            self.increment_game_round()
-            for robot in self.robots:
-                robot.clear_robot_attributes(self)
-                self.deal_cards(robot)
-            print("past_deck end round", self.past_deck)
+        self.increment_game_round()
+        for robot in self.robots:
+            robot.clear_robot_attributes(self)
+            self.deal_cards(robot)
 
 
 class NoCardError(LookupError):
