@@ -641,9 +641,10 @@ class State:
                 tile.repair_robot(robot, self)
             # Robot will now ressurect at his start coordinates
             if robot.inactive:
-                robot.coordinates = robot.start_coordinates
-                robot.damages = 0
-                robot.direction = Direction.N
+                if not robot.name in self.winners:
+                    robot.coordinates = robot.start_coordinates
+                    robot.damages = 0
+                    robot.direction = Direction.N
             if robot.lives <= 0:
                 robot.permanent_damages += 1
 
