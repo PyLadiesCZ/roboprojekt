@@ -174,11 +174,11 @@ class Robot:
         if self.lives > 0:
             self.lives -= 1
 
-        if robot.lives <= 0:
-            robot.permanent_damages += 1
+        if self.lives <= 0:
+            self.permanent_damages += 1
 
         self.coordinates = None
-        self.unblocked_cards
+        self.unblocked_cards()
 
     def rotate(self, where_to):
         """
