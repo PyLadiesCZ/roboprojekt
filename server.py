@@ -135,10 +135,8 @@ class Server:
                 # TODO: this part only sets the POWER DOWN attribute,
                 # it doesn't affect anything else.
                 robot.power_down = message["interface_data"]["power_down"]
-                # Set robot's program with chosen cards
-
-                selection = message["interface_data"]["my_program"]
-                robot.selection = selection
+                # Set robot's selection with chosen card´s index
+                robot.selection = message["interface_data"]["my_program"]
 
             # choice of cards was blocked by the player
             else:
