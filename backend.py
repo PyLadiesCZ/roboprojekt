@@ -174,6 +174,9 @@ class Robot:
         if self.lives > 0:
             self.lives -= 1
 
+        if robot.lives <= 0:
+            robot.permanent_damages += 1
+
         self.coordinates = None
         self.unblocked_cards
 
@@ -653,8 +656,6 @@ class State:
                 robot.coordinates = robot.start_coordinates
                 robot.damages = 0
                 robot.direction = Direction.N
-            if robot.lives <= 0:
-                robot.permanent_damages += 1
 
     def get_robots_ordered_by_cards_priority(self, register):
         """
