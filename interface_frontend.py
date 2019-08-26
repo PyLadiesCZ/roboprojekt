@@ -71,10 +71,6 @@ for i in range(MAX_DAMAGES_COUNT):
     y = 768
     damages_tokens_sprites.append(get_sprite('img/interface/png/token.png', x, y))
 
-number_sprites = []
-for i in range(10):
-    number_sprites.append(get_sprite(f'img/interface/png/number_{i}.png'))
-
 # Cards sprites
 cards_type_sprites = {
     'u_turn': get_sprite('img/interface/png/u_turn.png'),
@@ -244,27 +240,39 @@ def draw_interface(interface_state, window):
 
         # Other robots´flags
         for i, robot in enumerate(interface_state.players):
-            for sprite in number_sprites:
-                if robot.flags == number_sprites.index(sprite):
-                    sprite.x = 85 + 98 * i
-                    sprite.y = 53
-                    sprite.draw()
+            flag_label = get_label(
+                str(robot.flags),
+                110 + 100 * i,
+                62,
+                20,
+                "right",
+                (0, 0, 0, 255)
+            )
+            flag_label.draw()
 
         # Other robots´damages
         for i, robot in enumerate(interface_state.players):
-            for sprite in number_sprites:
-                if robot.damages == number_sprites.index(sprite):
-                    sprite.x = 107 + 98 * i
-                    sprite.y = 153
-                    sprite.draw()
+            damage_label = get_label(
+                str(robot.damages),
+                132 + 100 * i,
+                162,
+                20,
+                "right",
+                (0, 0, 0, 255)
+            )
+            damage_label.draw()
 
         # Other robots´lives
         for i, robot in enumerate(interface_state.players):
-            for sprite in number_sprites:
-                if robot.lives == number_sprites.index(sprite):
-                    sprite.x = 65 + 98 * i
-                    sprite.y = 153
-                    sprite.draw()
+            life_label = get_label(
+                str(robot.lives),
+                92 + 100 * i,
+                162,
+                20,
+                "right",
+                (0, 0, 0, 255)
+            )
+            life_label.draw()
 
     # Cards on hand
     for coordinate, card_index in zip(program_coordinates, interface_state.my_program):
