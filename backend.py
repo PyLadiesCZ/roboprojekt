@@ -12,6 +12,7 @@ from loading import get_board, get_map_data, board_from_data
 
 
 MAX_CARD_COUNT = 9
+MAX_DAMAGE_VALUE = 10
 
 
 class Robot:
@@ -172,7 +173,7 @@ class Robot:
         """
         if self.lives > 0:
             self.lives -= 1
-            
+
         self.coordinates = None
         self.unblocked_cards
 
@@ -234,11 +235,12 @@ class Robot:
         By default it is 1 - the value of robot's laser.
         When the damage is performed by laser tile, there can be bigger number.
         """
-        max_damage_value = 10
         if self.permanent_damages > 0:
-            max_damage_value = max_damage_value - self.permanent_damages
+            max_robot_damages = MAX_DAMAGE_VALUE - self.permanent_damages
+        else:
+            max_robot_damages = MAX_DAMAGE_VALUE
 
-        if self.damages < (max_damage_value - strength):
+        if self.damages < (max_robot_damages - strength):
             # Laser won't kill robot, but it will damage robot.
             self.damages += strength
         else:
