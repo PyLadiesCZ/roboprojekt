@@ -403,6 +403,7 @@ class State:
         self.past_deck = []
         self.game_round = 1
         self.game_over = False
+        self.winners = []
 
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
@@ -636,15 +637,17 @@ class State:
         "Inactive" robots who have lost one life during the round,
         will reboot on start coordinates.
         """
+        print("self.winners", self.winners)
+        self.robots = [robot for robot in self.robots if not robot.name in self.winners]
+        print("self.robots", self.robots)
         for robot in self.robots:
             for tile in self.get_tiles(robot.coordinates):
                 tile.repair_robot(robot, self)
             # Robot will now ressurect at his start coordinates
             if robot.inactive:
-                if not robot.name in self.winners:
-                    robot.coordinates = robot.start_coordinates
-                    robot.damages = 0
-                    robot.direction = Direction.N
+                robot.coordinates = robot.start_coordinates
+                robot.damages = 0
+                robot.direction = Direction.N
             if robot.lives <= 0:
                 robot.permanent_damages += 1
 
@@ -692,8 +695,6 @@ class State:
 
             self.apply_tile_effects(register)
 
-        # After last register ressurect the robots to their starting coordinates.
-        self.set_robots_for_new_turn()
 
     def create_card_pack(self):
         """
@@ -800,10 +801,10 @@ class State:
         """
         number_flags = self.get_number_flags_from_map()
         if not self.game_over:
-            self.winners = []
             for robot in self.robots:
                 if robot.flags == number_flags:
                     self.winners.append(robot.name)
+                    print("winner", robot)
         if self.winners:
             self.game_over = True
         return self.winners
@@ -818,6 +819,7 @@ class State:
             robot.select_cards(self)
         self.apply_all_effects()
         self.check_winner()
+        self.set_robots_for_new_turn()
         self.increment_game_round()
         for robot in self.robots:
             robot.clear_robot_attributes(self)
