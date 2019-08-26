@@ -173,7 +173,7 @@ class Robot:
         """
         if self.lives > 0:
             self.lives -= 1
-            
+
         self.coordinates = None
 
     def rotate(self, where_to):
@@ -405,7 +405,6 @@ class State:
         self.past_deck = []
         self.game_round = 1
         self.game_over = False
-        self.winners = []
 
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
@@ -639,7 +638,6 @@ class State:
         "Inactive" robots who have lost one life during the round,
         will reboot on start coordinates.
         """
-        print("self.winners", self.winners)
         self.robots = [robot for robot in self.robots if not robot.name in self.winners]
         print("self.robots", self.robots)
         for robot in self.robots:
@@ -801,6 +799,7 @@ class State:
         Check if somebody win(robot gained all flags).
         Return list of winner(s).
         """
+        self.winners = []
         number_flags = self.get_number_flags_from_map()
         if not self.game_over:
             for robot in self.robots:
