@@ -177,6 +177,7 @@ def test_robot_from_dict():
     assert robot.lives == 5
     assert robot.flags == 8
     assert robot.damages == 5
+    assert robot.permanent_damages == 1
     assert robot.power_down is False
     assert robot.direction == Direction.E
     assert robot.start_coordinates == (3, 1)
