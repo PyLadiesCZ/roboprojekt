@@ -178,7 +178,7 @@ class Robot:
             self.permanent_damages += 1
 
         self.coordinates = None
-        self.unblocked_cards()
+        self.unblocked_cards
 
     def rotate(self, where_to):
         """
