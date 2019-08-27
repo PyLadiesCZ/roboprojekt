@@ -14,6 +14,14 @@ MAX_DAMAGE_VALUE = 10
 MAX_CARD_COUNT = 9
 
 
+class NoCardError(LookupError):
+    """Raised when a robot doesn't have a card for the given register."""
+
+
+class CardNotKnownError(LookupError):
+    """Raised when a card doesn't belong to any known type."""
+
+
 class Robot:
     def __init__(self, direction, coordinates, name):
         self.direction = direction
@@ -38,6 +46,16 @@ class Robot:
         All inactive robots have coordinates None.
         """
         return self.coordinates is None
+
+    @property
+    def unblocked_cards(self):
+        """
+        Count robot´s unblocked cards.
+        """
+        if self.damages > 4:
+            return MAX_CARD_COUNT - self.damages
+        else:
+            return 5
 
     def __repr__(self):
         return "<Robot {} {} {} Lives: {} Flags: {} Damages: {} \
@@ -240,16 +258,6 @@ class Robot:
             # Robot is damaged so much that laser kills it.
             self.die()
 
-    @property
-    def unblocked_cards(self):
-        """
-        Count robot´s unblocked cards.
-        """
-        if self.damages > 4:
-            return MAX_CARD_COUNT - self.damages
-        else:
-            return 5
-
     def clear_robot_attributes(self, state):
         """
         Clear robot attributes at the end of round.
@@ -404,6 +412,7 @@ class State:
         self.past_deck = []
         self.game_round = 1
         self.game_over = False
+        self.flag_count = self.get_flag_count()
 
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
@@ -739,7 +748,6 @@ class State:
                 shuffle(self.present_deck)
             robot.dealt_cards.append(self.present_deck.pop())
 
-
     def cards_and_game_round_as_dict(self, cards, blocked_cards):
         """
         Take a list of cards instances and return them as dictionary.
@@ -763,12 +771,6 @@ class State:
             card_pack.append(Card.from_dict(card))
         return card_pack
 
-    def increment_game_round(self):
-        """
-        Raise game_round number by 1.
-        """
-        self.game_round += 1
-
     def selection_confirmed_number(self):
         """
         Return number of confirmed selections.
@@ -779,29 +781,28 @@ class State:
                 selection_confirmed_number += 1
         return selection_confirmed_number
 
-    def get_number_flags_from_map(self):
+    def get_flag_count(self):
         """
         Return number of flags on the map.
         """
-        number_flags = 0
+        flag_count = 0
         weight, height = self.tile_count
         for x in range(0, weight):
             for y in range(0, height):
                 tiles = self.get_tiles((x, y))
                 for tile in tiles:
                     if tile.type == "flag":
-                        number_flags += 1
-        return number_flags
+                        flag_count += 1
+        return flag_count
 
     def check_winner(self):
         """
-        Check if somebody win(robot gained all flags).
+        Check if somebody has won (robot collected all flags).
         Return list of winner(s).
         """
-        number_flags = self.get_number_flags_from_map()
         self.winners = []
         for robot in self.robots:
-            if robot.flags == number_flags:
+            if robot.flags == self.flag_count:
                 self.winners.append(robot.name)
         if self.winners:
             self.game_over = True
@@ -810,27 +811,19 @@ class State:
     def play_round(self):
         """
         Apply effects of cards and tiles.
-        Check if somebody win.
-        Robots attributes are cleared and new cards dealt.
+        Check if somebody has won.
+        Robots' attributes are cleared and new cards dealt.
         """
         for robot in self.robots:
             robot.select_cards(self)
         self.apply_all_effects()
         self.check_winner()
         if not self.game_over:
-            self.increment_game_round()
+            self.game_round += 1
             for robot in self.robots:
                 robot.clear_robot_attributes(self)
                 self.deal_cards(robot)
-            print("past_deck end round", self.past_deck)
-
-
-class NoCardError(LookupError):
-    """Raised when a robot doesn't have a card for the given register."""
-
-
-class CardNotKnownError(LookupError):
-    """Raised when a card doesn't belong to any known type."""
+            # print("past_deck end round", self.past_deck)
 
 
 def get_robot_names():
