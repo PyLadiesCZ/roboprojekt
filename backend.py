@@ -35,7 +35,7 @@ class Robot:
         self.power_down = False
         self.name = name
         self.selection_confirmed = False
-        self.selection = []
+        self.card_indexes = []
 
     @property
     # More info about @property decorator - official documentation:
@@ -107,12 +107,12 @@ class Robot:
         and if robot didn´t choose all cards to his program,
         they are replaced by random cards.
         """
-        for program_index, dealt_card_index in enumerate(self.selection):
+        for program_index, dealt_card_index in enumerate(self.card_indexes):
             if self.program[program_index] is None and dealt_card_index is not None:
                 card = self.dealt_cards[dealt_card_index]
                 self.dealt_cards[dealt_card_index] = None
                 self.program[program_index] = card
-        self.selection = []
+        self.card_indexes = []
 
         available_cards = []
         while self.dealt_cards:
