@@ -112,6 +112,7 @@ cards_type_names = {
 
 labels = {}
 
+
 def get_label(text, x, y, font_size, anchor_x, color):
     """
     Return text label for card´s name and priority.
@@ -119,7 +120,7 @@ def get_label(text, x, y, font_size, anchor_x, color):
     if text in labels:
         label = labels[text]
     else:
-        label =  pyglet.text.Label()
+        label = pyglet.text.Label()
         labels[text] = label
     label.text = text
     label.x = x
@@ -199,7 +200,12 @@ def draw_interface(interface_state, window):
         my_robot_sprite.image = loaded_robots_images[interface_state.robot.name]
         my_robot_sprite.draw()
 
-        robot_name = get_label(interface_state.robot.name, 250, 862, 20, "center", (0, 0, 0, 255))
+        robot_name = get_label(
+            interface_state.robot.name,
+            250, 862, 20,
+            "center",
+            (0, 0, 0, 255),
+        )
         robot_name.draw()
 
         # Flags

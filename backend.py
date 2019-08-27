@@ -3,7 +3,6 @@ Backend file contains functions for the game logic.
 """
 from pathlib import Path
 from collections import OrderedDict
-import random
 from random import shuffle
 
 from util import Direction, Rotation, get_next_coordinates
@@ -61,7 +60,7 @@ class Robot:
                  "direction": self.direction.value,
                  "start_coordinates": self.start_coordinates,
                  "selection_confirmed": self.selection_confirmed,
-                 "unblocked_cards": self.unblocked_cards,}}
+                 "unblocked_cards": self.unblocked_cards, }}
 
     @classmethod
     def from_dict(cls, robot_description):
@@ -90,7 +89,7 @@ class Robot:
         they are replaced by random cards.
         """
         for program_index, dealt_card_index in enumerate(self.selection):
-            if self.program[program_index] == None and dealt_card_index != None:
+            if self.program[program_index] is None and dealt_card_index is not None:
                 card = self.dealt_cards[dealt_card_index]
                 self.dealt_cards[dealt_card_index] = None
                 self.program[program_index] = card
@@ -104,7 +103,7 @@ class Robot:
         shuffle(available_cards)
 
         for index, card in enumerate(self.program):
-            if card == None:
+            if card is None:
                 card = available_cards.pop()
                 self.program[index] = card
 
@@ -173,7 +172,7 @@ class Robot:
         """
         if self.lives > 0:
             self.lives -= 1
-            
+
         self.coordinates = None
 
     def rotate(self, where_to):
