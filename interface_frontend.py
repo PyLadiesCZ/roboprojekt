@@ -1,5 +1,6 @@
 import pyglet
 from pathlib import Path
+from functools import lru_cache
 
 MAX_CARDS_COUNT = 9
 MAX_LIVES_COUNT = 3
@@ -110,18 +111,13 @@ cards_type_names = {
     'move3': 'MOVE 3',
 }
 
-labels = {}
 
-
+@lru_cache(maxsize=100)
 def get_label(text, x, y, font_size, anchor_x, color):
     """
     Return text label for card´s name and priority.
     """
-    if text in labels:
-        label = labels[text]
-    else:
-        label = pyglet.text.Label()
-        labels[text] = label
+    label = pyglet.text.Label()
     label.text = text
     label.x = x
     label.y = y
