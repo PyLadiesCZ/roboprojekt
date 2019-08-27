@@ -23,7 +23,7 @@ class Robot:
         self.program = [None, None, None, None, None]
         self.lives = 3
         self.flags = 0
-        self.damages = 0
+        self.damages = 4
         self.permanent_damages = 0
         self.power_down = False
         self.name = name
@@ -178,7 +178,6 @@ class Robot:
             self.permanent_damages += 1
 
         self.coordinates = None
-        self.unblocked_cards
 
     def rotate(self, where_to):
         """
