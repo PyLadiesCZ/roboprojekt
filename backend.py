@@ -11,8 +11,8 @@ from tile import HoleTile
 from loading import get_board, get_map_data, board_from_data
 
 
-MAX_DAMAGE_VALUE = 10
 MAX_CARD_COUNT = 9
+MAX_DAMAGE_VALUE = 10
 
 
 class Robot:
@@ -173,7 +173,10 @@ class Robot:
         """
         if self.lives > 0:
             self.lives -= 1
-            
+
+        if self.lives <= 0:
+            self.permanent_damages += 1
+
         self.coordinates = None
 
     def rotate(self, where_to):
@@ -234,7 +237,12 @@ class Robot:
         By default it is 1 - the value of robot's laser.
         When the damage is performed by laser tile, there can be bigger number.
         """
-        if self.damages < (MAX_DAMAGE_VALUE - strength):
+        if self.permanent_damages > 0:
+            max_robot_damages = MAX_DAMAGE_VALUE - self.permanent_damages
+        else:
+            max_robot_damages = MAX_DAMAGE_VALUE
+
+        if self.damages < (max_robot_damages - strength):
             # Laser won't kill robot, but it will damage robot.
             self.damages += strength
         else:
@@ -246,8 +254,9 @@ class Robot:
         """
         Count robot´s unblocked cards.
         """
-        if self.damages > 4:
-            return MAX_CARD_COUNT - self.damages
+        damages = self.damages + self.permanent_damages
+        if damages > 4:
+            return MAX_CARD_COUNT - damages
         else:
             return 5
 
@@ -646,8 +655,6 @@ class State:
                 robot.coordinates = robot.start_coordinates
                 robot.damages = 0
                 robot.direction = Direction.N
-            if robot.lives <= 0:
-                robot.permanent_damages += 1
 
     def get_robots_ordered_by_cards_priority(self, register):
         """
@@ -731,15 +738,13 @@ class State:
         """
         # Maximum number of cards is 9.
         # Robot's damages reduce the count of dealt cards - each damage one card.
-
         robot.dealt_cards = []
-        for number in range(MAX_CARD_COUNT-robot.damages):
+        for number in range(MAX_CARD_COUNT-robot.damages-robot.permanent_damages):
             if not self.present_deck:
                 self.present_deck.extend(self.past_deck)
                 self.past_deck.clear()
                 shuffle(self.present_deck)
             robot.dealt_cards.append(self.present_deck.pop())
-
 
     def cards_and_game_round_as_dict(self, cards, blocked_cards):
         """
@@ -823,7 +828,6 @@ class State:
             for robot in self.robots:
                 robot.clear_robot_attributes(self)
                 self.deal_cards(robot)
-            print("past_deck end round", self.past_deck)
 
 
 class NoCardError(LookupError):
