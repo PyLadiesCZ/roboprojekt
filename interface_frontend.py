@@ -243,7 +243,7 @@ def draw_interface(interface_state, window):
             flag_label = get_label(
                 str(robot.flags),
                 132 + 100 * i,
-                162,
+                160,
                 20,
                 "right",
                 (0, 0, 0, 255)
@@ -254,8 +254,8 @@ def draw_interface(interface_state, window):
         for i, robot in enumerate(interface_state.players):
             damage_label = get_label(
                 str(robot.damages),
-                132 + 100 * i,
-                162,
+                92 + 100 * i,
+                56,
                 20,
                 "right",
                 (0, 0, 0, 255)
@@ -266,7 +266,7 @@ def draw_interface(interface_state, window):
             permanent_damage_label = get_label(
                 str(robot.permanent_damages),
                 132 + 100 * i,
-                62,
+                56,
                 20,
                 "right",
                 (0, 0, 0, 255)
@@ -278,7 +278,7 @@ def draw_interface(interface_state, window):
             life_label = get_label(
                 str(robot.lives),
                 92 + 100 * i,
-                162,
+                160,
                 20,
                 "right",
                 (0, 0, 0, 255)
