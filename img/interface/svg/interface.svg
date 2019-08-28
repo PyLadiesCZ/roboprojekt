@@ -408,9 +408,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.26"
-     inkscape:cx="372.41528"
-     inkscape:cy="945.17223"
+     inkscape:zoom="5.0373353"
+     inkscape:cx="289.35634"
+     inkscape:cy="854.49885"
      inkscape:document-units="mm"
      inkscape:current-layer="layer4"
      showgrid="true"
@@ -1749,15 +1749,53 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:7.73008823px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.19325221"
-       x="67.935188"
-       y="45.391865"
+       x="155.13686"
+       y="42.232082"
        id="text3791"
        transform="scale(0.9952043,1.0048188)"><tspan
          sodipodi:role="line"
          id="tspan3789"
-         x="67.935188"
-         y="45.391865"
+         x="155.13686"
+         y="42.232082"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.30678463px;font-family:sans-serif;-inkscape-font-specification:sans-serif;text-align:center;text-anchor:middle;fill:#b3b3b3;stroke-width:0.19325221">TIMER</tspan></text>
+    <rect
+       style="display:inline;opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.23176168;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:21.1607151;stroke-opacity:1;paint-order:markers stroke fill"
+       id="rect8545-6-1"
+       width="33.97171"
+       height="8.2902765"
+       x="50.616901"
+       y="36.110992"
+       inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/interface/png/interface.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <rect
+       style="fill:#cccccc;fill-opacity:1;stroke:none;stroke-width:0.06539412;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect495"
+       width="37.901283"
+       height="2.0803227"
+       x="48.709232"
+       y="34.05389" />
+    <rect
+       style="display:inline;fill:#cccccc;fill-opacity:1;stroke:none;stroke-width:0.06247651;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect495-8"
+       width="37.915237"
+       height="1.8981346"
+       x="48.726635"
+       y="44.455044" />
+    <rect
+       style="fill:#cccccc;fill-opacity:1;stroke:none;stroke-width:0.06817257;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect514"
+       width="2.00407"
+       height="9.6559734"
+       x="48.735332"
+       y="35.546196" />
+    <rect
+       style="display:inline;fill:#cccccc;fill-opacity:1;stroke:none;stroke-width:0.06817257;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect514-0"
+       width="2.00407"
+       height="9.6559734"
+       x="84.610199"
+       y="35.788128" />
   </g>
   <g
      inkscape:groupmode="layer"

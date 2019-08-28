@@ -25,7 +25,7 @@ def get_sprite(img_path, x=0, y=0):
 interface_sprite = get_sprite('img/interface/png/interface.png', x=0, y=0)
 power_down_sprite = get_sprite('img/interface/png/power.png', x=210, y=900)
 # Timer
-timer_sprite = get_sprite('img/interface/png/timer_on.png', x=193, y=852.9)
+timer_sprite = get_sprite('img/interface/png/timer_on.png', x=521, y=864)
 # Time indicator
 indicator_green_sprite = get_sprite('img/interface/png/green.png', x=688, y=864)
 # Time indicator
@@ -71,9 +71,11 @@ for i in range(MAX_DAMAGES_COUNT):
     y = 768
     damages_tokens_sprites.append(get_sprite('img/interface/png/token.png', x, y))
 
-number_sprites = []
-for i in range(10):
-    number_sprites.append(get_sprite(f'img/interface/png/number_{i}.png'))
+permanent_damages_sprites = []
+for i in range(MAX_DAMAGES_COUNT):
+    x = 676 + i * -70
+    y = 768
+    permanent_damages_sprites.append(get_sprite('img/interface/png/permanent_damage.png', x, y))
 
 # Cards sprites
 cards_type_sprites = {
@@ -116,7 +118,7 @@ cards_type_names = {
 
 labels = {}
 
-def get_label(text, x, y, font_size, anchor_x):
+def get_label(text, x, y, font_size, anchor_x, color):
     """
     Return text label for card´s name and priority.
     """
@@ -130,6 +132,7 @@ def get_label(text, x, y, font_size, anchor_x):
     label.y = y
     label.font_size = font_size
     label.anchor_x = anchor_x
+    label.color = color
     return label
 
 
@@ -161,6 +164,7 @@ def draw_card(coordinate, card):
         y_priority,
         14,
         "right",
+        (255, 255, 255, 255)
     )
     priority_label.draw()
 
@@ -175,6 +179,7 @@ def draw_card(coordinate, card):
         y_name,
         10,
         "center",
+        (255, 255, 255, 255)
     )
     name_label.draw()
 
@@ -200,6 +205,9 @@ def draw_interface(interface_state, window):
         my_robot_sprite.image = loaded_robots_images[interface_state.robot.name]
         my_robot_sprite.draw()
 
+        robot_name = get_label(interface_state.robot.name, 250, 862, 20, "center", (0, 0, 0, 255))
+        robot_name.draw()
+
         # Flags
         for sprite in flags_sprites[0:interface_state.robot.flags]:
             sprite.draw()
@@ -209,8 +217,13 @@ def draw_interface(interface_state, window):
             sprite.draw()
 
         # Damage Tokens
-        for sprite in damages_tokens_sprites[0:interface_state.robot.damages]:
+        damages = interface_state.robot.damages + interface_state.robot.permanent_damages
+        for sprite in damages_tokens_sprites[0:damages]:
             sprite.draw()
+
+        for sprite in permanent_damages_sprites[0:interface_state.robot.permanent_damages]:
+            sprite.draw()
+
 
     if interface_state.dealt_cards:
         # CARDS
@@ -238,32 +251,62 @@ def draw_interface(interface_state, window):
 
         # Other robots´flags
         for i, robot in enumerate(interface_state.players):
-            for sprite in number_sprites:
-                if robot.flags == number_sprites.index(sprite):
-                    sprite.x = 85 + 98 * i
-                    sprite.y = 53
-                    sprite.draw()
+            flag_label = get_label(
+                str(robot.flags),
+                132 + 100 * i,
+                160,
+                20,
+                "right",
+                (0, 0, 0, 255)
+            )
+            flag_label.draw()
 
         # Other robots´damages
         for i, robot in enumerate(interface_state.players):
-            for sprite in number_sprites:
-                if robot.damages == number_sprites.index(sprite):
-                    sprite.x = 107 + 98 * i
-                    sprite.y = 153
-                    sprite.draw()
+            damage_label = get_label(
+                str(robot.damages),
+                92 + 100 * i,
+                56,
+                20,
+                "right",
+                (0, 0, 0, 255)
+            )
+            damage_label.draw()
+
+        for i, robot in enumerate(interface_state.players):
+            permanent_damage_label = get_label(
+                str(robot.permanent_damages),
+                132 + 100 * i,
+                56,
+                20,
+                "right",
+                (0, 0, 0, 255)
+            )
+            permanent_damage_label.draw()
 
         # Other robots´lives
         for i, robot in enumerate(interface_state.players):
-            for sprite in number_sprites:
-                if robot.lives == number_sprites.index(sprite):
-                    sprite.x = 65 + 98 * i
-                    sprite.y = 153
-                    sprite.draw()
+            life_label = get_label(
+                str(robot.lives),
+                92 + 100 * i,
+                160,
+                20,
+                "right",
+                (0, 0, 0, 255)
+            )
+            life_label.draw()
 
     # Cards on hand
     for coordinate, card_index in zip(program_coordinates, interface_state.my_program):
         if card_index is not None:
             draw_card(coordinate, interface_state.dealt_cards[card_index])
+
+    # Blocked cards
+    if interface_state.blocked_cards:
+        blocked_cards_coordinates = program_coordinates[-(len(interface_state.blocked_cards)):]
+
+        for coordinate, card in zip(blocked_cards_coordinates, interface_state.blocked_cards):
+            draw_card(coordinate, card)
 
     # Selected cards
     # if card is selected, selected card in dealt cards is gray
