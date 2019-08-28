@@ -121,7 +121,9 @@ cards_type_names = {
 @lru_cache(maxsize=100)
 def get_label(text, x, y, font_size, anchor_x, color):
     """
-    Return text label for card´s name and priority.
+    Return text label with parameters defined from given arguments.
+    Store last 100 labels in cache, documented here:
+    https://docs.python.org/3/library/functools.html#functools.lru_cache
     """
     label = pyglet.text.Label()
     label.text = text
@@ -225,7 +227,6 @@ def draw_interface(interface_state, window):
 
         for sprite in permanent_damages_sprites[0:interface_state.robot.permanent_damages]:
             sprite.draw()
-
 
     if interface_state.dealt_cards:
         # CARDS
