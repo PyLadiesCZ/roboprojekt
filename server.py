@@ -97,8 +97,7 @@ class Server:
                 **self.state.whole_as_dict(map_name),
                 **self.state.cards_and_game_round_as_dict(
                     robot.dealt_cards,
-                    # DO WE NEED TO SEND IT WITH THE FIRST MESSAGE?
-                    robot.select_blocked_cards_from_program()
+                    robot.select_blocked_cards_from_program(),
                     ),
                 }
             # Send the message to the connected client
