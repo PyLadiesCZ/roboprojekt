@@ -173,7 +173,7 @@ class Robot:
         """
         if self.lives > 0:
             self.lives -= 1
-            
+
         self.coordinates = None
 
     def rotate(self, where_to):
@@ -639,9 +639,6 @@ class State:
         "Inactive" robots who have lost one life during the round,
         will reboot on start coordinates.
         """
-        print("self.winners", self.winners)
-        self.robots = [robot for robot in self.robots if not robot.name in self.winners]
-        print("self.robots", self.robots)
         for robot in self.robots:
             for tile in self.get_tiles(robot.coordinates):
                 tile.repair_robot(robot, self)

@@ -322,7 +322,6 @@ def draw_interface(interface_state, window):
     if interface_state.winner is not None:
         if interface_state.robot.name in interface_state.winner:
             crown_sprite.draw()
-
             winner_sprite.draw()
         #else:
         #    game_over_sprite.draw()
