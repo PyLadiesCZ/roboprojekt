@@ -1,5 +1,6 @@
 import pyglet
 from pathlib import Path
+from functools import lru_cache
 
 MAX_CARDS_COUNT = 9
 MAX_LIVES_COUNT = 3
@@ -116,17 +117,15 @@ cards_type_names = {
     'move3': 'MOVE 3',
 }
 
-labels = {}
 
+@lru_cache(maxsize=100)
 def get_label(text, x, y, font_size, anchor_x, color):
     """
-    Return text label for card´s name and priority.
+    Return text label with parameters defined from given arguments.
+    Store last 100 labels in cache, documented here:
+    https://docs.python.org/3/library/functools.html#functools.lru_cache
     """
-    if text in labels:
-        label = labels[text]
-    else:
-        label =  pyglet.text.Label()
-        labels[text] = label
+    label = pyglet.text.Label()
     label.text = text
     label.x = x
     label.y = y
@@ -205,7 +204,12 @@ def draw_interface(interface_state, window):
         my_robot_sprite.image = loaded_robots_images[interface_state.robot.name]
         my_robot_sprite.draw()
 
-        robot_name = get_label(interface_state.robot.name, 250, 862, 20, "center", (0, 0, 0, 255))
+        robot_name = get_label(
+            interface_state.robot.name,
+            250, 862, 20,
+            "center",
+            (0, 0, 0, 255),
+        )
         robot_name.draw()
 
         # Flags
@@ -223,7 +227,6 @@ def draw_interface(interface_state, window):
 
         for sprite in permanent_damages_sprites[0:interface_state.robot.permanent_damages]:
             sprite.draw()
-
 
     if interface_state.dealt_cards:
         # CARDS
