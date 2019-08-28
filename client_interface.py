@@ -21,7 +21,6 @@ class Interface:
             on_text=self.on_text, )
         self.state = InterfaceState()
         self.game_state = None
-        self.stop_message = False
 
         # Connection attribute
         self.ws = None
@@ -60,8 +59,6 @@ class Interface:
             async with session.ws_connect('http://localhost:8080/interface/') as self.ws:
                 # Cycle "for" is finished when client disconnects from server
                 async for message in self.ws:
-                    if self.stop_message:
-                        return
                     message = message.json()
                     if "robot_name" in message:
                         robot_name = message["robot_name"]
@@ -73,7 +70,7 @@ class Interface:
                         self.set_dealt_cards(message)
                         self.state.timer = False
                     if "winner" in message:
-                        self.set_winner(message)
+                        self.state.winner = message["winner"]
                     if "timer_start" in message:
                         self.state.timer = True
                     if "timer_end" in message:
@@ -127,14 +124,6 @@ class Interface:
         cards = message["blocked_cards"]
         self.state.blocked_cards = self.game_state.cards_from_dict(cards)
         # print(self.state.robot.name, "blocked cards", self.state.blocked_cards)
-
-    def set_winner(self, message):
-        """
-        Set winner from received message.
-        """
-        self.state.winner = message["winner"]
-        if self.state.robot.name in self.state.winner:
-            self.stop_message = True
 
     def set_timer_off(self, message):
         """

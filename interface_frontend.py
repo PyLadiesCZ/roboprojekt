@@ -349,8 +349,8 @@ def draw_interface(interface_state, window):
             crown_sprite.draw()
 
             winner_sprite.draw()
-        #else:
-        #    game_over_sprite.draw()
+        else:
+            game_over_sprite.draw()
 
     pyglet.gl.glPopMatrix()
 

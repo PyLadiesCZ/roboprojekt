@@ -192,12 +192,9 @@ class Robot:
         if self.lives > 0:
             self.lives -= 1
 
-<<<<<<< HEAD
-=======
         if self.lives <= 0:
             self.permanent_damages += 1
 
->>>>>>> 65f4dff8453dc884654ecfa7a4380d509017af53
         self.coordinates = None
 
     def rotate(self, where_to):
@@ -658,8 +655,6 @@ class State:
         "Inactive" robots who have lost one life during the round,
         will reboot on start coordinates.
         """
-        self.robots = [robot for robot in self.robots if not robot.name in self.winners]
-        print("self.robots", self.robots)
         for robot in self.robots:
             for tile in self.get_tiles(robot.coordinates):
                 tile.repair_robot(robot, self)
@@ -828,11 +823,10 @@ class State:
             robot.select_cards(self)
         self.apply_all_effects()
         self.check_winner()
-        if not self.game_over:
-            self.game_round += 1
-            for robot in self.robots:
-                robot.clear_robot_attributes(self)
-                self.deal_cards(robot)
+        self.game_round += 1
+        for robot in self.robots:
+            robot.clear_robot_attributes(self)
+            self.deal_cards(robot)
             # print("past_deck end round", self.past_deck)
 
 
