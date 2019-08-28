@@ -92,7 +92,6 @@ class Server:
             # and assign it to client
             robot = self.assign_robot_to_client(ws)
             # Prepare message to send: robot name, game state and cards
-            print(robot.name, robot.dealt_cards)
             welcome_message = {
                 "robot_name": robot.name,
                 **self.state.whole_as_dict(map_name),
@@ -141,7 +140,6 @@ class Server:
                 robot.power_down = message["interface_data"]["power_down"]
                 # Set robot's selection with chosen card´s index
                 robot.card_indexes = message["interface_data"]["my_program"]
-                print(robot.card_indexes)
 
             # choice of cards was blocked by the player
             else:
@@ -187,7 +185,6 @@ class Server:
         """
         for robot in self.state.robots:
             ws = self.assigned_robots[robot.name]
-            print(robot.name, robot.dealt_cards)
             await ws.send_json(self.state.cards_and_game_round_as_dict(
                 robot.dealt_cards, robot.select_blocked_cards_from_program()))
 
