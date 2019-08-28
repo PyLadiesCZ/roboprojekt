@@ -25,7 +25,6 @@ for map_path in Path("tests/").glob("test_*"):
         VALID_MAPS_PATHS.append(map_path / Path("map.json"))
 
 
-@pytest.mark.xfail
 @pytest.mark.parametrize("map_name", VALID_MAPS_PATHS)
 def test_map_is_valid(map_name):
     """
