@@ -102,7 +102,7 @@ class Interface:
                 index = self.state.players.index(robot)
                 del self.state.players[index]
                 del self.state.my_program[self.state.robot.unblocked_cards:]
-                print("interface_program", self.state.my_program)
+                # print("interface_program", self.state.my_program)
 
     def set_dealt_cards(self, message):
         """
@@ -111,16 +111,19 @@ class Interface:
         self.state.selection_confirmed = False
         cards = message["cards"]
         self.state.dealt_cards = self.game_state.cards_from_dict(cards)
-        print(self.state.robot.name, "dealt_cards", self.state.dealt_cards)
+        # print(self.state.robot.name, "dealt_cards", self.state.dealt_cards)
         self.state.return_cards()
         # Set the game round for this client - it is changed only
         # by message from server
         self.state.my_game_round = message["current_game_round"]
 
     def set_blocked_cards(self, message):
+        """
+        Set blocked cards from the message obtained from server.
+        """
         cards = message["blocked_cards"]
         self.state.blocked_cards = self.game_state.cards_from_dict(cards)
-        print(self.state.robot.name, "blocked cards", self.state.blocked_cards)
+        # print(self.state.robot.name, "blocked cards", self.state.blocked_cards)
 
     def set_winner(self, message):
         """
@@ -131,11 +134,13 @@ class Interface:
 
     def set_timer_off(self, message):
         """
-        Set timer for client. It check game round for timer off.
+        Stop the timer for client.
+        The game round must be the same for the client and server side.
         """
         state_game_round = message["timer_end"]["game_round"]
         if state_game_round == self.state.my_game_round:
             self.state.timer = False
+
 
 def tick_asyncio(dt):
     """
