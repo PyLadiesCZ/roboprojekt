@@ -108,10 +108,14 @@ class Robot:
         they are replaced by random cards.
         """
         for program_index, dealt_card_index in enumerate(self.card_indexes):
+            print("1 krok, program index", program_index, "dealt cards index", dealt_card_index)
             if self.program[program_index] is None and dealt_card_index is not None:
+                print("2. krok: if self.program na indexu je none a dealt_cards_index je not none")
                 card = self.dealt_cards[dealt_card_index]
+                print("3. krok: to je karta", card)
                 self.dealt_cards[dealt_card_index] = None
                 self.program[program_index] = card
+                print("4. krok: a na to misto je prirazena", self.program[program_index])
         self.card_indexes = []
 
         available_cards = []
@@ -686,6 +690,7 @@ class State:
         """
         robot_cards = self.get_robots_ordered_by_cards_priority(register)
         for robot, card in robot_cards:
+            print("playing", robot.name, card)
             card.apply_effect(robot, self)
 
     def apply_all_effects(self, registers=5):
@@ -765,8 +770,10 @@ class State:
         for card in blocked_cards:
             blocked_cards_pack.append(card.as_dict())
 
-        return {"cards": card_pack, "blocked_cards": blocked_cards_pack,
+        msg = {"cards": card_pack, "blocked_cards": blocked_cards_pack,
                 "current_game_round": self.game_round}
+        print(msg)
+        return msg
 
     def cards_from_dict(self, cards):
         """
