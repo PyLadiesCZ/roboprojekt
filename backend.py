@@ -414,6 +414,7 @@ class State:
         self.past_deck = []
         self.game_round = 1
         self.game_over = False
+        self.flag_count = self.get_flag_count()
 
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
@@ -785,29 +786,28 @@ class State:
                 selection_confirmed_number += 1
         return selection_confirmed_number
 
-    def get_number_flags_from_map(self):
+    def get_flag_count(self):
         """
         Return number of flags on the map.
         """
-        number_flags = 0
+        flag_count = 0
         weight, height = self.tile_count
         for x in range(0, weight):
             for y in range(0, height):
                 tiles = self.get_tiles((x, y))
                 for tile in tiles:
                     if tile.type == "flag":
-                        number_flags += 1
-        return number_flags
+                        flag_count += 1
+        return flag_count
 
     def check_winner(self):
         """
         Check if somebody win(robot gained all flags).
         Return list of winner(s).
         """
-        number_flags = self.get_number_flags_from_map()
         self.winners = []
         for robot in self.robots:
-            if robot.flags == number_flags:
+            if robot.flags == self.flag_count:
                 self.winners.append(robot.name)
         if self.winners:
             self.game_over = True
