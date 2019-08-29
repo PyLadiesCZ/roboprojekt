@@ -11,6 +11,7 @@ class InterfaceState:
         self.my_game_round = None
         self.winner = None
         self.timer = False
+        self.flag_count = 0
 
     def __repr__(self):
         return f"InterfaceState \

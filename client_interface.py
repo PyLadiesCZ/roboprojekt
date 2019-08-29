@@ -96,6 +96,7 @@ class Interface:
         """
         self.game_state.robots = self.game_state.robots_from_dict(message)
         self.state.players = self.game_state.robots
+        self.state.flag_count = self.game_state.flag_count
         for robot in self.state.players:
             if robot.name == robot_name:
                 self.state.robot = robot

@@ -2,6 +2,7 @@ import pyglet
 from pathlib import Path
 from functools import lru_cache
 
+
 MAX_CARDS_COUNT = 9
 MAX_LIVES_COUNT = 3
 MAX_FLAGS_COUNT = 8
@@ -64,6 +65,8 @@ for i in range(MAX_FLAGS_COUNT):
     x = 332 + i * 48
     y = 928
     flags_sprites.append(get_sprite(f'img/tiles/png/flag_{i+1}.png', x, y))
+
+flag_slot_sprite = get_sprite('img/interface/png/flag_slot.png')
 
 # Tokens of damage
 damages_tokens_sprites = []
@@ -199,35 +202,6 @@ def draw_interface(interface_state, window):
     # Interface background
     interface_sprite.draw()
 
-    if interface_state.robot:
-        # Robot
-        my_robot_sprite.image = loaded_robots_images[interface_state.robot.name]
-        my_robot_sprite.draw()
-
-        robot_name = get_label(
-            interface_state.robot.name,
-            250, 862, 20,
-            "center",
-            (0, 0, 0, 255),
-        )
-        robot_name.draw()
-
-        # Flags
-        for sprite in flags_sprites[0:interface_state.robot.flags]:
-            sprite.draw()
-
-        # Robot lives
-        for sprite in lives_sprites[0:interface_state.robot.lives]:
-            sprite.draw()
-
-        # Damage Tokens
-        damages = interface_state.robot.damages + interface_state.robot.permanent_damages
-        for sprite in damages_tokens_sprites[0:damages]:
-            sprite.draw()
-
-        for sprite in permanent_damages_sprites[0:interface_state.robot.permanent_damages]:
-            sprite.draw()
-
     if interface_state.dealt_cards:
         # CARDS
         # Dealt cards
@@ -340,6 +314,41 @@ def draw_interface(interface_state, window):
         indicator_green_sprite.draw()
     else:
         indicator_red_sprite.draw()
+
+    # Flag slot
+    for i in range(interface_state.flag_count):
+        flag_slot_sprite.x = 341 + i * 48
+        flag_slot_sprite.y = 933
+        flag_slot_sprite.draw()
+
+    if interface_state.robot:
+        # Robot
+        my_robot_sprite.image = loaded_robots_images[interface_state.robot.name]
+        my_robot_sprite.draw()
+
+        robot_name = get_label(
+            interface_state.robot.name,
+            250, 862, 20,
+            "center",
+            (0, 0, 0, 255),
+        )
+        robot_name.draw()
+
+        # Flags
+        for sprite in flags_sprites[0:interface_state.robot.flags]:
+            sprite.draw()
+
+        # Robot lives
+        for sprite in lives_sprites[0:interface_state.robot.lives]:
+            sprite.draw()
+
+        # Damage Tokens
+        damages = interface_state.robot.damages + interface_state.robot.permanent_damages
+        for sprite in damages_tokens_sprites[0:damages]:
+            sprite.draw()
+
+        for sprite in permanent_damages_sprites[0:interface_state.robot.permanent_damages]:
+            sprite.draw()
 
     # Winner/Game over
     if interface_state.winner is not None:
