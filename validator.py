@@ -36,10 +36,11 @@ def check_tiles(map_name):
         tile_type_letter = []
         tile_type_and_direction = []
         for tile in tiles:
-            print(tile_type_and_direction)
             tile_type_letter.append(get_order_tiles(type(tile).__name__))
 
-            # Tiles with the same type and direction mustn't be in list of types
+            """
+            Tiles with the same type and direction mustn't be in list of types
+            """
             if (type(tile).__name__, tile.direction) in tile_type_and_direction:
                 print(f"""On coordinates: {coordinate} \
                       there is this tile twice: {type(tile).__name__}. \
@@ -71,9 +72,11 @@ def check_tiles(map_name):
                   There must be only one of tile from those types.""")
             return coordinate, a, b, c, d  # ((1, 9), 1, 2, 0, 0)
 
-        # Tiles types must be in the correct order.
-        # ["A","B","D"] is correct ["D", "A"] is not
-        # A < B < C < D < E
+        """
+        Tiles types must be in the correct order.
+        ["A","B","D"] is correct ["D", "A"] is not
+        A < B < C < D < E
+        """
         letters_count = len(tile_type_letter)
         for i in range(letters_count-1):
             if tile_type_letter[i][0] > tile_type_letter[i+1][0]:
@@ -81,7 +84,9 @@ def check_tiles(map_name):
                       there is wrong layers order: {tile_type_letter[i]}.""")
                 return coordinate, tile_type_letter[i]  # ((7, 9), 'D')
 
-        # "Flag" mustn't be over the "Hole" or "Starting tile"
+        """
+        "Flag" mustn't be over the "Hole" or "Starting tile"
+        """
         for i in range(len(tile_type_letter)-1):
             if tile_type_letter[i] == "C_hole" and tile_type_letter[i+1] == "D_flag" \
              or tile_type_letter[i] == "B_start_tile" and tile_type_letter[i+1] == "D_flag":
@@ -89,8 +94,10 @@ def check_tiles(map_name):
                       hole or start: {tile_type_letter[i]}.""")
                 return coordinate, tile_type_letter[i]
 
-        # Lasers cannot be in opposite direction: they would cover each other
-        # visually and give 2 x damages to robots.
+        """
+        Lasers cannot be in opposite direction: they would cover each other
+        visually and give 2 x damages to robots.
+        """
         if laser_count > 1:
             N_or_S = False
             W_or_E = False
