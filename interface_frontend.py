@@ -316,7 +316,7 @@ def draw_interface(interface_state, window):
         indicator_red_sprite.draw()
 
     # Flag slot
-    for i in range(interface_state.flag):
+    for i in range(interface_state.flag_count):
         flag_slot_sprite.x = 341 + i * 48
         flag_slot_sprite.y = 933
         flag_slot_sprite.draw()
