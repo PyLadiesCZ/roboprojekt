@@ -322,10 +322,15 @@ def draw_interface(interface_state, window):
 
     # Winner/Game over
     if interface_state.winner is not None:
-        start = time.monotonic()
+        if interface_state.robot.name in interface_state.winner:
+            start = time.monotonic()
+            for i in range(5):
+                end = time.monotonic()
+                if end - start <5:
+                    winner_sprite.draw()
 
-        while start + 5 < time.monotonic():
-            winner_sprite.draw()
+
+
         """
         if interface_state.robot.name in interface_state.winner:
             crown_sprite.draw()
