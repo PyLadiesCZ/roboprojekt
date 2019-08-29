@@ -116,4 +116,35 @@ def check_tiles(map_name):
                         else:
                             W_or_E = True
 
+        """
+        Lasers must start and end on wall tiles. Wall can be either on the same
+        field or one field before/after laser start/end.
+        """
+        for tile in tile_type_and_direction:
+            if tile[0] == "LaserTile":
+                direction = tile[1]
+                # Check the wall in your direction
+                if not ("WallTile", direction) in tile_type_and_direction:
+                    if direction == Direction.N or direction == Direction.S:
+                        x, y = coordinate
+                        print(x, y)
+                        # Look to the north
+                        new_coordinate = x, y+1
+                        print(new_coordinate)
+                        if new_coordinate in board.keys():
+                            print(f"check {new_coordinate}")
+                            tile_type_and_direction_2 = []
+                            # Check if there is wall in the opposite direction
+                            print("AAA", board[new_coordinate])
+                            for tile2 in board[new_coordinate]:
+                                tile_type_and_direction_2.append((type(tile2).__name__, tile2.direction))
+                            print(tile2)
+                            for tile3 in tile_type_and_direction_2:
+                                if tile3 != ("WallTile", direction + Direction(180)):
+                                    if tile3 != ("LaserTile", direction):
+                                        pass
+                                return coordinate, new_coordinate, "OOOPS"
+
+
+
     return True
