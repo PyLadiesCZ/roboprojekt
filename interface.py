@@ -68,7 +68,7 @@ class InterfaceState:
         Change selecting cursor position to the next one.
         """
         if not self.selection_confirmed:
-            max_cursor_index = self.robot.unblocked_cards - 1
+            max_cursor_index = -(len(self.blocked_cards) - 4)
             if self.cursor_index < max_cursor_index:
                 self.cursor_index += 1
 
