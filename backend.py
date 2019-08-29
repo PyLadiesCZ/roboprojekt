@@ -803,7 +803,6 @@ class State:
             for robot in self.robots:
                 if robot.flags == number_flags:
                     self.winners.append(robot.name)
-                    print("winner", robot)
         if self.winners:
             self.game_over = True
         return self.winners

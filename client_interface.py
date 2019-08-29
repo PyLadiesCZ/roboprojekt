@@ -71,7 +71,6 @@ class Interface:
                         self.state.timer = False
                     if "winner" in message:
                         self.state.winner = message["winner"]
-                        print("winner", self.state.winner)
                     if "timer_start" in message:
                         self.state.timer = True
                     if "timer_end" in message:
@@ -79,7 +78,8 @@ class Interface:
                     if "blocked_cards" in message:
                         self.set_blocked_cards(message)
                     if "round_over" in message:
-                        self.state = InterfaceState()
+                        if self.state.winner is None:
+                            self.state = InterfaceState()
 
         self.ws = None
 

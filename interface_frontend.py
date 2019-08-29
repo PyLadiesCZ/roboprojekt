@@ -1,5 +1,7 @@
 import pyglet
 from pathlib import Path
+import time
+from datetime import datetime
 
 MAX_CARDS_COUNT = 9
 MAX_LIVES_COUNT = 3
@@ -320,12 +322,18 @@ def draw_interface(interface_state, window):
 
     # Winner/Game over
     if interface_state.winner is not None:
+        start = time.monotonic()
+
+        while start + 5 < time.monotonic():
+            winner_sprite.draw()
+        """
         if interface_state.robot.name in interface_state.winner:
             crown_sprite.draw()
             winner_sprite.draw()
-        #else:
-        #    game_over_sprite.draw()
 
+        else:
+            game_over_sprite.draw()
+        """
     pyglet.gl.glPopMatrix()
 
 
