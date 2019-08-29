@@ -7,6 +7,8 @@ The frontend module
 import pyglet
 from pathlib import Path
 
+from interface_frontend import get_label
+
 # Constatnts for size of tile image in px
 TILE_WIDTH = 64
 TILE_HEIGHT = 64
@@ -21,6 +23,14 @@ for image_path in Path('./img/robots_map/png').iterdir():
     loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
 
 
+def get_sprite(img_path, x=0, y=0):
+    img = pyglet.image.load(img_path)
+    return pyglet.sprite.Sprite(img, x, y)
+
+# Game over
+game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=180)
+
+
 def create_window(state):
     """
     Return a pyglet window for graphic output.
@@ -28,7 +38,7 @@ def create_window(state):
     state: State object containing game board, robots and map sizes
     """
     window = pyglet.window.Window(state.tile_count[0] * TILE_WIDTH,
-                                  state.tile_count[1] * TILE_HEIGHT, resizable=True)
+                                  state.tile_count[1] * TILE_HEIGHT + 50, resizable=True)
     return window
 
 
@@ -114,7 +124,7 @@ def draw_state(state, window):
 
     # Scaling ratio
     zoom = min(
-        window.height / (state.tile_count[1] * TILE_HEIGHT),
+        window.height / (state.tile_count[1] * TILE_HEIGHT + 50),
         window.width / (state.tile_count[0] * TILE_WIDTH)
     )
 
@@ -122,5 +132,14 @@ def draw_state(state, window):
 
     for tile_sprite in tile_sprites:
         tile_sprite.draw()
+
+    if state.game_over:
+        game_over_sprite.draw()
+        winner_label = get_label("WINNER", 150, 780, 20, "right", (255, 255, 255, 255))
+        winner_label.draw()
+
+        for i, name in enumerate(state.winners):
+            winner_name_label = get_label(str(name), 300 + 165 * i, 780, 20, "right", (255, 255, 255, 255))
+            winner_name_label.draw()
 
     pyglet.gl.glPopMatrix()

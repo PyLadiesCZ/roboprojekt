@@ -421,6 +421,7 @@ class State:
         self.past_deck = []
         self.game_round = 1
         self.game_over = False
+        self.winners = None
         self.flag_count = self.get_flag_count()
 
     def __repr__(self):
