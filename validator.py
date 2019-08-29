@@ -75,7 +75,6 @@ def check_tiles(map_name):
         # ["A","B","D"] is correct ["D", "A"] is not
         # A < B < C < D < E
         letters_count = len(tile_type_letter)
-        print(tile_type_letter)
         for i in range(letters_count-1):
             if tile_type_letter[i][0] > tile_type_letter[i+1][0]:
                 print(f"""On coordinates: {coordinate} \
@@ -84,10 +83,10 @@ def check_tiles(map_name):
 
         # "Flag" mustn't be over the "Hole" or "Starting tile"
         for i in range(len(tile_type_letter)-1):
-            if (tile_type_letter[i] == "C_hole" and tile_type_letter[i+1] == "D_flag") \
-            or (tile_type_letter[i] == "B_start_tile" and tile_type_letter[i+1] == "D_flag"):
-                print(f"""On coordinates: {coordinate} \
-                      there is flag over hole or start: {tile_type_letter[i]}.""")
+            if tile_type_letter[i] == "C_hole" and tile_type_letter[i+1] == "D_flag" \
+             or tile_type_letter[i] == "B_start_tile" and tile_type_letter[i+1] == "D_flag":
+                print(f"""On coordinates: {coordinate} there is flag over \
+                      hole or start: {tile_type_letter[i]}.""")
                 return coordinate, tile_type_letter[i]
 
         # Lasers cannot be in opposite direction: they would cover each other
