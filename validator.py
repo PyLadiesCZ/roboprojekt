@@ -5,6 +5,7 @@ Don't call it separately
 """
 
 from loading import get_board
+from util import Direction
 
 
 def get_order_tiles(text):
@@ -89,15 +90,24 @@ def check_tiles(map_name):
                       there is flag over hole or start: {tile_type_letter[i]}.""")
                 return coordinate, tile_type_letter[i]
 
+        # Lasers cannot be in opposite direction: they would cover each other
+        # visually and give 2 x damages to robots.
         if laser_count > 1:
-            match = False
-            new_direction = None
+            N_or_S = False
+            W_or_E = False
             for tile in tile_type_and_direction:
-                if not match:
-                    if tile_type_and_direction[tile][0] == "LaserTile":
-                        new_direction = tile_type_and_direction[tile][1] + 180
-
-
-
+                if tile[0] == "LaserTile":
+                    if (tile[1] == Direction.N or tile[1] == Direction.S):
+                        if N_or_S:
+                            print(f"Lasers in opposite directions on {coordinate}.")
+                            return coordinate
+                        else:
+                            N_or_S = True
+                    if (tile[1] == Direction.W or tile[1] == Direction.E):
+                        if W_or_E:
+                            print(f"Lasers in opposite directions on {coordinate}.")
+                            return coordinate
+                        else:
+                            W_or_E = True
 
     return True
