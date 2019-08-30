@@ -34,21 +34,21 @@ def check_tiles(map_name):
 
     for coordinate, tiles in board.items():
         tile_type_letter = []
-        tile_type_and_direction = []
+        tiles_on_coordinate = []
         for tile in tiles:
             tile_type_letter.append(get_order_tiles(type(tile).__name__))
 
             """
             Tiles with the same type and direction mustn't be in list of types
             """
-            if tile in tile_type_and_direction:
+            if tile in tiles_on_coordinate:
                 print(f"""On coordinates: {coordinate} \
                       there is this tile twice: {tile.name}. \
                       The tiles mustn't repeat.""")
                 return coordinate, tile.name  # (8, 9), 'wall'
             else:
-                tile_type_and_direction.append(tile)
-        print(tile_type_and_direction)
+                tiles_on_coordinate.append(tile)
+        print(tiles_on_coordinate)
 
         a = 0
         b = 0
@@ -102,7 +102,7 @@ def check_tiles(map_name):
         if laser_count > 1:
             N_or_S = False
             W_or_E = False
-            for tile in tile_type_and_direction:
+            for tile in tiles_on_coordinate:
                 if tile.type == "laser":
                     if (tile.direction == Direction.N or tile.direction == Direction.S):
                         if N_or_S:
@@ -121,7 +121,7 @@ def check_tiles(map_name):
         Lasers must start and end on wall tiles. Wall can be either on the same
         field or one field before/after laser start/end.
         """
-        for tile in tile_type_and_direction:
+        for tile in tiles_on_coordinate:
             if tile.type == "laser":
                 direction = tile.direction
 
