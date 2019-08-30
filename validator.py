@@ -31,7 +31,8 @@ def check_tiles(map_name):
     A, B and C type can be only once in type list.
     """
     board = get_board(map_name)
-
+    flags = []
+    starts = []
     for coordinate, tiles in board.items():
         tile_type_letter = []
         tiles_on_coordinate = []
@@ -117,8 +118,8 @@ def check_tiles(map_name):
                             W_or_E = True
 
         """
-        Lasers must start on wall tiles. Wall must be on the same coordinates,
-        at the laser base.
+        Lasers must start on wall tiles. Wall must be on the same coordinates
+        as the laser base.
         """
         opposite_wall = False
         for tile in tiles_on_coordinate:
@@ -131,5 +132,20 @@ def check_tiles(map_name):
                 if not opposite_wall:
                     print(f"There is no wall at the start of laser on {coordinate}")
                     return coordinate
+            if tile.type == "flag":
+                flags.append(tile.number)
+            if tile.type == "start":
+                starts.append(tile.number)
+
+    """
+    Flags and starts must be numbered from 1 to N, incremented +1.
+    """
+    flags.sort()
+    starts.sort()
+    for tiles_list in (flags, starts):
+        if tiles_list != list(range(1, len(tiles_list) + 1)):
+            print(tiles_list)
+            print(list(range(1, len(tiles_list) + 1)))
+            return "Look at your flags or starts, they are not in order"
 
     return True

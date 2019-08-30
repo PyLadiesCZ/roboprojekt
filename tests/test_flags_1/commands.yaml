@@ -36,7 +36,7 @@ prerequisites:
   -
     flags: 3
   -
-    flags: 3
+    flags: 0
 
 results:
   -
@@ -49,5 +49,5 @@ results:
     flags: 3
     start: [1, 1]
   -
-    flags: 3
+    flags: 0
     start: [1, 0]
