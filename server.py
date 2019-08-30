@@ -175,7 +175,6 @@ class Server:
         It continues to apply effects.
         """
         await asyncio.sleep(30)
-        await self.send_message({"timer_end": {"game_round": game_round}})
         if game_round == self.state.game_round:
             await self.play_game_round()
 
