@@ -1,3 +1,4 @@
+import pytest
 from interface import InterfaceState
 
 
@@ -149,3 +150,47 @@ def test_return_cards_when_selection_not_confirmed_2():
     interface_state = start_interface_state(program=True)
     interface_state.return_cards()
     assert interface_state.my_program == [None, None, None, None]
+
+
+def test_cursor_is_not_moving_when_at_the_first_position():
+    """
+    If selection is not confirmed and cursor is on the first position,
+    it is not possible to move it to the left.
+    """
+    interface_state = start_interface_state(program=True)
+    interface_state.cursor_index_minus()
+    assert interface_state.cursor_index == 0
+
+
+def test_cursor_is_moving_to_the_left():
+    """
+    If selection is not confirmed and cursor is not on the first position,
+    it is possible to move it to the left.
+    """
+    interface_state = start_interface_state(program=True)
+    interface_state.cursor_index = 3
+    interface_state.cursor_index_minus()
+    assert interface_state.cursor_index == 2
+
+
+def test_power_down_cannot_be_switched():
+    """
+    If selection is confirmed, power down can't be switched on or off.
+    """
+    interface_state = start_interface_state()
+    interface_state.confirm_selection()
+    interface_state.switch_power_down()
+    assert interface_state.power_down is False
+
+
+@pytest.mark.parametrize(
+    ("current_value", "expected_value"), [(True, False), (False, True)]
+)
+def test_power_down_can_be_switched(current_value, expected_value):
+    """
+    If selection is not confirmed, power down can be switched on and off.
+    """
+    interface_state = start_interface_state()
+    interface_state.power_down = current_value
+    interface_state.switch_power_down()
+    assert interface_state.power_down is expected_value
