@@ -41,13 +41,14 @@ def check_tiles(map_name):
             """
             Tiles with the same type and direction mustn't be in list of types
             """
-            if (type(tile).__name__, tile.direction) in tile_type_and_direction:
+            if tile in tile_type_and_direction:
                 print(f"""On coordinates: {coordinate} \
-                      there is this tile twice: {type(tile).__name__}. \
+                      there is this tile twice: {tile.name}. \
                       The tiles mustn't repeat.""")
-                return coordinate, type(tile).__name__  # (8, 9), 'wall'
+                return coordinate, tile.name  # (8, 9), 'wall'
             else:
-                tile_type_and_direction.append((type(tile).__name__, tile.direction))
+                tile_type_and_direction.append(tile)
+        print(tile_type_and_direction)
 
         a = 0
         b = 0
@@ -102,14 +103,14 @@ def check_tiles(map_name):
             N_or_S = False
             W_or_E = False
             for tile in tile_type_and_direction:
-                if tile[0] == "LaserTile":
-                    if (tile[1] == Direction.N or tile[1] == Direction.S):
+                if tile.type == "laser":
+                    if (tile.direction == Direction.N or tile.direction == Direction.S):
                         if N_or_S:
                             print(f"Lasers in opposite directions on {coordinate}.")
                             return coordinate
                         else:
                             N_or_S = True
-                    if (tile[1] == Direction.W or tile[1] == Direction.E):
+                    if (tile.direction == Direction.W or tile.direction == Direction.E):
                         if W_or_E:
                             print(f"Lasers in opposite directions on {coordinate}.")
                             return coordinate
@@ -121,30 +122,7 @@ def check_tiles(map_name):
         field or one field before/after laser start/end.
         """
         for tile in tile_type_and_direction:
-            if tile[0] == "LaserTile":
-                direction = tile[1]
-                # Check the wall in your direction
-                if not ("WallTile", direction) in tile_type_and_direction:
-                    if direction == Direction.N or direction == Direction.S:
-                        x, y = coordinate
-                        print(x, y)
-                        # Look to the north
-                        new_coordinate = x, y+1
-                        print(new_coordinate)
-                        if new_coordinate in board.keys():
-                            print(f"check {new_coordinate}")
-                            tile_type_and_direction_2 = []
-                            # Check if there is wall in the opposite direction
-                            print("AAA", board[new_coordinate])
-                            for tile2 in board[new_coordinate]:
-                                tile_type_and_direction_2.append((type(tile2).__name__, tile2.direction))
-                            print(tile2)
-                            for tile3 in tile_type_and_direction_2:
-                                if tile3 != ("WallTile", direction + Direction(180)):
-                                    if tile3 != ("LaserTile", direction):
-                                        pass
-                                return coordinate, new_coordinate, "OOOPS"
-
-
+            if tile.type == "laser":
+                direction = tile.direction
 
     return True

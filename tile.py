@@ -11,6 +11,15 @@ class Tile:
         self.name = name
         self.type = tile_type
 
+    def __eq__(self, other):
+        """
+        Override standard method for comparing the tiles.
+        When tile has the same name and direction as the other, it is
+        considered the same.
+        """
+        if (self.name == other.name) and (self.direction == other.direction):
+            return True
+
     def __repr__(self):
         # type(self).__name__: shows the type of the particular tile
         # eg. HoleTile, WallTile or just Tile
