@@ -5,7 +5,7 @@ Don't call it separately
 """
 
 from loading import get_board
-from util import Direction
+from util import Direction, Rotation
 
 
 def get_order_tiles(text):
@@ -48,7 +48,6 @@ def check_tiles(map_name):
                 return coordinate, tile.name  # (8, 9), 'wall'
             else:
                 tiles_on_coordinate.append(tile)
-        print(tiles_on_coordinate)
 
         a = 0
         b = 0
@@ -118,11 +117,19 @@ def check_tiles(map_name):
                             W_or_E = True
 
         """
-        Lasers must start and end on wall tiles. Wall can be either on the same
-        field or one field before/after laser start/end.
+        Lasers must start on wall tiles. Wall must be on the same coordinates,
+        at the laser base.
         """
+        opposite_wall = False
         for tile in tiles_on_coordinate:
-            if tile.type == "laser":
-                direction = tile.direction
+            if tile.name.startswith("laser_start"):
+                # There must be wall in the opposite direction
+                new_direction = tile.direction + Rotation(180)
+                for tile_2 in tiles_on_coordinate:
+                    if tile_2.type == "wall" and tile_2.direction == new_direction:
+                        opposite_wall = True
+                if not opposite_wall:
+                    print(f"There is no wall at the start of laser on {coordinate}")
+                    return coordinate
 
     return True

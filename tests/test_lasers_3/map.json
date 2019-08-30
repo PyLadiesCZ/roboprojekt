@@ -50,7 +50,7 @@
          "y":0
         }, 
         {
-         "data":[2684354573, 0, 0, 0, 3221225485, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13],
+         "data":[2684354573, 0, 13, 13, 3221225485, 0, 0, 2684354573, 1610612749, 0, 0, 0, 3221225485, 3221225485, 0, 13],
          "height":4,
          "id":5,
          "name":"walls",
@@ -77,7 +77,7 @@
  "nextobjectid":1,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.2.1",
+ "tiledversion":"1.2.4",
  "tileheight":64,
  "tilesets":[
         {

@@ -50,10 +50,22 @@
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 0, 1610612749, 1610612749, 0, 0, 0, 13, 0, 0, 0, 0, 0],
+         "data":[0, 0, 0, 2684354573, 0, 1610612749, 1610612749, 0, 1610612749, 0, 13, 0, 0, 3221225485, 0, 0],
          "height":4,
          "id":5,
          "name":"wall",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":4,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":4,
+         "id":8,
+         "name":"wall2",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
@@ -73,7 +85,7 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":8,
+ "nextlayerid":9,
  "nextobjectid":1,
  "orientation":"orthogonal",
  "renderorder":"right-down",
