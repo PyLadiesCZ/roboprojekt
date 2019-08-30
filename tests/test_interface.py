@@ -27,31 +27,36 @@ def test_as_dict():
     assert transformed["interface_data"]["my_game_round"] == 128
 
 
-def start_interface_state():
+def start_interface_state(confirmed=False, program=False):
     """
     Initialize almost empty interface for the other tests.
     """
     interface_state = InterfaceState()
     interface_state.dealt_cards = ["A", "B", "C", "D"]
+    if confirmed:
+        interface_state.selection_confirmed = True
+    if program:
+        interface_state.my_program = [4, 3, 2, 1]
     return interface_state
 
 
 def test_non_existing_card_cannot_be_chosen():
     """
-    Have 4 cards on hand, try to choose 6th card. Assert None is returned.
+    Have 4 cards on hand, try to choose 6th card. Assert no card was chosen.
     """
     interface_state = start_interface_state()
-    assert interface_state.select_card(6) is None
+    interface_state.select_card(6)
+    assert interface_state.my_program == [None, None, None, None, None]
 
 
 def test_if_selection_confirmed_card_cannot_be_chosen():
     """
     When selection is confirmed, no card can be chosen.
-    Assert None is returned.
+    Assert program hasn't changed
     """
-    interface_state = start_interface_state()
-    interface_state.selection_confirmed = True
-    assert interface_state.select_card(2) is None
+    interface_state = start_interface_state(confirmed=True)
+    interface_state.select_card(2)
+    assert interface_state.my_program == [None, None, None, None, None]
 
 
 def test_cursor_moves_when_card_is_chosen():
@@ -89,3 +94,58 @@ def test_cursor_is_not_moving_when_at_the_last_position():
     interface_state.select_card(2)
     assert interface_state.my_program[4] == 2
     assert interface_state.cursor_index == 4
+
+
+def test_return_card_when_selection_not_confirmed():
+    """
+    If selection is not confirmed,
+    it is possible to return card on which there is cursor.
+    """
+    interface_state = start_interface_state(program=True)
+    interface_state.return_card()
+    interface_state.cursor_index = 2
+    interface_state.return_card()
+    assert interface_state.my_program == [None, 3, None, 1]
+
+
+def test_return_card_when_selection_confirmed_():
+    """
+    If selection is confirmed,
+    it is not possible to return any card.
+    """
+    interface_state = start_interface_state(confirmed=True, program=True)
+    interface_state.cursor_index = 3
+    interface_state.return_card()
+    assert interface_state.my_program == [4, 3, 2, 1]
+
+
+def test_return_cards_when_selection_confirmed():
+    """
+    If selection is confirmed,
+    it is not possible to return all card.
+    """
+    interface_state = start_interface_state(confirmed=True, program=True)
+    interface_state.blocked_cards = ["D"]
+    interface_state.return_cards()
+    assert interface_state.my_program == [4, 3, 2, 1]
+
+
+def test_return_cards_when_selection_not_confirmed():
+    """
+    If selection is not confirmed,
+    it is possible to return cards except for the blocked position.
+    """
+    interface_state = start_interface_state(program=True)
+    interface_state.blocked_cards = ["D"]
+    interface_state.return_cards()
+    assert interface_state.my_program == [None, None, None, 1]
+
+
+def test_return_cards_when_selection_not_confirmed_2():
+    """
+    If selection is not confirmed,
+    it is possible to return all cards.
+    """
+    interface_state = start_interface_state(program=True)
+    interface_state.return_cards()
+    assert interface_state.my_program == [None, None, None, None]
