@@ -73,8 +73,6 @@ class Interface:
                         self.state.winner = message["winner"]
                     if "timer_start" in message:
                         self.state.timer = True
-                    if "timer_end" in message:
-                        self.set_timer_off(message)
                     if "blocked_cards" in message:
                         self.set_blocked_cards(message)
                     if "round_over" in message:
@@ -97,12 +95,14 @@ class Interface:
         """
         self.game_state.robots = self.game_state.robots_from_dict(message)
         self.state.players = self.game_state.robots
+        self.state.flag_count = self.game_state.flag_count
         for robot in self.state.players:
             if robot.name == robot_name:
                 self.state.robot = robot
                 index = self.state.players.index(robot)
                 del self.state.players[index]
                 del self.state.my_program[self.state.robot.unblocked_cards:]
+                # print("interface_program", self.state.my_program)
 
     def set_dealt_cards(self, message):
         """
@@ -123,13 +123,6 @@ class Interface:
         cards = message["blocked_cards"]
         self.state.blocked_cards = self.game_state.cards_from_dict(cards)
 
-    def set_timer_off(self, message):
-        """
-        Set timer for client. It check game round for timer off.
-        """
-        state_game_round = message["timer_end"]["game_round"]
-        if state_game_round == self.state.my_game_round:
-            self.state.timer = False
 
 def tick_asyncio(dt):
     """

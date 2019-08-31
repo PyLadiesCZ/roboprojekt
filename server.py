@@ -92,11 +92,14 @@ class Server:
             # and assign it to client
             robot = self.assign_robot_to_client(ws)
             # Prepare message to send: robot name, game state and cards
-            welcome_message = {"robot_name": robot.name,
-                               **self.state.whole_as_dict(map_name),
-                               **self.state.cards_and_game_round_as_dict(
-                               robot.dealt_cards, robot.select_blocked_cards_from_program()),
-                               }
+            welcome_message = {
+                "robot_name": robot.name,
+                **self.state.whole_as_dict(map_name),
+                **self.state.cards_and_game_round_as_dict(
+                    robot.dealt_cards,
+                    robot.select_blocked_cards_from_program(),
+                    ),
+                }
             # Send the message to the connected client
             await ws.send_json(welcome_message)
 
@@ -136,7 +139,7 @@ class Server:
                 # it doesn't affect anything else.
                 robot.power_down = message["interface_data"]["power_down"]
                 # Set robot's selection with chosen card´s index
-                robot.selection = message["interface_data"]["my_program"]
+                robot.card_indexes = message["interface_data"]["my_program"]
 
             # choice of cards was blocked by the player
             else:
@@ -170,7 +173,6 @@ class Server:
         It continues to apply effects.
         """
         await asyncio.sleep(30)
-        await self.send_message({"timer_end": {"game_round": game_round}})
         if game_round == self.state.game_round:
             await self.play_game_round()
 
@@ -190,6 +192,7 @@ class Server:
         ws_all = self.ws_receivers + self.ws_interfaces
         for client in ws_all:
             await client.send_json(message)
+
 
 # aiohttp.web application
 def get_app(argv=None):
