@@ -808,9 +808,10 @@ class State:
         Return list of winner(s).
         """
         self.winners = []
-        for robot in self.robots:
-            if robot.flags == self.flag_count:
-                self.winners.append(robot.name)
+        if not self.game_over:
+            for robot in self.robots:
+                if robot.flags == self.flag_count:
+                    self.winners.append(robot.name)
         if self.winners:
             self.game_over = True
         return self.winners
@@ -825,11 +826,11 @@ class State:
             robot.select_cards(self)
         self.apply_all_effects()
         self.check_winner()
-        if not self.game_over:
-            self.game_round += 1
-            for robot in self.robots:
-                robot.clear_robot_attributes(self)
-                self.deal_cards(robot)
+        print(self.winners)
+        self.game_round += 1
+        for robot in self.robots:
+            robot.clear_robot_attributes(self)
+            self.deal_cards(robot)
             # print("past_deck end round", self.past_deck)
 
 
