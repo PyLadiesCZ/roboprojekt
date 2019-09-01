@@ -30,6 +30,8 @@ power_down_sprite = get_sprite('img/interface/png/power.png', x=210, y=900)
 timer_sprite = get_sprite('img/interface/png/timer_on.png', x=521, y=864)
 # Winner crown
 crown_sprite = get_sprite('img/interface/png/crown.png')
+# Loss crown
+loss_sprite = get_sprite('img/interface/png/no_crown.png')
 # Time indicator
 indicator_green_sprite = get_sprite('img/interface/png/green.png', x=688, y=864)
 # Time indicator
@@ -276,10 +278,16 @@ def draw_interface(interface_state, window):
             life_label.draw()
 
         for i, robot in enumerate(interface_state.players):
-            if robot.winner:
-                crown_sprite.x = 78 + i * 98
-                crown_sprite.y = 90
-                crown_sprite.draw()
+            if interface_state.robot.winner is not None:
+                if robot.winner:
+                    crown_sprite.x = 78 + i * 98
+                    crown_sprite.y = 90
+                    crown_sprite.draw()
+                else:
+                    loss_sprite.x = 78 + i * 98
+                    loss_sprite.y = 90
+                    loss_sprite.draw()
+
 
 
     # Cards on hand
@@ -360,10 +368,15 @@ def draw_interface(interface_state, window):
             sprite.draw()
 
         # Winner crown
-        if interface_state.robot.winner:
-            crown_sprite.x = 120
-            crown_sprite.y = 945
-            crown_sprite.draw()
+        if interface_state.robot.winner is not None:
+            if interface.state.robot.winner:
+                crown_sprite.x = 120
+                crown_sprite.y = 945
+                crown_sprite.draw()
+            else:
+                loss_sprite.x = 120
+                loss_sprite.y = 945
+                loss_sprite.draw()
 
 
     pyglet.gl.glPopMatrix()

@@ -36,7 +36,7 @@ class Robot:
         self.name = name
         self.selection_confirmed = False
         self.card_indexes = []
-        self.winner = False
+        self.winner = None
 
     @property
     # More info about @property decorator - official documentation:
@@ -818,6 +818,9 @@ class State:
                     robot.winner = True
         if self.winners:
             self.game_over = True
+            for robot in self.robots:
+                if not robot.winner:
+                    robot.winner = False
         return self.winners
 
     def play_round(self):
@@ -834,7 +837,6 @@ class State:
         for robot in self.robots:
             robot.clear_robot_attributes(self)
             self.deal_cards(robot)
-            # print("past_deck end round", self.past_deck)
 
 
 def get_robot_names():
