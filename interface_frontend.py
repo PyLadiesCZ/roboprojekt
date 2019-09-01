@@ -369,7 +369,7 @@ def draw_interface(interface_state, window):
 
         # Winner crown
         if interface_state.robot.winner is not None:
-            if interface.state.robot.winner:
+            if interface_state.robot.winner:
                 crown_sprite.x = 120
                 crown_sprite.y = 945
                 crown_sprite.draw()

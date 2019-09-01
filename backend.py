@@ -819,7 +819,7 @@ class State:
         if self.winners:
             self.game_over = True
             for robot in self.robots:
-                if not robot.winner:
+                if robot.winner is None:
                     robot.winner = False
         return self.winners
 

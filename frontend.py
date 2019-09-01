@@ -134,7 +134,7 @@ def draw_state(state, window):
         tile_sprite.draw()
 
     if state.game_over:
-        game_over_sprite.draw()
+        #game_over_sprite.draw()
         winner_label = get_label("WINNER", 150, 780, 20, "right", (255, 255, 255, 255))
         winner_label.draw()
 
