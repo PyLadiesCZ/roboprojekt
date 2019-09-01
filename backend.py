@@ -423,8 +423,7 @@ class State:
         self.present_deck = self.create_card_pack()
         self.past_deck = []
         self.game_round = 1
-        self.game_over = False
-        self.winners = None
+        self.winners = []
         self.flag_count = self.get_flag_count()
 
     def __repr__(self):
@@ -810,17 +809,14 @@ class State:
         Check if somebody has won (robot collected all flags).
         Return list of winner(s).
         """
-        self.winners = []
-        if not self.game_over:
+        if not self.winners:
             for robot in self.robots:
                 if robot.flags == self.flag_count:
                     self.winners.append(robot.name)
                     robot.winner = True
-        if self.winners:
-            self.game_over = True
-            for robot in self.robots:
-                if robot.winner is None:
-                    robot.winner = False
+                if self.winners:
+                    if robot.winner is None:
+                        robot.winner = False
         return self.winners
 
     def play_round(self):

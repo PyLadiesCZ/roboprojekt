@@ -285,7 +285,7 @@ def draw_interface(interface_state, window):
                     crown_sprite.draw()
                 else:
                     loss_sprite.x = 78 + i * 98
-                    loss_sprite.y = 90
+                    loss_sprite.y = 88
                     loss_sprite.draw()
 
 
