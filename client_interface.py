@@ -74,8 +74,7 @@ class Interface:
                     if "blocked_cards" in message:
                         self.set_blocked_cards(message)
                     if "round_over" in message:
-                        if self.state.winner is None:
-                            self.state = InterfaceState()
+                        self.state = InterfaceState()
 
         self.ws = None
 

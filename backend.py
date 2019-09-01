@@ -100,7 +100,7 @@ class Robot:
         robot.power_down = robot_description["power_down"]
         robot.start_coordinates = robot_description["start_coordinates"]
         robot.selection_confirmed = robot_description["selection_confirmed"]
-        self.winner = robot_description["winner"]
+        robot.winner = robot_description["winner"]
         return robot
 
     def select_cards(self, state):
@@ -659,7 +659,6 @@ class State:
         "Inactive" robots who have lost one life during the round,
         will reboot on start coordinates.
         """
-        self.robots = robot
         for robot in self.robots:
             for tile in self.get_tiles(robot.coordinates):
                 tile.repair_robot(robot, self)
@@ -831,7 +830,6 @@ class State:
             robot.select_cards(self)
         self.apply_all_effects()
         self.check_winner()
-        print(self.winners)
         self.game_round += 1
         for robot in self.robots:
             robot.clear_robot_attributes(self)

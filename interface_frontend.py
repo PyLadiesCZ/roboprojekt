@@ -29,7 +29,7 @@ power_down_sprite = get_sprite('img/interface/png/power.png', x=210, y=900)
 # Timer
 timer_sprite = get_sprite('img/interface/png/timer_on.png', x=521, y=864)
 # Winner crown
-crown_sprite = get_sprite('img/interface/png/crown.png', x=120, y=945)
+crown_sprite = get_sprite('img/interface/png/crown.png')
 # Time indicator
 indicator_green_sprite = get_sprite('img/interface/png/green.png', x=688, y=864)
 # Time indicator
@@ -275,6 +275,13 @@ def draw_interface(interface_state, window):
             )
             life_label.draw()
 
+        for i, robot in enumerate(interface_state.players):
+            if robot.winner:
+                crown_sprite.x = 78 + i * 98
+                crown_sprite.y = 90
+                crown_sprite.draw()
+
+
     # Cards on hand
     for coordinate, card_index in zip(program_coordinates, interface_state.my_program):
         if card_index is not None:
@@ -352,9 +359,11 @@ def draw_interface(interface_state, window):
         for sprite in permanent_damages_sprites[0:interface_state.robot.permanent_damages]:
             sprite.draw()
 
-    # Winner/Game over
-    if interface_state.robot.winner:
-        crown_sprite.draw()
+        # Winner crown
+        if interface_state.robot.winner:
+            crown_sprite.x = 120
+            crown_sprite.y = 945
+            crown_sprite.draw()
 
 
     pyglet.gl.glPopMatrix()
