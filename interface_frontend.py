@@ -280,15 +280,13 @@ def draw_interface(interface_state, window):
         for i, robot in enumerate(interface_state.players):
             if interface_state.robot.winner is not None:
                 if robot.winner:
-                    crown_sprite.x = 78 + i * 98
-                    crown_sprite.y = 90
-                    crown_sprite.draw()
+                    sprite = crown_sprite
                 else:
-                    loss_sprite.x = 78 + i * 98
-                    loss_sprite.y = 88
-                    loss_sprite.draw()
+                    sprite = loss_sprite
 
-
+                    sprite.x = 78 + i * 98
+                    sprite.y = 90
+                    sprite.draw()
 
     # Cards on hand
     for coordinate, card_index in zip(program_coordinates, interface_state.my_program):
