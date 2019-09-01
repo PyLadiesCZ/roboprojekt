@@ -378,7 +378,6 @@ def draw_interface(interface_state, window):
                 loss_sprite.y = 945
                 loss_sprite.draw()
 
-
     pyglet.gl.glPopMatrix()
 
 
