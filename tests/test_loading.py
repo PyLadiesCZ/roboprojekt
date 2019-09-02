@@ -11,7 +11,7 @@ from loading import get_map_data, get_tiles_data, get_tile_id, get_tile_directio
 from loading import get_board, get_tiles_properties
 from util import Direction
 from tile import Tile, HoleTile
-from validator import check_tiles
+from validator import check_tiles, WrongLayersOrderError
 
 
 # List of paths to valid test maps.
@@ -38,7 +38,8 @@ def test_map_is_invalid(map_name):
     """
     Use validator to check the invalid map is not accepted.
     """
-    assert check_tiles(map_name) is not True
+    with pytest.raises(WrongLayersOrderError):
+        check_tiles(map_name)
 
 
 @pytest.mark.parametrize(
