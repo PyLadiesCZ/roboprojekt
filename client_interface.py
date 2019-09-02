@@ -69,6 +69,8 @@ class Interface:
                     if "cards" in message:
                         self.set_dealt_cards(message)
                         self.state.timer = False
+                    if "winner" in message:
+                        self.state.winner = message["winner"]
                     if "timer_start" in message:
                         self.state.timer = True
                     if "blocked_cards" in message:

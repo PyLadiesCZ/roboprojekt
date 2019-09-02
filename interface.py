@@ -11,6 +11,7 @@ class InterfaceState:
         self.cursor_index = 0  # 0-4 number of positon
         self.players = []
         self.my_game_round = None
+        self.winner = None
         self.timer = False
         self.flag_count = 0
 

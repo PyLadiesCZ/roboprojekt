@@ -277,16 +277,17 @@ def draw_interface(interface_state, window):
             )
             life_label.draw()
 
+        # Winner crown
         for i, robot in enumerate(interface_state.players):
-            if interface_state.robot.winner is not None:
+            if interface_state.winner is not None:
                 if robot.winner:
                     sprite = crown_sprite
                 else:
                     sprite = loss_sprite
 
-                    sprite.x = 78 + i * 98
-                    sprite.y = 90
-                    sprite.draw()
+                sprite.x = 78 + i * 98
+                sprite.y = 90
+                sprite.draw()
 
     # Cards on hand
     for coordinate, card_index in zip(program_coordinates, interface_state.my_program):
@@ -366,15 +367,15 @@ def draw_interface(interface_state, window):
             sprite.draw()
 
         # Winner crown
-        if interface_state.robot.winner is not None:
+        if interface_state.winner is not None:
             if interface_state.robot.winner:
                 sprite = crown_sprite
             else:
                 sprite = loss_sprite
 
-                sprite.x = 120
-                sprite.y = 945
-                sprite.draw()
+            sprite.x = 120
+            sprite.y = 945
+            sprite.draw()
 
     pyglet.gl.glPopMatrix()
 

@@ -36,7 +36,7 @@ class Robot:
         self.name = name
         self.selection_confirmed = False
         self.card_indexes = []
-        self.winner = None
+        self.winner = False
 
     @property
     # More info about @property decorator - official documentation:
@@ -814,9 +814,6 @@ class State:
                 if robot.flags == self.flag_count:
                     self.winners.append(robot.name)
                     robot.winner = True
-                if self.winners:
-                    if robot.winner is None:
-                        robot.winner = False
         return self.winners
 
     def play_round(self):
