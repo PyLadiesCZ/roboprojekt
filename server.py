@@ -162,7 +162,6 @@ class Server:
         await self.send_message("round_over")
         if self.state.winners:
             await self.send_message({"winner": self.state.winners})
-
         await self.send_message(self.state.robots_as_dict())
         await self.send_new_dealt_cards()
 
