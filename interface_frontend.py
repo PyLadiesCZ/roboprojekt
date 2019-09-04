@@ -398,5 +398,4 @@ def handle_text(interface_state, text):
 
     # Confirm selection of cards
     if text == 'k':
-        if None not in interface_state.program:
-            interface_state.confirm_selection()
+        interface_state.confirm_selection()
