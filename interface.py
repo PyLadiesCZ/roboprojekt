@@ -68,7 +68,7 @@ class InterfaceState:
         Change selecting cursor position to the next one.
         """
         if not self.selection_confirmed:
-            max_cursor_index = len(self.program) - 1
+            max_cursor_index = len(self.my_program) - 1
             if self.cursor_index < max_cursor_index:
                 self.cursor_index += 1
 
