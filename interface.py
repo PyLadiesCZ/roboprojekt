@@ -4,6 +4,7 @@ class InterfaceState:
     def __init__(self):
         self.dealt_cards = []
         self.robot = None
+        #len(self.program) is the number of cards to select (0 - 5)
         self.program = [None, None, None, None, None]
         self.blocked_cards = []
         self.power_down = False
@@ -11,6 +12,7 @@ class InterfaceState:
         self.cursor_index = 0  # 0-4 number of positon
         self.players = []
         self.game_round = None
+        # List of winners
         self.winner = []
         self.timer = False
         self.flag_count = 0
