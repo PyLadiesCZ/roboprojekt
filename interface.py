@@ -4,21 +4,21 @@ class InterfaceState:
     def __init__(self):
         self.dealt_cards = []
         self.robot = None
-        self.my_program = [None, None, None, None, None]
+        self.program = [None, None, None, None, None]
         self.blocked_cards = []
         self.power_down = False
         self.selection_confirmed = False
         self.cursor_index = 0  # 0-4 number of positon
         self.players = []
-        self.my_game_round = None
-        self.winner = None
+        self.game_round = None
+        self.winner = []
         self.timer = False
         self.flag_count = 0
 
     def __repr__(self):
         return f"InterfaceState \
                 Cards: {self.dealt_cards}, \
-                My Cards: {self.my_program}, \
+                My Cards: {self.program}, \
                 Power Down: {self.power_down,}, \
                 Robot: {self.robot}"
 
@@ -28,10 +28,10 @@ class InterfaceState:
         """
         return {
             "interface_data": {
-                "my_program": self.my_program,
+                "program": self.program,
                 "power_down": self.power_down,
                 "confirmed": self.selection_confirmed,
-                "my_game_round": self.my_game_round,
+                "game_round": self.game_round,
                 }
             }
 
@@ -44,8 +44,8 @@ class InterfaceState:
         if not self.selection_confirmed:
             if dealt_card_index >= len(self.dealt_cards):
                 return
-            if dealt_card_index not in self.my_program:
-                self.my_program[self.cursor_index] = dealt_card_index
+            if dealt_card_index not in self.program:
+                self.program[self.cursor_index] = dealt_card_index
                 # After select a card Move with cursor to right
                 self.cursor_index_plus()
 
@@ -54,7 +54,7 @@ class InterfaceState:
         Return one selected card from your program back to the dealt cards.
         """
         if not self.selection_confirmed:
-            self.my_program[self.cursor_index] = None
+            self.program[self.cursor_index] = None
 
     def return_cards(self):
         """
@@ -62,7 +62,7 @@ class InterfaceState:
         """
         if not self.selection_confirmed:
             for card in range(-(len(self.blocked_cards) - MAX_CURSOR_INDEX)):
-                self.my_program[card] = None
+                self.program[card] = None
             self.cursor_index = 0
 
     def cursor_index_plus(self):

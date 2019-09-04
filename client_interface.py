@@ -100,8 +100,7 @@ class Interface:
                 self.state.robot = robot
                 index = self.state.players.index(robot)
                 del self.state.players[index]
-                del self.state.my_program[self.state.robot.unblocked_cards:]
-                # print("interface_program", self.state.my_program)
+                del self.state.program[self.state.robot.unblocked_cards:]
 
     def set_dealt_cards(self, message):
         """
@@ -114,7 +113,7 @@ class Interface:
         self.state.return_cards()
         # Set the game round for this client - it is changed only
         # by message from server
-        self.state.my_game_round = message["current_game_round"]
+        self.state.game_round = message["current_game_round"]
 
     def set_blocked_cards(self, message):
         """

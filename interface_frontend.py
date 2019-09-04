@@ -274,7 +274,7 @@ def draw_interface(interface_state, window):
             life_label.draw()
 
     # Cards on hand
-    for coordinate, card_index in zip(program_coordinates, interface_state.my_program):
+    for coordinate, card_index in zip(program_coordinates, interface_state.program):
         if card_index is not None:
             draw_card(coordinate, interface_state.dealt_cards[card_index])
 
@@ -287,7 +287,7 @@ def draw_interface(interface_state, window):
 
     # Selected cards
     # if card is selected, selected card in dealt cards is gray
-    for card_index in interface_state.my_program:
+    for card_index in interface_state.program:
         if card_index is not None:
             card = interface_state.dealt_cards[card_index]
             x, y = dealt_cards_coordinates[interface_state.dealt_cards.index(card)]
@@ -351,7 +351,7 @@ def draw_interface(interface_state, window):
             sprite.draw()
 
     # Winner/Game over
-    if interface_state.winner is not None:
+    if interface_state.winner:
         if interface_state.robot.name in interface_state.winner:
             winner_sprite.draw()
         else:
@@ -396,5 +396,5 @@ def handle_text(interface_state, text):
 
     # Confirm selection of cards
     if text == 'k':
-        if None not in interface_state.my_program:
+        if None not in interface_state.program:
             interface_state.confirm_selection()
