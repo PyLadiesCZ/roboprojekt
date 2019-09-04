@@ -36,6 +36,7 @@ class Robot:
         self.name = name
         self.selection_confirmed = False
         self.card_indexes = []
+        self.winner = False
 
     @property
     # More info about @property decorator - official documentation:
@@ -61,10 +62,10 @@ class Robot:
     def __repr__(self):
         return "<Robot {} {} {} Lives: {} Flags: {} Damages: {} \
                 Permanent_damages: {} Inactive: {} Selection_confirmed: {} \
-                Unblocked_cards: {}>".format(
+                Unblocked_cards: {} Winner: {}>".format(
                 self.name, self.direction, self.coordinates, self.lives, self.flags,
                 self.damages, self.permanent_damages, self.inactive, self.selection_confirmed,
-                self.unblocked_cards)
+                self.unblocked_cards, self.winner)
 
     def as_dict(self):
         """
@@ -79,7 +80,8 @@ class Robot:
                  "direction": self.direction.value,
                  "start_coordinates": self.start_coordinates,
                  "selection_confirmed": self.selection_confirmed,
-                 "unblocked_cards": self.unblocked_cards, }}
+                 "unblocked_cards": self.unblocked_cards,
+                 "winner": self.winner }}
 
     @classmethod
     def from_dict(cls, robot_description):
@@ -98,6 +100,7 @@ class Robot:
         robot.power_down = robot_description["power_down"]
         robot.start_coordinates = robot_description["start_coordinates"]
         robot.selection_confirmed = robot_description["selection_confirmed"]
+        robot.winner = robot_description["winner"]
         return robot
 
     def select_cards(self, state):
@@ -420,8 +423,7 @@ class State:
         self.present_deck = self.create_card_pack()
         self.past_deck = []
         self.game_round = 1
-        self.game_over = False
-        self.winners = None
+        self.winners = []
         self.flag_count = self.get_flag_count()
 
     def __repr__(self):
@@ -807,12 +809,11 @@ class State:
         Check if somebody has won (robot collected all flags).
         Return list of winner(s).
         """
-        self.winners = []
-        for robot in self.robots:
-            if robot.flags == self.flag_count:
-                self.winners.append(robot.name)
-        if self.winners:
-            self.game_over = True
+        if not self.winners:
+            for robot in self.robots:
+                if robot.flags == self.flag_count:
+                    self.winners.append(robot.name)
+                    robot.winner = True
         return self.winners
 
     def play_round(self):
@@ -825,12 +826,10 @@ class State:
             robot.select_cards(self)
         self.apply_all_effects()
         self.check_winner()
-        if not self.game_over:
-            self.game_round += 1
-            for robot in self.robots:
-                robot.clear_robot_attributes(self)
-                self.deal_cards(robot)
-            # print("past_deck end round", self.past_deck)
+        self.game_round += 1
+        for robot in self.robots:
+            robot.clear_robot_attributes(self)
+            self.deal_cards(robot)
 
 
 def get_robot_names():

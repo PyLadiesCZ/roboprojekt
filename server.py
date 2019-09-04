@@ -160,12 +160,11 @@ class Server:
         """
         self.state.play_round()
         await self.send_message("round_over")
-        await self.send_message(self.state.robots_as_dict())
-
-        if not self.state.game_over:
-            await self.send_new_dealt_cards()
-        else:
+        if self.state.winners:
             await self.send_message({"winner": self.state.winners})
+        await self.send_message(self.state.robots_as_dict())
+        await self.send_new_dealt_cards()
+
 
     async def timer(self, game_round):
         """

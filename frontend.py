@@ -28,7 +28,7 @@ def get_sprite(img_path, x=0, y=0):
     return pyglet.sprite.Sprite(img, x, y)
 
 # Game over
-game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=180)
+#game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=180)
 
 
 def create_window(state):
@@ -133,8 +133,8 @@ def draw_state(state, window):
     for tile_sprite in tile_sprites:
         tile_sprite.draw()
 
-    if state.game_over:
-        game_over_sprite.draw()
+    if state.winners:
+        #game_over_sprite.draw()
         winner_label = get_label("WINNER", 150, 780, 20, "right", (255, 255, 255, 255))
         winner_label.draw()
 
