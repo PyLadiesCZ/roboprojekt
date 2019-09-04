@@ -177,7 +177,7 @@ def test_power_down_cannot_be_switched():
     """
     If selection is confirmed, power down can't be switched on or off.
     """
-    interface_state = start_interface_state()
+    interface_state = start_interface_state(program=True)
     interface_state.confirm_selection()
     interface_state.switch_power_down()
     assert interface_state.power_down is False
