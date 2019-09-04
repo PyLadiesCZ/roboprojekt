@@ -11,7 +11,7 @@ from loading import get_map_data, get_tiles_data, get_tile_id, get_tile_directio
 from loading import get_board, get_tiles_properties
 from util import Direction
 from tile import Tile, HoleTile
-from validator import check_tiles
+from validator import check_tiles, WrongLayersOrderError
 
 
 # List of paths to valid test maps.
@@ -25,7 +25,6 @@ for map_path in Path("tests/").glob("test_*"):
         VALID_MAPS_PATHS.append(map_path / Path("map.json"))
 
 
-@pytest.mark.xfail
 @pytest.mark.parametrize("map_name", VALID_MAPS_PATHS)
 def test_map_is_valid(map_name):
     """
@@ -39,7 +38,8 @@ def test_map_is_invalid(map_name):
     """
     Use validator to check the invalid map is not accepted.
     """
-    assert check_tiles(map_name) is not True
+    with pytest.raises(WrongLayersOrderError):
+        check_tiles(map_name)
 
 
 @pytest.mark.parametrize(
@@ -178,11 +178,3 @@ def test_convert_tile_direction(test_case):
     """
     tile_number = test_case
     assert get_tile_direction(tile_number) == CONVERT_TEST_DATA[test_case]["direction"]
-
-
-def test_map_with_embedded_tileset():
-    """
-    Try to load the map with tileset directly in map file.
-    Assert board exists.
-    """
-    assert get_board("maps/test_4.json")
