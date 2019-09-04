@@ -1,5 +1,3 @@
-MAX_CURSOR_INDEX = 4
-
 class InterfaceState:
     def __init__(self):
         self.dealt_cards = []
@@ -61,7 +59,7 @@ class InterfaceState:
         Return all cards of your program back to the dealt cards.
         """
         if not self.selection_confirmed:
-            for card in range(-(len(self.blocked_cards) - MAX_CURSOR_INDEX)):
+            for card in range(len(self.my_program)):
                 self.my_program[card] = None
             self.cursor_index = 0
 
@@ -70,7 +68,7 @@ class InterfaceState:
         Change selecting cursor position to the next one.
         """
         if not self.selection_confirmed:
-            max_cursor_index = -(len(self.blocked_cards) - MAX_CURSOR_INDEX)
+            max_cursor_index = len(self.my_program) - 1
             if self.cursor_index < max_cursor_index:
                 self.cursor_index += 1
 

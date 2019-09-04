@@ -134,12 +134,13 @@ def test_return_cards_when_selection_confirmed():
 def test_return_cards_when_selection_not_confirmed():
     """
     If selection is not confirmed,
-    it is possible to return cards except for the blocked position.
+    it is possible to return all cards -
+    blocked cards aren´t in program.
     """
     interface_state = start_interface_state(program=True)
     interface_state.blocked_cards = ["D"]
     interface_state.return_cards()
-    assert interface_state.my_program == [None, None, None, 1]
+    assert interface_state.my_program == [None, None, None, None]
 
 
 def test_return_cards_when_selection_not_confirmed_2():
