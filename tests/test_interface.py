@@ -140,7 +140,7 @@ def test_return_cards_when_selection_not_confirmed():
     interface_state = start_interface_state(program=True)
     interface_state.blocked_cards = ["D"]
     interface_state.return_cards()
-    assert interface_state.my_program == [None, None, None, None]
+    assert interface_state.program == [None, None, None, None]
 
 
 def test_return_cards_when_selection_not_confirmed_2():
