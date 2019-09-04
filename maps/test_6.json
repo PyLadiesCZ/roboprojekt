@@ -1,0 +1,55 @@
+{ "height":4,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[3221225473, 3221225473, 3221225473, 3221225473, 1, 1, 3221225473, 3221225473, 3221225473, 3221225473, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+         "height":4,
+         "id":6,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":6,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[30, 10, 11, 7, 2684354589, 24, 40, 38, 39, 8, 1610612763, 3221225500, 4, 17, 15, 1610612759, 2684354578, 19, 3, 16, 14, 2, 22, 0],
+         "height":4,
+         "id":7,
+         "name":"Tile Layer 2",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":6,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 13, 13, 0, 0, 0, 3221225485, 3221225485, 3221225485, 0, 0, 0],
+         "height":4,
+         "id":8,
+         "name":"Tile Layer 3",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":6,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":9,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.2.4",
+ "tileheight":64,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"development_tileset.json"
+        }],
+ "tilewidth":64,
+ "type":"map",
+ "version":1.2,
+ "width":6
+}

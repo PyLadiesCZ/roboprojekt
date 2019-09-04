@@ -9,7 +9,7 @@ from pathlib import Path
 
 from loading import get_map_data, get_tiles_data, get_tile_id, get_tile_direction
 from loading import get_board, get_tiles_properties
-from util import Direction
+from util import Direction, Rotation
 from tile import Tile, HoleTile
 from validator import check_tiles, WrongLayersOrderError
 
@@ -105,9 +105,95 @@ def test_map_returns_correct_image_names(index_number, expected_value):
     assert loaded_tileset[index_number]["image"] == expected_value
 
 
-def test_board_structure():
+# Properties test - the properties are read and set correctly
+@pytest.mark.parametrize(
+    ("coordinates", "laser_attribute", "start_attribute"),
+    [
+        ((0, 0), 1, True),
+        ((1, 0), 2, True),
+        ((2, 0), 3, True),
+        ((0, 1), 1, False),
+        ((1, 1), 2, False),
+        ((2, 1), 3, False),
+    ]
+)
+def test_lasers_on_board(coordinates, laser_attribute, start_attribute):
+    test_board = get_board("maps/test_6.json")
+    test_tile = test_board[coordinates][1]
+    assert test_tile.laser_strength == laser_attribute
+    assert test_tile.start == start_attribute
 
-    pass
+
+@pytest.mark.parametrize(
+    ("coordinates", "register"),
+    [
+        ((1, 3), 1),
+        ((2, 3), 0),
+    ]
+)
+def test_pusher_on_board(coordinates, register):
+    test_board = get_board("maps/test_6.json")
+    test_tile = test_board[coordinates][1]
+    assert test_tile.register == register
+
+
+@pytest.mark.parametrize(
+    ("coordinates", "new_start"),
+    [
+        ((1, 2), False),
+        ((2, 2), True),
+    ]
+)
+def test_repair_on_board(coordinates, new_start):
+    test_board = get_board("maps/test_6.json")
+    test_tile = test_board[coordinates][1]
+    assert test_tile.new_start == new_start
+
+
+@pytest.mark.parametrize(
+    ("coordinates", "number"),
+    [
+        ((0, 3), 1),
+        ((0, 2), 1),
+    ]
+)
+def test_start_flag_on_board(coordinates, number):
+    test_board = get_board("maps/test_6.json")
+    test_tile = test_board[coordinates][1]
+    assert test_tile.number == number
+
+
+@pytest.mark.parametrize(
+    ("coordinates", "move_direction"),
+    [
+        ((3, 3), Rotation.RIGHT),
+        ((3, 2), Rotation.LEFT),
+    ]
+)
+def test_gear_on_board(coordinates, move_direction):
+    test_board = get_board("maps/test_6.json")
+    test_tile = test_board[coordinates][1]
+    assert test_tile.move_direction == move_direction
+
+
+@pytest.mark.parametrize(
+    ("coordinates", "direction_out", "express"),
+    [
+        ((3, 1), Rotation.U_TURN, False),
+        ((4, 0), Rotation.RIGHT, False),
+        ((4, 1), Direction.N, False),
+        ((5, 1), Rotation.LEFT, False),
+        ((4, 2), Rotation.LEFT, True),
+        ((5, 2), Rotation.RIGHT, True),
+        ((4, 3), Rotation.U_TURN, True),
+        ((5, 3), Direction.N, True),
+    ]
+)
+def test_belts_on_board(coordinates, direction_out, express):
+    test_board = get_board("maps/test_6.json")
+    test_tile = test_board[coordinates][1]
+    assert test_tile.direction_out == direction_out
+    assert test_tile.express == express
 
 
 @pytest.mark.parametrize(
