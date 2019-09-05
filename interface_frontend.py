@@ -223,7 +223,7 @@ def draw_interface(interface_state, window):
 
         # Other robots and their attributes
         for i, robot in enumerate(interface_state.players):
-            draw_robot(i, robot)
+            draw_robot(i, robot, interface_state)
 
     # Cards on hand
     for coordinate, card_index in zip(program_coordinates, interface_state.program):
@@ -315,7 +315,7 @@ def draw_interface(interface_state, window):
 
     pyglet.gl.glPopMatrix()
 
-def draw_robot(i, robot):
+def draw_robot(i, robot, interface_state):
     """
     Draw robot and his attributes.
     """
@@ -368,7 +368,6 @@ def draw_robot(i, robot):
         (0, 0, 0, 255)
     )
     life_label.draw()
-
     
     # Winner crown
     if interface_state.winner:
