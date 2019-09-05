@@ -11,7 +11,10 @@ from loading import get_map_data, get_tiles_data, get_tile_id, get_tile_directio
 from loading import get_board, get_tiles_properties
 from util import Direction, Rotation
 from tile import Tile, HoleTile
-from validator import check_tiles, WrongLayersOrderError
+from validator import check_tiles, WrongLayersOrderError, RepeatingTilesError
+from validator import TilesOfOneTypeError, FlagOnStartOrHoleError
+from validator import LasersInOppositeDirectionError, LasersWithoutWallError
+from validator import NumberedTilesNotInOrderError
 
 
 # List of paths to valid test maps.
@@ -23,6 +26,8 @@ for map_path in Path("maps/").glob("test_*.json"):
 for map_path in Path("tests/").glob("test_*"):
     if map_path.is_dir():
         VALID_MAPS_PATHS.append(map_path / Path("map.json"))
+for map_path in Path("maps/").glob("game_*.json"):
+    VALID_MAPS_PATHS.append(map_path)
 
 
 @pytest.mark.parametrize("map_name", VALID_MAPS_PATHS)
@@ -33,12 +38,22 @@ def test_map_is_valid(map_name):
     assert check_tiles(map_name) is True
 
 
-@pytest.mark.parametrize("map_name", ["maps/bad_map.json"])
-def test_map_is_invalid(map_name):
+@pytest.mark.parametrize(
+    ("map_name", "map_exception"),
+    [
+        ("maps/bad_maps/bad_1.json", WrongLayersOrderError),
+        ("maps/bad_maps/bad_2.json", RepeatingTilesError),
+        ("maps/bad_maps/bad_3.json", TilesOfOneTypeError),
+        ("maps/bad_maps/bad_4.json", FlagOnStartOrHoleError),
+        ("maps/bad_maps/bad_5.json", LasersInOppositeDirectionError),
+        ("maps/bad_maps/bad_6.json", LasersWithoutWallError),
+        ("maps/bad_maps/bad_7.json", NumberedTilesNotInOrderError),
+    ])
+def test_map_is_invalid(map_name, map_exception):
     """
     Use validator to check the invalid map is not accepted.
     """
-    with pytest.raises(WrongLayersOrderError):
+    with pytest.raises(map_exception):
         check_tiles(map_name)
 
 
