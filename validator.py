@@ -187,6 +187,6 @@ def check_tiles(map_name):
         if tiles_list != list(range(1, len(tiles_list) + 1)):
             print(tiles_list)
             print(list(range(1, len(tiles_list) + 1)))
-            return NumberedTilesNotInOrderError
+            raise NumberedTilesNotInOrderError
 
     return True
