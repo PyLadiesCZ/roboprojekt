@@ -8,7 +8,7 @@ def test_init():
     """
     interface_state = InterfaceState()
     assert interface_state.robot is None
-    assert len(interface_state.my_program) == 5
+    assert len(interface_state.program) == 5
 
 
 def test_as_dict():
@@ -16,16 +16,16 @@ def test_as_dict():
     Assert the correct data are transformed into dictionary.
     """
     interface_state = InterfaceState()
-    interface_state.my_program = "ABC"
+    interface_state.program = "ABC"
     interface_state.power_down = True
     interface_state.confirmed = False
-    interface_state.my_game_round = 128
+    interface_state.game_round = 128
 
     transformed = interface_state.as_dict()
-    assert transformed["interface_data"]["my_program"] == "ABC"
+    assert transformed["interface_data"]["program"] == "ABC"
     assert transformed["interface_data"]["power_down"] is True
     assert transformed["interface_data"]["confirmed"] is False
-    assert transformed["interface_data"]["my_game_round"] == 128
+    assert transformed["interface_data"]["game_round"] == 128
 
 
 def start_interface_state(confirmed=False, program=False):
@@ -37,7 +37,7 @@ def start_interface_state(confirmed=False, program=False):
     if confirmed:
         interface_state.selection_confirmed = True
     if program:
-        interface_state.my_program = [4, 3, 2, 1]
+        interface_state.program = [4, 3, 2, 1]
     return interface_state
 
 
@@ -47,7 +47,7 @@ def test_non_existing_card_cannot_be_chosen():
     """
     interface_state = start_interface_state()
     interface_state.select_card(6)
-    assert interface_state.my_program == [None, None, None, None, None]
+    assert interface_state.program == [None, None, None, None, None]
 
 
 def test_if_selection_confirmed_card_cannot_be_chosen():
@@ -57,18 +57,18 @@ def test_if_selection_confirmed_card_cannot_be_chosen():
     """
     interface_state = start_interface_state(confirmed=True)
     interface_state.select_card(2)
-    assert interface_state.my_program == [None, None, None, None, None]
+    assert interface_state.program == [None, None, None, None, None]
 
 
 def test_cursor_moves_when_card_is_chosen():
     """
-    When card is chosen, its index is added to my_program.
+    When card is chosen, its index is added to program.
     Cursor moves to the next position (+1) if it is possible.
     """
     interface_state = start_interface_state()
     interface_state.cursor_index = 3
     interface_state.select_card(2)
-    assert interface_state.my_program[3] == 2
+    assert interface_state.program[3] == 2
     assert interface_state.cursor_index == 4
 
 
@@ -81,19 +81,19 @@ def test_cursor_not_moving_card_is_not_chosen():
     interface_state.select_card(2)
     interface_state.cursor_index = 2
     interface_state.select_card(2)
-    assert interface_state.my_program[2] is None
+    assert interface_state.program[2] is None
     assert interface_state.cursor_index == 2
 
 
 def test_cursor_is_not_moving_when_at_the_last_position():
     """
-    When card is chosen, its index is added to my_program.
+    When card is chosen, its index is added to program.
     Cursor can't move to another position so it stays at the last position.
     """
     interface_state = start_interface_state()
     interface_state.cursor_index = 4
     interface_state.select_card(2)
-    assert interface_state.my_program[4] == 2
+    assert interface_state.program[4] == 2
     assert interface_state.cursor_index == 4
 
 
@@ -106,7 +106,7 @@ def test_return_card_when_selection_not_confirmed():
     interface_state.return_card()
     interface_state.cursor_index = 2
     interface_state.return_card()
-    assert interface_state.my_program == [None, 3, None, 1]
+    assert interface_state.program == [None, 3, None, 1]
 
 
 def test_return_card_when_selection_confirmed_():
@@ -117,7 +117,7 @@ def test_return_card_when_selection_confirmed_():
     interface_state = start_interface_state(confirmed=True, program=True)
     interface_state.cursor_index = 3
     interface_state.return_card()
-    assert interface_state.my_program == [4, 3, 2, 1]
+    assert interface_state.program == [4, 3, 2, 1]
 
 
 def test_return_cards_when_selection_confirmed():
@@ -128,7 +128,7 @@ def test_return_cards_when_selection_confirmed():
     interface_state = start_interface_state(confirmed=True, program=True)
     interface_state.blocked_cards = ["D"]
     interface_state.return_cards()
-    assert interface_state.my_program == [4, 3, 2, 1]
+    assert interface_state.program == [4, 3, 2, 1]
 
 
 def test_return_cards_when_selection_not_confirmed():
@@ -140,7 +140,7 @@ def test_return_cards_when_selection_not_confirmed():
     interface_state = start_interface_state(program=True)
     interface_state.blocked_cards = ["D"]
     interface_state.return_cards()
-    assert interface_state.my_program == [None, None, None, None]
+    assert interface_state.program == [None, None, None, None]
 
 
 def test_return_cards_when_selection_not_confirmed_2():
@@ -150,7 +150,7 @@ def test_return_cards_when_selection_not_confirmed_2():
     """
     interface_state = start_interface_state(program=True)
     interface_state.return_cards()
-    assert interface_state.my_program == [None, None, None, None]
+    assert interface_state.program == [None, None, None, None]
 
 
 def test_cursor_is_not_moving_when_at_the_first_position():
@@ -178,7 +178,7 @@ def test_power_down_cannot_be_switched():
     """
     If selection is confirmed, power down can't be switched on or off.
     """
-    interface_state = start_interface_state()
+    interface_state = start_interface_state(program=True)
     interface_state.confirm_selection()
     interface_state.switch_power_down()
     assert interface_state.power_down is False

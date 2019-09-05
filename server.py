@@ -130,7 +130,7 @@ class Server:
         if robot.selection_confirmed:
             return
         message = message.json()
-        robot_game_round = message["interface_data"]["my_game_round"]
+        robot_game_round = message["interface_data"]["game_round"]
         if robot_game_round == self.state.game_round:
             # Set robot's attributes according to data in message
             # While selection is not confirmed, it is still possible to choose cards
@@ -139,7 +139,7 @@ class Server:
                 # it doesn't affect anything else.
                 robot.power_down = message["interface_data"]["power_down"]
                 # Set robot's selection with chosen card´s index
-                robot.card_indexes = message["interface_data"]["my_program"]
+                robot.card_indexes = message["interface_data"]["program"]
 
             # choice of cards was blocked by the player
             else:

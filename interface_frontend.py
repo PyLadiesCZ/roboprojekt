@@ -3,7 +3,6 @@ from pathlib import Path
 from functools import lru_cache
 
 
-MAX_CARDS_COUNT = 9
 MAX_LIVES_COUNT = 3
 MAX_FLAGS_COUNT = 8
 MAX_DAMAGES_COUNT = 9
@@ -222,75 +221,12 @@ def draw_interface(interface_state, window):
             players_background.y = 50
             players_background.draw()
 
-        # Other robots
+        # Other robots and their attributes
         for i, robot in enumerate(interface_state.players):
-            if robot.name in loaded_robots_images:
-                player_sprite.image = loaded_robots_images[robot.name]
-                player_sprite.x = 68 + i * 98
-                player_sprite.y = 90
-                player_sprite.draw()
-
-        # Other robots´flags
-        for i, robot in enumerate(interface_state.players):
-            flag_label = get_label(
-                str(robot.flags),
-                132 + 100 * i,
-                160,
-                20,
-                "right",
-                (0, 0, 0, 255)
-            )
-            flag_label.draw()
-
-        # Other robots´damages
-        for i, robot in enumerate(interface_state.players):
-            damage_label = get_label(
-                str(robot.damages),
-                92 + 100 * i,
-                56,
-                20,
-                "right",
-                (0, 0, 0, 255)
-            )
-            damage_label.draw()
-
-        for i, robot in enumerate(interface_state.players):
-            permanent_damage_label = get_label(
-                str(robot.permanent_damages),
-                132 + 100 * i,
-                56,
-                20,
-                "right",
-                (0, 0, 0, 255)
-            )
-            permanent_damage_label.draw()
-
-        # Other robots´lives
-        for i, robot in enumerate(interface_state.players):
-            life_label = get_label(
-                str(robot.lives),
-                92 + 100 * i,
-                160,
-                20,
-                "right",
-                (0, 0, 0, 255)
-            )
-            life_label.draw()
-
-        # Winner crown
-        for i, robot in enumerate(interface_state.players):
-            if interface_state.winner is not None:
-                if robot.winner:
-                    sprite = crown_sprite
-                else:
-                    sprite = loss_sprite
-
-                sprite.x = 78 + i * 98
-                sprite.y = 90
-                sprite.draw()
+            draw_robot(i, robot, interface_state)
 
     # Cards on hand
-    for coordinate, card_index in zip(program_coordinates, interface_state.my_program):
+    for coordinate, card_index in zip(program_coordinates, interface_state.program):
         if card_index is not None:
             draw_card(coordinate, interface_state.dealt_cards[card_index])
 
@@ -303,7 +239,7 @@ def draw_interface(interface_state, window):
 
     # Selected cards
     # if card is selected, selected card in dealt cards is gray
-    for card_index in interface_state.my_program:
+    for card_index in interface_state.program:
         if card_index is not None:
             card = interface_state.dealt_cards[card_index]
             x, y = dealt_cards_coordinates[interface_state.dealt_cards.index(card)]
@@ -367,7 +303,7 @@ def draw_interface(interface_state, window):
             sprite.draw()
 
         # Winner crown
-        if interface_state.winner is not None:
+        if interface_state.winner:
             if interface_state.robot.winner:
                 sprite = crown_sprite
             else:
@@ -379,6 +315,70 @@ def draw_interface(interface_state, window):
 
     pyglet.gl.glPopMatrix()
 
+def draw_robot(i, robot, interface_state):
+    """
+    Draw robot and his attributes.
+    """
+    # Robot´s image
+    if robot.name in loaded_robots_images:
+        player_sprite.image = loaded_robots_images[robot.name]
+        player_sprite.x = 68 + i * 98
+        player_sprite.y = 90
+        player_sprite.draw()
+
+    # Robot´flags
+    flag_label = get_label(
+        str(robot.flags),
+        132 + 100 * i,
+        160,
+        20,
+        "right",
+        (0, 0, 0, 255)
+    )
+    flag_label.draw()
+
+    # Robot´damages
+    damage_label = get_label(
+        str(robot.damages),
+        92 + 100 * i,
+        56,
+        20,
+        "right",
+        (0, 0, 0, 255)
+    )
+    damage_label.draw()
+
+    permanent_damage_label = get_label(
+        str(robot.permanent_damages),
+        132 + 100 * i,
+        56,
+        20,
+        "right",
+        (0, 0, 0, 255)
+    )
+    permanent_damage_label.draw()
+
+    # Robot´lives
+    life_label = get_label(
+        str(robot.lives),
+        92 + 100 * i,
+        160,
+        20,
+        "right",
+        (0, 0, 0, 255)
+    )
+    life_label.draw()
+    
+    # Winner crown
+    if interface_state.winner:
+        if robot.winner:
+            sprite = crown_sprite
+        else:
+            sprite = loss_sprite
+
+        sprite.x = 78 + i * 98
+        sprite.y = 90
+        sprite.draw()
 
 CARD_KEYS = ["q", "w", "e", "r", "t", "a", "s", "d", "f"]
 
@@ -416,5 +416,4 @@ def handle_text(interface_state, text):
 
     # Confirm selection of cards
     if text == 'k':
-        if None not in interface_state.my_program:
-            interface_state.confirm_selection()
+        interface_state.confirm_selection()
