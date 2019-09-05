@@ -418,3 +418,13 @@ def handle_text(interface_state, text):
     if text == 'k':
         if None not in interface_state.my_program:
             interface_state.confirm_selection()
+
+def handle_click(interface_state, x, y):
+    card_sprite = cards_type_sprites["u_turn"]
+    for i, coordinate in enumerate(dealt_cards_coordinates):
+        coord_x, coord_y = coordinate
+        if (
+            coord_x < x < coord_x + card_sprite.width
+            and coord_y < y < coord_y + card_sprite.height
+        ):
+            interface_state.select_card(i)
