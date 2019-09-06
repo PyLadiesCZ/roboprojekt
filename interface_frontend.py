@@ -428,3 +428,10 @@ def handle_click(interface_state, x, y):
             and coord_y < y < coord_y + card_sprite.height
         ):
             interface_state.select_card(i)
+
+
+    if (
+        688 < x < 688 + indicator_red_sprite.width
+        and 864 < y < 864 + indicator_red_sprite.height
+        ):
+            interface_state.confirm_selection()
