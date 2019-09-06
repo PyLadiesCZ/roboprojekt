@@ -9,7 +9,8 @@ class InterfaceState:
         self.cursor_index = 0  # 0-4 number of positon
         self.players = []
         self.game_round = None
-        self.winner = None
+        # List of winners
+        self.winner = []
         self.timer = False
         self.flag_count = 0
         # Change_callback - callback function which is called with argument,
