@@ -124,16 +124,27 @@ def check_tiles(map_name):
         check_layers_order(tile_type_letter, coordinate)
         check_flag_is_not_on_hole_or_start(tile_type_letter, coordinate)
         laser_count = get_laser_count(tile_type_letter)
-        check_lasers_in_opposite_direction(laser_count, tiles_on_coordinate, coordinate)
+        check_lasers_in_opposite_direction(
+            laser_count, tiles_on_coordinate, coordinate
+        )
         check_lasers_start(tiles_on_coordinate, coordinate)
-        flags_number, starts_number = get_flags_and_starts(tiles_on_coordinate, flags, starts)
+        flags_number, starts_number = get_flags_and_starts(
+            tiles_on_coordinate, flags, starts
+        )
     check_consecutive_numbers(flags_number)
     check_consecutive_numbers(starts_number)
 
+    # If none of above checks has raised and exception, validation is OK, so:
     return True
 
 
 def get_tiles(coordinate, tiles):
+    """
+    Gather the tiles on given coordinates to two lists:
+    tile_type_letter - list of tiles' types according to order_tiles dictionary
+    tiles_on_coordinate - list of tiles on the same coordinates.
+    If there is the same tile twice, raise exception.
+    """
     tile_type_letter = []
     tiles_on_coordinate = []
     for tile in tiles:
@@ -149,6 +160,7 @@ def get_tiles(coordinate, tiles):
 
 
 def get_laser_count(tile_type_letter):
+    """Return the count of laser tiles on given coordinates."""
     laser_count = 0
     for letter in tile_type_letter:
         if letter == "E_laser":
@@ -156,7 +168,21 @@ def get_laser_count(tile_type_letter):
     return laser_count
 
 
+def get_flags_and_starts(tiles_on_coordinate, flags, starts):
+    """Return the list of flag and start tiles on given coordinates."""
+    for tile in tiles_on_coordinate:
+        if tile.type == "flag":
+            flags.append(tile.number)
+        if tile.type == "start":
+            starts.append(tile.number)
+    return flags, starts
+
+
 def check_count_of_tiles(tile_type_letter, coordinate):
+    """
+    Check there is only one tile of type A, B, C or D on the same coordinates.
+    If there is more than one, raise exception.
+    """
     a = 0
     b = 0
     c = 0
@@ -235,15 +261,6 @@ def check_lasers_start(tiles_on_coordinate, coordinate):
                     opposite_wall = True
             if not opposite_wall:
                 raise LasersWithoutWallError(coordinate)
-
-
-def get_flags_and_starts(tiles_on_coordinate, flags, starts):
-    for tile in tiles_on_coordinate:
-        if tile.type == "flag":
-            flags.append(tile.number)
-        if tile.type == "start":
-            starts.append(tile.number)
-    return flags, starts
 
 
 def check_consecutive_numbers(tiles_list):
