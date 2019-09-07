@@ -75,47 +75,11 @@ def check_tiles(map_name):
     flags = []
     starts = []
     for coordinate, tiles in board.items():
-        tile_type_letter = []
-        tiles_on_coordinate = []
-        for tile in tiles:
-            tile_type_letter.append(get_order_tiles(type(tile).__name__))
-
-            """
-            Tiles with the same type and direction mustn't be in list of types
-            """
-            if tile in tiles_on_coordinate:
-                print(f"""On coordinates: {coordinate} \
-                      there is this tile twice: {tile.name}. \
-                      The tiles mustn't repeat.""")
-                raise RepeatingTilesError
-            else:
-                tiles_on_coordinate.append(tile)
-
-        a = 0
-        b = 0
-        c = 0
-        d = 0
-        laser_count = 0
-
-        for letter in tile_type_letter:
-            if letter[0] == 'A':
-                a += 1
-            if letter[0] == 'B':
-                b += 1
-            if letter[0] == 'C':
-                c += 1
-            if letter[0] == 'D':
-                d += 1
-            if letter == "E_laser":
-                laser_count += 1
-        if a > 1 or b > 1 or c > 1 or d > 1:
-            print(f"""On coordinates: {coordinate} \
-                  there is this count of tiles: a-{a}, b-{b}, c-{c}, d-{d}. \
-                  There must be only one of tile from those types.""")
-            raise TilesOfOneTypeError
-
+        tile_type_letter, tiles_on_coordinate = get_tiles(coordinate, tiles)
+        check_count_of_tiles(tile_type_letter, coordinate)
         check_layers_order(tile_type_letter, coordinate)
         check_flag_is_not_on_hole_or_start(tile_type_letter, coordinate)
+        laser_count = get_laser_count(tile_type_letter)
         check_lasers_in_opposite_direction(laser_count, tiles_on_coordinate, coordinate)
         check_lasers_start(tiles_on_coordinate, coordinate)
         flags_number, starts_number = get_flags_and_starts(tiles_on_coordinate, flags, starts)
@@ -123,6 +87,55 @@ def check_tiles(map_name):
     check_consecutive_numbers(starts_number)
 
     return True
+
+
+def get_tiles(coordinate, tiles):
+    tile_type_letter = []
+    tiles_on_coordinate = []
+    for tile in tiles:
+        tile_type_letter.append(get_order_tiles(type(tile).__name__))
+        """
+        Tiles with the same type and direction mustn't be in list of types
+        """
+        if tile in tiles_on_coordinate:
+            print(f"""On coordinates: {coordinate} \
+                  there is this tile twice: {tile.name}. \
+                  The tiles mustn't repeat.""")
+            raise RepeatingTilesError
+        else:
+            tiles_on_coordinate.append(tile)
+    return tile_type_letter, tiles_on_coordinate
+
+
+def get_laser_count(tile_type_letter):
+    laser_count = 0
+    for letter in tile_type_letter:
+        if letter == "E_laser":
+            laser_count += 1
+    return laser_count
+
+
+def check_count_of_tiles(tile_type_letter, coordinate):
+    a = 0
+    b = 0
+    c = 0
+    d = 0
+
+    for letter in tile_type_letter:
+        if letter[0] == 'A':
+            a += 1
+        if letter[0] == 'B':
+            b += 1
+        if letter[0] == 'C':
+            c += 1
+        if letter[0] == 'D':
+            d += 1
+
+    if a > 1 or b > 1 or c > 1 or d > 1:
+        print(f"""On coordinates: {coordinate} \
+              there is this count of tiles: a-{a}, b-{b}, c-{c}, d-{d}. \
+              There must be only one of tile from those types.""")
+        raise TilesOfOneTypeError
 
 
 def check_layers_order(tile_type_letter, coordinate):
