@@ -9,8 +9,14 @@ from util import Direction, Rotation
 
 
 class RepeatingTilesError(Exception):
-    """Raised when there are two the same tiles on the same coordinates.
-    """
+    """Raised when there are two the same tiles on the same coordinates."""
+    def __init__(self, coordinates, tiles):
+        self.coordinates = coordinates
+        self.tiles = tiles
+
+    def __str__(self):
+        return f"""On coordinates: {self.coordinates} there is this tile twice: \
+{self.tiles}. The tiles mustn't repeat."""
 
 
 class WrongLayersOrderError(Exception):
@@ -18,6 +24,13 @@ class WrongLayersOrderError(Exception):
     Raised when the layers are in the incorrect order which may lead to
     covering visible elements of the map.
     """
+    def __init__(self, coordinates, tiles_letter):
+        self.coordinates = coordinates
+        self.tiles_letter = tiles_letter
+
+    def __str__(self):
+        return f"""On coordinates: {self.coordinates} there is wrong layers order: \
+{self.tiles_letter}."""
 
 
 class TilesOfOneTypeError(Exception):
@@ -25,10 +38,25 @@ class TilesOfOneTypeError(Exception):
     Raised when there is too many tiles of one type on the same coordinates.
     Eg. Repair or gear tile mustn't repeat, there may be one only.
     """
+    def __init__(self, details, layers):
+        self.coordinates = details
+        self.layers = layers
+
+    def __str__(self):
+        return f"""On coordinates: {self.coordinates} there is this count of \
+tiles: a-{self.layers[0]}, b-{self.layers[1]}, c-{self.layers[2]}, d-{self.layers[3]}. \
+There must be only one of tile from those types."""
 
 
 class FlagOnStartOrHoleError(Exception):
     """Raised when flag covers start or hole tile."""
+    def __init__(self, coordinates, tiles_letter):
+        self.coordinates = coordinates
+        self.tiles_letter = tiles_letter
+
+    def __str__(self):
+        return f"""On coordinates: {self.coordinates} there there is flag over \
+hole or start: {self.tiles_letter}."""
 
 
 class LasersInOppositeDirectionError(Exception):
@@ -36,10 +64,20 @@ class LasersInOppositeDirectionError(Exception):
     Raised when lasers are heading opposite directions,
     therefore are not visible.
     """
+    def __init__(self, coordinates):
+        self.coordinates = coordinates
+
+    def __str__(self):
+        return f"Lasers in opposite directions on {self.coordinates}."
 
 
 class LasersWithoutWallError(Exception):
     """Raised when there is no wall at the beginning of the laser."""
+    def __init__(self, coordinates):
+        self.coordinates = coordinates
+
+    def __str__(self):
+        return f"There is no wall at the start of laser on {self.coordinates}."
 
 
 class NumberedTilesNotInOrderError(Exception):
@@ -47,6 +85,12 @@ class NumberedTilesNotInOrderError(Exception):
     - not in order (eg. 1, 2, 6, 7)
     - starting from different number than 1 (eg. 0, 1, 2 or 5, 6, 7)
     """
+    def __init__(self, tiles_list):
+        self.tiles_list = tiles_list
+
+    def __str__(self):
+        return f"""The list {self.tiles_list} should look like this""",
+        list(range(1, len(self.tiles_list) + 1))
 
 
 def get_order_tiles(text):
@@ -98,10 +142,7 @@ def get_tiles(coordinate, tiles):
         Tiles with the same type and direction mustn't be in list of types
         """
         if tile in tiles_on_coordinate:
-            print(f"""On coordinates: {coordinate} \
-                  there is this tile twice: {tile.name}. \
-                  The tiles mustn't repeat.""")
-            raise RepeatingTilesError
+            raise RepeatingTilesError(coordinate, tile.name)
         else:
             tiles_on_coordinate.append(tile)
     return tile_type_letter, tiles_on_coordinate
@@ -132,10 +173,7 @@ def check_count_of_tiles(tile_type_letter, coordinate):
             d += 1
 
     if a > 1 or b > 1 or c > 1 or d > 1:
-        print(f"""On coordinates: {coordinate} \
-              there is this count of tiles: a-{a}, b-{b}, c-{c}, d-{d}. \
-              There must be only one of tile from those types.""")
-        raise TilesOfOneTypeError
+        raise TilesOfOneTypeError(coordinate, (a, b, c, d))
 
 
 def check_layers_order(tile_type_letter, coordinate):
@@ -147,9 +185,7 @@ def check_layers_order(tile_type_letter, coordinate):
     letters_count = len(tile_type_letter)
     for i in range(letters_count-1):
         if tile_type_letter[i][0] > tile_type_letter[i+1][0]:
-            print(f"""On coordinates: {coordinate} \
-                  there is wrong layers order: {tile_type_letter[i]}.""")
-            raise WrongLayersOrderError
+            raise WrongLayersOrderError(coordinate, tile_type_letter[i])
 
 
 def check_flag_is_not_on_hole_or_start(tile_type_letter, coordinate):
@@ -159,9 +195,7 @@ def check_flag_is_not_on_hole_or_start(tile_type_letter, coordinate):
     for i in range(len(tile_type_letter)-1):
         if tile_type_letter[i] == "B_hole" and tile_type_letter[i+1] == "D_flag" \
          or tile_type_letter[i] == "B_start_tile" and tile_type_letter[i+1] == "D_flag":
-            print(f"""On coordinates: {coordinate} there is flag over \
-                  hole or start: {tile_type_letter[i]}.""")
-            raise FlagOnStartOrHoleError
+            raise FlagOnStartOrHoleError(coordinate, tile_type_letter[i])
 
 
 def check_lasers_in_opposite_direction(laser_count, tiles_on_coordinate, coordinate):
@@ -176,14 +210,12 @@ def check_lasers_in_opposite_direction(laser_count, tiles_on_coordinate, coordin
             if tile.type == "laser":
                 if (tile.direction == Direction.N or tile.direction == Direction.S):
                     if N_or_S:
-                        print(f"Lasers in opposite directions on {coordinate}.")
-                        raise LasersInOppositeDirectionError
+                        raise LasersInOppositeDirectionError(coordinate)
                     else:
                         N_or_S = True
                 if (tile.direction == Direction.W or tile.direction == Direction.E):
                     if W_or_E:
-                        print(f"Lasers in opposite directions on {coordinate}.")
-                        raise LasersInOppositeDirectionError
+                        raise LasersInOppositeDirectionError(coordinate)
                     else:
                         W_or_E = True
 
@@ -202,8 +234,7 @@ def check_lasers_start(tiles_on_coordinate, coordinate):
                 if tile_2.type == "wall" and tile_2.direction == new_direction:
                     opposite_wall = True
             if not opposite_wall:
-                print(f"There is no wall at the start of laser on {coordinate}")
-                raise LasersWithoutWallError
+                raise LasersWithoutWallError(coordinate)
 
 
 def get_flags_and_starts(tiles_on_coordinate, flags, starts):
@@ -221,5 +252,4 @@ def check_consecutive_numbers(tiles_list):
     """
     tiles_list.sort()
     if tiles_list != list(range(1, len(tiles_list) + 1)):
-        print(f"The list {tiles_list} should look like this", list(range(1, len(tiles_list) + 1)))
-        raise NumberedTilesNotInOrderError
+        raise NumberedTilesNotInOrderError(tiles_list)
