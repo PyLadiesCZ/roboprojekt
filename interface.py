@@ -13,8 +13,10 @@ class InterfaceState:
         self.winner = []
         self.timer = False
         self.flag_count = 0
-        # Change_callback - callback function which is called with argument,
-        # when new InterfaceState is created
+        # Assign the function that should be called within some InterfaceState methods,
+        # eg. after choosing or returning cards on hand, 
+        # not on change of the purely visual elements of interface, like moving the cursor.
+        # Assigned function is be called after every robot-related interface state change.
         self.change_callback = change_callback
 
     def __repr__(self):
@@ -68,7 +70,7 @@ class InterfaceState:
             for card in range(len(self.program)):
                 self.program[card] = None
             self.cursor_index = 0
-        self.change_callback()
+            self.change_callback()
 
     def cursor_index_plus(self):
         """
@@ -97,7 +99,7 @@ class InterfaceState:
                 self.power_down = True
             else:
                 self.power_down = False
-        self.change_callback()
+            self.change_callback()
 
     def confirm_selection(self):
         """
