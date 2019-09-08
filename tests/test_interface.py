@@ -202,7 +202,7 @@ def test_change_callback(capsys):
     Test if change_callback function works and assert correct result.
     Test function "sum" is used.
     """
-    interface_state = start_interface_state(sum)
+    interface_state = start_interface_state(test_print)
     print("Hello")
     captured = capsys.readouterr()
     assert captured.out == "Hello\n"
