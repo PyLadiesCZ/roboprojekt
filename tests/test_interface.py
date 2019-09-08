@@ -200,11 +200,12 @@ def test_power_down_can_be_switched(current_value, expected_value):
 def test_change_callback(capsys):
     """
     Test if change_callback function works and assert correct result.
-    Test function "sum" is used.
+    Test function "test_print" is used.
     """
-    interface_state = start_interface_state(test_print)
-    print("Hello")
+    interface_state = start_interface_state(test_print,program=True)
+    interface_state.confirm_selection()
     captured = capsys.readouterr()
+
     assert captured.out == "Hello\n"
 
 
