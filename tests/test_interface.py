@@ -6,7 +6,7 @@ def test_init():
     """
     Smoke test just to initialize empty interface state.
     """
-    interface_state = InterfaceState(change_callback=test_print)
+    interface_state = InterfaceState(test_print)
     assert interface_state.robot is None
     assert len(interface_state.program) == 5
 
@@ -15,7 +15,7 @@ def test_as_dict():
     """
     Assert the correct data are transformed into dictionary.
     """
-    interface_state = InterfaceState(change_callback=test_print)
+    interface_state = InterfaceState(test_print)
     interface_state.program = "ABC"
     interface_state.power_down = True
     interface_state.confirmed = False
@@ -32,7 +32,7 @@ def start_interface_state(confirmed=False, program=False):
     """
     Initialize almost empty interface for the other tests.
     """
-    interface_state = InterfaceState(change_callback=test_print)
+    interface_state = InterfaceState(test_print)
     interface_state.dealt_cards = ["A", "B", "C", "D"]
     if confirmed:
         interface_state.selection_confirmed = True
@@ -205,7 +205,6 @@ def test_change_callback(capsys):
     interface_state = start_interface_state(test_print,program=True)
     interface_state.confirm_selection()
     captured = capsys.readouterr()
-
     assert captured.out == "Hello\n"
 
 
