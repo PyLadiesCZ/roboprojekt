@@ -105,5 +105,5 @@ class InterfaceState:
         When is True the player ended the selection of cards.
         """
         if None not in self.program:
-            self.confirm_selection = True
+            self.selection_confirmed = True
             self.change_callback()
