@@ -8,11 +8,15 @@ MAX_FLAGS_COUNT = 8
 MAX_DAMAGES_COUNT = 9
 
 
-def create_window():
+def create_window(on_draw, on_text):
     """
     Return a pyglet window for graphic output.
     """
     window = pyglet.window.Window(768, 1024, resizable=True)
+    window.push_handlers(
+        on_draw=on_draw,
+        on_text=on_text,
+    )
     return window
 
 

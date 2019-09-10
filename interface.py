@@ -1,8 +1,7 @@
 class InterfaceState:
-    def __init__(self):
+    def __init__(self, change_callback):
         self.dealt_cards = []
         self.robot = None
-        #len(self.program) is the number of cards to select (0 - 5)
         self.program = [None, None, None, None, None]
         self.blocked_cards = []
         self.power_down = False
@@ -14,6 +13,11 @@ class InterfaceState:
         self.winner = []
         self.timer = False
         self.flag_count = 0
+        # Assign the function that should be called within some InterfaceState methods,
+        # eg. after choosing or returning cards on hand, 
+        # not on change of the purely visual elements of interface, like moving the cursor.
+        # Assigned function is be called after every robot-related interface state change.
+        self.change_callback = change_callback
 
     def __repr__(self):
         return f"InterfaceState \
@@ -46,6 +50,7 @@ class InterfaceState:
                 return
             if dealt_card_index not in self.program:
                 self.program[self.cursor_index] = dealt_card_index
+                self.change_callback()
                 # After select a card Move with cursor to right
                 self.cursor_index_plus()
 
@@ -55,6 +60,7 @@ class InterfaceState:
         """
         if not self.selection_confirmed:
             self.program[self.cursor_index] = None
+            self.change_callback()
 
     def return_cards(self):
         """
@@ -64,6 +70,7 @@ class InterfaceState:
             for card in range(len(self.program)):
                 self.program[card] = None
             self.cursor_index = 0
+            self.change_callback()
 
     def cursor_index_plus(self):
         """
@@ -92,6 +99,7 @@ class InterfaceState:
                 self.power_down = True
             else:
                 self.power_down = False
+            self.change_callback()
 
     def confirm_selection(self):
         """
@@ -100,3 +108,4 @@ class InterfaceState:
         """
         if None not in self.program:
             self.selection_confirmed = True
+            self.change_callback()
