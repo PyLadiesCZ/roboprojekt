@@ -124,9 +124,10 @@ def check_tiles(map_name):
         check_layers_order(tile_type_letter, coordinate)
         check_flag_is_not_on_hole_or_start(tile_type_letter, coordinate)
         laser_count = get_laser_count(tile_type_letter)
-        check_lasers_in_opposite_direction(
-            laser_count, tiles_on_coordinate, coordinate
-        )
+        if laser_count > 1:
+            check_lasers_in_opposite_direction(
+                tiles_on_coordinate, coordinate
+                )
         check_lasers_start(tiles_on_coordinate, coordinate)
         flags_number, starts_number = get_flags_and_starts(
             tiles_on_coordinate, flags, starts
@@ -160,7 +161,7 @@ def get_tiles(coordinate, tiles):
 
 
 def get_laser_count(tile_type_letter):
-    """Return the count of laser tiles on given coordinates."""
+    """Return the count of laser tiles from given list."""
     laser_count = 0
     for letter in tile_type_letter:
         if letter == "E_laser":
@@ -224,26 +225,25 @@ def check_flag_is_not_on_hole_or_start(tile_type_letter, coordinate):
             raise FlagOnStartOrHoleError(coordinate, tile_type_letter[i])
 
 
-def check_lasers_in_opposite_direction(laser_count, tiles_on_coordinate, coordinate):
+def check_lasers_in_opposite_direction(tiles_on_coordinate, coordinate):
     """
     Lasers cannot be in opposite direction: they would cover each other
     visually and give 2 x damages to robots.
     """
-    if laser_count > 1:
-        N_or_S = False
-        W_or_E = False
-        for tile in tiles_on_coordinate:
-            if tile.type == "laser":
-                if (tile.direction == Direction.N or tile.direction == Direction.S):
-                    if N_or_S:
-                        raise LasersInOppositeDirectionError(coordinate)
-                    else:
-                        N_or_S = True
-                if (tile.direction == Direction.W or tile.direction == Direction.E):
-                    if W_or_E:
-                        raise LasersInOppositeDirectionError(coordinate)
-                    else:
-                        W_or_E = True
+    N_or_S = False
+    W_or_E = False
+    for tile in tiles_on_coordinate:
+        if tile.type == "laser":
+            if (tile.direction == Direction.N or tile.direction == Direction.S):
+                if N_or_S:
+                    raise LasersInOppositeDirectionError(coordinate)
+                else:
+                    N_or_S = True
+            if (tile.direction == Direction.W or tile.direction == Direction.E):
+                if W_or_E:
+                    raise LasersInOppositeDirectionError(coordinate)
+                else:
+                    W_or_E = True
 
 
 def check_lasers_start(tiles_on_coordinate, coordinate):
