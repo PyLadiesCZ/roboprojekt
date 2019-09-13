@@ -119,18 +119,18 @@ def check_tiles(map_name):
     flags = []
     starts = []
     for coordinate, tiles in board.items():
-        tile_type_letter, tiles_on_coordinate = get_tiles(coordinate, tiles)
+        tile_type_letter = get_tiles(coordinate, tiles)
         check_count_of_tiles(tile_type_letter, coordinate)
         check_layers_order(tile_type_letter, coordinate)
         check_flag_is_not_on_hole_or_start(tile_type_letter, coordinate)
         laser_count = get_laser_count(tile_type_letter)
         if laser_count > 1:
             check_lasers_in_opposite_direction(
-                tiles_on_coordinate, coordinate
+                tiles, coordinate
                 )
-        check_lasers_start(tiles_on_coordinate, coordinate)
+        check_lasers_start(tiles, coordinate)
         flags_number, starts_number = get_flags_and_starts(
-            tiles_on_coordinate, flags, starts
+            tiles, flags, starts
         )
     check_consecutive_numbers(flags_number)
     check_consecutive_numbers(starts_number)
@@ -147,17 +147,22 @@ def get_tiles(coordinate, tiles):
     If there is the same tile twice, raise exception.
     """
     tile_type_letter = []
-    tiles_on_coordinate = []
+    # tiles_on_coordinate = []
+    repeating_tiles = False
     for tile in tiles:
         tile_type_letter.append(get_order_tiles(type(tile).__name__))
         """
         Tiles with the same type and direction mustn't be in list of types
         """
-        if tile in tiles_on_coordinate:
-            raise RepeatingTilesError(coordinate, tile.name)
-        else:
-            tiles_on_coordinate.append(tile)
-    return tile_type_letter, tiles_on_coordinate
+        if tile in tiles:
+            if repeating_tiles:
+                raise RepeatingTilesError(coordinate, tile.name)
+            else:
+                repeating_tiles = True
+
+        # else:
+            # tiles_on_coordinate.append(tile)
+    return tile_type_letter
 
 
 def get_laser_count(tile_type_letter):
@@ -169,9 +174,9 @@ def get_laser_count(tile_type_letter):
     return laser_count
 
 
-def get_flags_and_starts(tiles_on_coordinate, flags, starts):
+def get_flags_and_starts(tiles, flags, starts):
     """Return the list of flag and start tiles on given coordinates."""
-    for tile in tiles_on_coordinate:
+    for tile in tiles:
         if tile.type == "flag":
             flags.append(tile.number)
         if tile.type == "start":
