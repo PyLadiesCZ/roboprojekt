@@ -193,7 +193,7 @@ def draw_card(coordinate, card):
     name_label.draw()
 
 
-def draw_interface(interface_state,game_state, window):
+def draw_interface(interface_state, game_state, window):
     """
     Draw the images of given interface,
     react to user's resizing of window by scaling the interface.
@@ -218,14 +218,14 @@ def draw_interface(interface_state,game_state, window):
                 ):
             draw_card(coordinate, card)
 
-    players = []
-    for robot in interface_state.game_state.robots:
-        if interface_state.robot.name not in robot.name:
-            players.append(robot)
-
     if game_state.robots:
+        players = []
+        for robot in game_state.robots:
+            if interface_state.robot.name not in robot.name:
+                players.append(robot)
+
         # Other robots background
-        for i in range(len(game_state.robots)-1):
+        for i in range(len(players)):
             players_background.x = 50 + i * 98
             players_background.y = 50
             players_background.draw()

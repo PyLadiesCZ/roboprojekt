@@ -17,7 +17,7 @@ class Interface:
         # Game attributes
         self.window = create_window(self.window_draw, self.on_text)
         # When something has changed in interface state, the function 'send_state_to_server' is called.
-        self.interface_state = InterfaceState(self.game_state, self.send_state_to_server)
+        self.interface_state = InterfaceState(self.send_state_to_server)
         self.game_state = None
 
         # Connection attribute
@@ -77,7 +77,7 @@ class Interface:
                     if "game_round" in message:
                         self.game_state.game_round = message["current_game_round"]
                     if "round_over" in message:
-                        self.interface_state = InterfaceState(self.game_state, self.send_state_to_server)
+                        self.interface_state = InterfaceState(self.send_state_to_server)
 
         self.ws = None
 
