@@ -193,7 +193,7 @@ def draw_card(coordinate, card):
     name_label.draw()
 
 
-def draw_interface(interface_state, window):
+def draw_interface(interface_state,game_state, window):
     """
     Draw the images of given interface,
     react to user's resizing of window by scaling the interface.
@@ -218,15 +218,20 @@ def draw_interface(interface_state, window):
                 ):
             draw_card(coordinate, card)
 
-    if interface_state.players:
+    players = []
+    for robot in interface_state.game_state.robots:
+        if interface_state.robot.name not in robot.name:
+            players.append(robot)
+
+    if game_state.robots:
         # Other robots background
-        for i in range(len(interface_state.players)):
+        for i in range(len(game_state.robots)-1):
             players_background.x = 50 + i * 98
             players_background.y = 50
             players_background.draw()
 
         # Other robots and their attributes
-        for i, robot in enumerate(interface_state.players):
+        for i, robot in enumerate(players):
             draw_robot(i, robot, interface_state)
 
     # Cards on hand
@@ -272,7 +277,7 @@ def draw_interface(interface_state, window):
         indicator_red_sprite.draw()
 
     # Flag slot
-    for i in range(interface_state.flag_count):
+    for i in range(interface_state.game_state.flag_count):
         flag_slot_sprite.x = 341 + i * 48
         flag_slot_sprite.y = 933
         flag_slot_sprite.draw()
@@ -372,7 +377,7 @@ def draw_robot(i, robot, interface_state):
         (0, 0, 0, 255)
     )
     life_label.draw()
-    
+
     # Winner crown
     if interface_state.winner:
         if robot.winner:
