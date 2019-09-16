@@ -120,7 +120,7 @@ def check_tiles(map_name):
     starts = []
     for coordinate, tiles in board.items():
         tile_type_letter = get_tiles(coordinate, tiles)
-        check_count_of_tiles(tile_type_letter, coordinate)
+        check_count_of_tiles_types(tile_type_letter, coordinate)
         check_layers_order(tile_type_letter, coordinate)
         check_flag_is_not_on_hole_or_start(tile_type_letter, coordinate)
         laser_count = get_laser_count(tile_type_letter)
@@ -135,16 +135,15 @@ def check_tiles(map_name):
     check_consecutive_numbers(flags_number)
     check_consecutive_numbers(starts_number)
 
-    # If none of above checks has raised and exception, validation is OK, so:
+    # If none of above checks has raised an exception, validation is OK, so:
     return True
 
 
 def get_tiles(coordinate, tiles):
     """
-    Gather the tiles on given coordinates to two lists:
+    Return tiles types for further processing.
     tile_type_letter - list of tiles' types according to order_tiles dictionary
-    tiles_on_coordinate - list of tiles on the same coordinates.
-    If there is the same tile twice, raise exception.
+    If there is the same tile twice on one coordinates, raise an exception.
     """
     tile_type_letter = []
     # seen_tiles is local variable to compare tiles list, it is not returned.
@@ -180,7 +179,7 @@ def get_flags_and_starts(tiles, flags, starts):
     return flags, starts
 
 
-def check_count_of_tiles(tile_type_letter, coordinate):
+def check_count_of_tiles_types(tile_type_letter, coordinate):
     """
     Check there is only one tile of type A, B, C or D on the same coordinates.
     If there is more than one, raise exception.
@@ -207,8 +206,8 @@ def check_count_of_tiles(tile_type_letter, coordinate):
 def check_layers_order(tile_type_letter, coordinate):
     """
     Tiles types must be in the correct order.
-    ["A","B","D"] is correct ["D", "A"] is not
-    A < B < C < D < E
+    ["A","B","D"] is correct, ["D", "A"] is not.
+    A < B < C < D < E.
     """
     letters_count = len(tile_type_letter)
     for i in range(letters_count-1):
@@ -218,7 +217,7 @@ def check_layers_order(tile_type_letter, coordinate):
 
 def check_flag_is_not_on_hole_or_start(tile_type_letter, coordinate):
     """
-    "Flag" mustn't be over the "Hole" or "Starting tile"
+    "Flag" mustn't be over the "Hole" or "Starting tile".
     """
     for i in range(len(tile_type_letter)-1):
         if tile_type_letter[i] == "B_hole" and tile_type_letter[i+1] == "D_flag" \
@@ -226,14 +225,14 @@ def check_flag_is_not_on_hole_or_start(tile_type_letter, coordinate):
             raise FlagOnStartOrHoleError(coordinate, tile_type_letter[i])
 
 
-def check_lasers_in_opposite_direction(tiles_on_coordinate, coordinate):
+def check_lasers_in_opposite_direction(tiles, coordinate):
     """
-    Lasers cannot be in opposite direction: they would cover each other
+    Lasers can not be in opposite direction: they would cover each other
     visually and give 2 x damages to robots.
     """
     N_or_S = False
     W_or_E = False
-    for tile in tiles_on_coordinate:
+    for tile in tiles:
         if tile.type == "laser":
             if (tile.direction == Direction.N or tile.direction == Direction.S):
                 if N_or_S:
@@ -247,17 +246,17 @@ def check_lasers_in_opposite_direction(tiles_on_coordinate, coordinate):
                     W_or_E = True
 
 
-def check_lasers_start(tiles_on_coordinate, coordinate):
+def check_lasers_start(tiles, coordinate):
     """
     Lasers must start on wall tiles. Wall must be on the same coordinates
     as the laser base.
     """
     opposite_wall = False
-    for tile in tiles_on_coordinate:
+    for tile in tiles:
         if tile.name.startswith("laser_start"):
             # There must be wall in the opposite direction
             new_direction = tile.direction + Rotation(180)
-            for tile_2 in tiles_on_coordinate:
+            for tile_2 in tiles:
                 if tile_2.type == "wall" and tile_2.direction == new_direction:
                     opposite_wall = True
             if not opposite_wall:
