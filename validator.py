@@ -147,21 +147,17 @@ def get_tiles(coordinate, tiles):
     If there is the same tile twice, raise exception.
     """
     tile_type_letter = []
-    # tiles_on_coordinate = []
-    repeating_tiles = False
+    # seen_tiles is local variable to compare tiles list, it is not returned.
+    seen_tiles = []
     for tile in tiles:
         tile_type_letter.append(get_order_tiles(type(tile).__name__))
         """
         Tiles with the same type and direction mustn't be in list of types
         """
-        if tile in tiles:
-            if repeating_tiles:
-                raise RepeatingTilesError(coordinate, tile.name)
-            else:
-                repeating_tiles = True
-
-        # else:
-            # tiles_on_coordinate.append(tile)
+        if tile in seen_tiles:
+            raise RepeatingTilesError(coordinate, tile.name)
+        else:
+            seen_tiles.append(tile)
     return tile_type_letter
 
 
