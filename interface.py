@@ -8,13 +8,12 @@ class InterfaceState:
         self.selection_confirmed = False
         self.cursor_index = 0  # 0-4 number of positon
         self.players = []
-        self.game_round = None
         # List of winners
         self.winner = []
         self.timer = False
         self.flag_count = 0
         # Assign the function that should be called within some InterfaceState methods,
-        # eg. after choosing or returning cards on hand, 
+        # eg. after choosing or returning cards on hand,
         # not on change of the purely visual elements of interface, like moving the cursor.
         # Assigned function is be called after every robot-related interface state change.
         self.change_callback = change_callback
@@ -35,7 +34,6 @@ class InterfaceState:
                 "program": self.program,
                 "power_down": self.power_down,
                 "confirmed": self.selection_confirmed,
-                "game_round": self.game_round,
                 }
             }
 

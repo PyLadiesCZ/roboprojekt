@@ -17,7 +17,7 @@ class Interface:
         # Game attributes
         self.window = create_window(self.window_draw, self.on_text)
         # When something has changed in interface state, the function 'send_state_to_server' is called.
-        self.interface_state = InterfaceState(change_callback=self.send_state_to_server)
+        self.interface_state = InterfaceState(self.send_state_to_server)
         self.game_state = None
 
         # Connection attribute
@@ -28,7 +28,7 @@ class Interface:
         Draw the window containing game interface with its current state.
         """
         self.window.clear()
-        draw_interface(self.interface_state, self.window)
+        draw_interface(self.interface_state, self.game_state, self.window)
 
     def on_text(self, text):
         """
@@ -44,6 +44,7 @@ class Interface:
         """
         if self.ws:
             message = self.interface_state.as_dict()
+            message["interface_data"]["game_round"] = self.game_state.game_round
             asyncio.ensure_future(self.ws.send_json(message))
 
     async def get_messages(self):
@@ -65,16 +66,18 @@ class Interface:
                     if "robots" in message:
                         self.set_robots(message, robot_name)
                     if "cards" in message:
-                        self.set_dealt_cards(message)
+                        self.set_dealt_cards(message["cards"])
                         self.interface_state.timer = False
                     if "winner" in message:
                         self.interface_state.winner = message["winner"]
                     if "timer_start" in message:
                         self.interface_state.timer = True
                     if "blocked_cards" in message:
-                        self.set_blocked_cards(message)
+                        self.set_blocked_cards(message["blocked_cards"])
+                    if "game_round" in message:
+                        self.game_state.game_round = message["current_game_round"]
                     if "round_over" in message:
-                        self.interface_state = InterfaceState(change_callback=self.send_state_to_server)
+                        self.interface_state = InterfaceState(self.send_state_to_server)
 
         self.ws = None
 
@@ -91,34 +94,26 @@ class Interface:
         Set robots, players and self robot using data from sent message.
         """
         self.game_state.robots = self.game_state.robots_from_dict(message)
-        self.interface_state.players = self.game_state.robots
-        self.interface_state.flag_count = self.game_state.flag_count
-        for robot in self.interface_state.players:
+        for robot in self.interface_state.robots:
             if robot.name == robot_name:
                 self.interface_state.robot = robot
-                index = self.interface_state.players.index(robot)
-                del self.interface_state.players[index]
-                del self.interface_state.program[self.interface_state.robot.unblocked_cards:]
 
     def set_dealt_cards(self, message):
         """
         Set dealt cards and game round using data from server message.
         """
         self.interface_state.selection_confirmed = False
-        cards = message["cards"]
         self.interface_state.dealt_cards = self.game_state.cards_from_dict(cards)
         # print(self.interface_state.robot.name, "dealt_cards", self.interface_state.dealt_cards)
         self.interface_state.return_cards()
-        # Set the game round for this client - it is changed only
-        # by message from server
-        self.interface_state.game_round = message["current_game_round"]
 
     def set_blocked_cards(self, message):
         """
         Set blocked cards from the message obtained from server.
         """
-        cards = message["blocked_cards"]
         self.interface_state.blocked_cards = self.game_state.cards_from_dict(cards)
+        del self.interface_state.program[:-len(self.interface_state.blocked_cards)]
+        print(self.interface_state.program)
 
 def tick_asyncio(dt):
     """
