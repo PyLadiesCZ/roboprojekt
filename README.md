@@ -1,7 +1,7 @@
 # RoboProject
 *Advanced PyLadies CZ Course*
 
-This course was created primarilly for those who succesfully passed the PyLadies beginner courses and want to continue with Python via "real" project. It should show participants the process of software development from the very basics, and enable them to try it on their own. It is focused on team cooperation, using Python for real tasks, working with Git and GitHub, showing best practices and trying various useful tools.
+This course was created primarily for those who successfully passed the PyLadies beginner courses and want to continue with Python via "real" project. It should show participants the process of software development from the very basics, and enable them to try it on their own. It is focused on team cooperation, using Python for real tasks, working with Git and GitHub, showing best practices and trying various useful tools.
 
 The assignment of this project is transforming board game RoboRally to computer version so the final result should be working playable computer game.
 
@@ -14,7 +14,7 @@ You can follow the progress on our [blog](https://roboprojekt.pyladies.cz/).
 Python v. 3.7
 We recommend to use virtual environment.
 
-To succesfully run the project, run the script below. It will install all the requirements including [pyglet](https://bitbucket.org/pyglet/pyglet/wiki/Home) and [asyncio](https://docs.python.org/3/library/asyncio.html) libraries.
+To successfully run the project, run the script below. It will install all the requirements including [pyglet](https://bitbucket.org/pyglet/pyglet/wiki/Home) and [asyncio](https://docs.python.org/3/library/asyncio.html) libraries.
 ```
 python -m pip install -r requirements.txt
 ```
@@ -63,7 +63,7 @@ After this phase is complete, the robots standing on the repair tile or in Power
 
 ### Tests
 
-Currently, the tests are places in `tests/` folder. They are divided into three separate files, `test_effects.py`, `test_backend.py` and `test_loading.py`, covering respective modules.
+The tests are places in `tests/` folder. They are divided into three separate files, `test_effects.py`, `test_backend.py` and `test_loading.py`, covering respective modules.
 `test_effects.py` reads the subfolders with test maps and commands. It executes the game on the background and asserts the robots performed the steps and their attributes were changed according to tile effects. For more details about testing framework see `tests/README-tests.md`.
 `test_loading.py` also contains map validator (see map details below).
 
@@ -73,19 +73,15 @@ If you want to run only one of the testing files, add the name of the file after
 
 ### Create your own map
 
-Current maps were created in [Tiled](https://www.mapeditor.org/) map editor, version 1.2.1..
+Current maps were created in [Tiled](https://www.mapeditor.org/) map editor, version at least 1.2.1.
 You can create your own map with the prepared tileset `development_tileset.json`.
-When creating multiple-layered tiles, keep the following order of layers:
+When creating multiple-layered tiles, we strongly recommend to create the new layer for every kind of tiles, including the separate layers for lasers (horizontal, vertical) and walls (N, S, E, W).
+The order of layers is checked by validator and must follow the pattern:
 1. earth
-2. one of the following: hole, start, repair, belt, gear
+2. one of the following: hole, start,
+3. one of the following: repair, belt, gear
 3. flag
-4. laser (horizontal), wall (North)
-5. laser (vertical), wall (West)
-6. wall (South)
-7. wall (East)
-8. pusher
-
-Part of the test suite is a map validator which checks the order of tile layers.
+4. pusher, laser, wall
 
 ### Automatic conversion from .SVG to .PNG
 
