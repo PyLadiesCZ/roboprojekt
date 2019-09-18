@@ -66,7 +66,7 @@ class Interface:
                     if "robots" in message:
                         self.set_robots(message, robot_name)
                     if "cards" in message:
-                        self.set_dealt_cards(message["cards"])
+                        self.interface_state.dealt_cards = self.game_state.cards_from_dict(cards)
                     if "winner" in message:
                         self.interface_state.winner = message["winner"]
                     if "timer_start" in message:
@@ -96,14 +96,6 @@ class Interface:
         for robot in self.game_state.robots:
             if robot.name == robot_name:
                 self.interface_state.robot = robot
-
-    def set_dealt_cards(self, cards):
-        """
-        Set dealt cards and game round using data from server message.
-        """
-        self.interface_state.selection_confirmed = False
-        self.interface_state.dealt_cards = self.game_state.cards_from_dict(cards)
-        self.interface_state.return_cards()
 
     def set_blocked_cards(self, cards):
         """
