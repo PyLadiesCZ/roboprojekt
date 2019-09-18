@@ -19,13 +19,11 @@ def test_as_dict():
     interface_state.program = "ABC"
     interface_state.power_down = True
     interface_state.confirmed = False
-    interface_state.game_round = 128
 
     transformed = interface_state.as_dict()
     assert transformed["interface_data"]["program"] == "ABC"
     assert transformed["interface_data"]["power_down"] is True
     assert transformed["interface_data"]["confirmed"] is False
-    assert transformed["interface_data"]["game_round"] == 128
 
 
 def start_interface_state(confirmed=False, program=False):

@@ -112,7 +112,6 @@ class Interface:
         """
         self.interface_state.blocked_cards = self.game_state.cards_from_dict(cards)
         del self.interface_state.program[:len(self.interface_state.blocked_cards)]
-        print(self.interface_state.program)
 
 def tick_asyncio(dt):
     """
