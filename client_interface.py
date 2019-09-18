@@ -17,7 +17,7 @@ class Interface:
         # Game attributes
         self.window = create_window(self.window_draw, self.on_text)
         # When something has changed in interface state, the function 'send_state_to_server' is called.
-        self.interface_state = InterfaceState(self.send_state_to_server)
+        self.interface_state = InterfaceState(change_callback=self.send_state_to_server)
         self.game_state = None
 
         # Connection attribute
@@ -77,7 +77,7 @@ class Interface:
                     if "game_round" in message:
                         self.game_state.game_round = message["current_game_round"]
                     if "round_over" in message:
-                        self.interface_state = InterfaceState(self.send_state_to_server)
+                        self.interface_state = InterfaceState(change_callback=self.send_state_to_server)
 
         self.ws = None
 
@@ -104,7 +104,6 @@ class Interface:
         """
         self.interface_state.selection_confirmed = False
         self.interface_state.dealt_cards = self.game_state.cards_from_dict(cards)
-        # print(self.interface_state.robot.name, "dealt_cards", self.interface_state.dealt_cards)
         self.interface_state.return_cards()
 
     def set_blocked_cards(self, cards):
@@ -112,7 +111,7 @@ class Interface:
         Set blocked cards from the message obtained from server.
         """
         self.interface_state.blocked_cards = self.game_state.cards_from_dict(cards)
-        del self.interface_state.program[:-len(self.interface_state.blocked_cards)]
+        del self.interface_state.program[:len(self.interface_state.blocked_cards)]
         print(self.interface_state.program)
 
 def tick_asyncio(dt):
