@@ -74,7 +74,7 @@ class Interface:
                         self.interface_state.timer = True
                     if "blocked_cards" in message:
                         self.set_blocked_cards(message["blocked_cards"])
-                    if "game_round" in message:
+                    if "current_game_round" in message:
                         self.game_state.game_round = message["current_game_round"]
                     if "round_over" in message:
                         self.interface_state = InterfaceState(change_callback=self.send_state_to_server)

@@ -209,14 +209,13 @@ def draw_interface(interface_state, game_state, window):
     # Interface background
     interface_sprite.draw()
 
-    if interface_state.dealt_cards:
-        # CARDS
-        # Dealt cards
-        for coordinate, card in zip(
-                dealt_cards_coordinates,
-                interface_state.dealt_cards,
-                ):
-            draw_card(coordinate, card)
+    # CARDS
+    # Dealt cards
+    for coordinate, card in zip(
+            dealt_cards_coordinates,
+            interface_state.dealt_cards,
+            ):
+        draw_card(coordinate, card)
 
     if game_state is not None:
         players = []

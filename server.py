@@ -145,7 +145,6 @@ class Server:
             else:
                 robot.selection_confirmed = True
                 selection_confirmed_number = self.state.selection_confirmed_number()
-
                 if selection_confirmed_number == len(self.state.robots):
                     await self.play_game_round()
                 # If last robot doesnt selected his cards, the timer starts.
@@ -164,7 +163,6 @@ class Server:
             await self.send_message({"winner": self.state.winners})
         await self.send_message(self.state.robots_as_dict())
         await self.send_new_dealt_cards()
-
 
     async def timer(self, game_round):
         """

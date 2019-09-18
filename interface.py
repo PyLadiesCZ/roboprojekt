@@ -103,3 +103,4 @@ class InterfaceState:
         if None not in self.program:
             self.selection_confirmed = True
             self.change_callback()
+            print("confirm_selection")
