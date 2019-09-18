@@ -67,7 +67,6 @@ class Interface:
                         self.set_robots(message, robot_name)
                     if "cards" in message:
                         self.set_dealt_cards(message["cards"])
-                        self.interface_state.timer = False
                     if "winner" in message:
                         self.interface_state.winner = message["winner"]
                     if "timer_start" in message:
