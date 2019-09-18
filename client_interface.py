@@ -94,11 +94,11 @@ class Interface:
         Set robots, players and self robot using data from sent message.
         """
         self.game_state.robots = self.game_state.robots_from_dict(message)
-        for robot in self.interface_state.robots:
+        for robot in self.game_state.robots:
             if robot.name == robot_name:
                 self.interface_state.robot = robot
 
-    def set_dealt_cards(self, message):
+    def set_dealt_cards(self, cards):
         """
         Set dealt cards and game round using data from server message.
         """
@@ -107,7 +107,7 @@ class Interface:
         # print(self.interface_state.robot.name, "dealt_cards", self.interface_state.dealt_cards)
         self.interface_state.return_cards()
 
-    def set_blocked_cards(self, message):
+    def set_blocked_cards(self, cards):
         """
         Set blocked cards from the message obtained from server.
         """

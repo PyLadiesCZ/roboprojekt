@@ -218,21 +218,27 @@ def draw_interface(interface_state, game_state, window):
                 ):
             draw_card(coordinate, card)
 
-    if game_state.robots:
+    if game_state is not None:
         players = []
         for robot in game_state.robots:
             if interface_state.robot.name not in robot.name:
                 players.append(robot)
 
         # Other robots background
-        for i in range(len(players)):
+        for i, player_background in enumerate(players):
             players_background.x = 50 + i * 98
             players_background.y = 50
             players_background.draw()
 
         # Other robots and their attributes
         for i, robot in enumerate(players):
-            draw_robot(i, robot, interface_state)
+            draw_robot(i, robot, game_state, interface_state)
+
+        # Flag slot
+        for i in range(game_state.flag_count):
+            flag_slot_sprite.x = 341 + i * 48
+            flag_slot_sprite.y = 933
+            flag_slot_sprite.draw()
 
     # Cards on hand
     for coordinate, card_index in zip(program_coordinates, interface_state.program):
@@ -276,11 +282,6 @@ def draw_interface(interface_state, game_state, window):
     else:
         indicator_red_sprite.draw()
 
-    # Flag slot
-    for i in range(interface_state.game_state.flag_count):
-        flag_slot_sprite.x = 341 + i * 48
-        flag_slot_sprite.y = 933
-        flag_slot_sprite.draw()
 
     if interface_state.robot:
         # Robot
@@ -312,7 +313,7 @@ def draw_interface(interface_state, game_state, window):
             sprite.draw()
 
         # Winner crown
-        if interface_state.winner:
+        if game_state.winners:
             if interface_state.robot.winner:
                 sprite = crown_sprite
             else:
@@ -324,7 +325,7 @@ def draw_interface(interface_state, game_state, window):
 
     pyglet.gl.glPopMatrix()
 
-def draw_robot(i, robot, interface_state):
+def draw_robot(i, robot, game_state, interface_state):
     """
     Draw robot and his attributes.
     """
@@ -379,7 +380,7 @@ def draw_robot(i, robot, interface_state):
     life_label.draw()
 
     # Winner crown
-    if interface_state.winner:
+    if game_state.winners:
         if robot.winner:
             sprite = crown_sprite
         else:
