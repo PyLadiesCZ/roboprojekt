@@ -66,7 +66,7 @@ class Interface:
                     if "robots" in message:
                         self.set_robots(message, robot_name)
                     if "cards" in message:
-                        self.interface_state.dealt_cards = self.game_state.cards_from_dict(cards)
+                        self.interface_state.dealt_cards = self.game_state.cards_from_dict(message["cards"])
                     if "winner" in message:
                         self.interface_state.winner = message["winner"]
                     if "timer_start" in message:
