@@ -689,7 +689,8 @@ class State:
         """
         robot_cards = self.get_robots_ordered_by_cards_priority(register)
         for robot, card in robot_cards:
-            card.apply_effect(robot, self)
+            if not robot.inactive:
+                card.apply_effect(robot, self)
 
     def apply_all_effects(self, registers=5):
         """
