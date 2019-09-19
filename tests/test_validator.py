@@ -7,7 +7,7 @@ from loading import get_board
 from validator import get_tiles, get_laser_count, get_flags_and_starts
 from validator import check_count_of_tiles_types, check_layers_order
 from validator import check_flag_is_not_on_hole_or_start
-from validator import check_consecutive_numbers
+from validator import sort_and_check_consecutive_numbers
 from validator import NumberedTilesNotInOrderError, WrongLayersOrderError
 from validator import FlagOnStartOrHoleError, RepeatingTilesError
 from validator import TilesOfOneTypeError
@@ -16,7 +16,7 @@ from validator import TilesOfOneTypeError
 def test_numbers_are_consecutive():
     """ Assert list of consecutive numbers is given. """
     tiles_list = [5, 2, 4, 3, 1]
-    assert check_consecutive_numbers(tiles_list) is None
+    assert sort_and_check_consecutive_numbers(tiles_list) is None
 
 
 def test_flag_numbers_are_inconsecutive():
@@ -25,7 +25,7 @@ def test_flag_numbers_are_inconsecutive():
     """
     tiles_list = [5, 8, 3, 2]
     with pytest.raises(NumberedTilesNotInOrderError):
-        check_consecutive_numbers(tiles_list)
+        sort_and_check_consecutive_numbers(tiles_list)
 
 
 @pytest.mark.parametrize(("tiles_layers"),
@@ -121,5 +121,7 @@ def test_get_tiles_raises_exception():
 def test_get_tiles():
     """ Assert the tiles are correctly matched to their types. """
     board = get_board("./maps/test_6.json")
-    ttl = get_tiles((1, 1), board[(1, 1)])
-    assert ttl == ['A_ground', 'E_laser', 'E_wall']
+    ttl_1_1 = get_tiles((1, 1), board[(1, 1)])
+    ttl_2_2 = get_tiles((2, 2), board[(2, 2)])
+    assert ttl_1_1 == ['A_ground', 'E_laser', 'E_wall']
+    assert ttl_2_2 == ['A_ground', 'C_repair']

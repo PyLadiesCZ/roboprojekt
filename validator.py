@@ -132,8 +132,8 @@ def check_tiles(map_name):
         flags_number, starts_number = get_flags_and_starts(
             tiles, flags, starts
         )
-    check_consecutive_numbers(flags_number)
-    check_consecutive_numbers(starts_number)
+    sort_and_check_consecutive_numbers(flags_number)
+    sort_and_check_consecutive_numbers(starts_number)
 
     # If none of above checks has raised an exception, validation is OK, so:
     return True
@@ -150,9 +150,8 @@ def get_tiles(coordinate, tiles):
     seen_tiles = []
     for tile in tiles:
         tile_type_letter.append(get_order_tiles(type(tile).__name__))
-        """
-        Tiles with the same type and direction mustn't be in list of types
-        """
+
+        # Tiles with the same type and direction mustn't be in list of types
         if tile in seen_tiles:
             raise RepeatingTilesError(coordinate, tile.name)
         else:
@@ -170,7 +169,7 @@ def get_laser_count(tile_type_letter):
 
 
 def get_flags_and_starts(tiles, flags, starts):
-    """Return the list of flag and start tiles on given coordinates."""
+    """Return the lists of numbers on flags and start tiles from the board."""
     for tile in tiles:
         if tile.type == "flag":
             flags.append(tile.number)
@@ -217,12 +216,14 @@ def check_layers_order(tile_type_letter, coordinate):
 
 def check_flag_is_not_on_hole_or_start(tile_type_letter, coordinate):
     """
-    "Flag" mustn't be over the "Hole" or "Starting tile".
+    Take tiles` types list and check that flag never stands on hole or start.
     """
-    for i in range(len(tile_type_letter)-1):
-        if tile_type_letter[i] == "B_hole" and tile_type_letter[i+1] == "D_flag" \
-         or tile_type_letter[i] == "B_start_tile" and tile_type_letter[i+1] == "D_flag":
-            raise FlagOnStartOrHoleError(coordinate, tile_type_letter[i])
+    hole_or_start_tile = False
+    for letter in tile_type_letter:
+        if letter == "B_hole" or letter == "B_start_tile":
+            hole_or_start_tile = True
+        if hole_or_start_tile and letter == "D_flag":
+            raise FlagOnStartOrHoleError(coordinate, letter)
 
 
 def check_lasers_in_opposite_direction(tiles, coordinate):
@@ -248,8 +249,8 @@ def check_lasers_in_opposite_direction(tiles, coordinate):
 
 def check_lasers_start(tiles, coordinate):
     """
-    Lasers must start on wall tiles. Wall must be on the same coordinates
-    as the laser base.
+    Check that lasers start on wall tiles.
+    Wall must be on the same coordinates as the laser base.
     """
     opposite_wall = False
     for tile in tiles:
@@ -263,9 +264,10 @@ def check_lasers_start(tiles, coordinate):
                 raise LasersWithoutWallError(coordinate)
 
 
-def check_consecutive_numbers(tiles_list):
+def sort_and_check_consecutive_numbers(tiles_list):
     """
-    Flags and starts must be numbered from 1 to N, incremented +1.
+    Sort a list of numbers and check if it increments by 1 starting from 1.
+    If it doesn't match the pattern, raise NumberedTilesNotInOrderError.
     """
     tiles_list.sort()
     if tiles_list != list(range(1, len(tiles_list) + 1)):
