@@ -659,6 +659,7 @@ class State:
         will reboot on start coordinates.
         """
         for robot in self.robots:
+            robot.power_down = False
             for tile in self.get_tiles(robot.coordinates):
                 tile.repair_robot(robot, self)
             # Robot will now ressurect at his start coordinates
@@ -675,7 +676,7 @@ class State:
         """
         try:
             robot_cards = [(robot, robot.program[register])
-                           for robot in self.get_active_robots()]
+                           for robot in self.get_active_robots() if not robot.power_down]
             robot_cards.sort(key=lambda item: item[1], reverse=True)
             return robot_cards
 
