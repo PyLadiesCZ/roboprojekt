@@ -432,7 +432,7 @@ def handle_text(interface_state, text):
 
 def handle_click(interface_state, x, y, window):
     """
-    Interface react on mouser press.
+    Interface react on mouse press.
     """
     # Transform x, y coordinates according to zoom of window.
     zoom = min(
