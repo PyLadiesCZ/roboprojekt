@@ -193,7 +193,7 @@ def draw_card(coordinate, card):
     name_label.draw()
 
 
-def draw_interface(interface_state, window):
+def draw_interface(interface_state, game_state, window):
     """
     Draw the images of given interface,
     react to user's resizing of window by scaling the interface.
@@ -209,25 +209,35 @@ def draw_interface(interface_state, window):
     # Interface background
     interface_sprite.draw()
 
-    if interface_state.dealt_cards:
-        # CARDS
-        # Dealt cards
-        for coordinate, card in zip(
-                dealt_cards_coordinates,
-                interface_state.dealt_cards,
-                ):
-            draw_card(coordinate, card)
+    # CARDS
+    # Dealt cards
+    for coordinate, card in zip(
+            dealt_cards_coordinates,
+            interface_state.dealt_cards,
+            ):
+        draw_card(coordinate, card)
 
-    if interface_state.players:
+    if game_state is not None:
+        players = []
+        for robot in game_state.robots:
+            if interface_state.robot.name not in robot.name:
+                players.append(robot)
+
         # Other robots background
-        for i in range(len(interface_state.players)):
+        for i, player_background in enumerate(players):
             players_background.x = 50 + i * 98
             players_background.y = 50
             players_background.draw()
 
         # Other robots and their attributes
-        for i, robot in enumerate(interface_state.players):
-            draw_robot(i, robot, interface_state)
+        for i, robot in enumerate(players):
+            draw_robot(i, robot, game_state, interface_state)
+
+        # Flag slot
+        for i in range(game_state.flag_count):
+            flag_slot_sprite.x = 341 + i * 48
+            flag_slot_sprite.y = 933
+            flag_slot_sprite.draw()
 
     # Cards on hand
     for coordinate, card_index in zip(program_coordinates, interface_state.program):
@@ -271,11 +281,6 @@ def draw_interface(interface_state, window):
     else:
         indicator_red_sprite.draw()
 
-    # Flag slot
-    for i in range(interface_state.flag_count):
-        flag_slot_sprite.x = 341 + i * 48
-        flag_slot_sprite.y = 933
-        flag_slot_sprite.draw()
 
     if interface_state.robot:
         # Robot
@@ -307,7 +312,7 @@ def draw_interface(interface_state, window):
             sprite.draw()
 
         # Winner crown
-        if interface_state.winner:
+        if game_state.winners:
             if interface_state.robot.winner:
                 sprite = crown_sprite
             else:
@@ -319,7 +324,7 @@ def draw_interface(interface_state, window):
 
     pyglet.gl.glPopMatrix()
 
-def draw_robot(i, robot, interface_state):
+def draw_robot(i, robot, game_state, interface_state):
     """
     Draw robot and his attributes.
     """
@@ -372,9 +377,9 @@ def draw_robot(i, robot, interface_state):
         (0, 0, 0, 255)
     )
     life_label.draw()
-    
+
     # Winner crown
-    if interface_state.winner:
+    if game_state.winners:
         if robot.winner:
             sprite = crown_sprite
         else:
@@ -383,6 +388,7 @@ def draw_robot(i, robot, interface_state):
         sprite.x = 78 + i * 98
         sprite.y = 90
         sprite.draw()
+
 
 CARD_KEYS = ["q", "w", "e", "r", "t", "a", "s", "d", "f"]
 
