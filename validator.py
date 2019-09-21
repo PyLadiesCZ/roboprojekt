@@ -119,48 +119,48 @@ def check_tiles(map_name):
     flags = []
     starts = []
     for coordinate, tiles in board.items():
-        tile_type_letter, tiles_on_coordinate = get_tiles(coordinate, tiles)
-        check_count_of_tiles(tile_type_letter, coordinate)
+        tile_type_letter = get_tiles(coordinate, tiles)
+        check_count_of_tiles_types(tile_type_letter, coordinate)
         check_layers_order(tile_type_letter, coordinate)
         check_flag_is_not_on_hole_or_start(tile_type_letter, coordinate)
         laser_count = get_laser_count(tile_type_letter)
-        check_lasers_in_opposite_direction(
-            laser_count, tiles_on_coordinate, coordinate
-        )
-        check_lasers_start(tiles_on_coordinate, coordinate)
+        if laser_count > 1:
+            check_lasers_in_opposite_direction(
+                tiles, coordinate
+                )
+        check_lasers_start(tiles, coordinate)
         flags_number, starts_number = get_flags_and_starts(
-            tiles_on_coordinate, flags, starts
+            tiles, flags, starts
         )
-    check_consecutive_numbers(flags_number)
-    check_consecutive_numbers(starts_number)
+    sort_and_check_consecutive_numbers(flags_number)
+    sort_and_check_consecutive_numbers(starts_number)
 
-    # If none of above checks has raised and exception, validation is OK, so:
+    # If none of above checks has raised an exception, validation is OK, so:
     return True
 
 
 def get_tiles(coordinate, tiles):
     """
-    Gather the tiles on given coordinates to two lists:
+    Return tiles types for further processing.
     tile_type_letter - list of tiles' types according to order_tiles dictionary
-    tiles_on_coordinate - list of tiles on the same coordinates.
-    If there is the same tile twice, raise exception.
+    If there is the same tile twice on one coordinates, raise an exception.
     """
     tile_type_letter = []
-    tiles_on_coordinate = []
+    # seen_tiles is local variable to compare tiles list, it is not returned.
+    seen_tiles = []
     for tile in tiles:
         tile_type_letter.append(get_order_tiles(type(tile).__name__))
-        """
-        Tiles with the same type and direction mustn't be in list of types
-        """
-        if tile in tiles_on_coordinate:
+
+        # Tiles with the same type and direction mustn't be in list of types
+        if tile in seen_tiles:
             raise RepeatingTilesError(coordinate, tile.name)
         else:
-            tiles_on_coordinate.append(tile)
-    return tile_type_letter, tiles_on_coordinate
+            seen_tiles.append(tile)
+    return tile_type_letter
 
 
 def get_laser_count(tile_type_letter):
-    """Return the count of laser tiles on given coordinates."""
+    """Return the count of laser tiles from given list."""
     laser_count = 0
     for letter in tile_type_letter:
         if letter == "E_laser":
@@ -168,9 +168,9 @@ def get_laser_count(tile_type_letter):
     return laser_count
 
 
-def get_flags_and_starts(tiles_on_coordinate, flags, starts):
-    """Return the list of flag and start tiles on given coordinates."""
-    for tile in tiles_on_coordinate:
+def get_flags_and_starts(tiles, flags, starts):
+    """Return the lists of numbers on flags and start tiles from the board."""
+    for tile in tiles:
         if tile.type == "flag":
             flags.append(tile.number)
         if tile.type == "start":
@@ -178,7 +178,7 @@ def get_flags_and_starts(tiles_on_coordinate, flags, starts):
     return flags, starts
 
 
-def check_count_of_tiles(tile_type_letter, coordinate):
+def check_count_of_tiles_types(tile_type_letter, coordinate):
     """
     Check there is only one tile of type A, B, C or D on the same coordinates.
     If there is more than one, raise exception.
@@ -205,8 +205,8 @@ def check_count_of_tiles(tile_type_letter, coordinate):
 def check_layers_order(tile_type_letter, coordinate):
     """
     Tiles types must be in the correct order.
-    ["A","B","D"] is correct ["D", "A"] is not
-    A < B < C < D < E
+    ["A","B","D"] is correct, ["D", "A"] is not.
+    A < B < C < D < E.
     """
     letters_count = len(tile_type_letter)
     for i in range(letters_count-1):
@@ -216,56 +216,58 @@ def check_layers_order(tile_type_letter, coordinate):
 
 def check_flag_is_not_on_hole_or_start(tile_type_letter, coordinate):
     """
-    "Flag" mustn't be over the "Hole" or "Starting tile"
+    Take tiles` types list and check that flag never stands on hole or start.
     """
-    for i in range(len(tile_type_letter)-1):
-        if tile_type_letter[i] == "B_hole" and tile_type_letter[i+1] == "D_flag" \
-         or tile_type_letter[i] == "B_start_tile" and tile_type_letter[i+1] == "D_flag":
-            raise FlagOnStartOrHoleError(coordinate, tile_type_letter[i])
+    hole_or_start_tile = False
+    for letter in tile_type_letter:
+        if letter == "B_hole" or letter == "B_start_tile":
+            hole_or_start_tile = True
+        if hole_or_start_tile and letter == "D_flag":
+            raise FlagOnStartOrHoleError(coordinate, letter)
 
 
-def check_lasers_in_opposite_direction(laser_count, tiles_on_coordinate, coordinate):
+def check_lasers_in_opposite_direction(tiles, coordinate):
     """
-    Lasers cannot be in opposite direction: they would cover each other
+    Lasers can not be in opposite direction: they would cover each other
     visually and give 2 x damages to robots.
     """
-    if laser_count > 1:
-        N_or_S = False
-        W_or_E = False
-        for tile in tiles_on_coordinate:
-            if tile.type == "laser":
-                if (tile.direction == Direction.N or tile.direction == Direction.S):
-                    if N_or_S:
-                        raise LasersInOppositeDirectionError(coordinate)
-                    else:
-                        N_or_S = True
-                if (tile.direction == Direction.W or tile.direction == Direction.E):
-                    if W_or_E:
-                        raise LasersInOppositeDirectionError(coordinate)
-                    else:
-                        W_or_E = True
+    N_or_S = False
+    W_or_E = False
+    for tile in tiles:
+        if tile.type == "laser":
+            if (tile.direction == Direction.N or tile.direction == Direction.S):
+                if N_or_S:
+                    raise LasersInOppositeDirectionError(coordinate)
+                else:
+                    N_or_S = True
+            if (tile.direction == Direction.W or tile.direction == Direction.E):
+                if W_or_E:
+                    raise LasersInOppositeDirectionError(coordinate)
+                else:
+                    W_or_E = True
 
 
-def check_lasers_start(tiles_on_coordinate, coordinate):
+def check_lasers_start(tiles, coordinate):
     """
-    Lasers must start on wall tiles. Wall must be on the same coordinates
-    as the laser base.
+    Check that lasers start on wall tiles.
+    Wall must be on the same coordinates as the laser base.
     """
     opposite_wall = False
-    for tile in tiles_on_coordinate:
+    for tile in tiles:
         if tile.name.startswith("laser_start"):
             # There must be wall in the opposite direction
             new_direction = tile.direction + Rotation(180)
-            for tile_2 in tiles_on_coordinate:
+            for tile_2 in tiles:
                 if tile_2.type == "wall" and tile_2.direction == new_direction:
                     opposite_wall = True
             if not opposite_wall:
                 raise LasersWithoutWallError(coordinate)
 
 
-def check_consecutive_numbers(tiles_list):
+def sort_and_check_consecutive_numbers(tiles_list):
     """
-    Flags and starts must be numbered from 1 to N, incremented +1.
+    Sort a list of numbers and check if it increments by 1 starting from 1.
+    If it doesn't match the pattern, raise NumberedTilesNotInOrderError.
     """
     tiles_list.sort()
     if tiles_list != list(range(1, len(tiles_list) + 1)):
