@@ -45,7 +45,7 @@ class InterfaceState:
             if dealt_card_index not in self.program:
                 self.program[self.cursor_index] = dealt_card_index
                 self.change_callback()
-                # After select a card Move with cursor to right
+                # After selecting a card move the cursor to the right
                 self.cursor_index_plus()
 
     def return_card(self):
@@ -97,9 +97,11 @@ class InterfaceState:
 
     def confirm_selection(self):
         """
-        When indicator is False the player can choose cards and switch Power Down.
-        When is True the player ended the selection of cards.
+        While selection is not confirmed (False) the player can choose cards
+        and switch Power Down.
+        When Power Down is switched on or all cards are chosen,
+        it is possible to confirm selection.
         """
-        if None not in self.program:
+        if None not in self.program or self.power_down:
             self.selection_confirmed = True
             self.change_callback()
