@@ -8,7 +8,7 @@ MAX_FLAGS_COUNT = 8
 MAX_DAMAGES_COUNT = 9
 
 
-def create_window(on_draw, on_text):
+def create_window(on_draw, on_text, on_mouse_press):
     """
     Return a pyglet window for graphic output.
     """
@@ -16,6 +16,7 @@ def create_window(on_draw, on_text):
     window.push_handlers(
         on_draw=on_draw,
         on_text=on_text,
+        on_mouse_press=on_mouse_press,
     )
     return window
 
@@ -427,3 +428,38 @@ def handle_text(interface_state, text):
     # Confirm selection of cards
     if text == 'k':
         interface_state.confirm_selection()
+
+
+def handle_click(interface_state, x, y, window):
+    """
+    Interface react on mouser press.
+    """
+    # Transform x, y coordinates according to zoom of window.
+    zoom = min(
+        window.height / 1024,
+        window.width / 768
+    )
+    x, y = (x / zoom, y / zoom)
+    # Select a card and take it in your "hand"
+    # Selected card is in "GREEN" cursor
+    card_sprite = cards_type_sprites["u_turn"]
+    for i, coordinate in enumerate(dealt_cards_coordinates):
+        coord_x, coord_y = coordinate
+        if (
+            coord_x < x < (coord_x + card_sprite.width)
+            and coord_y < y < (coord_y + card_sprite.height)
+        ):
+            interface_state.select_card(i)
+    # Confirm selection of cards
+    if (
+        688 < x < 688 + indicator_red_sprite.width
+        and 864 < y < 864 + indicator_red_sprite.height
+    ):
+        interface_state.confirm_selection()
+
+    # Put and take a Power Down token
+    if (
+        210 < x < 210 + power_down_sprite.width
+        and 900 < y < 900 + power_down_sprite.height
+    ):
+        interface_state.switch_power_down()
