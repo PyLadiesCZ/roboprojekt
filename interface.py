@@ -61,13 +61,10 @@ class InterfaceState:
         Return all cards of your program back to the dealt cards.
         """
         if not self.selection_confirmed:
-            self.return_cards_for_power_down()
-
-    def return_cards_for_power_down(self):
-        for card in range(len(self.program)):
-            self.program[card] = None
-        self.cursor_index = 0
-        self.change_callback()
+            for card in range(len(self.program)):
+                self.program[card] = None
+            self.cursor_index = 0
+            self.change_callback()
 
     def cursor_index_plus(self):
         """
@@ -100,13 +97,14 @@ class InterfaceState:
 
     def confirm_selection(self):
         """
-        While selection is not confirmed (False) the player can choose cards
-        and switch Power Down.
         When Power Down is switched on or all cards are chosen,
         it is possible to confirm selection.
+        Additionally when Power Down is switched on,
+        the cards from hand are returned.
         """
         if None not in self.program or self.power_down:
             self.selection_confirmed = True
             if self.power_down:
-                self.return_cards_for_power_down()
+                for card in range(len(self.program)):
+                    self.program[card] = None
             self.change_callback()
