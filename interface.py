@@ -61,10 +61,13 @@ class InterfaceState:
         Return all cards of your program back to the dealt cards.
         """
         if not self.selection_confirmed:
-            for card in range(len(self.program)):
-                self.program[card] = None
-            self.cursor_index = 0
-            self.change_callback()
+            self.return_cards_for_power_down()
+
+    def return_cards_for_power_down(self):
+        for card in range(len(self.program)):
+            self.program[card] = None
+        self.cursor_index = 0
+        self.change_callback()
 
     def cursor_index_plus(self):
         """
@@ -104,4 +107,6 @@ class InterfaceState:
         """
         if None not in self.program or self.power_down:
             self.selection_confirmed = True
+            if self.power_down:
+                self.return_cards_for_power_down()
             self.change_callback()
