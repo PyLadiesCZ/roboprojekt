@@ -29,6 +29,7 @@ def get_sprite(img_path, x=0, y=0):
 # Interface background
 interface_sprite = get_sprite('img/interface/png/interface.png', x=0, y=0)
 power_down_sprite = get_sprite('img/interface/png/power.png', x=210, y=900)
+power_down_player_sprite = get_sprite('img/interface/png/power_player.png')
 # Timer
 timer_sprite = get_sprite('img/interface/png/timer_on.png', x=521, y=864)
 # Winner crown
@@ -231,7 +232,7 @@ def draw_interface(interface_state, game_state, window):
 
         # Other robots and their attributes
         for i, robot in enumerate(players):
-            draw_robot(i, robot, game_state, interface_state)
+            draw_robot(i, robot, game_state)
 
         # Flag slot
         for i in range(game_state.flag_count):
@@ -324,7 +325,8 @@ def draw_interface(interface_state, game_state, window):
 
     pyglet.gl.glPopMatrix()
 
-def draw_robot(i, robot, game_state, interface_state):
+
+def draw_robot(i, robot, game_state):
     """
     Draw robot and his attributes.
     """
@@ -334,6 +336,12 @@ def draw_robot(i, robot, game_state, interface_state):
         player_sprite.x = 68 + i * 98
         player_sprite.y = 90
         player_sprite.draw()
+
+    # Power_down
+    if robot.power_down:
+        power_down_player_sprite.x = 82 + 98 * i
+        power_down_player_sprite.y = 95
+        power_down_player_sprite.draw()
 
     # Robot´flags
     flag_label = get_label(
