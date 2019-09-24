@@ -440,6 +440,7 @@ def handle_click(interface_state, x, y, window):
         window.width / 768
     )
     x, y = (x / zoom, y / zoom)
+    print (x, y)
     # Select a card and take it in your "hand"
     # Selected card is in "GREEN" cursor
     card_sprite = cards_type_sprites["u_turn"]
@@ -473,3 +474,7 @@ def handle_click(interface_state, x, y, window):
             and coord_y < y < (coord_y + card_sprite.height)
         ):
             interface_state.cursor_index = i
+
+    # Return all cards
+    if (445 < x < 635) and (535 < y < 565):
+        interface_state.return_cards()
