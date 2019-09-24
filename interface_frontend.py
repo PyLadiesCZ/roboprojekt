@@ -465,10 +465,11 @@ def handle_click(interface_state, x, y, window):
         interface_state.switch_power_down()
 
     # Cursor
-    for coordinate in program_coordinates:
+    for i, coordinate in enumerate(program_coordinates):
+
         coord_x, coord_y = coordinate
         if (
             coord_x < x < (coord_x + card_sprite.width)
             and coord_y < y < (coord_y + card_sprite.height)
         ):
-            print(coordinate)
+            interface_state.cursor_index = i
