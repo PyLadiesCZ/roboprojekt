@@ -135,11 +135,11 @@ def draw_state(state, window):
 
     if state.winners:
         #game_over_sprite.draw()
-        winner_label = get_label("WINNER", 150, 780, 20, "right", (255, 255, 255, 255))
+        winner_label = get_label("WINNER", 150, state.tile_count[1] * TILE_HEIGHT + 10, 20, "right", (255, 255, 255, 255))
         winner_label.draw()
 
         for i, name in enumerate(state.winners):
-            winner_name_label = get_label(str(name), 300 + 165 * i, 780, 20, "right", (255, 255, 255, 255))
+            winner_name_label = get_label(str(name), 300 + 165 * i, state.tile_count[1] * TILE_HEIGHT + 10, 20, "right", (255, 255, 255, 255))
             winner_name_label.draw()
 
     pyglet.gl.glPopMatrix()
