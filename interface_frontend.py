@@ -478,3 +478,7 @@ def handle_click(interface_state, x, y, window):
     # Return all cards
     if (445 < x < 635) and (535 < y < 565):
         interface_state.return_cards()
+
+    # Return card
+    if (250 < x < 435) and (535 < y < 565):
+        interface_state.return_card()
