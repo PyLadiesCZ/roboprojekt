@@ -6,13 +6,14 @@ from functools import lru_cache
 MAX_LIVES_COUNT = 3
 MAX_FLAGS_COUNT = 8
 MAX_DAMAGES_COUNT = 9
-
+WINDOW_WIDTH = 768
+WINDOW_HEIGHT = 1024
 
 def create_window(on_draw, on_text, on_mouse_press):
     """
     Return a pyglet window for graphic output.
     """
-    window = pyglet.window.Window(768, 1024, resizable=True)
+    window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT, resizable=True)
     window.push_handlers(
         on_draw=on_draw,
         on_text=on_text,
@@ -202,8 +203,8 @@ def draw_interface(interface_state, game_state, window):
     pyglet.gl.glPushMatrix()
     window.clear()
     zoom = min(
-        window.height / 1024,
-        window.width / 768
+        window.height / WINDOW_HEIGHT,
+        window.width / WINDOW_WIDTH
     )
     pyglet.gl.glScalef(zoom, zoom, 1)
 
@@ -436,49 +437,55 @@ def handle_click(interface_state, x, y, window):
     """
     # Transform x, y coordinates according to zoom of window.
     zoom = min(
-        window.height / 1024,
-        window.width / 768
+        window.height / WINDOW_HEIGHT,
+        window.width / WINDOW_WIDTH
     )
     x, y = (x / zoom, y / zoom)
-    print (x, y)
     # Select a card and take it in your "hand"
     # Selected card is in "GREEN" cursor
     card_sprite = cards_type_sprites["u_turn"]
     for i, coordinate in enumerate(dealt_cards_coordinates):
         coord_x, coord_y = coordinate
-        if (
-            coord_x < x < (coord_x + card_sprite.width)
-            and coord_y < y < (coord_y + card_sprite.height)
+        if coords_in_rect(
+            x, y, coord_x, coord_y, card_sprite.width, card_sprite.height
         ):
             interface_state.select_card(i)
+
     # Confirm selection of cards
-    if (
-        688 < x < 688 + indicator_red_sprite.width
-        and 864 < y < 864 + indicator_red_sprite.height
+    if coords_in_rect(
+        x, y, indicator_red_sprite.x, indicator_red_sprite.y,
+        indicator_red_sprite.width, indicator_red_sprite.height
     ):
         interface_state.confirm_selection()
 
     # Put and take a Power Down token
-    if (
-        210 < x < 210 + power_down_sprite.width
-        and 900 < y < 900 + power_down_sprite.height
+    if coords_in_rect(
+        x, y, power_down_sprite.x, power_down_sprite.y,
+        power_down_sprite.width, power_down_sprite.height
     ):
         interface_state.switch_power_down()
 
     # Cursor
     for i, coordinate in enumerate(program_coordinates):
-
         coord_x, coord_y = coordinate
-        if (
-            coord_x < x < (coord_x + card_sprite.width)
-            and coord_y < y < (coord_y + card_sprite.height)
+        if coords_in_rect(
+            x, y, coord_x, coord_y, card_sprite.width, card_sprite.height
         ):
             interface_state.cursor_index = i
 
     # Return all cards
+    # The numbers are coordinate of "Return all cards" rectangle
     if (445 < x < 635) and (535 < y < 565):
         interface_state.return_cards()
 
     # Return card
+    # The numbers are coordinate of "Return one card" rectangle
     if (250 < x < 435) and (535 < y < 565):
         interface_state.return_card()
+
+
+def coords_in_rect(x, y, left, bottom, width, height):
+    """
+    Return comparison of coordinate x, y to a rectangle
+    """
+    return (left < x < left+width and bottom < y < bottom+height)
