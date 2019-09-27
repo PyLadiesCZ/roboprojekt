@@ -29,8 +29,6 @@ def get_sprite(img_path, x=0, y=0):
 # Interface background
 interface_sprite = get_sprite('img/interface/png/interface.png', x=0, y=0)
 power_down_sprite = get_sprite('img/interface/png/power.png', x=210, y=900)
-# Timer
-timer_sprite = get_sprite('img/interface/png/timer_on.png', x=521, y=864)
 # Winner crown
 crown_sprite = get_sprite('img/interface/png/crown.png')
 # Loss crown
