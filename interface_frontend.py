@@ -422,7 +422,7 @@ def handle_text(interface_state, text):
     if text == 'n':
         interface_state.cursor_index_minus()
 
-    # Put and take a Power Down token
+    # Switch on and off Power Down token
     if text == 'p':
         interface_state.switch_power_down()
 
@@ -458,7 +458,7 @@ def handle_click(interface_state, x, y, window):
     ):
         interface_state.confirm_selection()
 
-    # Put and take a Power Down token
+    # Switch on and off Power Down token
     if coords_in_rect(
         x, y, power_down_sprite.x, power_down_sprite.y,
         power_down_sprite.width, power_down_sprite.height
