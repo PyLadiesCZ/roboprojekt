@@ -1,7 +1,7 @@
 import pyglet
 from pathlib import Path
 from functools import lru_cache
-
+from time import monotonic
 
 MAX_LIVES_COUNT = 3
 MAX_FLAGS_COUNT = 8
@@ -272,8 +272,14 @@ def draw_interface(interface_state, game_state, window):
         power_down_sprite.draw()
 
     # Timer
-    if interface_state.timer:
-        timer_sprite.draw()
+    if interface_state.timer is not None:
+        seconds = monotonic() - interface_state.timer
+        seconds_left = round(30-seconds)
+
+        timer_label = get_label(f"00:{seconds_left}", 585, 865, 26, "center", (255, 0, 0, 255))
+        if seconds_left < 10:
+            timer_label.text = f"00:0{seconds_left}"
+        timer_label.draw()
 
     # Indicator
     if not interface_state.selection_confirmed:
