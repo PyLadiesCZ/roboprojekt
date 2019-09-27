@@ -144,11 +144,11 @@ class Server:
             # choice of cards was blocked by the player
             else:
                 robot.selection_confirmed = True
-                selection_confirmed_number = self.state.selection_confirmed_number()
-                if selection_confirmed_number == len(self.state.robots):
+                confirmed_count = self.state.count_confirmed_selections()
+                if confirmed_count == len(self.state.robots):
                     await self.play_game_round()
-                # If last robot doesnt selected his cards, the timer starts.
-                if selection_confirmed_number == len(self.state.robots) - 1:
+                # If only last robot didn't select his cards, the timer starts.
+                if confirmed_count == len(self.state.robots) - 1:
                     await self.send_message("timer_start")
                     asyncio.create_task(self.timer(self.state.game_round))
 
