@@ -167,11 +167,11 @@ def draw_card(coordinate, card):
     y_priority = y + 118
     priority_label = get_label(
         str(card.priority),
-        x_priority,
-        y_priority,
-        14,
-        "right",
-        (255, 255, 255, 255)
+        x=x_priority,
+        y=y_priority,
+        font_size=14,
+        anchor_x="right",
+        color=(255, 255, 255, 255),
     )
     priority_label.draw()
 
@@ -182,11 +182,11 @@ def draw_card(coordinate, card):
 
     name_label = get_label(
         card_name,
-        x_name,
-        y_name,
-        10,
-        "center",
-        (255, 255, 255, 255)
+        x=x_name,
+        y=y_name,
+        font_size=10,
+        anchor_x="center",
+        color=(255, 255, 255, 255),
     )
     name_label.draw()
 
@@ -273,8 +273,14 @@ def draw_interface(interface_state, game_state, window):
     if interface_state.timer is not None:
         seconds = monotonic() - interface_state.timer
         seconds_left = round(30-seconds)
-
-        timer_label = get_label(f"00:{seconds_left}", 585, 865, 26, "center", (255, 0, 0, 255))
+        timer_label = get_label(
+            f"00:{seconds_left}",
+            x=585,
+            y=865,
+            font_size=26,
+            anchor_x="center",
+            color=(255, 0, 0, 255),
+        )
         if seconds_left < 10:
             timer_label.text = f"00:0{seconds_left}"
         timer_label.draw()
@@ -293,9 +299,11 @@ def draw_interface(interface_state, game_state, window):
 
         robot_name = get_label(
             interface_state.robot.name,
-            250, 862, 20,
-            "center",
-            (0, 0, 0, 255),
+            x=250,
+            y=862,
+            font_size=20,
+            anchor_x="center",
+            color=(0, 0, 0, 255),
         )
         robot_name.draw()
 
@@ -342,43 +350,43 @@ def draw_robot(i, robot, game_state, interface_state):
     # Robot´flags
     flag_label = get_label(
         str(robot.flags),
-        132 + 100 * i,
-        160,
-        20,
-        "right",
-        (0, 0, 0, 255)
+        x=132 + 100 * i,
+        y=160,
+        font_size=20,
+        anchor_x="right",
+        color=(0, 0, 0, 255),
     )
     flag_label.draw()
 
     # Robot´damages
     damage_label = get_label(
         str(robot.damages),
-        92 + 100 * i,
-        56,
-        20,
-        "right",
-        (0, 0, 0, 255)
+        x=92 + 100 * i,
+        y=56,
+        font_size=20,
+        anchor_x="right",
+        color=(0, 0, 0, 255),
     )
     damage_label.draw()
 
     permanent_damage_label = get_label(
         str(robot.permanent_damages),
-        132 + 100 * i,
-        56,
-        20,
-        "right",
-        (0, 0, 0, 255)
+        x=132 + 100 * i,
+        y=56,
+        font_size=20,
+        anchor_x="right",
+        color=(0, 0, 0, 255),
     )
     permanent_damage_label.draw()
 
     # Robot´lives
     life_label = get_label(
         str(robot.lives),
-        92 + 100 * i,
-        160,
-        20,
-        "right",
-        (0, 0, 0, 255)
+        x=92 + 100 * i,
+        y=160,
+        font_size=20,
+        anchor_x="right",
+        color=(0, 0, 0, 255),
     )
     life_label.draw()
 
