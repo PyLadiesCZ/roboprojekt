@@ -486,6 +486,6 @@ def handle_click(interface_state, x, y, window):
 
 def coordinates_in_rectangle(x, y, left, bottom, width, height):
     """
-    Return comparison of coordinate x, y to a rectangle
+    Return True if coordinates x, y are in the defined rectangle and False if they are out of the rectangle.
     """
     return (left < x < left+width and bottom < y < bottom+height)
