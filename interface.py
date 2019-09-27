@@ -103,8 +103,7 @@ class InterfaceState:
         the cards from hand are returned.
         """
         if None not in self.program or self.power_down:
-            self.selection_confirmed = True
             if self.power_down:
-                for card in range(len(self.program)):
-                    self.program[card] = None
+                self.return_cards()
+            self.selection_confirmed = True
             self.change_callback()
