@@ -446,20 +446,20 @@ def handle_click(interface_state, x, y, window):
     card_sprite = cards_type_sprites["u_turn"]
     for i, coordinate in enumerate(dealt_cards_coordinates):
         coord_x, coord_y = coordinate
-        if coords_in_rect(
+        if coordinates_in_rectangle(
             x, y, coord_x, coord_y, card_sprite.width, card_sprite.height
         ):
             interface_state.select_card(i)
 
     # Confirm selection of cards
-    if coords_in_rect(
+    if coordinates_in_rectangle(
         x, y, indicator_red_sprite.x, indicator_red_sprite.y,
         indicator_red_sprite.width, indicator_red_sprite.height
     ):
         interface_state.confirm_selection()
 
     # Switch on and off Power Down token
-    if coords_in_rect(
+    if coordinates_in_rectangle(
         x, y, power_down_sprite.x, power_down_sprite.y,
         power_down_sprite.width, power_down_sprite.height
     ):
@@ -468,7 +468,7 @@ def handle_click(interface_state, x, y, window):
     # Cursor
     for i, coordinate in enumerate(program_coordinates):
         coord_x, coord_y = coordinate
-        if coords_in_rect(
+        if coordinates_in_rectangle(
             x, y, coord_x, coord_y, card_sprite.width, card_sprite.height
         ):
             interface_state.cursor_index = i
@@ -484,7 +484,7 @@ def handle_click(interface_state, x, y, window):
         interface_state.return_card()
 
 
-def coords_in_rect(x, y, left, bottom, width, height):
+def coordinates_in_rectangle(x, y, left, bottom, width, height):
     """
     Return comparison of coordinate x, y to a rectangle
     """
