@@ -7,7 +7,7 @@ import asyncio
 import aiohttp
 import pyglet
 
-from interface_frontend import draw_interface, create_window, handle_text
+from interface_frontend import draw_interface, create_window, handle_text, handle_click
 from interface import InterfaceState
 from backend import State
 
@@ -15,7 +15,7 @@ from backend import State
 class Interface:
     def __init__(self):
         # Game attributes
-        self.window = create_window(self.window_draw, self.on_text)
+        self.window = create_window(self.window_draw, self.on_text, self.on_mouse_press)
         # When something has changed in interface state, the function 'send_state_to_server' is called.
         self.interface_state = InterfaceState(change_callback=self.send_state_to_server)
         self.game_state = None
@@ -34,9 +34,14 @@ class Interface:
         """
         Key listener.
         Wait for user input on keyboard and react for it.
-        With every key press send interface state to server.
         """
         handle_text(self.interface_state, text)
+
+    def on_mouse_press(self, x, y, button, mod):
+        """
+        Interface is handled by mouse press.
+        """
+        handle_click(self.interface_state, x, y, self.window)
 
     def send_state_to_server(self):
         """
@@ -103,6 +108,7 @@ class Interface:
         """
         self.interface_state.blocked_cards = self.game_state.cards_from_dict(cards)
         del self.interface_state.program[:len(self.interface_state.blocked_cards)]
+
 
 def tick_asyncio(dt):
     """

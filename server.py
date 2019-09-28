@@ -139,16 +139,16 @@ class Server:
     async def robot_confirmed_selection(self, robot):
         """
         When the player confirmed his selection, robot.selection_confirmed
-        is set up on True and according number of selections the Timer is
+        is set up on True and according confirmed_count the Timer is
         started or game round is played.
         """
         robot.selection_confirmed = True
-        selection_confirmed_number = self.state.selection_confirmed_number()
+        confirmed_count = self.state.confirmed_count()
         # If last robot doesnt selected his cards, the timer starts.
-        if selection_confirmed_number == len(self.state.robots) - 1:
+        if confirmed_count == len(self.state.robots) - 1:
             await self.send_message("timer_start")
             asyncio.create_task(self.timer(self.state.game_round))
-        if selection_confirmed_number == len(self.state.robots):
+        if confirmed_count == len(self.state.robots):
             await self.play_game_round()
 
     async def play_game_round(self):

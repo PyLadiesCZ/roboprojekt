@@ -6,16 +6,18 @@ from functools import lru_cache
 MAX_LIVES_COUNT = 3
 MAX_FLAGS_COUNT = 8
 MAX_DAMAGES_COUNT = 9
+WINDOW_WIDTH = 768
+WINDOW_HEIGHT = 1024
 
-
-def create_window(on_draw, on_text):
+def create_window(on_draw, on_text, on_mouse_press):
     """
     Return a pyglet window for graphic output.
     """
-    window = pyglet.window.Window(768, 1024, resizable=True)
+    window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT, resizable=True)
     window.push_handlers(
         on_draw=on_draw,
         on_text=on_text,
+        on_mouse_press=on_mouse_press,
     )
     return window
 
@@ -29,6 +31,7 @@ def get_sprite(img_path, x=0, y=0):
 # Interface background
 interface_sprite = get_sprite('img/interface/png/interface.png', x=0, y=0)
 power_down_sprite = get_sprite('img/interface/png/power.png', x=210, y=900)
+power_down_player_sprite = get_sprite('img/interface/png/power_player.png')
 # Timer
 timer_sprite = get_sprite('img/interface/png/timer_on.png', x=521, y=864)
 # Winner crown
@@ -201,8 +204,8 @@ def draw_interface(interface_state, game_state, window):
     pyglet.gl.glPushMatrix()
     window.clear()
     zoom = min(
-        window.height / 1024,
-        window.width / 768
+        window.height / WINDOW_HEIGHT,
+        window.width / WINDOW_WIDTH
     )
     pyglet.gl.glScalef(zoom, zoom, 1)
 
@@ -231,7 +234,7 @@ def draw_interface(interface_state, game_state, window):
 
         # Other robots and their attributes
         for i, robot in enumerate(players):
-            draw_robot(i, robot, game_state, interface_state)
+            draw_robot(i, robot, game_state)
 
         # Flag slot
         for i in range(game_state.flag_count):
@@ -324,7 +327,8 @@ def draw_interface(interface_state, game_state, window):
 
     pyglet.gl.glPopMatrix()
 
-def draw_robot(i, robot, game_state, interface_state):
+
+def draw_robot(i, robot, game_state):
     """
     Draw robot and his attributes.
     """
@@ -334,6 +338,12 @@ def draw_robot(i, robot, game_state, interface_state):
         player_sprite.x = 68 + i * 98
         player_sprite.y = 90
         player_sprite.draw()
+
+    # Power_down
+    if robot.power_down:
+        power_down_player_sprite.x = 82 + 98 * i
+        power_down_player_sprite.y = 95
+        power_down_player_sprite.draw()
 
     # Robot´flags
     flag_label = get_label(
@@ -420,10 +430,70 @@ def handle_text(interface_state, text):
     if text == 'n':
         interface_state.cursor_index_minus()
 
-    # Put and take a Power Down token
+    # Switch on and off Power Down token
     if text == 'p':
         interface_state.switch_power_down()
 
     # Confirm selection of cards
     if text == 'k':
         interface_state.confirm_selection()
+
+
+def handle_click(interface_state, x, y, window):
+    """
+    Interface reacts on mouse press.
+    """
+    # Transform x, y coordinates according to zoom of window.
+    zoom = min(
+        window.height / WINDOW_HEIGHT,
+        window.width / WINDOW_WIDTH
+    )
+    x, y = (x / zoom, y / zoom)
+    # Select a card and take it in your "hand"
+    # Selected card is in "GREEN" cursor
+    card_sprite = cards_type_sprites["u_turn"]
+    for i, coordinate in enumerate(dealt_cards_coordinates):
+        coord_x, coord_y = coordinate
+        if coordinates_in_rectangle(
+            x, y, coord_x, coord_y, card_sprite.width, card_sprite.height
+        ):
+            interface_state.select_card(i)
+
+    # Confirm selection of cards
+    if coordinates_in_rectangle(
+        x, y, indicator_red_sprite.x, indicator_red_sprite.y,
+        indicator_red_sprite.width, indicator_red_sprite.height
+    ):
+        interface_state.confirm_selection()
+
+    # Switch on and off Power Down token
+    if coordinates_in_rectangle(
+        x, y, power_down_sprite.x, power_down_sprite.y,
+        power_down_sprite.width, power_down_sprite.height
+    ):
+        interface_state.switch_power_down()
+
+    # Cursor
+    for i, coordinate in enumerate(program_coordinates):
+        coord_x, coord_y = coordinate
+        if coordinates_in_rectangle(
+            x, y, coord_x, coord_y, card_sprite.width, card_sprite.height
+        ):
+            interface_state.cursor_index = i
+
+    # Return all cards
+    # The numbers are coordinate of "Return all cards" rectangle
+    if (445 < x < 635) and (535 < y < 565):
+        interface_state.return_cards()
+
+    # Return card
+    # The numbers are coordinate of "Return one card" rectangle
+    if (250 < x < 435) and (535 < y < 565):
+        interface_state.return_card()
+
+
+def coordinates_in_rectangle(x, y, left, bottom, width, height):
+    """
+    Return True if coordinates x, y are in the defined rectangle and False if they are out of the rectangle.
+    """
+    return (left < x < left+width and bottom < y < bottom+height)

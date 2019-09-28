@@ -280,6 +280,7 @@ class Robot:
             state.past_deck.append(card)
             self.program[index] = None
         self.selection_confirmed = False
+        self.power_down = False
 
     def select_blocked_cards_from_program(self):
         """
@@ -675,7 +676,7 @@ class State:
         """
         try:
             robot_cards = [(robot, robot.program[register])
-                           for robot in self.get_active_robots()]
+                           for robot in self.get_active_robots() if not robot.power_down]
             robot_cards.sort(key=lambda item: item[1], reverse=True)
             return robot_cards
 
@@ -714,6 +715,24 @@ class State:
 
         # After last register ressurect the robots to their starting coordinates.
         self.set_robots_for_new_turn()
+
+    def play_round(self):
+        """
+        Apply effects of cards and tiles.
+        Erase robot's damages if they chose power down for this round.
+        Check if somebody has won.
+        Robots' attributes are cleared and new cards dealt.
+        """
+        for robot in self.robots:
+            robot.select_cards(self)
+            if robot.power_down:
+                robot.damages = 0
+        self.apply_all_effects()
+        self.check_winner()
+        self.game_round += 1
+        for robot in self.robots:
+            robot.clear_robot_attributes(self)
+            self.deal_cards(robot)
 
     def create_card_pack(self):
         """
@@ -781,15 +800,15 @@ class State:
             card_pack.append(Card.from_dict(card))
         return card_pack
 
-    def selection_confirmed_number(self):
+    def count_confirmed_selections(self):
         """
         Return number of confirmed selections.
         """
-        selection_confirmed_number = 0
+        confirmed_count = 0
         for robot in self.robots:
             if robot.selection_confirmed:
-                selection_confirmed_number += 1
-        return selection_confirmed_number
+                confirmed_count += 1
+        return confirmed_count
 
     def get_flag_count(self):
         """
@@ -816,21 +835,6 @@ class State:
                     self.winners.append(robot.name)
                     robot.winner = True
         return self.winners
-
-    def play_round(self):
-        """
-        Apply effects of cards and tiles.
-        Check if somebody has won.
-        Robots' attributes are cleared and new cards dealt.
-        """
-        for robot in self.robots:
-            robot.select_cards(self)
-        self.apply_all_effects()
-        self.check_winner()
-        self.game_round += 1
-        for robot in self.robots:
-            robot.clear_robot_attributes(self)
-            self.deal_cards(robot)
 
 
 def get_robot_names():
