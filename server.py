@@ -123,18 +123,19 @@ class Server:
             return
         message = message.json()
         robot_game_round = message["interface_data"]["game_round"]
-        if robot_game_round == self.state.game_round:
-            # Set robot's attributes according to data in message
-            # Choice of cards was blocked by the player
-            if message["interface_data"]["confirmed"]:
-                await robot_confirmed_selection(robot)
-            else:
-                # While selection is not confirmed, it is still possible to choose cards
-                robot.power_down = message["interface_data"]["power_down"]
-                # Set robot's selection with chosen card´s index
-                robot.card_indexes = message["interface_data"]["program"]
+        if robot_game_round != self.state.game_round:
+            return
+        # Set robot's attributes according to data in message
+        # Choice of cards was blocked by the player
+        if message["interface_data"]["confirmed"]:
+            await robot_confirmed_selection(robot)
+        else:
+            # While selection is not confirmed, it is still possible to choose cards
+            robot.power_down = message["interface_data"]["power_down"]
+            # Set robot's selection with chosen card´s index
+            robot.card_indexes = message["interface_data"]["program"]
 
-            await self.send_message(self.state.robots_as_dict())
+        await self.send_message(self.state.robots_as_dict())
 
     async def robot_confirmed_selection(self, robot):
         """
@@ -187,7 +188,9 @@ class Server:
         """
         Send message to all  clients.
         """
-        ws_all = self.ws_receivers + self.ws_interfaces
+        ws_all = self.ws_receivers
+        for value in self.assigned_robots.values():
+            ws_all.append(value)
         for client in ws_all:
             await client.send_json(message)
 
