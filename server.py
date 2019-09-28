@@ -43,26 +43,14 @@ class Server:
         self.ws_receivers = []
         self.ws_interfaces = []
 
-    @contextlib.asynccontextmanager
     async def ws_handler(self, request, ws_list):
         """
-        Context manager for server.
-
-        Set up the websocket and add connected client to the respective list,
-        depending on its role (interface or receiver).
-        Yield the prepared websocket.
-        When connection is disrupted, remove the client from the list.
+        Set up and return the prepared websocket.
         """
         # Prepare WebSocket
         ws = web.WebSocketResponse()
         await ws.prepare(request)
-        # WebSocket is added to a list
-        ws_list.append(ws)
-        try:
-            yield ws
-        finally:
-            # after disconnection client is removed from list
-            ws_list.remove(ws)
+        return ws
 
     async def talk_to_receiver(self, request):
         """
@@ -71,13 +59,17 @@ class Server:
         Send them game state.
         Maintain connection to the client until they disconnect.
         """
-        async with self.ws_handler(request, self.ws_receivers) as ws:
+        ws = await self.ws_handler(request, self.ws_receivers)
+        self.ws_receivers.append(ws)
+        try:
             # This message is sent only this (just connected) client
             await ws.send_json(self.state.whole_as_dict(map_name))
             # For cycle keeps the connection with client alive
             async for message in ws:
                 pass
             return ws
+        finally:
+            self.ws_receivers.remove(ws)
 
     async def talk_to_interface(self, request):
         """
@@ -87,7 +79,9 @@ class Server:
         React to the messages from interface: update game state accordingly.
         Maintain connection to the client until they disconnect.
         """
-        async with self.ws_handler(request, self.ws_interfaces) as ws:
+        ws = await self.ws_handler(request, self.ws_interfaces)
+        self.ws_interfaces.append(ws)
+        try:
             # Get first data for connected client: robot and cards
             # and assign it to client
             robot = self.assign_robot_to_client(ws)
@@ -107,8 +101,9 @@ class Server:
             async for message in ws:
                 await self.process_message(message, robot)
                 await self.send_message(self.state.robots_as_dict())
-
             return ws
+        finally:
+            self.ws_interfaces.remove(ws)
 
     def assign_robot_to_client(self, ws):
         """
