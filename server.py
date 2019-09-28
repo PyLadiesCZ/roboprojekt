@@ -41,9 +41,8 @@ class Server:
         # Attributes related to network connections
         # List of connected clients
         self.ws_receivers = []
-        self.ws_interfaces = []
 
-    async def ws_handler(self, request, ws_list):
+    async def ws_handler(self, request):
         """
         Set up and return the prepared websocket.
         """
@@ -59,7 +58,7 @@ class Server:
         Send them game state.
         Maintain connection to the client until they disconnect.
         """
-        ws = await self.ws_handler(request, self.ws_receivers)
+        ws = await self.ws_handler(request)
         self.ws_receivers.append(ws)
         try:
             # This message is sent only this (just connected) client
@@ -79,8 +78,7 @@ class Server:
         React to the messages from interface: update game state accordingly.
         Maintain connection to the client until they disconnect.
         """
-        ws = await self.ws_handler(request, self.ws_interfaces)
-        self.ws_interfaces.append(ws)
+        ws = await self.ws_handler(request)
         try:
             # Get first data for connected client: robot and cards
             # and assign it to client
@@ -100,10 +98,9 @@ class Server:
             # React to the sent state of this client and send new state to all
             async for message in ws:
                 await self.process_message(message, robot)
-                await self.send_message(self.state.robots_as_dict())
             return ws
         finally:
-            self.ws_interfaces.remove(ws)
+            del self.assigned_robots[ws]
 
     def assign_robot_to_client(self, ws):
         """
@@ -128,24 +125,31 @@ class Server:
         robot_game_round = message["interface_data"]["game_round"]
         if robot_game_round == self.state.game_round:
             # Set robot's attributes according to data in message
-            # While selection is not confirmed, it is still possible to choose cards
-            if not message["interface_data"]["confirmed"]:
-                # TODO: this part only sets the POWER DOWN attribute,
-                # it doesn't affect anything else.
+            # Choice of cards was blocked by the player
+            if message["interface_data"]["confirmed"]:
+                await robot_confirmed_selection(robot)
+            else:
+                # While selection is not confirmed, it is still possible to choose cards
                 robot.power_down = message["interface_data"]["power_down"]
                 # Set robot's selection with chosen card´s index
                 robot.card_indexes = message["interface_data"]["program"]
 
-            # choice of cards was blocked by the player
-            else:
-                robot.selection_confirmed = True
-                selection_confirmed_number = self.state.selection_confirmed_number()
-                if selection_confirmed_number == len(self.state.robots):
-                    await self.play_game_round()
-                # If last robot doesnt selected his cards, the timer starts.
-                if selection_confirmed_number == len(self.state.robots) - 1:
-                    await self.send_message("timer_start")
-                    asyncio.create_task(self.timer(self.state.game_round))
+            await self.send_message(self.state.robots_as_dict())
+
+    async def robot_confirmed_selection(self, robot):
+        """
+        When the player confirmed his selection, robot.selection_confirmed
+        is set up on True and according number of selections the Timer is
+        started or game round is played.
+        """
+        robot.selection_confirmed = True
+        selection_confirmed_number = self.state.selection_confirmed_number()
+        # If last robot doesnt selected his cards, the timer starts.
+        if selection_confirmed_number == len(self.state.robots) - 1:
+            await self.send_message("timer_start")
+            asyncio.create_task(self.timer(self.state.game_round))
+        if selection_confirmed_number == len(self.state.robots):
+            await self.play_game_round()
 
     async def play_game_round(self):
         """
