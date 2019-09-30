@@ -223,7 +223,7 @@ def draw_interface(interface_state, game_state, window):
     if game_state is not None:
         players = []
         for robot in game_state.robots:
-            if interface_state.robot.name not in robot.name:
+            if interface_state.robot and interface_state.robot.name != robot.name:
                 players.append(robot)
 
         # Other robots background
@@ -242,6 +242,10 @@ def draw_interface(interface_state, game_state, window):
             flag_slot_sprite.y = 933
             flag_slot_sprite.draw()
 
+        # Game over
+        if interface_state.robot is None:
+            game_over_sprite.draw()
+            
     # Cards on hand
     for coordinate, card_index in zip(program_coordinates, interface_state.program):
         if card_index is not None:
