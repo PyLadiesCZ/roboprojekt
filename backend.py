@@ -659,6 +659,7 @@ class State:
         "Inactive" robots who have lost one life during the round,
         will reboot on start coordinates.
         """
+        self.robots = [robot for robot in self.robots if robot.permanent_damages < 10]
         for robot in self.robots:
             for tile in self.get_tiles(robot.coordinates):
                 tile.repair_robot(robot, self)
