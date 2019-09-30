@@ -6,6 +6,7 @@ server. It sends messages with its state to server.
 import asyncio
 import aiohttp
 import pyglet
+from time import monotonic
 
 from interface_frontend import draw_interface, create_window, handle_text, handle_click
 from interface import InterfaceState
@@ -75,7 +76,7 @@ class Interface:
                     if "winner" in message:
                         self.game_state.winners = message["winner"]
                     if "timer_start" in message:
-                        self.interface_state.timer = True
+                        self.interface_state.timer = monotonic()
                     if "blocked_cards" in message:
                         self.set_blocked_cards(message["blocked_cards"])
                     if "current_game_round" in message:

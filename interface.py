@@ -7,7 +7,7 @@ class InterfaceState:
         self.power_down = False
         self.selection_confirmed = False
         self.cursor_index = 0  # 0-4 number of positon
-        self.timer = False
+        self.timer = None
         # Assign the function that should be called within some InterfaceState methods,
         # eg. after choosing or returning cards on hand,
         # not on change of the purely visual elements of interface, like moving the cursor.
