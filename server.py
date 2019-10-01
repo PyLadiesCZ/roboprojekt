@@ -79,10 +79,11 @@ class Server:
         Maintain connection to the client until they disconnect.
         """
         ws = await self.ws_handler(request)
+        robot = self.assign_robot_to_client(ws)
+
         try:
             # Get first data for connected client: robot and cards
             # and assign it to client
-            robot = self.assign_robot_to_client(ws)
             # Prepare message to send: robot name, game state and cards
             welcome_message = {
                 "robot_name": robot.name,
@@ -100,7 +101,8 @@ class Server:
                 await self.process_message(message, robot)
             return ws
         finally:
-            del self.assigned_robots[ws]
+            del self.assigned_robots[robot.name]
+            self.available_robots.append(robot)
 
     def assign_robot_to_client(self, ws):
         """
@@ -109,9 +111,8 @@ class Server:
         Return the assigned robot.
         """
         # Client_interface is added to dictionary (robot.name: ws)
-        name = self.available_robots[0].name
-        self.assigned_robots[name] = ws
         robot = self.available_robots.pop(0)
+        self.assigned_robots[robot.name] = ws
         return robot
 
     async def process_message(self, message, robot):
@@ -188,9 +189,8 @@ class Server:
         """
         Send message to all  clients.
         """
-        ws_all = self.ws_receivers
-        for value in self.assigned_robots.values():
-            ws_all.append(value)
+        ws_all = list(self.ws_receivers)
+        ws_all.extend(self.assigned_robots.values())
         for client in ws_all:
             await client.send_json(message)
 
