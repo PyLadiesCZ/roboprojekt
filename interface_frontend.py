@@ -194,7 +194,7 @@ def draw_card(coordinate, card):
     name_label.draw()
 
 
-def draw_interface(interface_state, game_state, window):
+def draw_interface(interface_state, game_state, winner_time, window):
     """
     Draw the images of given interface,
     react to user's resizing of window by scaling the interface.
@@ -243,7 +243,7 @@ def draw_interface(interface_state, game_state, window):
         # Game over
         if interface_state.robot is None:
             game_over_sprite.draw()
-            
+
     # Cards on hand
     for coordinate, card_index in zip(program_coordinates, interface_state.program):
         if card_index is not None:
@@ -334,6 +334,9 @@ def draw_interface(interface_state, game_state, window):
         if game_state.winners:
             if interface_state.robot.winner:
                 sprite = crown_sprite
+                seconds = 5 - (monotonic() - winner_time)
+                if (0 < seconds < 5):
+                    winner_sprite.draw()
             else:
                 sprite = loss_sprite
 
