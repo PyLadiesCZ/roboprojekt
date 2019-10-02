@@ -6,8 +6,11 @@ from time import monotonic
 MAX_LIVES_COUNT = 3
 MAX_FLAGS_COUNT = 8
 MAX_DAMAGES_COUNT = 9
+TILE_WIDTH = 64
+TILE_HEIGHT = 64
 WINDOW_WIDTH = 768
 WINDOW_HEIGHT = 1024
+
 
 def create_window(on_draw, on_text, on_mouse_press):
     """
@@ -47,8 +50,8 @@ select_sprite = get_sprite('img/interface/png/card_cv.png')
 # Selection cursor
 cursor_sprite = get_sprite('img/interface/png/card_sl.png')
 # Winner
-winner_sprite = get_sprite('img/interface/png/winner.png')
-game_winner_sprite = get_sprite('img/interface/png/game_winner.png')
+winner_sprite = get_sprite('img/interface/png/winner.png', x=160, y=290)
+game_winner_sprite = get_sprite('img/interface/png/game_winner.png', x=160, y=290)
 # Game over
 game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=280)
 # Other robot card
@@ -335,22 +338,32 @@ def draw_interface(interface_state, game_state, winner_time, window):
             # An announcement of winner is drawn for 5 sec from time,
             # when client received message about winner.
             # Winner crown is drawn for the rest of the game.
-            seconds = 5 - (monotonic() - winner_time)
             if interface_state.robot.winner:
                 crown = crown_sprite
-                announcement = winner_sprite
             else:
                 crown = loss_sprite
-                announcement = game_winner_sprite
-
             crown.x = 120
             crown.y = 945
             crown.draw()
 
+            seconds = 5 - (monotonic() - winner_time)
             if (0 < seconds < 5):
-                announcement.x = 160
-                announcement.y = 290
-                announcement.draw()
+                if interface_state.robot.winner:
+                    announcement = winner_sprite
+                    announcement.draw()
+                else:
+                    announcement = game_winner_sprite
+                    announcement.draw()
+                    for i, name in enumerate(game_state.winners):
+                        winner_label = get_label(
+                            str(name),
+                            x=(game_state.tile_count[0] * TILE_WIDTH) / 2 - 50,
+                            y=(game_state.tile_count[1] * TILE_HEIGHT) / 2 - i * 50,
+                            font_size=26,
+                            anchor_x="center",
+                            color=(255, 0, 0, 255),
+                        )
+                        winner_label.draw()
 
     pyglet.gl.glPopMatrix()
 
