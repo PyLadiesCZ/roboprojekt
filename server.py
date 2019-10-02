@@ -8,7 +8,6 @@ it will display the playing area. If you want to play, run also
 client_interface.py in another command line.
 """
 import sys
-import contextlib
 import asyncio
 
 from aiohttp import web
@@ -79,11 +78,11 @@ class Server:
         Maintain connection to the client until they disconnect.
         """
         ws = await self.ws_handler(request)
+        # Get first data for connected client: robot and cards
+        # and assign it to client
         robot = self.assign_robot_to_client(ws)
 
         try:
-            # Get first data for connected client: robot and cards
-            # and assign it to client
             # Prepare message to send: robot name, game state and cards
             welcome_message = {
                 "robot_name": robot.name,
@@ -100,7 +99,9 @@ class Server:
             async for message in ws:
                 await self.process_message(message, robot)
             return ws
+
         finally:
+            # Robot is deleted from assigned robots and return to available robots
             del self.assigned_robots[robot.name]
             self.available_robots.append(robot)
 
@@ -129,7 +130,7 @@ class Server:
         # Set robot's attributes according to data in message
         # Choice of cards was blocked by the player
         if message["interface_data"]["confirmed"]:
-            await robot_confirmed_selection(robot)
+            await self.robot_confirmed_selection(robot)
         else:
             # While selection is not confirmed, it is still possible to choose cards
             robot.power_down = message["interface_data"]["power_down"]
@@ -159,9 +160,9 @@ class Server:
         send_new_dealt_card.
         """
         self.state.play_round()
-        await self.send_message("round_over")
         if self.state.winners:
             await self.send_message({"winner": self.state.winners})
+        await self.send_message("round_over")
         await self.send_message(self.state.robots_as_dict())
         await self.send_new_dealt_cards()
 
