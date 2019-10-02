@@ -159,6 +159,8 @@ def draw_state(state, time, window):
             )
             winner_name_label.draw()
 
+        # Picture of winner is drawn for 5 sec from time,
+        # when client received message about winner.
         seconds = 5 - (monotonic() - time)
         if (0 < seconds < 5):
             winner_sprite.draw()
