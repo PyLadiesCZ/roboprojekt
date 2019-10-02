@@ -849,7 +849,7 @@ def get_robot_names():
     """
     Return a list of robots names (names of the files with robots avatars).
     """
-    robot_names = list(robot_displayed_names)
+    robot_names = list(robot_displayed_names.keys())
     return robot_names
 
 
