@@ -243,7 +243,7 @@ def draw_interface(interface_state, game_state, window):
         # Game over
         if interface_state.robot is None:
             game_over_sprite.draw()
-            
+
     # Cards on hand
     for coordinate, card_index in zip(program_coordinates, interface_state.program):
         if card_index is not None:
@@ -305,7 +305,7 @@ def draw_interface(interface_state, game_state, window):
         my_robot_sprite.draw()
 
         robot_name = get_label(
-            interface_state.robot.name,
+            interface_state.robot.displayed_name,
             x=250,
             y=862,
             font_size=20,
