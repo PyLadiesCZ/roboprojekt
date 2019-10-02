@@ -8,7 +8,6 @@ from time import monotonic
 
 from backend import State
 from frontend import draw_state, create_window
-from interface_frontend import get_label
 
 
 class Receiver:

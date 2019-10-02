@@ -23,15 +23,16 @@ loaded_robots_images = {}
 for image_path in Path('./img/robots_map/png').iterdir():
     loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
 
-# Winner
-winner_sprite = get_sprite('img/interface/png/game_winner.png', x=170, y=200)
-# Game over
-# game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=180)
-
 
 def get_sprite(img_path, x=0, y=0):
     img = pyglet.image.load(img_path)
     return pyglet.sprite.Sprite(img, x, y)
+
+
+# Winner
+winner_sprite = get_sprite('img/interface/png/game_winner.png', x=170, y=200)
+# Game over
+# game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=180)
 
 
 def create_window(state):
@@ -164,14 +165,15 @@ def draw_state(state, time, window):
         seconds = 5 - (monotonic() - time)
         if (0 < seconds < 5):
             winner_sprite.draw()
-            winner_label = get_label(
-                str(name),
-                x=(state.tile_count[0] * TILE_WIDTH) / 2 - 50,
-                y=450 - i * 50,
-                font_size=26,
-                anchor_x="center",
-                color=(255, 0, 0, 255),
-            )
-            winner_label.draw()
+            for i, name in enumerate(state.winners):
+                winner_label = get_label(
+                    str(name),
+                    x=(state.tile_count[0] * TILE_WIDTH) / 2 - 50,
+                    y=(state.tile_count[1] * TILE_HEIGHT) / 2 - i * 50,
+                    font_size=26,
+                    anchor_x="center",
+                    color=(255, 0, 0, 255),
+                )
+                winner_label.draw()
 
     pyglet.gl.glPopMatrix()
