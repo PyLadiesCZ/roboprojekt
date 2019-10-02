@@ -47,7 +47,8 @@ select_sprite = get_sprite('img/interface/png/card_cv.png')
 # Selection cursor
 cursor_sprite = get_sprite('img/interface/png/card_sl.png')
 # Winner
-winner_sprite = get_sprite('img/interface/png/winner.png', x=160, y=290)
+winner_sprite = get_sprite('img/interface/png/winner.png')
+game_winner_sprite = get_sprite('img/interface/png/game_winner.png')
 # Game over
 game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=280)
 # Other robot card
@@ -298,7 +299,6 @@ def draw_interface(interface_state, game_state, winner_time, window):
     else:
         indicator_red_sprite.draw()
 
-
     if interface_state.robot:
         # Robot
         my_robot_sprite.image = loaded_robots_images[interface_state.robot.name]
@@ -330,19 +330,27 @@ def draw_interface(interface_state, game_state, winner_time, window):
         for sprite in permanent_damages_sprites[0:interface_state.robot.permanent_damages]:
             sprite.draw()
 
-        # Winner crown
+        # Winner
         if game_state.winners:
+            # An announcement of winner is drawn for 5 sec from time,
+            # when client received message about winner.
+            # Winner crown is drawn for the rest of the game.
+            seconds = 5 - (monotonic() - winner_time)
             if interface_state.robot.winner:
-                sprite = crown_sprite
-                seconds = 5 - (monotonic() - winner_time)
-                if (0 < seconds < 5):
-                    winner_sprite.draw()
+                crown = crown_sprite
+                announcement = winner_sprite
             else:
-                sprite = loss_sprite
+                crown = loss_sprite
+                announcement = game_winner_sprite
 
-            sprite.x = 120
-            sprite.y = 945
-            sprite.draw()
+            crown.x = 120
+            crown.y = 945
+            crown.draw()
+
+            if (0 < seconds < 5):
+                announcement.x = 160
+                announcement.y = 290
+                announcement.draw()
 
     pyglet.gl.glPopMatrix()
 
