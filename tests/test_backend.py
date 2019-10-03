@@ -47,7 +47,7 @@ def test_robot_walk(input_coordinates, input_direction, distance, output_coordin
     to correct coordinates.
     """
     state = State.get_start_state("maps/test_3.json")
-    robot = Robot(input_direction, input_coordinates, "tester")
+    robot = Robot(input_direction, input_coordinates, "bender")
     robot.walk(distance, state, input_direction)
     assert robot.coordinates == output_coordinates
 
@@ -68,7 +68,7 @@ def test_robot_move(input_coordinates, input_direction, distance, output_coordin
     was moved to correct coordinates.
     """
     state = State.get_start_state("maps/test_3.json")
-    robot = Robot(Direction.N, input_coordinates, "tester")
+    robot = Robot(Direction.N, input_coordinates, "bender")
     robot.move(input_direction, distance, state)
     assert robot.coordinates == output_coordinates
 
@@ -82,7 +82,7 @@ def test_robot_change_direction(current_direction, towards, new_direction):
     """
     Assert that robot rotates correctly according to given rotation.
     """
-    robot = Robot(current_direction, None, "tester")
+    robot = Robot(current_direction, None, "bender")
     robot.rotate(towards)
     assert robot.direction == new_direction
 
@@ -166,7 +166,7 @@ def test_robot_from_dict():
     """
     Check if method Robot.from_dict returns robot from JSON.
     """
-    robot_description = {"robot_data": {'name': 'crazybot', 'coordinates': (10, 1),
+    robot_description = {"robot_data": {'name': 'bender', 'coordinates': (10, 1),
                          'lives': 5, 'flags': 8, 'damages': 5,
                          'permanent_damages': 1, 'power_down': False,
                          'direction': 90, 'start_coordinates': (3, 1),
@@ -174,7 +174,7 @@ def test_robot_from_dict():
                          'winner': False,}}
 
     robot = Robot.from_dict(robot_description)
-    assert robot.name == "crazybot"
+    assert robot.name == "bender"
     assert robot.coordinates == (10, 1)
     assert robot.lives == 5
     assert robot.flags == 8
