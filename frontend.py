@@ -113,11 +113,12 @@ def create_robot_sprite(robot):
     return robot_sprite
 
 
-def draw_state(state, time, window):
+def draw_state(state, winner_time, window):
     """
     Draw the images of tiles and robots into map, react to user's resizing of window by scaling the board.
 
-    state: State object containing game board, robots and map sizes
+    state: State object containing game board, robots and map sizes.
+    Winner_time is the time, when client received message about winner.
     """
     tile_sprites = load_tiles(state)
     robot_sprites = load_robots(state)
@@ -162,7 +163,7 @@ def draw_state(state, time, window):
 
         # Picture of winner is drawn for 5 sec from time,
         # when client received message about winner.
-        seconds = 5 - (monotonic() - time)
+        seconds = 5 - (monotonic() - winner_time)
         if (0 < seconds < 5):
             winner_sprite.draw()
             for i, name in enumerate(state.winners):
