@@ -1,0 +1,29 @@
+# Change displayed robot's name for the one you like.
+# Place the name of your choice instead of listed displayed_name,
+# make sure to write it between the quotation marks.
+# Robots appear on the board in the same order as they are listed in the file.
+# Recommended name length is max. 8 characters.
+
+bender:
+  displayed_name: "Bender"
+
+bishop:
+  displayed_name: "Bishop"
+
+cyberbot:
+  displayed_name: "Cyberbot"
+
+kitt:
+  displayed_name: "Kitt"
+
+marvin:
+  displayed_name: "Cyberbot"
+
+mintbot:
+  displayed_name: "Mintbot"
+
+robbie:
+  displayed_name: "Robbie"
+
+rusty:
+  displayed_name: "Rusty"

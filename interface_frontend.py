@@ -305,7 +305,7 @@ def draw_interface(interface_state, game_state, window):
         my_robot_sprite.draw()
 
         robot_name = get_label(
-            interface_state.robot.name,
+            interface_state.robot.displayed_name,
             x=250,
             y=862,
             font_size=20,
