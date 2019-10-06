@@ -8,7 +8,6 @@ it will display the playing area. If you want to play, run also
 client_interface.py in another command line.
 """
 import sys
-import contextlib
 import asyncio
 
 from aiohttp import web
@@ -41,28 +40,15 @@ class Server:
         # Attributes related to network connections
         # List of connected clients
         self.ws_receivers = []
-        self.ws_interfaces = []
 
-    @contextlib.asynccontextmanager
-    async def ws_handler(self, request, ws_list):
+    async def ws_handler(self, request):
         """
-        Context manager for server.
-
-        Set up the websocket and add connected client to the respective list,
-        depending on its role (interface or receiver).
-        Yield the prepared websocket.
-        When connection is disrupted, remove the client from the list.
+        Set up and return the prepared websocket.
         """
         # Prepare WebSocket
         ws = web.WebSocketResponse()
         await ws.prepare(request)
-        # WebSocket is added to a list
-        ws_list.append(ws)
-        try:
-            yield ws
-        finally:
-            # after disconnection client is removed from list
-            ws_list.remove(ws)
+        return ws
 
     async def talk_to_receiver(self, request):
         """
@@ -71,13 +57,17 @@ class Server:
         Send them game state.
         Maintain connection to the client until they disconnect.
         """
-        async with self.ws_handler(request, self.ws_receivers) as ws:
+        ws = await self.ws_handler(request)
+        self.ws_receivers.append(ws)
+        try:
             # This message is sent only this (just connected) client
             await ws.send_json(self.state.whole_as_dict(map_name))
             # For cycle keeps the connection with client alive
             async for message in ws:
                 pass
             return ws
+        finally:
+            self.ws_receivers.remove(ws)
 
     async def talk_to_interface(self, request):
         """
@@ -87,10 +77,12 @@ class Server:
         React to the messages from interface: update game state accordingly.
         Maintain connection to the client until they disconnect.
         """
-        async with self.ws_handler(request, self.ws_interfaces) as ws:
-            # Get first data for connected client: robot and cards
-            # and assign it to client
-            robot = self.assign_robot_to_client(ws)
+        ws = await self.ws_handler(request)
+        # Get first data for connected client: robot and cards
+        # and assign it to client
+        robot = self.assign_robot_to_client(ws)
+
+        try:
             # Prepare message to send: robot name, game state and cards
             welcome_message = {
                 "robot_name": robot.name,
@@ -106,9 +98,12 @@ class Server:
             # React to the sent state of this client and send new state to all
             async for message in ws:
                 await self.process_message(message, robot)
-                await self.send_message(self.state.robots_as_dict())
-
             return ws
+
+        finally:
+            # Robot is deleted from assigned robots and return to available robots
+            del self.assigned_robots[robot.name]
+            self.available_robots.append(robot)
 
     def assign_robot_to_client(self, ws):
         """
@@ -117,9 +112,8 @@ class Server:
         Return the assigned robot.
         """
         # Client_interface is added to dictionary (robot.name: ws)
-        name = self.available_robots[0].name
-        self.assigned_robots[name] = ws
         robot = self.available_robots.pop(0)
+        self.assigned_robots[robot.name] = ws
         return robot
 
     async def process_message(self, message, robot):
@@ -131,26 +125,34 @@ class Server:
             return
         message = message.json()
         robot_game_round = message["interface_data"]["game_round"]
-        if robot_game_round == self.state.game_round:
-            # Set robot's attributes according to data in message
+        if robot_game_round != self.state.game_round:
+            return
+        # Set robot's attributes according to data in message
+        # Choice of cards was blocked by the player
+        if message["interface_data"]["confirmed"]:
+            await self.actions_after_robot_confirmed_selection(robot)
+        else:
             # While selection is not confirmed, it is still possible to choose cards
-            if not message["interface_data"]["confirmed"]:
-                # TODO: this part only sets the POWER DOWN attribute,
-                # it doesn't affect anything else.
-                robot.power_down = message["interface_data"]["power_down"]
-                # Set robot's selection with chosen card´s index
-                robot.card_indexes = message["interface_data"]["program"]
+            robot.power_down = message["interface_data"]["power_down"]
+            # Set robot's selection with chosen card´s index
+            robot.card_indexes = message["interface_data"]["program"]
 
-            # choice of cards was blocked by the player
-            else:
-                robot.selection_confirmed = True
-                confirmed_count = self.state.count_confirmed_selections()
-                if confirmed_count == len(self.state.robots):
-                    await self.play_game_round()
-                # If only last robot didn't select his cards, the timer starts.
-                if confirmed_count == len(self.state.robots) - 1:
-                    await self.send_message("timer_start")
-                    asyncio.create_task(self.timer(self.state.game_round))
+        await self.send_message(self.state.robots_as_dict())
+
+    async def actions_after_robot_confirmed_selection(self, robot):
+        """
+        When the player confirmed his selection, robot.selection_confirmed
+        is set up on True and according confirmed_count the Timer is
+        started or game round is played.
+        """
+        robot.selection_confirmed = True
+        confirmed_count = self.state.count_confirmed_selections()
+        # If last robot doesnt selected his cards, the timer starts.
+        if confirmed_count == len(self.state.robots) - 1:
+            await self.send_message("timer_start")
+            asyncio.create_task(self.timer(self.state.game_round))
+        if confirmed_count == len(self.state.robots):
+            await self.play_game_round()
 
     async def play_game_round(self):
         """
@@ -158,9 +160,9 @@ class Server:
         send_new_dealt_card.
         """
         self.state.play_round()
-        await self.send_message("round_over")
         if self.state.winners:
             await self.send_message({"winner": self.state.winners})
+        await self.send_message("round_over")
         await self.send_message(self.state.robots_as_dict())
         await self.send_new_dealt_cards()
 
@@ -188,7 +190,8 @@ class Server:
         """
         Send message to all  clients.
         """
-        ws_all = self.ws_receivers + self.ws_interfaces
+        ws_all = list(self.ws_receivers)
+        ws_all.extend(self.assigned_robots.values())
         for client in ws_all:
             await client.send_json(message)
 
