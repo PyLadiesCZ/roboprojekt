@@ -50,8 +50,8 @@ select_sprite = get_sprite('img/interface/png/card_cv.png')
 # Selection cursor
 cursor_sprite = get_sprite('img/interface/png/card_sl.png')
 # Winner
-winner_sprite = get_sprite('img/interface/png/winner.png', x=160, y=290)
-game_winner_sprite = get_sprite('img/interface/png/game_winner.png', x=160, y=290)
+you_win_sprite = get_sprite('img/interface/png/winner.png', x=160, y=290)
+winner_of_the_game_sprite = get_sprite('img/interface/png/game_winner.png', x=160, y=290)
 # Game over
 game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=280)
 # Other robot card
@@ -349,10 +349,10 @@ def draw_interface(interface_state, game_state, winner_time, window):
             seconds = 5 - (monotonic() - winner_time)
             if (0 < seconds < 5):
                 if interface_state.robot.winner:
-                    announcement = winner_sprite
+                    announcement = you_win_sprite
                     announcement.draw()
                 else:
-                    announcement = game_winner_sprite
+                    announcement = winner_of_the_game_sprite
                     announcement.draw()
                     for i, name in enumerate(game_state.winners):
                         winner_label = get_label(
