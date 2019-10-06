@@ -130,7 +130,7 @@ class Server:
         # Set robot's attributes according to data in message
         # Choice of cards was blocked by the player
         if message["interface_data"]["confirmed"]:
-            await self.robot_confirmed_selection(robot)
+            await self.actions_after_robot_confirmed_selection(robot)
         else:
             # While selection is not confirmed, it is still possible to choose cards
             robot.power_down = message["interface_data"]["power_down"]
@@ -139,14 +139,14 @@ class Server:
 
         await self.send_message(self.state.robots_as_dict())
 
-    async def robot_confirmed_selection(self, robot):
+    async def actions_after_robot_confirmed_selection(self, robot):
         """
         When the player confirmed his selection, robot.selection_confirmed
         is set up on True and according confirmed_count the Timer is
         started or game round is played.
         """
         robot.selection_confirmed = True
-        confirmed_count = self.state.confirmed_count()
+        confirmed_count = self.state.count_confirmed_selections()
         # If last robot doesnt selected his cards, the timer starts.
         if confirmed_count == len(self.state.robots) - 1:
             await self.send_message("timer_start")
