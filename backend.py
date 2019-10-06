@@ -24,8 +24,8 @@ class CardNotKnownError(LookupError):
 
 
 # Load of robots displayed names in file robots.yaml
-with open('robots.yaml', encoding='utf-8') as file:
-    robot_displayed_names = yaml.safe_load(file)
+with open('robots.yaml', encoding='utf-8') as robot_file:
+    robot_displayed_names = yaml.safe_load(robot_file)
 
 
 class Robot:
