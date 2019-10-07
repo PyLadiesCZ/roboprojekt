@@ -599,6 +599,7 @@ class State:
                     for tile in self.get_tiles(robots_next_coordinates[robot]):
                         tile.rotate_robot_on_belt(robot, direction)
                 robot.coordinates = robots_next_coordinates[robot]
+                robot.fall_into_hole(self)
 
     def get_next_coordinates_for_belts(self, express_belts):
         """
