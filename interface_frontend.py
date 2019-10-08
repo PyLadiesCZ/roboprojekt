@@ -52,8 +52,6 @@ winner_sprite = get_sprite('img/interface/png/winner.png', x=160, y=290)
 game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=280)
 # Other robot card
 players_background = get_sprite('img/interface/png/player.png')
-# Choose robot background
-background_sprite = get_sprite('img/interface/png/board.png', x=100, y=200)
 # Loading of robots images
 loaded_robots_images = {}
 for image_path in Path('./img/robots/png').iterdir():
@@ -118,12 +116,6 @@ for i in range(5):
     x, y = 47, 576
     x = x + i * 144
     program_coordinates.append((x, y))
-
-picture_coordinates = []
-for i in range(8):
-    x = 100 + i * 100
-    y = 200
-    picture_coordinates.append((x, y))
 
 # dict for drawing cards names
 cards_type_names = {
@@ -348,18 +340,6 @@ def draw_interface(interface_state, game_state, window):
             sprite.x = 120
             sprite.y = 945
             sprite.draw()
-
-    if interface_state.robot is None:
-        background_sprite.draw()
-
-        for i, robot in enumerate(loaded_robots_images.keys()):
-            player_sprite.image = loaded_robots_images[robot]
-            player_sprite.x = 150 + 120 * i
-            player_sprite.y = 400
-            player_sprite.draw()
-
-            robot_name_label = get_label(str(robot), 180 + 120 * i, 380, 16, "center", (0, 0, 0, 255))
-            robot_name_label.draw()
 
     pyglet.gl.glPopMatrix()
 
