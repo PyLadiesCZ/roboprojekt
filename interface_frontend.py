@@ -52,6 +52,8 @@ winner_sprite = get_sprite('img/interface/png/winner.png', x=160, y=290)
 game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=280)
 # Other robot card
 players_background = get_sprite('img/interface/png/player.png')
+# Choose robot background
+background_sprite = get_sprite('img/interface/png/board.png', x=100, y=200)
 # Loading of robots images
 loaded_robots_images = {}
 for image_path in Path('./img/robots/png').iterdir():
@@ -116,6 +118,12 @@ for i in range(5):
     x, y = 47, 576
     x = x + i * 144
     program_coordinates.append((x, y))
+
+picture_coordinates = []
+for i in range(8):
+    x = 100 + i * 100
+    y = 200
+    picture_coordinates.append((x, y))
 
 # dict for drawing cards names
 cards_type_names = {
@@ -241,8 +249,8 @@ def draw_interface(interface_state, game_state, window):
             flag_slot_sprite.draw()
 
         # Game over
-        if interface_state.robot is None:
-            game_over_sprite.draw()
+        # if interface_state.robot is None:
+        #    game_over_sprite.draw()
 
     # Cards on hand
     for coordinate, card_index in zip(program_coordinates, interface_state.program):
@@ -281,7 +289,7 @@ def draw_interface(interface_state, game_state, window):
         seconds = monotonic() - interface_state.timer
         seconds_left = round(30-seconds)
         timer_label = get_label(
-            # format'02' means that number has always 2 digits, 
+            # format'02' means that number has always 2 digits,
             # shorter is filled with '0' before it.
             f"00:{seconds_left:02}",
             x=585,
@@ -340,6 +348,18 @@ def draw_interface(interface_state, game_state, window):
             sprite.x = 120
             sprite.y = 945
             sprite.draw()
+
+    if interface_state.robot is None:
+        background_sprite.draw()
+
+        for i, robot in enumerate(loaded_robots_images.keys()):
+            player_sprite.image = loaded_robots_images[robot]
+            player_sprite.x = 150 + 120 * i
+            player_sprite.y = 400
+            player_sprite.draw()
+
+            robot_name_label = get_label(str(robot), 180 + 120 * i, 380, 16, "center", (0, 0, 0, 255))
+            robot_name_label.draw()
 
     pyglet.gl.glPopMatrix()
 
@@ -507,6 +527,14 @@ def handle_click(interface_state, x, y, window):
     if (250 < x < 435) and (535 < y < 565):
         interface_state.return_card()
 
+    # Choose robot
+    for coordinate in picture_coordinates:
+        coord_x, coord_y = coordinate
+        if (
+            coord_x < x < coord_x + player_sprite.width and
+            coord_y < y < coord_y + player_sprite.height
+        ):
+            print("OK")
 
 def coordinates_in_rectangle(x, y, left, bottom, width, height):
     """

@@ -99,9 +99,9 @@ class Interface:
         Set robots, players and self robot using data from sent message.
         """
         self.game_state.robots = self.game_state.robots_from_dict(message)
-        for robot in self.game_state.robots:
-            if robot.name == robot_name:
-                self.interface_state.robot = robot
+        #for robot in self.game_state.robots:
+        #    if robot.name == robot_name:
+        #        self.interface_state.robot = robot
 
     def set_blocked_cards(self, cards):
         """
