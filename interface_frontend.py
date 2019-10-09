@@ -241,8 +241,8 @@ def draw_interface(interface_state, game_state, window):
             flag_slot_sprite.draw()
 
         # Game over
-        # if interface_state.robot is None:
-        #    game_over_sprite.draw()
+         if interface_state.robot is None:
+            game_over_sprite.draw()
 
     # Cards on hand
     for coordinate, card_index in zip(program_coordinates, interface_state.program):
@@ -281,7 +281,7 @@ def draw_interface(interface_state, game_state, window):
         seconds = monotonic() - interface_state.timer
         seconds_left = round(30-seconds)
         timer_label = get_label(
-            # format'02' means that number has always 2 digits,
+            # format'02' means that number has always 2 digits, 
             # shorter is filled with '0' before it.
             f"00:{seconds_left:02}",
             x=585,
