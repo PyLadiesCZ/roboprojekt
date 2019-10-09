@@ -1,13 +1,13 @@
 import pyglet
 from pathlib import Path
-from functools import lru_cache
 from time import monotonic
+
+from modul_frontend import TILE_WIDTH, TILE_HEIGHT, get_label
+
 
 MAX_LIVES_COUNT = 3
 MAX_FLAGS_COUNT = 8
 MAX_DAMAGES_COUNT = 9
-TILE_WIDTH = 64
-TILE_HEIGHT = 64
 WINDOW_WIDTH = 768
 WINDOW_HEIGHT = 1024
 
@@ -131,23 +131,6 @@ cards_type_names = {
     'move2': 'MOVE 2',
     'move3': 'MOVE 3',
 }
-
-
-@lru_cache(maxsize=100)
-def get_label(text, x, y, font_size, anchor_x, color):
-    """
-    Return text label with parameters defined from given arguments.
-    Store last 100 labels in cache, documented here:
-    https://docs.python.org/3/library/functools.html#functools.lru_cache
-    """
-    label = pyglet.text.Label()
-    label.text = text
-    label.x = x
-    label.y = y
-    label.font_size = font_size
-    label.anchor_x = anchor_x
-    label.color = color
-    return label
 
 
 def draw_card(coordinate, card):

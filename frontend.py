@@ -7,12 +7,8 @@ The frontend module
 import pyglet
 from pathlib import Path
 from time import monotonic
+from modul_frontend import TILE_WIDTH, TILE_HEIGHT, get_label
 
-from interface_frontend import get_label
-
-# Constatnts for size of tile image in px
-TILE_WIDTH = 64
-TILE_HEIGHT = 64
 
 # Loading of tiles and robots images
 loaded_tiles_images = {}
