@@ -77,10 +77,11 @@ class Server:
         React to the messages from interface: update game state accordingly.
         Maintain connection to the client until they disconnect.
         """
+        print(request.match_info)
         ws = await self.ws_handler(request)
         # Get first data for connected client: robot and cards
         # and assign it to client
-        robot = self.assign_robot_to_client(ws)
+        robot = self.assign_robot_to_client(request.match_info.get("robot_name"), ws)
 
         try:
             # Prepare message to send: robot name, game state and cards
@@ -105,16 +106,24 @@ class Server:
             del self.assigned_robots[robot.name]
             self.available_robots.append(robot)
 
-    def assign_robot_to_client(self, ws):
+    def assign_robot_to_client(self, robot_name, ws):
         """
         Assign the first available robots to the client.
         Store the pair in a dictionary of assigned robots.
         Return the assigned robot.
         """
         # Client_interface is added to dictionary (robot.name: ws)
-        robot = self.available_robots.pop(0)
-        self.assigned_robots[robot.name] = ws
-        return robot
+        if robot_name is not None:
+            for robot in self.available_robots:
+                if robot_name == robot.name:
+                    self.available_robots.remove(robot)
+                    self.assigned_robots[robot.name] = ws
+                    return robot
+            raise web.HTTPNotFound()
+        else:
+            robot = self.available_robots.pop(0)
+            self.assigned_robots[robot.name] = ws
+            return robot
 
     async def process_message(self, message, robot):
         """
@@ -199,9 +208,11 @@ class Server:
 # aiohttp.web application
 def get_app(argv=None):
     app = web.Application()
-    app.add_routes([web.get("/receiver/", server.talk_to_receiver),
-                   web.get("/interface/", server.talk_to_interface), ],
-                   )
+    app.add_routes([
+        web.get("/receiver/", server.talk_to_receiver),
+        web.get("/interface/", server.talk_to_interface),
+        web.get("/interface/{robot_name}", server.talk_to_interface)
+    ])
     return app
 
 

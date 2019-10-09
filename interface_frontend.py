@@ -507,14 +507,6 @@ def handle_click(interface_state, x, y, window):
     if (250 < x < 435) and (535 < y < 565):
         interface_state.return_card()
 
-    # Choose robot
-    for coordinate in picture_coordinates:
-        coord_x, coord_y = coordinate
-        if (
-            coord_x < x < coord_x + player_sprite.width and
-            coord_y < y < coord_y + player_sprite.height
-        ):
-            print("OK")
 
 def coordinates_in_rectangle(x, y, left, bottom, width, height):
     """
