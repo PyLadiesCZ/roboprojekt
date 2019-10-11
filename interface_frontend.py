@@ -349,7 +349,7 @@ def draw_robot(i, robot, game_state):
     Draw robot and his attributes.
     """
     # Robot´s image
-    if robot.name in loaded_robots_images:
+    if robot.name in loaded_robots_images.keys():
         player_sprite.image = loaded_robots_images[robot.name]
         player_sprite.x = 68 + i * 98
         player_sprite.y = 90

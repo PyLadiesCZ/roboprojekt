@@ -13,13 +13,14 @@ class Receiver:
     def __init__(self):
         self.window = None
         self.state = None
+        self.available_robots = None
 
     def window_draw(self):
         """
         Draw the game state (board and robots).
         """
         self.window.clear()
-        draw_state(self.state, self.window)
+        draw_state(self.state, self.available_robots, self.window)
 
     async def get_game_state(self):
         async with aiohttp.ClientSession() as session:
@@ -36,6 +37,8 @@ class Receiver:
                         self.state.robots = self.state.robots_from_dict(message)
                     if "winner" in message:
                         self.state.winners = message["winner"]
+                    if "available_robots" in message:
+                        self.available_robots = message["available_robots"]
 
 
 def tick_asyncio(dt):

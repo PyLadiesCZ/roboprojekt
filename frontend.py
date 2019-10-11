@@ -9,9 +9,12 @@ from pathlib import Path
 
 from interface_frontend import get_label
 
+
 # Constatnts for size of tile image in px
 TILE_WIDTH = 64
 TILE_HEIGHT = 64
+WINDOW_WIDTH = 768
+WINDOW_HEIGHT = 1024
 
 # Loading of tiles and robots images
 loaded_tiles_images = {}
@@ -22,13 +25,14 @@ loaded_robots_images = {}
 for image_path in Path('./img/robots_map/png').iterdir():
     loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
 
-
 def get_sprite(img_path, x=0, y=0):
     img = pyglet.image.load(img_path)
     return pyglet.sprite.Sprite(img, x, y)
 
+
+border_sprite = get_sprite('./img/interface/png/border.png')
 # Game over
-#game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=180)
+# game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=180)
 
 
 def create_window(state):
@@ -109,7 +113,7 @@ def create_robot_sprite(robot):
     return robot_sprite
 
 
-def draw_state(state, window):
+def draw_state(state, available_robots, window):
     """
     Draw the images of tiles and robots into map, react to user's resizing of window by scaling the board.
 
@@ -132,6 +136,14 @@ def draw_state(state, window):
 
     for tile_sprite in tile_sprites:
         tile_sprite.draw()
+
+    if available_robots:
+        for robot in state.robots:
+            x, y = robot.coordinates
+            for robot_sprite in robot_sprites:
+                border_sprite.x = x*TILE_WIDTH
+                border_sprite.y = y*TILE_HEIGHT
+                border_sprite.draw()
 
     if state.winners:
         #game_over_sprite.draw()

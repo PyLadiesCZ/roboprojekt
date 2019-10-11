@@ -12,7 +12,7 @@ import asyncio
 
 from aiohttp import web
 
-from backend import State
+from backend import State, Robot
 
 
 class Server:
@@ -50,6 +50,9 @@ class Server:
         await ws.prepare(request)
         return ws
 
+    def available_robots_as_dict(self):
+        return {"available_robots": [robot.as_dict() for robot in self.available_robots]}
+
     async def talk_to_receiver(self, request):
         """
         Communicate with websockets connected through `/receiver/` route.
@@ -62,6 +65,7 @@ class Server:
         try:
             # This message is sent only this (just connected) client
             await ws.send_json(self.state.whole_as_dict(map_name))
+            await ws.send_json(self.available_robots_as_dict())
             # For cycle keeps the connection with client alive
             async for message in ws:
                 pass
@@ -81,7 +85,7 @@ class Server:
         ws = await self.ws_handler(request)
         # Get first data for connected client: robot and cards
         # and assign it to client
-        robot = self.assign_robot_to_client(request.match_info.get("robot_name"), ws)
+        robot = await self.assign_robot_to_client(request.match_info.get("robot_name"), ws)
 
         try:
             # Prepare message to send: robot name, game state and cards
@@ -105,8 +109,9 @@ class Server:
             # Robot is deleted from assigned robots and return to available robots
             del self.assigned_robots[robot.name]
             self.available_robots.append(robot)
+            await self.send_message(self.available_robots_as_dict())
 
-    def assign_robot_to_client(self, robot_name, ws):
+    async def assign_robot_to_client(self, robot_name, ws):
         """
         Assign the first available robots to the client.
         Store the pair in a dictionary of assigned robots.
@@ -124,6 +129,7 @@ class Server:
             robot = self.available_robots.pop(0)
             self.assigned_robots[robot.name] = ws
             return robot
+        await self.send_message(self.available_robots_as_dict())
 
     async def process_message(self, message, robot):
         """

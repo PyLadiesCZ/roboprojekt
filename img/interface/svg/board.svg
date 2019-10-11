@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="500"
+   height="500"
+   viewBox="0 0 132.29166 132.29167"
+   version="1.1"
+   id="svg8"
+   sodipodi:docname="board.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   inkscape:export-filename="/home/iveta/pyladies/roboprojekt/img/interface/png/board.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.73"
+     inkscape:cx="176.6137"
+     inkscape:cy="255.27338"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1366"
+     inkscape:window-height="660"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-164.70832)">
+    <path
+       style="fill:#aaeeff;fill-opacity:1;stroke:#000000;stroke-width:0.10355725;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M -61.412992,223.21278 V 157.63817 H 70.921268 203.25548 v 65.57461 65.57467 H 70.921268 -61.412992 Z"
+       id="path12"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/iveta/pyladies/roboprojekt/img/interface/png/board.png"
+       inkscape:export-xdpi="95.985741"
+       inkscape:export-ydpi="95.985741" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:9.42685604px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#d40000;fill-opacity:1;stroke:none;stroke-width:0.25250503"
+       x="67.407188"
+       y="200.74768"
+       id="text16"
+       transform="scale(1.0615747,0.94199682)"
+       inkscape:export-filename="/home/iveta/pyladies/roboprojekt/img/interface/png/board.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"><tspan
+         sodipodi:role="line"
+         x="67.407188"
+         y="200.74768"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:15.52222229px;font-family:'Nimbus Mono L';-inkscape-font-specification:'Nimbus Mono L Bold';text-align:center;text-anchor:middle;fill:#d40000;stroke-width:0.25250503"
+         id="tspan18">ROBOPROJECT</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:bold;font-size:8.83660507px;line-height:1.25;font-family:Chilanka;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.22091512;-inkscape-font-specification:'Chilanka Bold';font-stretch:normal;font-variant:normal;"
+       x="82.313156"
+       y="251.03871"
+       id="text22"
+       transform="scale(1.2133754,0.82414723)"
+       inkscape:export-filename="/home/iveta/pyladies/roboprojekt/img/interface/png/board.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"><tspan
+         sodipodi:role="line"
+         id="tspan20"
+         x="82.313156"
+         y="258.85703"
+         style="stroke-width:0.22091512;-inkscape-font-specification:'Nimbus Mono L Bold';font-family:'Nimbus Mono L';font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal;font-size:11.28888903px;" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="34.683155"
+       y="202.57652"
+       id="text820"
+       inkscape:export-filename="/home/iveta/pyladies/roboprojekt/img/interface/png/board.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"><tspan
+         sodipodi:role="line"
+         id="tspan818"
+         x="34.683155"
+         y="202.57652"
+         style="font-size:7.76111126px;stroke-width:0.26458332">Choose your robot</tspan></text>
+  </g>
+</svg>
