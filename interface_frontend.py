@@ -2,7 +2,7 @@ import pyglet
 from pathlib import Path
 from time import monotonic
 
-from modul_frontend import TILE_WIDTH, TILE_HEIGHT, get_label
+from util_frontend import TILE_WIDTH, TILE_HEIGHT, get_label
 
 
 MAX_LIVES_COUNT = 3

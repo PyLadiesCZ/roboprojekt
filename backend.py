@@ -5,7 +5,7 @@ from pathlib import Path
 from collections import OrderedDict
 from random import shuffle
 
-from util import Direction, Rotation, get_next_coordinates
+from util_backend import Direction, Rotation, get_next_coordinates
 from tile import HoleTile
 from loading import get_board, get_map_data, board_from_data
 

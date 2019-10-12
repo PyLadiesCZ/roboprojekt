@@ -7,7 +7,7 @@ The frontend module
 import pyglet
 from pathlib import Path
 from time import monotonic
-from modul_frontend import TILE_WIDTH, TILE_HEIGHT, get_label
+from util_frontend import TILE_WIDTH, TILE_HEIGHT, get_label
 
 
 # Loading of tiles and robots images
