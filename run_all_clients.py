@@ -11,7 +11,7 @@ import client_receiver
 import client_interface
 
 client_receiver.main()
-client_interface.main()
-client_interface.main()
+client_interface.main(robot_name)
+client_interface.main(robot_name)
 
 pyglet.app.run()

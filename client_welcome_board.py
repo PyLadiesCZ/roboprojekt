@@ -45,7 +45,7 @@ class WelcomeBoard:
                     if "robots" in message:
                         self.state.robots = self.state.robots_from_dict(message)
                     if "available_robots" in message:
-                        self.available_robots = message["available_robots"]
+                        self.available_robots = self.state.robots_from_dict(message["available_robots"])
 
 
 def tick_asyncio(dt):

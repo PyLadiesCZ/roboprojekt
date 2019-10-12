@@ -66,7 +66,7 @@ def draw_board(state, window):
                 robot_sprite.draw()
 
                 robot_name_label = get_label(
-                    str(robot.name), robot_sprite.x + 30, robot_sprite.y - 20,
+                    str(robot.displayed_name), robot_sprite.x + 30, robot_sprite.y - 20,
                     16, "center", (0, 0, 0, 255),
                 )
                 robot_name_label.draw()
@@ -87,5 +87,7 @@ def handle_click(state, x, y, window, available_robots):
             coord_y < y < coord_y + robot_sprite.height
         ):
             robot_name = sorted(loaded_robots_images.keys())[i]
-            main(robot_name)
-            window.close()
+            for robot in available_robots:
+                if robot_name == robot.name:
+                    main(robot_name)
+                    window.close()
