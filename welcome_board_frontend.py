@@ -91,3 +91,5 @@ def handle_click(state, x, y, window, available_robots):
                 if robot_name == robot.name:
                     main(robot_name)
                     window.close()
+                else:
+                    print("Robot is not available.")
