@@ -138,7 +138,7 @@ def draw_state(state, available_robots, window):
         tile_sprite.draw()
 
     if available_robots:
-        for robot in state.robots:
+        for robot in available_robots:
             x, y = robot.coordinates
             for robot_sprite in robot_sprites:
                 border_sprite.x = x*TILE_WIDTH

@@ -28,6 +28,13 @@ for i in range(8):
     y = 200
     picture_coordinates.append((x, y))
 
+not_available_label = get_label(
+    "Robot is not available.",
+    x=500, y=250,
+    font_size=20, anchor_x="center",
+    color=(255, 255, 255, 255),
+)
+
 
 def create_window(on_draw, on_mouse_press):
     """
@@ -92,4 +99,4 @@ def handle_click(state, x, y, window, available_robots):
                     main(robot_name)
                     window.close()
                 else:
-                    print("Robot is not available.")
+                    not_available_label.draw()

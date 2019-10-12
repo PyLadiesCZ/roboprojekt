@@ -125,14 +125,15 @@ class Server:
             for robot in self.available_robots:
                 if robot_name == robot.name:
                     self.available_robots.remove(robot)
+                    await self.send_message(self.available_robots_as_dict())
                     self.assigned_robots[robot.name] = ws
                     return robot
             raise web.HTTPNotFound()
         else:
             robot = self.available_robots.pop(0)
+            await self.send_message(self.available_robots_as_dict())
             self.assigned_robots[robot.name] = ws
             return robot
-        await self.send_message(self.available_robots_as_dict())
 
     async def process_message(self, message, robot):
         """

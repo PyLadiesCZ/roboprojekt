@@ -38,7 +38,7 @@ class Receiver:
                     if "winner" in message:
                         self.state.winners = message["winner"]
                     if "available_robots" in message:
-                        self.available_robots = message["available_robots"]
+                        self.available_robots = self.state.robots_from_dict(message["available_robots"])
 
 
 def tick_asyncio(dt):
