@@ -5,14 +5,14 @@ https://aiohttp.readthedocs.io/en/stable/index.html
 
 Run server.py in command line, in new command line run client_receiver.py,
 it will display the playing area. If you want to play, run also
-client_interface.py in another command line.
+client_welcome_board.py in another command line.
 """
 import sys
 import asyncio
 
 from aiohttp import web
 
-from backend import State, Robot
+from backend import State
 
 
 class Server:

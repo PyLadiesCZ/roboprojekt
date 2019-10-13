@@ -37,10 +37,7 @@ def create_window(on_draw, on_mouse_press):
     Return a pyglet window for graphic output.
     """
     window = pyglet.window.Window(1000, 500, resizable=True)
-    window.push_handlers(
-        on_draw=on_draw,
-        on_mouse_press=on_mouse_press,
-    )
+    window.push_handlers(on_draw=on_draw, on_mouse_press=on_mouse_press)
     return window
 
 
