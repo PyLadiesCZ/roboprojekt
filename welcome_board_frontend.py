@@ -15,13 +15,7 @@ for image_path in Path('./img/robots/png').iterdir():
     loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
 # Border of available robot's picture
 border_sprite = get_sprite('./img/interface/png/border.png')
-
-
-def get_sprite(img_path, x=0, y=0):
-    img = pyglet.image.load(img_path)
-    return pyglet.sprite.Sprite(img, x, y)
-
-
+# Robot sprite
 robot_sprite = get_sprite('img/robots/png/bender.png')
 
 picture_coordinates = []
@@ -79,10 +73,11 @@ def draw_board(state, available_robots, window):
                 )
                 robot_name_label.draw()
 
-            #for robot in available_robots:
-            #    border_sprite.x = robot_sprite.x
-            #    border_sprite.y = robot_sprite.y
-            #    border_sprite.draw()
+            for available_robot in available_robots:
+                if available_robot.name == robot.name:
+                    border_sprite.x = robot_sprite.x
+                    border_sprite.y = robot_sprite.y
+                    border_sprite.draw()
 
         if not available_robots:
             not_available_label.draw()
@@ -104,7 +99,7 @@ def handle_click(state, x, y, window, available_robots):
             coord_y < y < coord_y + robot_sprite.height
         ):
             robot_name = sorted(loaded_robots_images.keys())[i]
-            for robot in available_robots:
-                if robot_name == robot.name:
+            for available_robot in available_robots:
+                if robot_name == available_robot.name:
                     main(robot_name)
                     window.close()
