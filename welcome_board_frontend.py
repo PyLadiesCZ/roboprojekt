@@ -2,7 +2,7 @@ import pyglet
 from pathlib import Path
 from client_interface import main
 
-from interface_frontend import get_sprite, get_label
+from util_frontend import get_sprite, get_label
 
 WINDOW_WIDTH = 1000
 WINDOW_HEIGHT = 500

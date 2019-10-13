@@ -21,3 +21,11 @@ def get_label(text, x, y, font_size, anchor_x, color):
     label.anchor_x = anchor_x
     label.color = color
     return label
+
+
+def get_sprite(img_path, x=0, y=0):
+    """
+    Return sprite of image.
+    """
+    img = pyglet.image.load(img_path)
+    return pyglet.sprite.Sprite(img, x, y)

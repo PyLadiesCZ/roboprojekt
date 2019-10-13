@@ -7,13 +7,12 @@ The frontend module
 import pyglet
 from pathlib import Path
 from time import monotonic
-from util_frontend import TILE_WIDTH, TILE_HEIGHT, get_label
+from util_frontend import TILE_WIDTH, TILE_HEIGHT, get_label, get_sprite
 
 
 # Constatnts for size of window in px
 WINDOW_WIDTH = 768
 WINDOW_HEIGHT = 1024
-
 
 # Loading of tiles and robots images
 loaded_tiles_images = {}
@@ -23,11 +22,6 @@ for image_path in Path('./img/tiles/png').iterdir():
 loaded_robots_images = {}
 for image_path in Path('./img/robots_map/png').iterdir():
     loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
-
-
-def get_sprite(img_path, x=0, y=0):
-    img = pyglet.image.load(img_path)
-    return pyglet.sprite.Sprite(img, x, y)
 
 # Border of available robot's picture
 border_sprite = get_sprite('./img/interface/png/border.png')

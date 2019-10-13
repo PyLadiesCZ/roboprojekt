@@ -2,7 +2,7 @@ import pyglet
 from pathlib import Path
 from time import monotonic
 
-from util_frontend import TILE_WIDTH, TILE_HEIGHT, get_label
+from util_frontend import TILE_WIDTH, TILE_HEIGHT, get_label, get_sprite
 
 
 MAX_LIVES_COUNT = 3
@@ -23,11 +23,6 @@ def create_window(on_draw, on_text, on_mouse_press):
         on_mouse_press=on_mouse_press,
     )
     return window
-
-
-def get_sprite(img_path, x=0, y=0):
-    img = pyglet.image.load(img_path)
-    return pyglet.sprite.Sprite(img, x, y)
 
 
 # Interface element sprites
