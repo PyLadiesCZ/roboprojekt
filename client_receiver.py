@@ -25,6 +25,10 @@ class Receiver:
         draw_state(self.state, self.winner_time, self.available_robots, self.window)
 
     async def get_game_state(self):
+        """
+        Connect to server and receive messages.
+        Process information from server.
+        """
         async with aiohttp.ClientSession() as session:
             async with session.ws_connect('http://localhost:8080/receiver/') as ws:
                 # Cycle "for" is finished when client disconnects from server
@@ -33,8 +37,7 @@ class Receiver:
                     if "game_state" in message:
                         self.state = State.whole_from_dict(message)
                         if self.window is None:
-                            self.window = create_window(self.state)
-                            self.window.push_handlers(on_draw=self.window_draw)
+                            self.window = create_window(self.state, self.window_draw)
                     if "robots" in message:
                         self.state.robots = self.state.robots_from_dict(message)
                     if "winner" in message:

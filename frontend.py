@@ -31,7 +31,7 @@ winner_sprite = get_sprite('img/interface/png/game_winner.png', x=170, y=200)
 # game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=180)
 
 
-def create_window(state):
+def create_window(state, on_draw):
     """
     Return a pyglet window for graphic output.
 
@@ -39,6 +39,7 @@ def create_window(state):
     """
     window = pyglet.window.Window(state.tile_count[0] * TILE_WIDTH,
                                   state.tile_count[1] * TILE_HEIGHT + 50, resizable=True)
+    window.push_handlers(on_draw=on_draw)
     return window
 
 

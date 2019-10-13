@@ -1,5 +1,6 @@
 """
-Client receives game state from server and draws it.
+Welcome board where player can choose his robot.
+Client receives game state with available robots from server.
 """
 import asyncio
 import aiohttp
@@ -17,18 +18,22 @@ class WelcomeBoard:
 
     def window_draw(self):
         """
-        Draw the game state (board and robots).
+        Draw the window with available robots.
         """
         self.window.clear()
         draw_board(self.state, self.available_robots, self.window)
 
     def on_mouse_press(self, x, y, button, mod):
         """
-        Interface is handled by mouse press.
+        Board is handled by mouse press.
         """
         handle_click(self.state, x, y, self.window, self.available_robots)
 
     async def get_game_state(self):
+        """
+        Connect to server and receive messages.
+        Process information from server.
+        """
         async with aiohttp.ClientSession() as session:
             async with session.ws_connect('http://localhost:8080/receiver/') as ws:
                 # Cycle "for" is finished when client disconnects from server
@@ -37,13 +42,7 @@ class WelcomeBoard:
                     if "game_state" in message:
                         self.state = State.whole_from_dict(message)
                         if self.window is None:
-                            self.window = create_window(self.state)
-                            self.window.push_handlers(
-                                on_draw=self.window_draw,
-                                on_mouse_press=self.on_mouse_press,
-                            )
-                    if "robots" in message:
-                        self.state.robots = self.state.robots_from_dict(message)
+                            self.window = create_window((self.window_draw, self.on_mouse_press)
                     if "available_robots" in message:
                         self.available_robots = self.state.robots_from_dict(message["available_robots"])
                         print(message)
