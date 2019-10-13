@@ -1,13 +1,16 @@
 import pyglet
 from pathlib import Path
-from functools import lru_cache
 from time import monotonic
+
+from util_frontend import TILE_WIDTH, TILE_HEIGHT, get_label
+
 
 MAX_LIVES_COUNT = 3
 MAX_FLAGS_COUNT = 8
 MAX_DAMAGES_COUNT = 9
 WINDOW_WIDTH = 768
 WINDOW_HEIGHT = 1024
+
 
 def create_window(on_draw, on_text, on_mouse_press):
     """
@@ -47,7 +50,8 @@ select_sprite = get_sprite('img/interface/png/card_cv.png')
 # Selection cursor
 cursor_sprite = get_sprite('img/interface/png/card_sl.png')
 # Winner
-winner_sprite = get_sprite('img/interface/png/winner.png', x=160, y=290)
+you_win_sprite = get_sprite('img/interface/png/winner.png', x=160, y=290)
+winner_of_the_game_sprite = get_sprite('img/interface/png/game_winner.png', x=160, y=290)
 # Game over
 game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=280)
 # Other robot card
@@ -129,23 +133,6 @@ cards_type_names = {
 }
 
 
-@lru_cache(maxsize=100)
-def get_label(text, x, y, font_size, anchor_x, color):
-    """
-    Return text label with parameters defined from given arguments.
-    Store last 100 labels in cache, documented here:
-    https://docs.python.org/3/library/functools.html#functools.lru_cache
-    """
-    label = pyglet.text.Label()
-    label.text = text
-    label.x = x
-    label.y = y
-    label.font_size = font_size
-    label.anchor_x = anchor_x
-    label.color = color
-    return label
-
-
 def draw_card(coordinate, card):
     """
     Draw one card
@@ -194,7 +181,7 @@ def draw_card(coordinate, card):
     name_label.draw()
 
 
-def draw_interface(interface_state, game_state, window):
+def draw_interface(interface_state, game_state, winner_time, window):
     """
     Draw the images of given interface,
     react to user's resizing of window by scaling the interface.
@@ -298,7 +285,6 @@ def draw_interface(interface_state, game_state, window):
     else:
         indicator_red_sprite.draw()
 
-
     if interface_state.robot:
         # Robot
         my_robot_sprite.image = loaded_robots_images[interface_state.robot.name]
@@ -330,16 +316,37 @@ def draw_interface(interface_state, game_state, window):
         for sprite in permanent_damages_sprites[0:interface_state.robot.permanent_damages]:
             sprite.draw()
 
-        # Winner crown
+        # Winner
         if game_state.winners:
+            # An announcement of winner is drawn for 5 sec from time,
+            # when client received message about winner.
+            # Winner crown is drawn for the rest of the game.
             if interface_state.robot.winner:
-                sprite = crown_sprite
+                crown = crown_sprite
             else:
-                sprite = loss_sprite
+                crown = loss_sprite
+            crown.x = 120
+            crown.y = 945
+            crown.draw()
 
-            sprite.x = 120
-            sprite.y = 945
-            sprite.draw()
+            seconds = 5 - (monotonic() - winner_time)
+            if (0 < seconds < 5):
+                if interface_state.robot.winner:
+                    announcement = you_win_sprite
+                    announcement.draw()
+                else:
+                    announcement = winner_of_the_game_sprite
+                    announcement.draw()
+                    for i, name in enumerate(game_state.winners):
+                        winner_label = get_label(
+                            str(name),
+                            x=(game_state.tile_count[0] * TILE_WIDTH) / 2 - 50,
+                            y=(game_state.tile_count[1] * TILE_HEIGHT) / 2 - i * 50,
+                            font_size=26,
+                            anchor_x="center",
+                            color=(255, 0, 0, 255),
+                        )
+                        winner_label.draw()
 
     pyglet.gl.glPopMatrix()
 

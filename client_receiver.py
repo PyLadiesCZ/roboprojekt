@@ -4,6 +4,7 @@ Client receives game state from server and draws it.
 import asyncio
 import aiohttp
 import pyglet
+from time import monotonic
 
 from backend import State
 from frontend import draw_state, create_window
@@ -13,13 +14,14 @@ class Receiver:
     def __init__(self):
         self.window = None
         self.state = None
+        self.winner_time = None
 
     def window_draw(self):
         """
         Draw the game state (board and robots).
         """
         self.window.clear()
-        draw_state(self.state, self.window)
+        draw_state(self.state, self.winner_time, self.window)
 
     async def get_game_state(self):
         async with aiohttp.ClientSession() as session:
@@ -36,6 +38,7 @@ class Receiver:
                         self.state.robots = self.state.robots_from_dict(message)
                     if "winner" in message:
                         self.state.winners = message["winner"]
+                        self.winner_time = monotonic()
 
 
 def tick_asyncio(dt):

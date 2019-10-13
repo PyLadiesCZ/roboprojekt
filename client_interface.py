@@ -20,7 +20,7 @@ class Interface:
         # When something has changed in interface state, the function 'send_state_to_server' is called.
         self.interface_state = InterfaceState(change_callback=self.send_state_to_server)
         self.game_state = None
-
+        self.winner_time = None
         # Connection attribute
         self.ws = None
 
@@ -29,7 +29,7 @@ class Interface:
         Draw the window containing game interface with its current state.
         """
         self.window.clear()
-        draw_interface(self.interface_state, self.game_state, self.window)
+        draw_interface(self.interface_state, self.game_state, self.winner_time, self.window)
 
     def on_text(self, text):
         """
@@ -75,6 +75,7 @@ class Interface:
                         self.interface_state.dealt_cards = self.game_state.cards_from_dict(message["cards"])
                     if "winner" in message:
                         self.game_state.winners = message["winner"]
+                        self.winner_time = monotonic()
                     if "timer_start" in message:
                         self.interface_state.timer = monotonic()
                     if "blocked_cards" in message:
