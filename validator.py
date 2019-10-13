@@ -5,7 +5,7 @@ Don't call it separately
 """
 
 from loading import get_board
-from util import Direction, Rotation
+from util_backend import Direction, Rotation
 
 
 class RepeatingTilesError(Exception):

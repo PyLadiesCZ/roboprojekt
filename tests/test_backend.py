@@ -3,7 +3,7 @@ import pytest
 from backend import create_robots, Robot, State, MovementCard
 from backend import RotationCard, get_direction_from_coordinates
 from backend import get_robot_names
-from util import Direction, Rotation
+from util_backend import Direction, Rotation
 from tile import Tile
 from loading import get_board
 
