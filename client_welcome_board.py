@@ -42,7 +42,7 @@ class WelcomeBoard:
                     if "game_state" in message:
                         self.state = State.whole_from_dict(message)
                         if self.window is None:
-                            self.window = create_window((self.window_draw, self.on_mouse_press)
+                            self.window = create_window(self.window_draw, self.on_mouse_press)
                     if "available_robots" in message:
                         self.available_robots = self.state.robots_from_dict(message["available_robots"])
                         print(message)
