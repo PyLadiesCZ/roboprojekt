@@ -20,7 +20,7 @@ class WelcomeBoard:
         Draw the game state (board and robots).
         """
         self.window.clear()
-        draw_board(self.state, self.window)
+        draw_board(self.state, self.available_robots, self.window)
 
     def on_mouse_press(self, x, y, button, mod):
         """
@@ -46,6 +46,7 @@ class WelcomeBoard:
                         self.state.robots = self.state.robots_from_dict(message)
                     if "available_robots" in message:
                         self.available_robots = self.state.robots_from_dict(message["available_robots"])
+                        print(message)
 
 
 def tick_asyncio(dt):

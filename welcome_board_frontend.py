@@ -13,6 +13,8 @@ background_sprite = get_sprite('img/interface/png/board.png', x=10, y=0)
 loaded_robots_images = {}
 for image_path in Path('./img/robots/png').iterdir():
     loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
+# Border of available robot's picture
+border_sprite = get_sprite('./img/interface/png/border.png')
 
 
 def get_sprite(img_path, x=0, y=0):
@@ -29,10 +31,10 @@ for i in range(8):
     picture_coordinates.append((x, y))
 
 not_available_label = get_label(
-    "Robot is not available.",
-    x=500, y=250,
+    "No more available robots.",
+    x=500, y=50,
     font_size=20, anchor_x="center",
-    color=(255, 255, 255, 255),
+    color=(255, 0, 0, 255),
 )
 
 
@@ -48,11 +50,10 @@ def create_window(on_draw, on_mouse_press):
     return window
 
 
-def draw_board(state, window):
+def draw_board(state, available_robots, window):
     """
-    Draw the images of tiles and robots into map, react to user's resizing of window by scaling the board.
-
-    state: State object containing game board, robots and map sizes
+    Draw the welcome board for choosing robot,
+    react to user's resizing of window by scaling the board.
     """
     pyglet.gl.glPushMatrix()
     window.clear()
@@ -77,6 +78,15 @@ def draw_board(state, window):
                     16, "center", (0, 0, 0, 255),
                 )
                 robot_name_label.draw()
+
+            #for robot in available_robots:
+            #    border_sprite.x = robot_sprite.x
+            #    border_sprite.y = robot_sprite.y
+            #    border_sprite.draw()
+
+        if not available_robots:
+            not_available_label.draw()
+
     pyglet.gl.glPopMatrix()
 
 
@@ -98,5 +108,3 @@ def handle_click(state, x, y, window, available_robots):
                 if robot_name == robot.name:
                     main(robot_name)
                     window.close()
-                else:
-                    not_available_label.draw()
