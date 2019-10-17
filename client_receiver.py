@@ -5,17 +5,19 @@ import asyncio
 import aiohttp
 import pyglet
 from time import monotonic
+from util_network import set_argument_value, tick_asyncio
 
 from backend import State
 from frontend import draw_state, create_window
 
 
 class Receiver:
-    def __init__(self):
+    def __init__(self, server_ip):
         self.window = None
         self.state = None
         self.available_robots = None
         self.winner_time = None
+        self.server_ip = server_ip
 
     def window_draw(self):
         """
@@ -30,7 +32,7 @@ class Receiver:
         Process information from server.
         """
         async with aiohttp.ClientSession() as session:
-            async with session.ws_connect('http://localhost:8080/receiver/') as ws:
+            async with session.ws_connect('http://' + self.server_ip + ':8080/receiver/') as ws:
                 # Cycle "for" is finished when client disconnects from server
                 async for message in ws:
                     message = message.json()
@@ -47,18 +49,9 @@ class Receiver:
                         self.available_robots = self.state.robots_from_dict(message["available_robots"])
 
 
-def tick_asyncio(dt):
-    """
-    Schedule an event loop.
-    More about event loop - https://docs.python.org/3/library/asyncio-eventloop.html
-    """
-    loop = asyncio.get_event_loop()
-    # Run the loop until the "asyncio.sleep" task is complete
-    loop.run_until_complete(asyncio.sleep(0))
-
-
 def main():
-    receiver = Receiver()
+    server_ip = set_argument_value("localhost")
+    receiver = Receiver(server_ip)
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
 
     # Schedule the "client" task

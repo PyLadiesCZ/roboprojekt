@@ -32,18 +32,25 @@ The goal is to have a game that is playable through the network. Therefore it is
 ```
 python server.py
 ```
+You can choose a map to play directly from command line by writing the location of the JSON map as the first argument.
 
-In order to see the game board with small players' avatars, use:
 ```
-python client_receiver.py
+python server.py maps/belt_map.json
+```
+
+If you run server on a different computer than the clients, get the server's IP address and run clients with its value as the first argument.
+If you want to run both server and client/-s on the same computer, the default value `localhost` will be used.
+In order to see the game board with small players' avatars, use for example:
+```
+python client_receiver.py 192.168.10.1
 ```
 
 And if you want to play with your own robot, there is a prepared interface.
 ```
-python client_interface.py
+python client_interface.py 192.168.10.1
 ```
 
-Note that currently, it is not possible to actually run the game on your own unless you play for all the players.
+Note that the possibility to connect to server run on a different computer may be limited by your network provider.
 In order to try the game, run as many interfaces as there are starting points on the map and at least one receiver.
 
 **How do you win and how does the game round look like?**
