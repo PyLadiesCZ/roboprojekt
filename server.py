@@ -7,12 +7,12 @@ Run server.py in command line, in new command line run client_receiver.py,
 it will display the playing area. If you want to play, run also
 client_interface.py in another command line.
 """
-import sys
 import asyncio
 
 from aiohttp import web
 
 from backend import State
+from util_network import set_argument_value
 
 
 class Server:
@@ -206,11 +206,7 @@ def get_app(argv=None):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 1:
-        map_name = "maps/test_winner.json"
-    else:
-        map_name = sys.argv[1]
-
+    map_name = set_argument_value("maps/test_winner.json")
     server = Server(map_name)
     app = get_app()
     web.run_app(app)

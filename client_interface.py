@@ -11,10 +11,11 @@ from time import monotonic
 from interface_frontend import draw_interface, create_window, handle_text, handle_click
 from interface import InterfaceState
 from backend import State
+from util_network import set_argument_value, tick_asyncio
 
 
 class Interface:
-    def __init__(self):
+    def __init__(self, server_ip):
         # Game attributes
         self.window = create_window(self.window_draw, self.on_text, self.on_mouse_press)
         # When something has changed in interface state, the function 'send_state_to_server' is called.
@@ -23,6 +24,7 @@ class Interface:
         self.winner_time = None
         # Connection attribute
         self.ws = None
+        self.server_ip = server_ip
 
     def window_draw(self):
         """
@@ -61,7 +63,7 @@ class Interface:
         # create Session
         async with aiohttp.ClientSession() as session:
             # create Websocket
-            async with session.ws_connect('http://localhost:8080/interface/') as self.ws:
+            async with session.ws_connect('http://' + self.server_ip + ':8080/interface/') as self.ws:
                 # Cycle "for" is finished when client disconnects from server
                 async for message in self.ws:
                     message = message.json()
@@ -112,16 +114,9 @@ class Interface:
         del self.interface_state.program[:len(self.interface_state.blocked_cards)]
 
 
-def tick_asyncio(dt):
-    """
-    Schedule an event loop.
-    """
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(asyncio.sleep(0))
-
-
 def main():
-    interface = Interface()
+    server_ip = set_argument_value("localhost")
+    interface = Interface(server_ip)
 
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
     asyncio.ensure_future(interface.get_messages())
