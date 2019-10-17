@@ -5,7 +5,7 @@ import asyncio
 import aiohttp
 import pyglet
 from time import monotonic
-from util_network import set_server_ip, tick_asyncio
+from util_network import set_argument_value, tick_asyncio
 
 from backend import State
 from frontend import draw_state, create_window
@@ -44,7 +44,7 @@ class Receiver:
 
 
 def main():
-    server_ip = set_server_ip()
+    server_ip = set_argument_value("localhost")
     receiver = Receiver(server_ip)
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
 

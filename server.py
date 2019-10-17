@@ -12,7 +12,7 @@ import asyncio
 from aiohttp import web
 
 from backend import State
-from util_network import set_map_name
+from util_network import set_argument_value
 
 
 class Server:
@@ -206,7 +206,7 @@ def get_app(argv=None):
 
 
 if __name__ == '__main__':
-    map_name = set_map_name()
+    map_name = set_argument_value("maps/test_winner.json")
     server = Server(map_name)
     app = get_app()
     web.run_app(app)

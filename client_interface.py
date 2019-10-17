@@ -11,7 +11,7 @@ from time import monotonic
 from interface_frontend import draw_interface, create_window, handle_text, handle_click
 from interface import InterfaceState
 from backend import State
-from util_network import parse_server_ip, tick_asyncio
+from util_network import set_argument_value, tick_asyncio
 
 
 class Interface:
@@ -115,7 +115,7 @@ class Interface:
 
 
 def main():
-    server_ip = parse_server_ip()
+    server_ip = set_argument_value("localhost")
     interface = Interface(server_ip)
 
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
