@@ -1,8 +1,8 @@
 import pyglet
 from pathlib import Path
-from client_interface import main
 
 from util_frontend import get_sprite, get_label
+from client_welcome_board import switch_to_client_interface
 
 WINDOW_WIDTH = 1000
 WINDOW_HEIGHT = 500
@@ -36,7 +36,7 @@ def create_window(on_draw, on_mouse_press):
     """
     Return a pyglet window for graphic output.
     """
-    window = pyglet.window.Window(1000, 500, resizable=True)
+    window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT, resizable=True)
     window.push_handlers(on_draw=on_draw, on_mouse_press=on_mouse_press)
     return window
 
@@ -57,11 +57,12 @@ def draw_board(state, available_robots, window):
     background_sprite.draw()
 
     if state is not None:
-        for i, robot in enumerate(state.robots):
+        for coordinate, robot in zip(picture_coordinates, state.robots):
+            x, y = coordinate
             if robot.name in loaded_robots_images.keys():
                 robot_sprite.image = loaded_robots_images[robot.name]
-                robot_sprite.x = 50 + i * 120
-                robot_sprite.y = 200
+                robot_sprite.x = x
+                robot_sprite.y = y
                 robot_sprite.draw()
 
                 robot_name_label = get_label(
@@ -98,5 +99,4 @@ def handle_click(state, x, y, window, available_robots):
             robot_name = sorted(loaded_robots_images.keys())[i]
             for available_robot in available_robots:
                 if robot_name == available_robot.name:
-                    main(robot_name)
-                    window.close()
+                    switch_to_client_interface(robot_name, window)

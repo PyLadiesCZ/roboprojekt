@@ -54,7 +54,7 @@ class Server:
         """
         Return dictionary with available robots.
         """
-        return {"available_robots": {"robots": [robot.as_dict() for robot in self.available_robots]}}
+        return {"available_robots": [robot.as_dict() for robot in self.available_robots]}
 
     async def talk_to_receiver(self, request):
         """

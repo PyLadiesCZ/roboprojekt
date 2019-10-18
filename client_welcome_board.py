@@ -7,7 +7,9 @@ import aiohttp
 import pyglet
 
 from backend import State
-from welcome_board_frontend import draw_board, create_window, handle_click
+from util_network import tick_asyncio
+from client_interface import main as interface_main
+from welcome_board_frontend import create_window, draw_board, handle_click
 
 
 class WelcomeBoard:
@@ -29,7 +31,14 @@ class WelcomeBoard:
         """
         handle_click(self.state, x, y, self.window, self.available_robots)
 
-    async def get_game_state(self):
+    def switch_to_client_interface(self, robot_name, window):
+        """
+        Open client_interface.py with chosen robot and close current window.
+        """
+        interface_main(robot_name)
+        window.close()
+
+    async def process_message(self):
         """
         Connect to server and receive messages.
         Process information from server.
@@ -44,18 +53,8 @@ class WelcomeBoard:
                         if self.window is None:
                             self.window = create_window(self.window_draw, self.on_mouse_press)
                     if "available_robots" in message:
-                        self.available_robots = self.state.robots_from_dict(message["available_robots"])
+                        self.available_robots = self.state.robots_from_dict({"robots": message["available_robots"]})
                         print(message)
-
-
-def tick_asyncio(dt):
-    """
-    Schedule an event loop.
-    More about event loop - https://docs.python.org/3/library/asyncio-eventloop.html
-    """
-    loop = asyncio.get_event_loop()
-    # Run the loop until the "asyncio.sleep" task is complete
-    loop.run_until_complete(asyncio.sleep(0))
 
 
 def main():
@@ -65,7 +64,7 @@ def main():
     # Schedule the "client" task
     # More about Futures - official documentation
     # https://docs.python.org/3/library/asyncio-future.html
-    asyncio.ensure_future(welcome_board.get_game_state())
+    asyncio.ensure_future(welcome_board.process_message())
 
 
 if __name__ == "__main__":
