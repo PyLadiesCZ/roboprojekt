@@ -2,7 +2,8 @@ import pyglet
 from pathlib import Path
 
 from util_frontend import get_sprite, get_label
-from client_welcome_board import switch_to_client_interface
+from client_interface import main
+
 
 WINDOW_WIDTH = 1000
 WINDOW_HEIGHT = 500
@@ -46,6 +47,7 @@ def draw_board(state, available_robots, window):
     Draw the welcome board for choosing robot,
     react to user's resizing of window by scaling the board.
     """
+    # with window_zoom as ...
     pyglet.gl.glPushMatrix()
     window.clear()
     zoom = min(
@@ -99,4 +101,5 @@ def handle_click(state, x, y, window, available_robots):
             robot_name = sorted(loaded_robots_images.keys())[i]
             for available_robot in available_robots:
                 if robot_name == available_robot.name:
-                    switch_to_client_interface(robot_name, window)
+                    main(robot_name)
+                    window.close()

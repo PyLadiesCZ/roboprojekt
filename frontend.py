@@ -10,10 +10,6 @@ from time import monotonic
 from util_frontend import TILE_WIDTH, TILE_HEIGHT, get_label, get_sprite
 
 
-# Constatnts for size of window in px
-WINDOW_WIDTH = 768
-WINDOW_HEIGHT = 1024
-
 # Loading of tiles and robots images
 loaded_tiles_images = {}
 for image_path in Path('./img/tiles/png').iterdir():

@@ -8,7 +8,6 @@ import pyglet
 
 from backend import State
 from util_network import tick_asyncio
-from client_interface import main as interface_main
 from welcome_board_frontend import create_window, draw_board, handle_click
 
 
@@ -31,13 +30,6 @@ class WelcomeBoard:
         """
         handle_click(self.state, x, y, self.window, self.available_robots)
 
-    def switch_to_client_interface(self, robot_name, window):
-        """
-        Open client_interface.py with chosen robot and close current window.
-        """
-        interface_main(robot_name)
-        window.close()
-
     async def process_message(self):
         """
         Connect to server and receive messages.
@@ -45,7 +37,7 @@ class WelcomeBoard:
         """
         async with aiohttp.ClientSession() as session:
             async with session.ws_connect('http://localhost:8080/receiver/') as ws:
-                # Cycle "for" is finished when client disconnects from server
+                # Loop "for" is finished when client disconnects from server
                 async for message in ws:
                     message = message.json()
                     if "game_state" in message:
@@ -54,7 +46,6 @@ class WelcomeBoard:
                             self.window = create_window(self.window_draw, self.on_mouse_press)
                     if "available_robots" in message:
                         self.available_robots = self.state.robots_from_dict({"robots": message["available_robots"]})
-                        print(message)
 
 
 def main():
