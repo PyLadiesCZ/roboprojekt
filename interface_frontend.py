@@ -268,7 +268,7 @@ def draw_interface(interface_state, game_state, winner_time, window):
         seconds = monotonic() - interface_state.timer
         seconds_left = round(30-seconds)
         timer_label = get_label(
-            # format'02' means that number has always 2 digits, 
+            # format'02' means that number has always 2 digits,
             # shorter is filled with '0' before it.
             f"00:{seconds_left:02}",
             x=585,
@@ -358,20 +358,20 @@ def draw_robot(i, robot, game_state):
     # Robot´s image
     if robot.name in loaded_robots_images:
         player_sprite.image = loaded_robots_images[robot.name]
-        player_sprite.x = 68 + i * 98
+        player_sprite.x = 68 + i * 97
         player_sprite.y = 90
         player_sprite.draw()
 
     # Power_down
     if robot.power_down:
-        power_down_player_sprite.x = 82 + 98 * i
+        power_down_player_sprite.x = 82 + 97 * i
         power_down_player_sprite.y = 95
         power_down_player_sprite.draw()
 
     # Robot´flags
     flag_label = get_label(
         str(robot.flags),
-        x=132 + 100 * i,
+        x=132 + 98 * i,
         y=160,
         font_size=20,
         anchor_x="right",
@@ -382,7 +382,7 @@ def draw_robot(i, robot, game_state):
     # Robot´damages
     damage_label = get_label(
         str(robot.damages),
-        x=92 + 100 * i,
+        x=92 + 98 * i,
         y=56,
         font_size=20,
         anchor_x="right",
@@ -392,7 +392,7 @@ def draw_robot(i, robot, game_state):
 
     permanent_damage_label = get_label(
         str(robot.permanent_damages),
-        x=132 + 100 * i,
+        x=132 + 98 * i,
         y=56,
         font_size=20,
         anchor_x="right",
@@ -403,7 +403,7 @@ def draw_robot(i, robot, game_state):
     # Robot´lives
     life_label = get_label(
         str(robot.lives),
-        x=92 + 100 * i,
+        x=92 + 98 * i,
         y=160,
         font_size=20,
         anchor_x="right",
