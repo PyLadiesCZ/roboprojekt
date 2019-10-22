@@ -250,3 +250,97 @@ def test_unblocked_cards_count_with_permanent_damages(given_damages, perma_damag
     robot.damages = given_damages
     robot.permanent_damages = perma_damages
     assert robot.unblocked_cards == cards_count
+
+
+def test_robot_clears_attributes():
+    """
+    Assert robot has his attributes cleared and program emptied.
+    """
+    state = State.get_start_state("maps/test_3.json")
+    joe = state.robots[0]
+    # Set imaginary program on robot's hand
+    joe.program = [1, 2, 3, 4, 5]
+    # Let's make less unblocked cards - should be 4
+    joe.damages = 5
+    joe.power_down = True
+    joe.selection_confirmed = True
+    joe.clear_robot_attributes(state)
+    assert joe.selection_confirmed is False
+    assert joe.power_down is False
+    assert joe.program == [None, None, None, None, 5]
+
+
+@pytest.mark.parametrize(("program_before", "program_after"),
+                         [([56, None, 12, "mama", None], [56, 12, "mama"]),
+                          ([None, None, None], []),
+                          ([0, 2, 5], [0, 2, 5]),
+                          ([1, None], [1]),
+                          ([None, "karta", "karta", "karta"], ["karta", "karta", "karta"]), ])
+def test_get_blocked_cards(program_before, program_after):
+    """
+    Assert the blocked cards (cards which are not None) are extracted
+    from robot's program.
+    """
+    joe = Robot(Direction.N, (0, 0), "bender")
+    joe.program = program_before
+    assert joe.select_blocked_cards_from_program() == program_after
+
+
+def test_confirmed_count():
+    """
+    Assert the count when 2 robots confirm choice selection.
+    """
+    state = State.get_start_state("maps/test_3.json")
+    state.robots[0].selection_confirmed = True
+    state.robots[1].selection_confirmed = True
+    assert state.count_confirmed_selections() == 2
+
+
+def test_confirmed_count_2():
+    """
+    Assert the count when all robots confirm choice selection.
+    """
+    state = State.get_start_state("maps/test_3.json")
+    for robot in state.robots:
+        robot.selection_confirmed = True
+    assert state.count_confirmed_selections() == len(state.robots)
+
+
+def test_confirmed_count_3():
+    """
+    Assert the count when none of robots confirms choice selection.
+    """
+    state = State.get_start_state("maps/test_3.json")
+    assert state.count_confirmed_selections() == 0
+
+
+def test_check_winner():
+    """
+    Assert the winner when there is only one.
+    """
+    state = State.get_start_state("maps/test_3.json")
+    state.robots[0].flags = state.flag_count
+    assert state.check_winner() == ['Bender']
+    assert state.robots[0].winner
+
+
+def test_check_winner_2():
+    """
+    Assert there in no winner when no one has collected enough flags.
+    """
+    state = State.get_start_state("maps/test_3.json")
+    state.robots[0].flags = state.flag_count - 1
+    assert state.check_winner() == []
+    assert state.robots[0].winner is False
+
+
+def test_check_winner_3():
+    """
+    Assert more winners when there is more who collected flags.
+    """
+    state = State.get_start_state("maps/test_3.json")
+    state.robots[0].flags = state.flag_count
+    state.robots[1].flags = state.flag_count
+    assert state.check_winner() == ['Bender', "Bishop"]
+    assert state.robots[0].winner
+    assert state.robots[1].winner
