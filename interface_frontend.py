@@ -462,52 +462,50 @@ def handle_click(interface_state, x, y, window):
     Interface reacts on mouse press.
     """
     # Transform x, y coordinates according to zoom of window.
-    zoom = min(
-        window.height / WINDOW_HEIGHT,
-        window.width / WINDOW_WIDTH
-    )
-    x, y = (x / zoom, y / zoom)
-    # Select a card and take it in your "hand"
-    # Selected card is in "GREEN" cursor
-    card_sprite = cards_type_sprites["u_turn"]
-    for i, coordinate in enumerate(dealt_cards_coordinates):
-        coord_x, coord_y = coordinate
+    with window_zoom(window):
+
+
+        # Select a card and take it in your "hand"
+        # Selected card is in "GREEN" cursor
+        card_sprite = cards_type_sprites["u_turn"]
+        for i, coordinate in enumerate(dealt_cards_coordinates):
+            coord_x, coord_y = coordinate
+            if coordinates_in_rectangle(
+                x, y, coord_x, coord_y, card_sprite.width, card_sprite.height
+            ):
+                interface_state.select_card(i)
+
+        # Confirm selection of cards
         if coordinates_in_rectangle(
-            x, y, coord_x, coord_y, card_sprite.width, card_sprite.height
+            x, y, indicator_red_sprite.x, indicator_red_sprite.y,
+            indicator_red_sprite.width, indicator_red_sprite.height
         ):
-            interface_state.select_card(i)
+            interface_state.confirm_selection()
 
-    # Confirm selection of cards
-    if coordinates_in_rectangle(
-        x, y, indicator_red_sprite.x, indicator_red_sprite.y,
-        indicator_red_sprite.width, indicator_red_sprite.height
-    ):
-        interface_state.confirm_selection()
-
-    # Switch on and off Power Down token
-    if coordinates_in_rectangle(
-        x, y, power_down_sprite.x, power_down_sprite.y,
-        power_down_sprite.width, power_down_sprite.height
-    ):
-        interface_state.switch_power_down()
-
-    # Cursor
-    for i, coordinate in enumerate(program_coordinates):
-        coord_x, coord_y = coordinate
+        # Switch on and off Power Down token
         if coordinates_in_rectangle(
-            x, y, coord_x, coord_y, card_sprite.width, card_sprite.height
+            x, y, power_down_sprite.x, power_down_sprite.y,
+            power_down_sprite.width, power_down_sprite.height
         ):
-            interface_state.cursor_index = i
+            interface_state.switch_power_down()
 
-    # Return all cards
-    # The numbers are coordinate of "Return all cards" rectangle
-    if (445 < x < 635) and (535 < y < 565):
-        interface_state.return_cards()
+        # Cursor
+        for i, coordinate in enumerate(program_coordinates):
+            coord_x, coord_y = coordinate
+            if coordinates_in_rectangle(
+                x, y, coord_x, coord_y, card_sprite.width, card_sprite.height
+            ):
+                interface_state.cursor_index = i
 
-    # Return card
-    # The numbers are coordinate of "Return one card" rectangle
-    if (250 < x < 435) and (535 < y < 565):
-        interface_state.return_card()
+        # Return all cards
+        # The numbers are coordinate of "Return all cards" rectangle
+        if (445 < x < 635) and (535 < y < 565):
+            interface_state.return_cards()
+
+        # Return card
+        # The numbers are coordinate of "Return one card" rectangle
+        if (250 < x < 435) and (535 < y < 565):
+            interface_state.return_card()
 
 
 def coordinates_in_rectangle(x, y, left, bottom, width, height):

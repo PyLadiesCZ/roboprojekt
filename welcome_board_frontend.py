@@ -2,7 +2,6 @@ import pyglet
 from pathlib import Path
 
 from util_frontend import get_sprite, get_label
-from client_interface import main
 
 
 WINDOW_WIDTH = 1000
@@ -101,5 +100,4 @@ def handle_click(state, x, y, window, available_robots):
             robot_name = sorted(loaded_robots_images.keys())[i]
             for available_robot in available_robots:
                 if robot_name == available_robot.name:
-                    main(robot_name)
-                    window.close()
+                    return robot_name

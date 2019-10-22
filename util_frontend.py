@@ -32,7 +32,7 @@ def get_sprite(img_path, x=0, y=0):
     return pyglet.sprite.Sprite(img, x, y)
 
 
-"""
+
 @contextmanager
 def window_zoom(window):
     pyglet.gl.glPushMatrix()
@@ -42,8 +42,5 @@ def window_zoom(window):
         window.width / WINDOW_WIDTH
     )
     pyglet.gl.glScalef(zoom, zoom, 1)
-    try:
-        ...
-    finally:
-        pyglet.gl.glPopMatrix()
-"""
+    yield
+    pyglet.gl.glPopMatrix()

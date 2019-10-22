@@ -63,11 +63,16 @@ class Interface:
         """
         # create Session
         async with aiohttp.ClientSession() as session:
+
             # create Websocket
             async with session.ws_connect('http://' + self.server_ip + ':8080/interface/' + robot_name) as self.ws:
                 # Cycle "for" is finished when client disconnects from server
                 async for message in self.ws:
-                    message = message.json()
+                    try:
+                        message = message.json()
+                    except aiohttp.WSMsgType.ERROR:
+                        print("Disconnect")
+                        break
                     if "robot_name" in message:
                         robot_name = message["robot_name"]
                     if "game_state" in message:
@@ -89,6 +94,7 @@ class Interface:
                         self.interface_state = InterfaceState(change_callback=self.send_state_to_server)
 
         self.ws = None
+        self.window.close()
 
     def set_game_state(self, message, robot_name):
         """
@@ -127,6 +133,6 @@ if __name__ == "__main__":
     if len(sys.argv) == 1:
         robot_name = ""
     else:
-        robot_name = sys.argv[1]
+        robot_name = sys.argv[2]
     main(robot_name)
     pyglet.app.run()

@@ -9,6 +9,7 @@ import pyglet
 from backend import State
 from util_network import tick_asyncio
 from welcome_board_frontend import create_window, draw_board, handle_click
+from client_interface import main as interface_main
 
 
 class WelcomeBoard:
@@ -28,7 +29,10 @@ class WelcomeBoard:
         """
         Board is handled by mouse press.
         """
-        handle_click(self.state, x, y, self.window, self.available_robots)
+        robot_name = handle_click(self.state, x, y, self.window, self.available_robots)
+        if robot_name is not None:
+            interface_main(robot_name)
+            self.window.close()
 
     async def process_message(self):
         """
