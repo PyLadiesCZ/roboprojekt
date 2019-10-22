@@ -1,7 +1,6 @@
 """
 Backend file contains functions for the game logic.
 """
-from pathlib import Path
 from collections import OrderedDict
 from random import shuffle
 import yaml
@@ -288,6 +287,13 @@ class Robot:
             self.program[index] = None
         self.selection_confirmed = False
         self.power_down = False
+
+    def freeze(self):
+        """
+        Switch on power down and confirm selection for robot.
+        """
+        self.power_down = True
+        self.selection_confirmed = True
 
     def select_blocked_cards_from_program(self):
         """
