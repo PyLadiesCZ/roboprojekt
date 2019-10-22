@@ -68,31 +68,30 @@ class Interface:
             async with session.ws_connect('http://' + self.server_ip + ':8080/interface/' + robot_name) as self.ws:
                 # Cycle "for" is finished when client disconnects from server
                 async for message in self.ws:
-                    try:
+                    if message.type == aiohttp.WSMsgType.TEXT:
                         message = message.json()
-                    except aiohttp.WSMsgType.ERROR:
-                        print("Disconnect")
+                        if "robot_name" in message:
+                            robot_name = message["robot_name"]
+                        if "game_state" in message:
+                            self.set_game_state(message, robot_name)
+                        if "robots" in message:
+                            self.set_robots(message, robot_name)
+                        if "cards" in message:
+                            self.interface_state.dealt_cards = self.game_state.cards_from_dict(message["cards"])
+                        if "winner" in message:
+                            self.game_state.winners = message["winner"]
+                            self.winner_time = monotonic()
+                        if "timer_start" in message:
+                            self.interface_state.timer = monotonic()
+                        if "blocked_cards" in message:
+                            self.set_blocked_cards(message["blocked_cards"])
+                        if "current_game_round" in message:
+                            self.game_state.game_round = message["current_game_round"]
+                        if "round_over" in message:
+                            self.interface_state = InterfaceState(change_callback=self.send_state_to_server)
+                    elif message.type == aiohttp.WSMsgType.ERROR:
+                        print("Connection closed")
                         break
-                    if "robot_name" in message:
-                        robot_name = message["robot_name"]
-                    if "game_state" in message:
-                        self.set_game_state(message, robot_name)
-                    if "robots" in message:
-                        self.set_robots(message, robot_name)
-                    if "cards" in message:
-                        self.interface_state.dealt_cards = self.game_state.cards_from_dict(message["cards"])
-                    if "winner" in message:
-                        self.game_state.winners = message["winner"]
-                        self.winner_time = monotonic()
-                    if "timer_start" in message:
-                        self.interface_state.timer = monotonic()
-                    if "blocked_cards" in message:
-                        self.set_blocked_cards(message["blocked_cards"])
-                    if "current_game_round" in message:
-                        self.game_state.game_round = message["current_game_round"]
-                    if "round_over" in message:
-                        self.interface_state = InterfaceState(change_callback=self.send_state_to_server)
-
         self.ws = None
         self.window.close()
 

@@ -1,7 +1,7 @@
 import pyglet
 from pathlib import Path
 
-from util_frontend import get_sprite, get_label
+from util_frontend import get_sprite, get_label, window_zoom
 
 
 WINDOW_WIDTH = 1000
@@ -46,42 +46,32 @@ def draw_board(state, available_robots, window):
     Draw the welcome board for choosing robot,
     react to user's resizing of window by scaling the board.
     """
-    # with window_zoom as ...
-    pyglet.gl.glPushMatrix()
-    window.clear()
-    zoom = min(
-        window.height / WINDOW_HEIGHT,
-        window.width / WINDOW_WIDTH
-    )
-    pyglet.gl.glScalef(zoom, zoom, 1)
+    with window_zoom(window, WINDOW_WIDTH, WINDOW_HEIGHT):
+        background_sprite.draw()
 
-    background_sprite.draw()
+        if state is not None:
+            for coordinate, robot in zip(picture_coordinates, state.robots):
+                x, y = coordinate
+                if robot.name in loaded_robots_images.keys():
+                    robot_sprite.image = loaded_robots_images[robot.name]
+                    robot_sprite.x = x
+                    robot_sprite.y = y
+                    robot_sprite.draw()
 
-    if state is not None:
-        for coordinate, robot in zip(picture_coordinates, state.robots):
-            x, y = coordinate
-            if robot.name in loaded_robots_images.keys():
-                robot_sprite.image = loaded_robots_images[robot.name]
-                robot_sprite.x = x
-                robot_sprite.y = y
-                robot_sprite.draw()
+                    robot_name_label = get_label(
+                        str(robot.displayed_name), robot_sprite.x + 30, robot_sprite.y - 20,
+                        16, "center", (0, 0, 0, 255),
+                    )
+                    robot_name_label.draw()
 
-                robot_name_label = get_label(
-                    str(robot.displayed_name), robot_sprite.x + 30, robot_sprite.y - 20,
-                    16, "center", (0, 0, 0, 255),
-                )
-                robot_name_label.draw()
+                for available_robot in available_robots:
+                    if available_robot.name == robot.name:
+                        border_sprite.x = robot_sprite.x
+                        border_sprite.y = robot_sprite.y
+                        border_sprite.draw()
 
-            for available_robot in available_robots:
-                if available_robot.name == robot.name:
-                    border_sprite.x = robot_sprite.x
-                    border_sprite.y = robot_sprite.y
-                    border_sprite.draw()
-
-        if not available_robots:
-            not_available_label.draw()
-
-    pyglet.gl.glPopMatrix()
+            if not available_robots:
+                not_available_label.draw()
 
 
 def handle_click(state, x, y, window, available_robots):
