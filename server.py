@@ -125,13 +125,16 @@ class Server:
             for robot in self.available_robots:
                 if robot_name == robot.name:
                     self.available_robots.remove(robot)
-                    self.assigned_robots[robot.name] = ws
-                    return robot
-            raise web.HTTPNotFound()
+                    break
+            else:
+                # The "else" clause executes after the loop completes normally-
+                # - the loop did not encounter a break statement.
+                raise web.HTTPNotFound()
         else:
             robot = self.available_robots.pop(0)
-            self.assigned_robots[robot.name] = ws
-            return robot
+
+        self.assigned_robots[robot.name] = ws
+        return robot
 
     async def process_message(self, message, robot):
         """
