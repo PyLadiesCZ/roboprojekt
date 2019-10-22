@@ -101,9 +101,14 @@ class Server:
             return ws
 
         finally:
-            # Robot is deleted from assigned robots and return to available robots
+            # Deleted robot from assigned and return him to available robots
+            # Set the respective robot as off (power down) and confirm their
+            # card selection.
             del self.assigned_robots[robot.name]
             self.available_robots.append(robot)
+            for robot_in_game in self.state.robots:
+                if robot_in_game in self.available_robots:
+                    robot_in_game.freeze()
 
     def assign_robot_to_client(self, ws):
         """
@@ -114,6 +119,8 @@ class Server:
         # Client_interface is added to dictionary (robot.name: ws)
         robot = self.available_robots.pop(0)
         self.assigned_robots[robot.name] = ws
+        # Whenever robot is assigned to the client, unset his selection.
+        robot.selection_confirmed = False
         return robot
 
     async def process_message(self, message, robot):
@@ -179,12 +186,17 @@ class Server:
 
     async def send_new_dealt_cards(self):
         """
-        Send new dealt cards to robots.
+        Send new dealt cards to assigned robots.
         """
         for robot in self.state.robots:
-            ws = self.assigned_robots[robot.name]
-            await ws.send_json(self.state.cards_and_game_round_as_dict(
-                robot.dealt_cards, robot.select_blocked_cards_from_program()))
+            if robot in self.available_robots:
+                robot.freeze()
+            else:
+                ws = self.assigned_robots[robot.name]
+                await ws.send_json(self.state.cards_and_game_round_as_dict(
+                    robot.dealt_cards, robot.select_blocked_cards_from_program(),
+                    )
+                )
 
     async def send_message(self, message):
         """
