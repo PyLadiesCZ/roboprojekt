@@ -215,3 +215,38 @@ def test_get_robot_names():
     assert robot_names[5] == "mintbot"
     assert robot_names[6] == "robbie"
     assert robot_names[7] == "rusty"
+
+
+@pytest.mark.parametrize(("given_damages", "cards_count"),
+                         [(8, 1),
+                          (1, 5),
+                          (0, 5),
+                          (4, 5),
+                          (5, 4),
+                          (9, 0),
+                          ])
+def test_unblocked_cards_count(given_damages, cards_count):
+    """
+    Assert that count of unblocked cards is always computed well according to robot's damages.
+    """
+    robot = Robot(Direction.N, (0, 0), "bender")
+    robot.damages = given_damages
+    assert robot.unblocked_cards == cards_count
+
+
+@pytest.mark.parametrize(("given_damages", "perma_damages", "cards_count"),
+                         [(8, 1, 0),
+                          (1, 3, 5),
+                          (0, 2, 5),
+                          (4, 4, 1),
+                          (5, 4, 0),
+                          (9, 0, 0),
+                          ])
+def test_unblocked_cards_count_with_permanent_damages(given_damages, perma_damages, cards_count):
+    """
+    Assert that count of unblocked cards is always computed well according to robot's damages and robot's permanent damages.
+    """
+    robot = Robot(Direction.N, (0, 0), "bender")
+    robot.damages = given_damages
+    robot.permanent_damages = perma_damages
+    assert robot.unblocked_cards == cards_count
