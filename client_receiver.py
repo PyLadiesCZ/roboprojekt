@@ -46,7 +46,7 @@ class Receiver:
                         self.state.winners = message["winner"]
                         self.winner_time = monotonic()
                     if "available_robots" in message:
-                        self.available_robots = self.state.robots_from_dict(message["available_robots"])
+                        self.available_robots = self.state.robots_from_dict({"robots": message["available_robots"]})
 
 
 def main():
