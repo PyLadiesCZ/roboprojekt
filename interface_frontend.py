@@ -10,8 +10,8 @@ MAX_FLAGS_COUNT = 8
 MAX_DAMAGES_COUNT = 9
 WINDOW_WIDTH = 768
 WINDOW_HEIGHT = 1024
-# Gab between other robots pictures
-GAB = 98
+# Gap between other robots pictures
+GAP = 98
 
 
 def create_window(on_draw, on_text, on_mouse_press):
@@ -352,27 +352,27 @@ def draw_robot(i, robot, game_state):
     Draw robot and his attributes.
     """
     # Robot's background
-    players_background.x = 50 + i * GAB
+    players_background.x = 50 + i * GAP
     players_background.y = 50
     players_background.draw()
 
     # Robot´s image
     if robot.name in loaded_robots_images:
         player_sprite.image = loaded_robots_images[robot.name]
-        player_sprite.x = 66 + i * GAB
+        player_sprite.x = 66 + i * GAP
         player_sprite.y = 90
         player_sprite.draw()
 
     # Power_down
     if robot.power_down:
-        power_down_player_sprite.x = 80 + GAB * i
+        power_down_player_sprite.x = 80 + GAP * i
         power_down_player_sprite.y = 95
         power_down_player_sprite.draw()
 
     # Robot´flags
     flag_label = get_label(
         str(robot.flags),
-        x=132 + GAB * i,
+        x=132 + GAP * i,
         y=160,
         font_size=20,
         anchor_x="right",
@@ -383,7 +383,7 @@ def draw_robot(i, robot, game_state):
     # Robot´damages
     damage_label = get_label(
         str(robot.damages),
-        x=92 + GAB * i,
+        x=92 + GAP * i,
         y=56,
         font_size=20,
         anchor_x="right",
@@ -393,7 +393,7 @@ def draw_robot(i, robot, game_state):
 
     permanent_damage_label = get_label(
         str(robot.permanent_damages),
-        x=132 + GAB * i,
+        x=132 + GAP * i,
         y=56,
         font_size=20,
         anchor_x="right",
@@ -404,7 +404,7 @@ def draw_robot(i, robot, game_state):
     # Robot´lives
     life_label = get_label(
         str(robot.lives),
-        x=92 + GAB * i,
+        x=92 + GAP * i,
         y=160,
         font_size=20,
         anchor_x="right",
@@ -419,7 +419,7 @@ def draw_robot(i, robot, game_state):
         else:
             sprite = loss_sprite
 
-        sprite.x = 78 + i * GAB
+        sprite.x = 78 + i * GAP
         sprite.y = 90
         sprite.draw()
 
