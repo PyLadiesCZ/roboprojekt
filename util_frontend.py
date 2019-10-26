@@ -34,6 +34,9 @@ def get_sprite(img_path, x=0, y=0):
 
 @contextmanager
 def window_zoom(window, WINDOW_WIDTH, WINDOW_HEIGHT):
+    """
+    Contextmanager for zoom of window.
+    """
     pyglet.gl.glPushMatrix()
     window.clear()
     zoom = min(
