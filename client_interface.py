@@ -48,8 +48,10 @@ class Interface:
         handle_click(self.interface_state, x, y, self.window)
 
     def on_close(self):
+        """
+        When windows is closed, WebSocket is disconnected.
+        """
         asyncio.ensure_future(self.ws.close())
-        print("closed")
 
     def send_state_to_server(self):
         """
