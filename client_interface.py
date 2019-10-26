@@ -134,6 +134,8 @@ def main(robot_name):
 
 
 if __name__ == "__main__":
+    # Chosen robot name can be entered as a second argument in the command line.
+    # (First argument is server ip).
     if len(sys.argv) == 1:
         robot_name = ""
     else:
