@@ -12,7 +12,7 @@ WINDOW_WIDTH = 768
 WINDOW_HEIGHT = 1024
 
 
-def create_window(on_draw, on_text, on_mouse_press):
+def create_window(on_draw, on_text, on_mouse_press, on_close):
     """
     Return a pyglet window for graphic output.
     """
@@ -21,6 +21,7 @@ def create_window(on_draw, on_text, on_mouse_press):
         on_draw=on_draw,
         on_text=on_text,
         on_mouse_press=on_mouse_press,
+        on_close=on_close,
     )
     return window
 

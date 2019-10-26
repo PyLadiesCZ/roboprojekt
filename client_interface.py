@@ -18,7 +18,7 @@ from util_network import set_argument_value, tick_asyncio
 class Interface:
     def __init__(self, server_ip):
         # Game attributes
-        self.window = create_window(self.window_draw, self.on_text, self.on_mouse_press)
+        self.window = create_window(self.window_draw, self.on_text, self.on_mouse_press, self.on_close)
         # When something has changed in interface state, the function 'send_state_to_server' is called.
         self.interface_state = InterfaceState(change_callback=self.send_state_to_server)
         self.game_state = None
@@ -47,6 +47,10 @@ class Interface:
         """
         handle_click(self.interface_state, x, y, self.window)
 
+    def on_close(self):
+        asyncio.ensure_future(self.ws.close())
+        print("closed")
+
     def send_state_to_server(self):
         """
         Send message with interface_state to server.
@@ -63,7 +67,6 @@ class Interface:
         """
         # create Session
         async with aiohttp.ClientSession() as session:
-
             # create Websocket
             async with session.ws_connect('http://' + self.server_ip + ':8080/interface/' + robot_name) as self.ws:
                 # Cycle "for" is finished when client disconnects from server
@@ -92,8 +95,8 @@ class Interface:
                     elif message.type == aiohttp.WSMsgType.ERROR:
                         print("Connection closed")
                         break
+        self.on_close()
         self.ws = None
-        self.window.close()
 
     def set_game_state(self, message, robot_name):
         """
