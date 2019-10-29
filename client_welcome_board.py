@@ -10,13 +10,15 @@ from backend import State
 from util_network import tick_asyncio
 from welcome_board_frontend import create_window, draw_board, handle_click
 from client_interface import main as interface_main
+from util_network import set_argument_value
 
 
 class WelcomeBoard:
-    def __init__(self):
+    def __init__(self, server_ip):
         self.window = create_window(self.window_draw, self.on_mouse_press)
         self.state = None
         self.available_robots = None
+        self.server_ip = server_ip
 
     def window_draw(self):
         """
@@ -40,7 +42,7 @@ class WelcomeBoard:
         Process information from server.
         """
         async with aiohttp.ClientSession() as session:
-            async with session.ws_connect('http://localhost:8080/receiver/') as ws:
+            async with session.ws_connect('http://' + self.server_ip + ':8080/receiver/') as ws:
                 # Loop "for" is finished when client disconnects from server
                 async for message in ws:
                     message = message.json()
@@ -53,7 +55,8 @@ class WelcomeBoard:
 
 
 def main():
-    welcome_board = WelcomeBoard()
+    server_ip = set_argument_value("localhost")
+    welcome_board = WelcomeBoard(server_ip)
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
 
     # Schedule the "client" task
