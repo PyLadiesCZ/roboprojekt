@@ -171,10 +171,10 @@ def test_robot_from_dict():
                          'permanent_damages': 1, 'power_down': False,
                          'direction': 90, 'start_coordinates': (3, 1),
                          'selection_confirmed': False,
-                         'winner': False,}}
+                         'winner': False, 'displayed_name': 'Bender'}}
 
     robot = Robot.from_dict(robot_description)
-    assert robot.name == "bender"
+    assert robot.name == 'bender'
     assert robot.coordinates == (10, 1)
     assert robot.lives == 5
     assert robot.flags == 8
@@ -185,6 +185,7 @@ def test_robot_from_dict():
     assert robot.start_coordinates == (3, 1)
     assert robot.selection_confirmed is False
     assert robot.winner is False
+    assert robot.displayed_name == 'Bender'
 
 
 def test_state_from_dict():

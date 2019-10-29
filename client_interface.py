@@ -6,6 +6,7 @@ server. It sends messages with its state to server.
 import asyncio
 import aiohttp
 import pyglet
+import sys
 from time import monotonic
 
 from interface_frontend import draw_interface, create_window, handle_text, handle_click
@@ -17,7 +18,7 @@ from util_network import set_argument_value, tick_asyncio
 class Interface:
     def __init__(self, server_ip):
         # Game attributes
-        self.window = create_window(self.window_draw, self.on_text, self.on_mouse_press)
+        self.window = create_window(self.window_draw, self.on_text, self.on_mouse_press, self.on_close)
         # When something has changed in interface state, the function 'send_state_to_server' is called.
         self.interface_state = InterfaceState(change_callback=self.send_state_to_server)
         self.game_state = None
@@ -46,6 +47,12 @@ class Interface:
         """
         handle_click(self.interface_state, x, y, self.window)
 
+    def on_close(self):
+        """
+        When windows is closed, WebSocket is disconnected.
+        """
+        asyncio.ensure_future(self.ws.close())
+
     def send_state_to_server(self):
         """
         Send message with interface_state to server.
@@ -55,7 +62,7 @@ class Interface:
             message["interface_data"]["game_round"] = self.game_state.game_round
             asyncio.ensure_future(self.ws.send_json(message))
 
-    async def get_messages(self):
+    async def get_messages(self, robot_name):
         """
         Connect to server and receive messages.
         Process information from server: game state, robot and cards.
@@ -63,30 +70,34 @@ class Interface:
         # create Session
         async with aiohttp.ClientSession() as session:
             # create Websocket
-            async with session.ws_connect('http://' + self.server_ip + ':8080/interface/') as self.ws:
+            async with session.ws_connect('http://' + self.server_ip + ':8080/interface/' + robot_name) as self.ws:
                 # Cycle "for" is finished when client disconnects from server
                 async for message in self.ws:
-                    message = message.json()
-                    if "robot_name" in message:
-                        robot_name = message["robot_name"]
-                    if "game_state" in message:
-                        self.set_game_state(message, robot_name)
-                    if "robots" in message:
-                        self.set_robots(message, robot_name)
-                    if "cards" in message:
-                        self.interface_state.dealt_cards = self.game_state.cards_from_dict(message["cards"])
-                    if "winner" in message:
-                        self.game_state.winners = message["winner"]
-                        self.winner_time = monotonic()
-                    if "timer_start" in message:
-                        self.interface_state.timer = monotonic()
-                    if "blocked_cards" in message:
-                        self.set_blocked_cards(message["blocked_cards"])
-                    if "current_game_round" in message:
-                        self.game_state.game_round = message["current_game_round"]
-                    if "round_over" in message:
-                        self.interface_state = InterfaceState(change_callback=self.send_state_to_server)
-
+                    if message.type == aiohttp.WSMsgType.TEXT:
+                        message = message.json()
+                        if "robot_name" in message:
+                            robot_name = message["robot_name"]
+                        if "game_state" in message:
+                            self.set_game_state(message, robot_name)
+                        if "robots" in message:
+                            self.set_robots(message, robot_name)
+                        if "cards" in message:
+                            self.interface_state.dealt_cards = self.game_state.cards_from_dict(message["cards"])
+                        if "winner" in message:
+                            self.game_state.winners = message["winner"]
+                            self.winner_time = monotonic()
+                        if "timer_start" in message:
+                            self.interface_state.timer = monotonic()
+                        if "blocked_cards" in message:
+                            self.set_blocked_cards(message["blocked_cards"])
+                        if "current_game_round" in message:
+                            self.game_state.game_round = message["current_game_round"]
+                        if "round_over" in message:
+                            self.interface_state = InterfaceState(change_callback=self.send_state_to_server)
+                    elif message.type == aiohttp.WSMsgType.ERROR:
+                        print("Connection closed")
+                        break
+        self.on_close()
         self.ws = None
 
     def set_game_state(self, message, robot_name):
@@ -114,14 +125,20 @@ class Interface:
         del self.interface_state.program[:len(self.interface_state.blocked_cards)]
 
 
-def main():
+def main(robot_name):
     server_ip = set_argument_value("localhost")
     interface = Interface(server_ip)
 
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
-    asyncio.ensure_future(interface.get_messages())
+    asyncio.ensure_future(interface.get_messages(robot_name))
 
 
 if __name__ == "__main__":
-    main()
+    # Chosen robot name can be entered as a second argument in the command line.
+    # (First argument is server ip).
+    if len(sys.argv) == 1:
+        robot_name = ""
+    else:
+        robot_name = sys.argv[2]
+    main(robot_name)
     pyglet.app.run()

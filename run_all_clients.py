@@ -8,10 +8,10 @@ For devel purposes.
 import pyglet
 
 import client_receiver
-import client_interface
+import client_welcome_board
 
 client_receiver.main()
-client_interface.main()
-client_interface.main()
+client_welcome_board.main()
+client_welcome_board.main()
 
 pyglet.app.run()

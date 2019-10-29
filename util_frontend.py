@@ -1,4 +1,5 @@
 import pyglet
+from contextlib import contextmanager
 from functools import lru_cache
 
 # Constatnts for size of tile image in px
@@ -21,3 +22,27 @@ def get_label(text, x, y, font_size, anchor_x, color):
     label.anchor_x = anchor_x
     label.color = color
     return label
+
+
+def get_sprite(img_path, x=0, y=0):
+    """
+    Return sprite of image.
+    """
+    img = pyglet.image.load(img_path)
+    return pyglet.sprite.Sprite(img, x, y)
+
+
+@contextmanager
+def window_zoom(window, WINDOW_WIDTH, WINDOW_HEIGHT):
+    """
+    Contextmanager for zoom of window.
+    """
+    pyglet.gl.glPushMatrix()
+    window.clear()
+    zoom = min(
+        window.height / WINDOW_HEIGHT,
+        window.width / WINDOW_WIDTH
+    )
+    pyglet.gl.glScalef(zoom, zoom, 1)
+    yield
+    pyglet.gl.glPopMatrix()

@@ -7,7 +7,7 @@ The frontend module
 import pyglet
 from pathlib import Path
 from time import monotonic
-from util_frontend import TILE_WIDTH, TILE_HEIGHT, get_label
+from util_frontend import TILE_WIDTH, TILE_HEIGHT, get_label, get_sprite, window_zoom
 
 
 # Loading of tiles and robots images
@@ -19,19 +19,15 @@ loaded_robots_images = {}
 for image_path in Path('./img/robots_map/png').iterdir():
     loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
 
-
-def get_sprite(img_path, x=0, y=0):
-    img = pyglet.image.load(img_path)
-    return pyglet.sprite.Sprite(img, x, y)
-
-
+# Border of available robot's picture
+border_sprite = get_sprite('./img/interface/png/border.png')
 # Winner
 winner_sprite = get_sprite('img/interface/png/game_winner.png', x=170, y=200)
 # Game over
 # game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=180)
 
 
-def create_window(state):
+def create_window(state, on_draw):
     """
     Return a pyglet window for graphic output.
 
@@ -39,6 +35,7 @@ def create_window(state):
     """
     window = pyglet.window.Window(state.tile_count[0] * TILE_WIDTH,
                                   state.tile_count[1] * TILE_HEIGHT + 50, resizable=True)
+    window.push_handlers(on_draw=on_draw)
     return window
 
 
@@ -109,7 +106,7 @@ def create_robot_sprite(robot):
     return robot_sprite
 
 
-def draw_state(state, winner_time, window):
+def draw_state(state, winner_time, available_robots, window):
     """
     Draw the images of tiles and robots into map, react to user's resizing of window by scaling the board.
 
@@ -120,57 +117,56 @@ def draw_state(state, winner_time, window):
     robot_sprites = load_robots(state)
     tile_sprites.extend(robot_sprites)
 
-    # Scaling
-    pyglet.gl.glPushMatrix()
+    with window_zoom(
+        window, state.tile_count[0] * TILE_WIDTH,
+        state.tile_count[1] * TILE_HEIGHT + 50
+    ):
+        for tile_sprite in tile_sprites:
+            tile_sprite.draw()
 
-    # Scaling ratio
-    zoom = min(
-        window.height / (state.tile_count[1] * TILE_HEIGHT + 50),
-        window.width / (state.tile_count[0] * TILE_WIDTH)
-    )
+        if available_robots:
+            for robot in available_robots:
+                x, y = robot.coordinates
+                for robot_sprite in robot_sprites:
+                    border_sprite.x = x*TILE_WIDTH
+                    border_sprite.y = y*TILE_HEIGHT
+                    border_sprite.draw()
 
-    pyglet.gl.glScalef(zoom, zoom, 1)
-
-    for tile_sprite in tile_sprites:
-        tile_sprite.draw()
-
-    if state.winners:
-        #game_over_sprite.draw()
-        winner_label = get_label(
-            "WINNER",
-            x=150,
-            y=state.tile_count[1] * TILE_HEIGHT + 10,
-            font_size=20,
-            anchor_x="right",
-            color=(255, 255, 255, 255),
-        )
-        winner_label.draw()
-
-        for i, name in enumerate(state.winners):
-            winner_name_label = get_label(
-                str(name),
-                x=300 + 165 * i,
+        if state.winners:
+            #game_over_sprite.draw()
+            winner_label = get_label(
+                "WINNER",
+                x=150,
                 y=state.tile_count[1] * TILE_HEIGHT + 10,
                 font_size=20,
                 anchor_x="right",
                 color=(255, 255, 255, 255),
             )
-            winner_name_label.draw()
+            winner_label.draw()
 
-        # Picture of winner is drawn for 5 sec from time,
-        # when client received message about winner.
-        seconds = 5 - (monotonic() - winner_time)
-        if (0 < seconds < 5):
-            winner_sprite.draw()
             for i, name in enumerate(state.winners):
-                winner_label = get_label(
+                winner_name_label = get_label(
                     str(name),
-                    x=(state.tile_count[0] * TILE_WIDTH) / 2 - 50,
-                    y=(state.tile_count[1] * TILE_HEIGHT) / 2 - i * 50,
-                    font_size=26,
-                    anchor_x="center",
-                    color=(255, 0, 0, 255),
+                    x=300 + 165 * i,
+                    y=state.tile_count[1] * TILE_HEIGHT + 10,
+                    font_size=20,
+                    anchor_x="right",
+                    color=(255, 255, 255, 255),
                 )
-                winner_label.draw()
+                winner_name_label.draw()
 
-    pyglet.gl.glPopMatrix()
+            # Picture of winner is drawn for 5 sec from time,
+            # when client received message about winner.
+            seconds = 5 - (monotonic() - winner_time)
+            if (0 < seconds < 5):
+                winner_sprite.draw()
+                for i, name in enumerate(state.winners):
+                    winner_label = get_label(
+                        str(name),
+                        x=(state.tile_count[0] * TILE_WIDTH) / 2 - 50,
+                        y=(state.tile_count[1] * TILE_HEIGHT) / 2 - i * 50,
+                        font_size=26,
+                        anchor_x="center",
+                        color=(255, 0, 0, 255),
+                    )
+                    winner_label.draw()

@@ -87,7 +87,8 @@ class Robot:
                  "start_coordinates": self.start_coordinates,
                  "selection_confirmed": self.selection_confirmed,
                  "unblocked_cards": self.unblocked_cards,
-                 "winner": self.winner }}
+                 "winner": self.winner,
+                 "displayed_name": self.displayed_name}}
 
     @classmethod
     def from_dict(cls, robot_description):
@@ -107,6 +108,7 @@ class Robot:
         robot.start_coordinates = robot_description["start_coordinates"]
         robot.selection_confirmed = robot_description["selection_confirmed"]
         robot.winner = robot_description["winner"]
+        robot.displayed_name = robot_description["displayed_name"]
         return robot
 
     def select_cards(self, state):

@@ -5,7 +5,7 @@ https://aiohttp.readthedocs.io/en/stable/index.html
 
 Run server.py in command line, in new command line run client_receiver.py,
 it will display the playing area. If you want to play, run also
-client_interface.py in another command line.
+client_welcome_board.py in another command line.
 """
 import asyncio
 
@@ -50,6 +50,12 @@ class Server:
         await ws.prepare(request)
         return ws
 
+    def available_robots_as_dict(self):
+        """
+        Return dictionary with available robots.
+        """
+        return {"available_robots": [robot.as_dict() for robot in self.available_robots]}
+
     async def talk_to_receiver(self, request):
         """
         Communicate with websockets connected through `/receiver/` route.
@@ -62,6 +68,7 @@ class Server:
         try:
             # This message is sent only this (just connected) client
             await ws.send_json(self.state.whole_as_dict(map_name))
+            await ws.send_json(self.available_robots_as_dict())
             # For cycle keeps the connection with client alive
             async for message in ws:
                 pass
@@ -80,7 +87,8 @@ class Server:
         ws = await self.ws_handler(request)
         # Get first data for connected client: robot and cards
         # and assign it to client
-        robot = self.assign_robot_to_client(ws)
+        robot = self.assign_robot_to_client(request.match_info.get("robot_name"), ws)
+        await self.send_message(self.available_robots_as_dict())
 
         try:
             # Prepare message to send: robot name, game state and cards
@@ -106,18 +114,30 @@ class Server:
             # card selection.
             del self.assigned_robots[robot.name]
             self.available_robots.append(robot)
+            await self.send_message(self.available_robots_as_dict())
             for robot_in_game in self.state.robots:
                 if robot_in_game in self.available_robots:
                     robot_in_game.freeze()
 
-    def assign_robot_to_client(self, ws):
+    def assign_robot_to_client(self, robot_name, ws):
         """
         Assign the first available robots to the client.
         Store the pair in a dictionary of assigned robots.
         Return the assigned robot.
         """
         # Client_interface is added to dictionary (robot.name: ws)
-        robot = self.available_robots.pop(0)
+        if robot_name is not None:
+            for robot in self.available_robots:
+                if robot_name == robot.name:
+                    self.available_robots.remove(robot)
+                    break
+            else:
+                # The "else" clause executes after the loop completes normally-
+                # - the loop did not encounter a break statement.
+                raise web.HTTPNotFound()
+        else:
+            robot = self.available_robots.pop(0)
+
         self.assigned_robots[robot.name] = ws
         # Whenever robot is assigned to the client, unset his selection.
         robot.selection_confirmed = False
@@ -211,9 +231,11 @@ class Server:
 # aiohttp.web application
 def get_app(argv=None):
     app = web.Application()
-    app.add_routes([web.get("/receiver/", server.talk_to_receiver),
-                   web.get("/interface/", server.talk_to_interface), ],
-                   )
+    app.add_routes([
+        web.get("/receiver/", server.talk_to_receiver),
+        web.get("/interface/", server.talk_to_interface),
+        web.get("/interface/{robot_name}", server.talk_to_interface)
+    ])
     return app
 
 
