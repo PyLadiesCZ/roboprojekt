@@ -75,6 +75,9 @@ def draw_board(state, available_robots, window):
 
 
 def handle_click(state, x, y, window, available_robots):
+    """
+    Board react on mouse press. Return robot_name when is clicked on robot.
+    """
     zoom = min(
         window.height / WINDOW_HEIGHT,
         window.width / WINDOW_WIDTH
