@@ -163,6 +163,10 @@ class Server:
             robot.power_down = message["interface_data"]["power_down"]
             # Set robot's selection with chosen card´s index
             robot.card_indexes = message["interface_data"]["program"]
+        # Set own robot name as displayed name on Interface
+        own_robot_name = message["interface_data"]["own_robot_name"]
+        if own_robot_name is not None:
+            robot.displayed_name = message["interface_data"]["own_robot_name"]
 
         await self.send_message(self.state.robots_as_dict())
 

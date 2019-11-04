@@ -13,6 +13,7 @@ class InterfaceState:
         # not on change of the purely visual elements of interface, like moving the cursor.
         # Assigned function is be called after every robot-related interface state change.
         self.change_callback = change_callback
+        self.own_robot_name = None
 
     def __repr__(self):
         return f"InterfaceState \
@@ -30,6 +31,7 @@ class InterfaceState:
                 "program": self.program,
                 "power_down": self.power_down,
                 "confirmed": self.selection_confirmed,
+                "own_robot_name": self.own_robot_name,
                 }
             }
 
@@ -107,3 +109,11 @@ class InterfaceState:
                 self.return_cards()
             self.selection_confirmed = True
             self.change_callback()
+
+    def change_robot_name(self, name):
+        """
+        Set up own robot name, when it is entered into command line.
+        Send it to server.
+        """
+        self.own_robot_name = name
+        self.change_callback()

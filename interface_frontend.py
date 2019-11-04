@@ -281,6 +281,7 @@ def draw_interface(interface_state, game_state, winner_time, window):
             my_robot_sprite.image = loaded_robots_images[interface_state.robot.name]
             my_robot_sprite.draw()
 
+            global robot_name
             robot_name = get_label(
                 interface_state.robot.displayed_name,
                 x=250,
@@ -412,7 +413,7 @@ def draw_robot(i, robot, game_state):
         else:
             sprite = loss_sprite
 
-        sprite.x = 78 + i * GAP
+        sprite.x = 75 + i * GAP
         sprite.y = 90
         sprite.draw()
 
@@ -507,6 +508,11 @@ def handle_click(interface_state, x, y, window):
     # The numbers are coordinate of "Return one card" rectangle
     if (250 < x < 435) and (535 < y < 565):
         interface_state.return_card()
+
+    # Enter own robot name into command line
+    if (190 < x < 320) and (855 < y < 885):
+        robot_name.text = input("Enter robot name:")
+        interface_state.change_robot_name(robot_name.text)
 
 
 def coordinates_in_rectangle(x, y, left, bottom, width, height):

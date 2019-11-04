@@ -2,6 +2,8 @@
 Game interface.
 Client which receives data about its robot, cards and state of the game from
 server. It sends messages with its state to server.
+If you want to change robot name, click displayed name and enter
+your own chosen name into command line.
 """
 import asyncio
 import aiohttp
