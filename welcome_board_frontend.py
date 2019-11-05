@@ -115,13 +115,3 @@ def handle_click(state, x, y, window, available_robots):
 
     #if (436 < x < 593) and (23 < y < 71):
     #    return {"chosen_robot": robot_name, "own_name": own_name_label.text}
-
-
-def handle_text(text, welcome_board_state):
-    welcome_board_state.own_robot_name = welcome_board_state.own_robot_name + text
-    print(welcome_board_state.own_robot_name)
-
-
-def on_text_motion(motion, welcome_board_state):
-    if pyglet.window.key.MOTION_BACKSPACE:
-        welcome_board_state.own_robot_name = welcome_board_state.own_robot_name[:-1]

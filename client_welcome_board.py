@@ -8,7 +8,7 @@ import pyglet
 
 from backend import State
 from util_network import tick_asyncio
-from welcome_board_frontend import create_window, draw_board, handle_click, handle_text, on_text_motion
+from welcome_board_frontend import create_window, draw_board, handle_click
 from client_interface import main as interface_main
 from util_network import set_argument_value
 
@@ -35,10 +35,11 @@ class WelcomeBoard:
         draw_board(self.state, self.available_robots, self.window, self.welcome_board_state)
 
     def on_text(self, text):
-        handle_text(text, self.welcome_board_state)
+        self.welcome_board_state.own_robot_name = self.welcome_board_state.own_robot_name + text
 
     def on_text_motion(self, motion):
-        on_text_motion(motion, self.welcome_board_state)
+        if motion == pyglet.window.key.MOTION_BACKSPACE:
+            self.welcome_board_state.own_robot_name = self.welcome_board_state.own_robot_name[:-1]
 
     def on_mouse_press(self, x, y, button, mod):
         """
