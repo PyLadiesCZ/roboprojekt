@@ -32,16 +32,21 @@ not_available_label = get_label(
 )
 
 
-def create_window(on_draw, on_mouse_press):
+def create_window(on_draw, on_mouse_press, on_text, on_text_motion):
     """
     Return a pyglet window for graphic output.
     """
     window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT, resizable=True)
-    window.push_handlers(on_draw=on_draw, on_mouse_press=on_mouse_press, on_text=handle_text)
+    window.push_handlers(
+        on_draw=on_draw,
+        on_mouse_press=on_mouse_press,
+        on_text=on_text,
+        on_text_motion=on_text_motion,
+    )
     return window
 
 
-def draw_board(state, available_robots, window):
+def draw_board(state, available_robots, window, welcome_board_state):
     """
     Draw the welcome board for choosing robot,
     react to user's resizing of window by scaling the board.
@@ -73,6 +78,16 @@ def draw_board(state, available_robots, window):
             if not available_robots:
                 not_available_label.draw()
 
+            own_name_label = get_label(
+                welcome_board_state.own_robot_name,
+                x=500,
+                y=325,
+                font_size=20,
+                anchor_x="center",
+                color=(255, 0, 0, 255),
+            )
+            own_name_label.draw()
+
 
 def handle_click(state, x, y, window, available_robots):
     """
@@ -95,30 +110,18 @@ def handle_click(state, x, y, window, available_robots):
                 if robot_name == available_robot.name:
                     return robot_name
 
-    if (438 < x < 667) and (317 < y < 366):
-        own_name_label = get_label(
-            "Pokus",
-            x=500,
-            y=340,
-            font_size=20,
-            anchor_x="center",
-            color=(255, 0, 0, 255),
-        )
-        own_name_label.draw()
-        return own_name_label.text
-        print("OK")
-
-    if (436 < x < 593) and (23 < y < 71):
-        return {"chosen_robot": robot_name, "own_name": own_name_label.text}
+    #if (438 < x < 667) and (317 < y < 366):
 
 
-def handle_text(text):
-    own_name_label = get_label(
-        text,
-        x=500,
-        y=250,
-        font_size=20,
-        anchor_x="center",
-        color=(0, 0, 0, 255),
-    )
-    own_name_label.draw()
+    #if (436 < x < 593) and (23 < y < 71):
+    #    return {"chosen_robot": robot_name, "own_name": own_name_label.text}
+
+
+def handle_text(text, welcome_board_state):
+    welcome_board_state.own_robot_name = welcome_board_state.own_robot_name + text
+    print(welcome_board_state.own_robot_name)
+
+
+def on_text_motion(motion, welcome_board_state):
+    if pyglet.window.key.MOTION_BACKSPACE:
+        welcome_board_state.own_robot_name = welcome_board_state.own_robot_name[:-1]

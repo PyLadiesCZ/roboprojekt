@@ -8,24 +8,37 @@ import pyglet
 
 from backend import State
 from util_network import tick_asyncio
-from welcome_board_frontend import create_window, draw_board, handle_click
+from welcome_board_frontend import create_window, draw_board, handle_click, handle_text, on_text_motion
 from client_interface import main as interface_main
 from util_network import set_argument_value
 
 
+class WelcomeBoardState:
+    def __init__(self):
+        self.own_robot_name = "sbdd"
+
+
 class WelcomeBoard:
     def __init__(self, server_ip):
-        self.window = create_window(self.window_draw, self.on_mouse_press)
+        self.window = create_window(self.window_draw, self.on_mouse_press,
+            self.on_text, self.on_text_motion)
         self.state = None
         self.available_robots = None
         self.server_ip = server_ip
+        self.welcome_board_state = WelcomeBoardState()
 
     def window_draw(self):
         """
         Draw the window with available robots.
         """
         self.window.clear()
-        draw_board(self.state, self.available_robots, self.window)
+        draw_board(self.state, self.available_robots, self.window, self.welcome_board_state)
+
+    def on_text(self, text):
+        handle_text(text, self.welcome_board_state)
+
+    def on_text_motion(self, motion):
+        on_text_motion(motion, self.welcome_board_state)
 
     def on_mouse_press(self, x, y, button, mod):
         """
@@ -49,7 +62,7 @@ class WelcomeBoard:
                     if "game_state" in message:
                         self.state = State.whole_from_dict(message)
                         if self.window is None:
-                            self.window = create_window(self.window_draw, self.on_mouse_press)
+                            self.window = create_window(self.window_draw, self.on_mouse_press, self.on_text, self.on_text_motion)
                     if "available_robots" in message:
                         self.available_robots = self.state.robots_from_dict({"robots": message["available_robots"]})
 
