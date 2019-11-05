@@ -37,7 +37,7 @@ def create_window(on_draw, on_mouse_press):
     Return a pyglet window for graphic output.
     """
     window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT, resizable=True)
-    window.push_handlers(on_draw=on_draw, on_mouse_press=on_mouse_press)
+    window.push_handlers(on_draw=on_draw, on_mouse_press=on_mouse_press, on_text=handle_text)
     return window
 
 
@@ -83,7 +83,7 @@ def handle_click(state, x, y, window, available_robots):
         window.width / WINDOW_WIDTH
     )
     x, y = (x / zoom, y / zoom)
-
+    print(x, y)
     for i, coordinate in enumerate(picture_coordinates):
         coord_x, coord_y = coordinate
         if (
@@ -94,3 +94,31 @@ def handle_click(state, x, y, window, available_robots):
             for available_robot in available_robots:
                 if robot_name == available_robot.name:
                     return robot_name
+
+    if (438 < x < 667) and (317 < y < 366):
+        own_name_label = get_label(
+            "Pokus",
+            x=500,
+            y=340,
+            font_size=20,
+            anchor_x="center",
+            color=(255, 0, 0, 255),
+        )
+        own_name_label.draw()
+        return own_name_label.text
+        print("OK")
+
+    if (436 < x < 593) and (23 < y < 71):
+        return {"chosen_robot": robot_name, "own_name": own_name_label.text}
+
+
+def handle_text(text):
+    own_name_label = get_label(
+        text,
+        x=500,
+        y=250,
+        font_size=20,
+        anchor_x="center",
+        color=(0, 0, 0, 255),
+    )
+    own_name_label.draw()
