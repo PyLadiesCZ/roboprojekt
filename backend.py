@@ -297,6 +297,19 @@ class Robot:
         self.power_down = True
         self.selection_confirmed = True
 
+    def change_start_coordinates(self, state):
+        """
+        Check if the other robots have the same starting coordinates as
+        own current coordinates. If so, don't change the starting coordinates.
+        If there is no other robot with the same starting coordinates,
+        change the start coordinates to current ones.
+        """
+        for robot in state.robots:
+            if robot.start_coordinates == self.coordinates:
+                return
+        else:
+            self.start_coordinates = self.coordinates
+
     def select_blocked_cards_from_program(self):
         """
         Return a list of blocked cards from robot program.
@@ -666,7 +679,7 @@ class State:
         # Collect flags, repair robots
         for robot in self.get_active_robots():
             for tile in self.get_tiles(robot.coordinates):
-                tile.collect_flag(robot)
+                tile.collect_flag(robot, self)
                 tile.set_new_start(robot, self)
 
     def set_robots_for_new_turn(self):
@@ -683,7 +696,6 @@ class State:
             if robot.inactive:
                 robot.coordinates = robot.start_coordinates
                 robot.damages = 0
-                robot.direction = Direction.N
 
     def get_robots_ordered_by_cards_priority(self, register):
         """

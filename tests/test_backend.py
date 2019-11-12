@@ -345,3 +345,29 @@ def test_check_winner_3():
     assert state.check_winner() == ['Bender', "Bishop"]
     assert state.robots[0].winner
     assert state.robots[1].winner
+
+
+def test_change_robots_start_coordinates():
+    """
+    Assert it is possible to change start coordinates when no other robot
+    has them as their start ones.
+    """
+    state = State.get_start_state("maps/test_3.json")
+    state.robots[0].start_coordinates = (5, 5)
+    state.robots[1].start_coordinates = (1, 0)
+    state.robots[1].coordinates = (5, 4)
+    state.robots[1].change_start_coordinates(state)
+    assert state.robots[1].start_coordinates == (5, 4)
+
+
+def test_dont_change_robots_start_coordinates():
+    """
+    Assert it is not possible to change start coordinates when another robot
+    has them as their start ones.
+    """
+    state = State.get_start_state("maps/test_3.json")
+    state.robots[0].start_coordinates = (5, 5)
+    state.robots[1].start_coordinates = (1, 0)
+    state.robots[1].coordinates = (5, 5)
+    state.robots[1].change_start_coordinates(state)
+    assert state.robots[1].start_coordinates == (1, 0)

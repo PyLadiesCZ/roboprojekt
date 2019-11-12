@@ -92,7 +92,7 @@ class Tile:
         """
         return robot
 
-    def collect_flag(self, robot):
+    def collect_flag(self, robot, state):
         """
         Collect flag by robot and change robot's start coordinates.
         """
@@ -249,10 +249,10 @@ class FlagTile(Tile):
         self.number = properties["number"]
         super().__init__(direction, name, tile_type, properties)
 
-    def collect_flag(self, robot):
+    def collect_flag(self, robot, state):
         # Robot always changes his start coordinates, when he is on a flag.
         # Flag number doesn't play a role.
-        robot.start_coordinates = robot.coordinates
+        robot.change_start_coordinates(state)
         # Collect only correct flag.
         # Correct flag will have a number that is equal to robot's flag number plus one.
         if (robot.flags + 1) == self.number:
@@ -272,7 +272,7 @@ class RepairTile(Tile):
     def set_new_start(self, robot, state):
         # Change start coordinates of robot, if it's a tile property.
         if self.new_start:
-            robot.start_coordinates = robot.coordinates
+            robot.change_start_coordinates(state)
 
 
 TILE_CLS = {'wall': WallTile, 'start': StartTile, 'hole': HoleTile,
