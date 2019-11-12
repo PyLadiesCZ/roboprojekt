@@ -14,11 +14,11 @@ from util_network import set_argument_value
 
 
 class WelcomeBoard:
-    def __init__(self, server_ip):
+    def __init__(self, hostname):
         self.window = create_window(self.window_draw, self.on_mouse_press)
         self.state = None
         self.available_robots = None
-        self.server_ip = server_ip
+        self.hostname = hostname
 
     def window_draw(self):
         """
@@ -42,7 +42,7 @@ class WelcomeBoard:
         Process information from server.
         """
         async with aiohttp.ClientSession() as session:
-            async with session.ws_connect('http://' + self.server_ip + ':8080/receiver/') as ws:
+            async with session.ws_connect('http://' + self.hostname + ':8080/receiver/') as ws:
                 # Loop "for" is finished when client disconnects from server
                 async for message in ws:
                     message = message.json()
@@ -55,8 +55,8 @@ class WelcomeBoard:
 
 
 def main():
-    server_ip = set_argument_value("localhost")
-    welcome_board = WelcomeBoard(server_ip)
+    hostname = set_argument_value("localhost")
+    welcome_board = WelcomeBoard(hostname)
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
 
     # Schedule the "client" task
