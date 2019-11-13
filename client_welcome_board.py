@@ -15,31 +15,46 @@ from util_network import set_argument_value
 
 class WelcomeBoardState:
     def __init__(self):
-        self.own_robot_name = "sbdd"
+        self.own_robot_name = ""
+
+    def on_text(self, text):
+        """
+        Welcome board reacts on input text. Set up own robot name.
+        """
+        self.own_robot_name = self.own_robot_name + text
+
+    def on_text_motion(self, motion):
+        """
+
+        """
+        if motion == pyglet.window.key.MOTION_BACKSPACE:
+            self.own_robot_name = self.own_robot_name[:-1]
 
 
 class WelcomeBoard:
     def __init__(self, server_ip):
-        self.window = create_window(self.window_draw, self.on_mouse_press,
-            self.on_text, self.on_text_motion)
+        self.welcome_board_state = WelcomeBoardState()
+        self.window = create_window(
+            self.window_draw,
+            self.on_mouse_press,
+            self.welcome_board_state.on_text,
+            self.welcome_board_state.on_text_motion,
+        )
         self.state = None
         self.available_robots = None
         self.server_ip = server_ip
-        self.welcome_board_state = WelcomeBoardState()
 
     def window_draw(self):
         """
         Draw the window with available robots.
         """
         self.window.clear()
-        draw_board(self.state, self.available_robots, self.window, self.welcome_board_state)
-
-    def on_text(self, text):
-        self.welcome_board_state.own_robot_name = self.welcome_board_state.own_robot_name + text
-
-    def on_text_motion(self, motion):
-        if motion == pyglet.window.key.MOTION_BACKSPACE:
-            self.welcome_board_state.own_robot_name = self.welcome_board_state.own_robot_name[:-1]
+        draw_board(
+            self.state,
+            self.available_robots,
+            self.window,
+            self.welcome_board_state
+        )
 
     def on_mouse_press(self, x, y, button, mod):
         """
@@ -47,7 +62,7 @@ class WelcomeBoard:
         """
         robot_name = handle_click(self.state, x, y, self.window, self.available_robots)
         if robot_name is not None:
-            interface_main(robot_name)
+            interface_main(robot_name, self.welcome_board_state.own_robot_name)
             self.window.close()
 
     async def process_message(self):
@@ -63,7 +78,12 @@ class WelcomeBoard:
                     if "game_state" in message:
                         self.state = State.whole_from_dict(message)
                         if self.window is None:
-                            self.window = create_window(self.window_draw, self.on_mouse_press, self.on_text, self.on_text_motion)
+                            self.window = create_window(
+                                self.window_draw,
+                                self.on_mouse_press,
+                                self.on_text,
+                                self.on_text_motion,
+                            )
                     if "available_robots" in message:
                         self.available_robots = self.state.robots_from_dict({"robots": message["available_robots"]})
 

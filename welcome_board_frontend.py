@@ -80,11 +80,11 @@ def draw_board(state, available_robots, window, welcome_board_state):
 
             own_name_label = get_label(
                 welcome_board_state.own_robot_name,
-                x=500,
-                y=325,
+                x=495,
+                y=327,
                 font_size=20,
-                anchor_x="center",
-                color=(255, 0, 0, 255),
+                anchor_x="left",
+                color=(0, 0, 0, 255),
             )
             own_name_label.draw()
 
@@ -98,7 +98,7 @@ def handle_click(state, x, y, window, available_robots):
         window.width / WINDOW_WIDTH
     )
     x, y = (x / zoom, y / zoom)
-    print(x, y)
+
     for i, coordinate in enumerate(picture_coordinates):
         coord_x, coord_y = coordinate
         if (
@@ -109,9 +109,3 @@ def handle_click(state, x, y, window, available_robots):
             for available_robot in available_robots:
                 if robot_name == available_robot.name:
                     return robot_name
-
-    #if (438 < x < 667) and (317 < y < 366):
-
-
-    #if (436 < x < 593) and (23 < y < 71):
-    #    return {"chosen_robot": robot_name, "own_name": own_name_label.text}
