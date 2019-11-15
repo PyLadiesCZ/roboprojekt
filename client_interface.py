@@ -131,7 +131,6 @@ class Interface:
 def main(robot_name, own_robot_name):
     hostname = set_argument_value("localhost")
     interface = Interface(hostname, robot_name, own_robot_name)
-    interface.interface_state.own_robot_name = own_robot_name
 
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
     asyncio.ensure_future(interface.get_messages(robot_name, own_robot_name))
