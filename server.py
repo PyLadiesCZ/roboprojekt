@@ -145,16 +145,10 @@ class Server:
 
     async def process_message(self, message, robot):
         """
-        Process the data sent by interface: chosen cards,
+        Process the data sent by interface: own robot name, chosen cards,
         confirmation of selected cards, power down state, played game round.
         """
         message = message.json()
-        # Set own robot name as displayed name on Interface
-
-        if "own_robot_name" in message:
-            own_robot_name = message["own_robot_name"]
-            if own_robot_name != "":
-                robot.displayed_name = message["own_robot_name"]
         if "interface_data" in message:
             if robot.selection_confirmed:
                 return
@@ -170,6 +164,13 @@ class Server:
                 robot.power_down = message["interface_data"]["power_down"]
                 # Set robot's selection with chosen card´s index
                 robot.card_indexes = message["interface_data"]["program"]
+
+        # Set own robot name as displayed name on Interface
+        if "own_robot_name" in message:
+            own_robot_name = message["own_robot_name"]
+            if own_robot_name != "":
+                robot.displayed_name = message["own_robot_name"]
+
         await self.send_message(self.state.robots_as_dict())
 
     async def actions_after_robot_confirmed_selection(self, robot):
