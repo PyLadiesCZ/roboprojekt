@@ -16,7 +16,6 @@ from util_network import set_argument_value
 class WelcomeBoardState:
     def __init__(self):
         self.own_robot_name = ""
-        self.click_on_name = False
 
     def on_text(self, text):
         """
@@ -27,7 +26,7 @@ class WelcomeBoardState:
 
     def on_text_motion(self, motion):
         """
-
+        React on backspace motion - when it is pressed, delete one letter.
         """
         if motion == pyglet.window.key.MOTION_BACKSPACE:
             self.own_robot_name = self.own_robot_name[:-1]
@@ -55,14 +54,15 @@ class WelcomeBoard:
             self.state,
             self.available_robots,
             self.window,
-            self.welcome_board_state
+            self.welcome_board_state,
+            self.welcome_board_state.click_on_name
         )
 
     def on_mouse_press(self, x, y, button, mod):
         """
         Board is handled by mouse press.
         """
-        robot_name = handle_click(self.state, x, y, self.window, self.available_robots, self.welcome_board_state.click_on_name)
+        robot_name = handle_click(self.state, x, y, self.window, self.available_robots)
         if robot_name is not None:
             interface_main(robot_name, self.welcome_board_state.own_robot_name)
             self.window.close()

@@ -1,7 +1,7 @@
 import pyglet
-from pathlib import Path
 
 from util_frontend import get_sprite, get_label, window_zoom
+from interface_frontend import loaded_robots_images, player_sprite
 
 
 WINDOW_WIDTH = 1000
@@ -9,14 +9,8 @@ WINDOW_HEIGHT = 500
 
 # Background
 background_sprite = get_sprite('img/interface/png/board.png', x=10, y=0)
-# Loading of robots images
-loaded_robots_images = {}
-for image_path in Path('./img/robots/png').iterdir():
-    loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
 # Border of available robot's picture
-border_sprite = get_sprite('./img/interface/png/border.png')
-# Robot sprite
-robot_sprite = get_sprite('img/robots/png/bender.png')
+border_sprite = get_sprite('img/interface/png/border.png')
 
 picture_coordinates = []
 for i in range(8):
@@ -58,21 +52,21 @@ def draw_board(state, available_robots, window, welcome_board_state):
             for coordinate, robot in zip(picture_coordinates, state.robots):
                 x, y = coordinate
                 if robot.name in loaded_robots_images.keys():
-                    robot_sprite.image = loaded_robots_images[robot.name]
-                    robot_sprite.x = x
-                    robot_sprite.y = y
-                    robot_sprite.draw()
+                    player_sprite.image = loaded_robots_images[robot.name]
+                    player_sprite.x = x
+                    player_sprite.y = y
+                    player_sprite.draw()
 
                     robot_name_label = get_label(
-                        str(robot.displayed_name), robot_sprite.x + 30, robot_sprite.y - 20,
+                        str(robot.displayed_name), player_sprite.x + 30, player_sprite.y - 20,
                         16, "center", (0, 0, 0, 255),
                     )
                     robot_name_label.draw()
 
                 for available_robot in available_robots:
                     if available_robot.name == robot.name:
-                        border_sprite.x = robot_sprite.x
-                        border_sprite.y = robot_sprite.y
+                        border_sprite.x = player_sprite.x
+                        border_sprite.y = player_sprite.y
                         border_sprite.draw()
 
             if not available_robots:
@@ -88,8 +82,11 @@ def draw_board(state, available_robots, window, welcome_board_state):
             )
             own_name_label.draw()
 
+            if name_border is True:
+                name_border_sprite.draw()
 
-def handle_click(state, x, y, window, available_robots, name_border):
+
+def handle_click(state, x, y, window, available_robots):
     """
     Board react on mouse press. Return robot_name when is clicked on robot.
     """
@@ -102,8 +99,8 @@ def handle_click(state, x, y, window, available_robots, name_border):
     for i, coordinate in enumerate(picture_coordinates):
         coord_x, coord_y = coordinate
         if (
-            coord_x < x < coord_x + robot_sprite.width and
-            coord_y < y < coord_y + robot_sprite.height
+            coord_x < x < coord_x + player_sprite.width and
+            coord_y < y < coord_y + player_sprite.height
         ):
             robot_name = sorted(loaded_robots_images.keys())[i]
             for available_robot in available_robots:
