@@ -16,12 +16,14 @@ from util_network import set_argument_value
 class WelcomeBoardState:
     def __init__(self):
         self.own_robot_name = ""
+        self.click_on_name = False
 
     def on_text(self, text):
         """
-        Welcome board reacts on input text. Set up own robot name.
+        Welcome board reacts on input text. Set up own robot name (max 8 char.)
         """
-        self.own_robot_name = self.own_robot_name + text
+        if len(self.own_robot_name) < 8:
+            self.own_robot_name = self.own_robot_name + text
 
     def on_text_motion(self, motion):
         """
@@ -60,7 +62,7 @@ class WelcomeBoard:
         """
         Board is handled by mouse press.
         """
-        robot_name = handle_click(self.state, x, y, self.window, self.available_robots)
+        robot_name = handle_click(self.state, x, y, self.window, self.available_robots, self.welcome_board_state.click_on_name)
         if robot_name is not None:
             interface_main(robot_name, self.welcome_board_state.own_robot_name)
             self.window.close()

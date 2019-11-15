@@ -89,7 +89,7 @@ def draw_board(state, available_robots, window, welcome_board_state):
             own_name_label.draw()
 
 
-def handle_click(state, x, y, window, available_robots):
+def handle_click(state, x, y, window, available_robots, name_border):
     """
     Board react on mouse press. Return robot_name when is clicked on robot.
     """
