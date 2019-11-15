@@ -82,9 +82,6 @@ def draw_board(state, available_robots, window, welcome_board_state):
             )
             own_name_label.draw()
 
-            if name_border is True:
-                name_border_sprite.draw()
-
 
 def handle_click(state, x, y, window, available_robots):
     """

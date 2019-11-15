@@ -55,7 +55,6 @@ class WelcomeBoard:
             self.available_robots,
             self.window,
             self.welcome_board_state,
-            self.welcome_board_state.click_on_name
         )
 
     def on_mouse_press(self, x, y, button, mod):
