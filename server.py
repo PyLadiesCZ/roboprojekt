@@ -148,10 +148,10 @@ class Server:
         Process the data sent by interface: own robot name, chosen cards,
         confirmation of selected cards, power down state, played game round.
         """
+        if robot.selection_confirmed:
+            return
         message = message.json()
         if "interface_data" in message:
-            if robot.selection_confirmed:
-                return
             robot_game_round = message["interface_data"]["game_round"]
             if robot_game_round != self.state.game_round:
                 return
