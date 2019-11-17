@@ -16,7 +16,7 @@ from util_network import set_argument_value, tick_asyncio
 
 
 class Interface:
-    def __init__(self, hostname, robot_name, own_robot_name):
+    def __init__(self, hostname):
         # Game attributes
         self.window = create_window(self.window_draw, self.on_text, self.on_mouse_press, self.on_close)
         # When something has changed in interface state, the function 'send_state_to_server' is called.
@@ -130,7 +130,7 @@ class Interface:
 
 def main(robot_name, own_robot_name):
     hostname = set_argument_value("localhost")
-    interface = Interface(hostname, robot_name, own_robot_name)
+    interface = Interface(hostname)
 
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
     asyncio.ensure_future(interface.get_messages(robot_name, own_robot_name))
