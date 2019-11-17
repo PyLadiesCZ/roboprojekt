@@ -509,11 +509,6 @@ def handle_click(interface_state, x, y, window):
     if (250 < x < 435) and (535 < y < 565):
         interface_state.return_card()
 
-    # Enter own robot name into command line
-    if (190 < x < 320) and (855 < y < 885):
-        robot_name.text = input("Enter robot name:")
-        interface_state.change_robot_name(robot_name.text)
-
 
 def coordinates_in_rectangle(x, y, left, bottom, width, height):
     """
