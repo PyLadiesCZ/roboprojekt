@@ -29,7 +29,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.73"
-     inkscape:cx="164.67884"
+     inkscape:cx="85.226785"
      inkscape:cy="255.27338"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -110,11 +110,11 @@
          y="202.57652"
          style="font-size:7.76111126px;stroke-width:0.26458332">Enter robot name:</tspan></text>
     <rect
-       style="fill:#e6e6e6;stroke:#1a1a1a;stroke-width:0.1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       style="fill:#e6e6e6;stroke:#1a1a1a;stroke-width:0.08012635;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
        id="rect867"
-       width="60.527969"
-       height="13.047953"
-       x="50.828991"
-       y="192.25398" />
+       width="38.801266"
+       height="13.067826"
+       x="50.819054"
+       y="192.24405" />
   </g>
 </svg>

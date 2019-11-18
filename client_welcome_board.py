@@ -1,6 +1,9 @@
 """
-Welcome board where player can choose his robot.
+Welcome board, where player can choose his robot and name.
 Client receives game state with available robots from server.
+If you want to change robot's name, just type on the keyboard.
+Max lenght of the name is 8 characters.
+Then click on the chosen robot.
 """
 import asyncio
 import aiohttp

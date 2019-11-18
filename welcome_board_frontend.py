@@ -74,7 +74,7 @@ def draw_board(state, available_robots, window, welcome_board_state):
 
             own_name_label = get_label(
                 welcome_board_state.own_robot_name,
-                x=495,
+                x=445,
                 y=327,
                 font_size=20,
                 anchor_x="left",
