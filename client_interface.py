@@ -77,6 +77,7 @@ class Interface:
                         message = message.json()
                         if "robot_name" in message:
                             robot_name = message["robot_name"]
+                            asyncio.ensure_future(self.ws.send_json({"own_robot_name": own_robot_name}))
                         if "game_state" in message:
                             self.set_game_state(message, robot_name, own_robot_name)
                         if "robots" in message:
@@ -118,7 +119,7 @@ class Interface:
                 self.interface_state.robot = robot
                 if own_robot_name != "":
                     robot.displayed_name == own_robot_name
-                    asyncio.ensure_future(self.ws.send_json({"own_robot_name": own_robot_name}))
+
 
     def set_blocked_cards(self, cards):
         """
