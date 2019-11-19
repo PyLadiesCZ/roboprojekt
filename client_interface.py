@@ -12,11 +12,11 @@ from time import monotonic
 from interface_frontend import draw_interface, create_window, handle_text, handle_click
 from interface import InterfaceState
 from backend import State
-from util_network import set_argument_value, tick_asyncio
+from util_network import tick_asyncio
 
 
 class Interface:
-    def __init__(self, hostname):
+    def __init__(self, hostname, game_name):
         # Game attributes
         self.window = create_window(self.window_draw, self.on_text, self.on_mouse_press, self.on_close)
         # When something has changed in interface state, the function 'send_state_to_server' is called.
@@ -26,6 +26,7 @@ class Interface:
         # Connection attribute
         self.ws = None
         self.hostname = hostname
+        self.game_name = game_name
 
     def window_draw(self):
         """
@@ -70,7 +71,7 @@ class Interface:
         # create Session
         async with aiohttp.ClientSession() as session:
             # create Websocket
-            async with session.ws_connect('http://' + self.hostname + ':8080/interface/' + robot_name) as self.ws:
+            async with session.ws_connect('http://' + self.hostname + ':8080/interface/' + robot_name + self.game_name) as self.ws:
                 # Cycle "for" is finished when client disconnects from server
                 async for message in self.ws:
                     if message.type == aiohttp.WSMsgType.TEXT:
@@ -125,20 +126,20 @@ class Interface:
         del self.interface_state.program[:len(self.interface_state.blocked_cards)]
 
 
-def main(robot_name):
-    hostname = set_argument_value("localhost")
-    interface = Interface(hostname)
+def main(robot_name, hostname, game_name):
+    # hostname = set_argument_value("localhost")
+    interface = Interface(hostname, game_name)
 
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
     asyncio.ensure_future(interface.get_messages(robot_name))
+    pyglet.app.run()
 
 
 if __name__ == "__main__":
     # Chosen robot name can be entered as a second argument in the command line.
     # (First argument is hostname).
-    if len(sys.argv) == 1:
-        robot_name = ""
-    else:
-        robot_name = sys.argv[2]
-    main(robot_name)
-    pyglet.app.run()
+    # if len(sys.argv) == 1:
+    #     robot_name = ""
+    # else:
+    #     robot_name = sys.argv[2]
+    main(robot_name, hostname, game_name)

@@ -62,7 +62,6 @@ class Server:
         Send them game state.
         Maintain connection to the client until they disconnect.
         """
-        print("tu")
         ws = await self.ws_handler(request)
         self.ws_receivers.append(ws)
         try:

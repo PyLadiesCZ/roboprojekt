@@ -5,20 +5,21 @@ Client receives game state with available robots from server.
 import asyncio
 import aiohttp
 import pyglet
+import click
 
 from backend import State
 from util_network import tick_asyncio
 from welcome_board_frontend import create_window, draw_board, handle_click
 from client_interface import main as interface_main
-from util_network import set_argument_value
 
 
 class WelcomeBoard:
-    def __init__(self, hostname):
+    def __init__(self, hostname, game_name):
         self.window = create_window(self.window_draw, self.on_mouse_press)
         self.state = None
         self.available_robots = None
         self.hostname = hostname
+        self.game_name = game_name
 
     def window_draw(self):
         """
@@ -33,7 +34,7 @@ class WelcomeBoard:
         """
         robot_name = handle_click(self.state, x, y, self.window, self.available_robots)
         if robot_name is not None:
-            interface_main(robot_name)
+            interface_main(robot_name, self.hostname, self.game_name)
             self.window.close()
 
     async def process_message(self):
@@ -42,7 +43,7 @@ class WelcomeBoard:
         Process information from server.
         """
         async with aiohttp.ClientSession() as session:
-            async with session.ws_connect('http://' + self.hostname + ':8080/receiver/') as ws:
+            async with session.ws_connect('http://' + self.hostname + ':8080/receiver/' + self.game_name) as ws:
                 # Loop "for" is finished when client disconnects from server
                 async for message in ws:
                     message = message.json()
@@ -54,17 +55,19 @@ class WelcomeBoard:
                         self.available_robots = self.state.robots_from_dict({"robots": message["available_robots"]})
 
 
-def main():
-    hostname = set_argument_value("localhost")
-    welcome_board = WelcomeBoard(hostname)
+@click.command()
+@click.option("-h", "--hostname", default="localhost",
+              help="Server's hostname.")
+@click.argument("game_name")
+def main(hostname, game_name):
+    welcome_board = WelcomeBoard(hostname, game_name)
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
-
     # Schedule the "client" task
     # More about Futures - official documentation
     # https://docs.python.org/3/library/asyncio-future.html
     asyncio.ensure_future(welcome_board.process_message())
+    pyglet.app.run()
 
 
 if __name__ == "__main__":
     main()
-    pyglet.app.run()
