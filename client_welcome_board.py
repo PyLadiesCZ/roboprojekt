@@ -27,6 +27,9 @@ class OwnRobotName:
         if len(self.own_robot_name) < 8:
             self.own_robot_name = self.own_robot_name + text
 
+        if text == pyglet.window.key.ENTER:
+            pass
+
     def on_text_motion(self, motion):
         """
         React on backspace motion - when it is pressed, delete one letter.
@@ -34,9 +37,6 @@ class OwnRobotName:
         if motion == pyglet.window.key.MOTION_BACKSPACE:
             self.own_robot_name = self.own_robot_name[:-1]
 
-    def on_key_press(symbol, modifiers):
-        if symbol == pyglet.window.key.ENTER:
-            pass
 
 class WelcomeBoard:
     def __init__(self, hostname):
