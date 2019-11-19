@@ -40,7 +40,7 @@ def create_window(on_draw, on_mouse_press, on_text, on_text_motion):
     return window
 
 
-def draw_board(state, available_robots, window, welcome_board_state):
+def draw_board(state, available_robots, window, own_robot_name):
     """
     Draw the welcome board for choosing robot,
     react to user's resizing of window by scaling the board.
@@ -48,7 +48,7 @@ def draw_board(state, available_robots, window, welcome_board_state):
     with window_zoom(window, WINDOW_WIDTH, WINDOW_HEIGHT):
         background_sprite.draw()
 
-        if state is not None:
+        if state is not None and available_robots is not None:
             for coordinate, robot in zip(picture_coordinates, state.robots):
                 x, y = coordinate
                 if robot.name in loaded_robots_images.keys():
@@ -73,7 +73,7 @@ def draw_board(state, available_robots, window, welcome_board_state):
                 not_available_label.draw()
 
             own_name_label = get_label(
-                welcome_board_state.own_robot_name,
+                own_robot_name,
                 x=445,
                 y=327,
                 font_size=20,

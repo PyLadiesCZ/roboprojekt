@@ -16,36 +16,14 @@ from client_interface import main as interface_main
 from util_network import set_argument_value
 
 
-class OwnRobotName:
-    def __init__(self):
-        self.own_robot_name = ""
-
-    def on_text(self, text):
-        """
-        Welcome board reacts on input text. Set up own robot name (max 8 char.)
-        """
-        if len(self.own_robot_name) < 8:
-            self.own_robot_name = self.own_robot_name + text
-
-        if text == pyglet.window.key.ENTER:
-            pass
-
-    def on_text_motion(self, motion):
-        """
-        React on backspace motion - when it is pressed, delete one letter.
-        """
-        if motion == pyglet.window.key.MOTION_BACKSPACE:
-            self.own_robot_name = self.own_robot_name[:-1]
-
-
 class WelcomeBoard:
     def __init__(self, hostname):
-        self.chosen_name = OwnRobotName()
+        self.own_robot_name = ""
         self.window = create_window(
             self.window_draw,
             self.on_mouse_press,
-            self.chosen_name.on_text,
-            self.chosen_name.on_text_motion,
+            self.on_text,
+            self.on_text_motion,
         )
         self.state = None
         self.available_robots = None
@@ -60,7 +38,7 @@ class WelcomeBoard:
             self.state,
             self.available_robots,
             self.window,
-            self.chosen_name,
+            self.own_robot_name,
         )
 
     def on_mouse_press(self, x, y, button, mod):
@@ -69,8 +47,23 @@ class WelcomeBoard:
         """
         robot_name = handle_click(self.state, x, y, self.window, self.available_robots)
         if robot_name is not None:
-            interface_main(robot_name, self.chosen_name.own_robot_name)
+            interface_main(robot_name, self.own_robot_name)
             self.window.close()
+
+    def on_text(self, text):
+        """
+        Welcome board reacts on input text. Set up own robot name (max 8 char.)
+        """
+        if len(self.own_robot_name) < 8:
+            if text != '\r':
+                self.own_robot_name = self.own_robot_name + text
+
+    def on_text_motion(self, motion):
+        """
+        React on backspace motion - when it is pressed, delete one letter.
+        """
+        if motion == pyglet.window.key.MOTION_BACKSPACE:
+            self.own_robot_name = self.own_robot_name[:-1]
 
     async def process_message(self):
         """
