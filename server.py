@@ -229,12 +229,12 @@ class Server:
 
 
 # aiohttp.web application
-def get_app(test, games):
+def get_app(game_name, games):
     app = web.Application()
     app.add_routes([
-        web.get("/receiver/" + test, games[test].talk_to_receiver),
-        web.get("/interface/", games[test].talk_to_interface),
-        web.get("/interface/{robot_name}", games[test].talk_to_interface)
+        web.get("/receiver/" + game_name, games[game_name].talk_to_receiver),
+        web.get("/interface/", games[game_name].talk_to_interface),
+        web.get("/interface/{robot_name}", games[game_name].talk_to_interface)
     ])
     return app
 
