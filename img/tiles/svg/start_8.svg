@@ -15,11 +15,11 @@
    viewBox="0 0 16.933333 16.933334"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="starting_square08.svg"
-   inkscape:export-filename="C:\Users\user\Documents\_Pyladies\roboprojekt\img\squares\png\starting_square05.png"
-   inkscape:export-xdpi="122.88001"
-   inkscape:export-ydpi="122.88001">
+   inkscape:version="0.92.4 (unknown)"
+   sodipodi:docname="start_8.svg"
+   inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/img/squares/png/starting_square.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
   <defs
      id="defs2">
     <linearGradient
@@ -38,17 +38,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="11.313708"
-     inkscape:cx="33.177807"
-     inkscape:cy="32.841263"
+     inkscape:zoom="6.3930203"
+     inkscape:cx="-31.716078"
+     inkscape:cy="37.083398"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      units="px"
      inkscape:window-width="1920"
-     inkscape:window-height="1027"
-     inkscape:window-x="1912"
-     inkscape:window-y="-8"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
      inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
@@ -63,7 +63,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -73,26 +73,19 @@
      id="layer1"
      transform="translate(0,-280.06665)">
     <circle
-       style="fill:#ffd42a;stroke:#000000;stroke-width:0.52916667;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:#ffd42a;stroke:#000000;stroke-width:0.48286462;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path3766"
-       cx="8.4666672"
-       cy="288.53333"
-       r="6.3499999"
-       inkscape:export-filename="C:\Users\user\Documents\_Pyladies\roboprojekt\img\squares\png\starting_square08.png"
-       inkscape:export-xdpi="122.88001"
-       inkscape:export-ydpi="122.88001" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458335"
-       x="4.4538198"
-       y="292.63712"
-       id="text819"
-       inkscape:export-filename="C:\Users\user\Documents\_Pyladies\roboprojekt\img\squares\png\starting_square08.png"
-       inkscape:export-xdpi="122"
-       inkscape:export-ydpi="122"><tspan
-         sodipodi:role="line"
-         id="tspan833"
-         x="4.4538198"
-         y="292.63712">8</tspan></text>
+       cx="8.4501314"
+       cy="288.51678"
+       r="5.7943749" />
+    <g
+       aria-label="8"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.30111122px;line-height:1.25;font-family:Cantarell;-inkscape-font-specification:'Cantarell, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.24143231"
+       id="text819">
+      <path
+         d="m 8.502016,292.29179 c 1.637877,0 2.698891,-0.82409 2.698891,-2.06022 0,-1.00951 -0.700475,-1.49366 -1.5142632,-1.8336 0.7828842,-0.35023 1.2464342,-0.9683 1.2464342,-1.69968 0,-1.05071 -0.9580031,-1.76149 -2.3589542,-1.76149 -1.5039623,0 -2.492869,0.81379 -2.492869,2.02932 0,0.85499 0.4738512,1.33914 1.0919178,1.66878 -0.8240889,0.29873 -1.3185422,0.9168 -1.3185422,1.70998 0,1.16403 1.0713156,1.94691 2.6473856,1.94691 z m -1.1228211,-5.43898 c 0,-0.49446 0.4120444,-0.83439 1.0919177,-0.83439 0.7004756,0 1.1743267,0.37084 1.1743267,0.9168 0,0.50475 -0.3914422,0.91679 -0.9992078,1.06101 -0.7004755,-0.26783 -1.2670366,-0.54596 -1.2670366,-1.14342 z m -0.2060223,3.27575 c 0,-0.52536 0.37084,-0.9271 0.9889067,-1.08162 0.8961967,0.31934 1.7305867,0.56656 1.7305867,1.27734 0,0.53566 -0.46355,0.8756 -1.2567356,0.8756 -0.8858955,0 -1.4627578,-0.43265 -1.4627578,-1.07132 z"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.30111122px;font-family:Cantarell;-inkscape-font-specification:'Cantarell, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.24143231"
+         id="path1375" />
+    </g>
   </g>
 </svg>

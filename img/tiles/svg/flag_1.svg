@@ -14,7 +14,7 @@
    viewBox="0 0 16.933333 16.933334"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   inkscape:version="0.92.4 (unknown)"
    sodipodi:docname="flag_1.svg">
   <defs
      id="defs2" />
@@ -25,18 +25,19 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="8"
-     inkscape:cx="13.820885"
-     inkscape:cy="31.788258"
+     inkscape:zoom="11.313708"
+     inkscape:cx="20.379855"
+     inkscape:cy="36.806943"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      units="px"
-     inkscape:window-width="1366"
-     inkscape:window-height="746"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1">
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:object-nodes="true">
     <inkscape:grid
        type="xygrid"
        id="grid10"
@@ -55,7 +56,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -65,33 +66,32 @@
      id="layer1"
      transform="translate(0,-280.06666)">
     <ellipse
-       style="fill:#ffff00;stroke:#010100;stroke-width:0.26458335;stroke-linejoin:round;stroke-opacity:1"
+       style="fill:#554400;stroke:#554400;stroke-width:0.16568013;stroke-linejoin:round;stroke-opacity:1"
        id="path4553"
-       cx="8.1028643"
-       cy="294.72531"
-       rx="5.291667"
-       ry="0.58796299" />
+       cx="5.9971781"
+       cy="294.00089"
+       rx="2.1073482"
+       ry="0.57892466" />
     <path
-       style="fill:#ffff00;stroke:#000000;stroke-width:0.26458335px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
-       d="m 4.2333334,282.18333 v 12.7 h 1.0583334 v -12.7 z"
+       style="fill:#aa8800;stroke:none;stroke-width:0.24309723px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 5.4500562,282.26252 v 11.66867 H 6.422445 v -11.66867 z"
        id="path3738"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:#ffff00;stroke:#000000;stroke-width:0.26458335px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
-       d="m 5.2916668,290.64998 9.5250002,-4.23333 -9.5250002,-4.23333 v 8.46666"
+       style="opacity:1;fill:#ffd42a;stroke:none;stroke-width:0.20710067;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
+       d="m 6.6655432,289.92007 6.5636238,-3.76799 -6.5636238,-3.76803 v 7.53602"
        id="path3742"
        inkscape:connector-curvature="0" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:3.52777791px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.54657388"
-       x="6.0766349"
-       y="326.70709"
-       id="text4551"
-       transform="scale(1.1363872,0.87998176)"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.61242104px;line-height:1.25;font-family:Cantarell;-inkscape-font-specification:'Cantarell, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;opacity:0.71220057;fill:#2b2200;fill-opacity:1;stroke:none;stroke-width:0.11531335"
+       x="7.2706542"
+       y="287.44574"
+       id="text824"><tspan
          sodipodi:role="line"
-         id="tspan4549"
-         x="6.0766349"
-         y="326.70709"
-         style="font-size:3.52777791px;stroke-width:0.54657388">1</tspan></text>
+         id="tspan822"
+         x="7.2706542"
+         y="287.44574"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.61242104px;font-family:Cantarell;-inkscape-font-specification:'Cantarell, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#2b2200;stroke-width:0.11531335">1</tspan></text>
   </g>
 </svg>

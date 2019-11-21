@@ -15,11 +15,11 @@
    viewBox="0 0 16.933333 16.933334"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="stop_square06.svg"
-   inkscape:export-filename="C:\Users\user\Documents\_Pyladies\roboprojekt\img\squares\png\starting_square05.png"
-   inkscape:export-xdpi="122.88001"
-   inkscape:export-ydpi="122.88001">
+   inkscape:version="0.92.4 (unknown)"
+   sodipodi:docname="stop_6.svg"
+   inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/img/squares/png/starting_square.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
   <defs
      id="defs2">
     <linearGradient
@@ -38,17 +38,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="11.313708"
-     inkscape:cx="18.461146"
-     inkscape:cy="32.841263"
+     inkscape:zoom="6.3930203"
+     inkscape:cx="-31.716078"
+     inkscape:cy="37.083398"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      units="px"
      inkscape:window-width="1920"
-     inkscape:window-height="1027"
-     inkscape:window-x="1912"
-     inkscape:window-y="-8"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
      inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
@@ -73,26 +73,19 @@
      id="layer1"
      transform="translate(0,-280.06665)">
     <circle
-       style="fill:#ff0000;stroke:#000000;stroke-width:0.52916667;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:#ff2a2a;stroke:#000000;stroke-width:0.48286462;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path3766"
-       cx="8.4666672"
-       cy="288.53333"
-       r="6.3499999"
-       inkscape:export-filename="C:\Users\user\Documents\_Pyladies\roboprojekt\img\squares\png\starting_square06.png"
-       inkscape:export-xdpi="122.88001"
-       inkscape:export-ydpi="122.88001" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458335"
-       x="4.3711376"
-       y="292.62885"
-       id="text819"
-       inkscape:export-filename="C:\Users\user\Documents\_Pyladies\roboprojekt\img\squares\png\starting_square06.png"
-       inkscape:export-xdpi="122"
-       inkscape:export-ydpi="122"><tspan
-         sodipodi:role="line"
-         id="tspan829"
-         x="4.3711376"
-         y="292.62885">6</tspan></text>
+       cx="8.4501314"
+       cy="288.51678"
+       r="5.7943749" />
+    <g
+       aria-label="6"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.30111122px;line-height:1.25;font-family:Cantarell;-inkscape-font-specification:'Cantarell, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.24143231"
+       id="text819">
+      <path
+         d="m 8.5325559,292.20903 c 1.5142631,0 2.5340731,-0.96831 2.5340731,-2.40016 0,-1.30824 -0.844691,-2.18384 -2.1014264,-2.18384 -0.7210778,0 -1.3288433,0.27813 -1.7923933,0.81379 0.051506,-1.64818 0.7519811,-2.48257 1.9572111,-2.48257 0.4944533,0 1.0816166,0.13392 1.4833596,0.33994 l 0.350238,-1.00951 c -0.453249,-0.26783 -1.1022187,-0.43264 -1.8232965,-0.43264 -2.1117278,0 -3.3169578,1.40095 -3.3169578,3.86291 0,2.27655 1.01981,3.49208 2.7091922,3.49208 z m 0,-3.50238 c 0.7313789,0 1.2258323,0.49445 1.2258323,1.24644 0,0.69017 -0.4223456,1.13312 -1.11252,1.13312 -0.7725834,0 -1.2670367,-0.58717 -1.4215534,-1.66878 0.3296356,-0.45325 0.7931856,-0.71078 1.3082411,-0.71078 z"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.30111122px;font-family:Cantarell;-inkscape-font-specification:'Cantarell, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.24143231"
+         id="path3046" />
+    </g>
   </g>
 </svg>

@@ -15,8 +15,8 @@
    viewBox="0 0 16.933333 16.933334"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="starting_square02.svg"
+   inkscape:version="0.92.4 (unknown)"
+   sodipodi:docname="start_2.svg"
    inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/img/squares/png/starting_square.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
@@ -38,17 +38,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="11.313708"
-     inkscape:cx="33.177807"
-     inkscape:cy="32.841263"
+     inkscape:zoom="7.9999996"
+     inkscape:cx="-11.833885"
+     inkscape:cy="29.845808"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      units="px"
      inkscape:window-width="1920"
-     inkscape:window-height="1027"
-     inkscape:window-x="1912"
-     inkscape:window-y="-8"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
      inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
@@ -63,7 +63,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -73,23 +73,19 @@
      id="layer1"
      transform="translate(0,-280.06665)">
     <circle
-       style="fill:#ffd42a;stroke:#000000;stroke-width:0.52916667;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:#ffd42a;stroke:#000000;stroke-width:0.48286462;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path3766"
-       cx="8.4666672"
-       cy="288.53333"
-       r="6.3499999"
-       inkscape:export-filename="C:\Users\user\Documents\_Pyladies\roboprojekt\img\squares\png\starting_square01.png"
-       inkscape:export-xdpi="122.88001"
-       inkscape:export-ydpi="122.88001" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458335"
-       x="4.2250657"
-       y="292.71704"
-       id="text819"><tspan
-         sodipodi:role="line"
-         id="tspan821"
-         x="4.2250657"
-         y="292.71704">2</tspan></text>
+       cx="8.4501314"
+       cy="288.51678"
+       r="5.7943749" />
+    <g
+       aria-label="2"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.30111122px;line-height:1.25;font-family:Cantarell;-inkscape-font-specification:'Cantarell, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.24143231"
+       id="text819">
+      <path
+         d="M 6.2363261,292.13922 H 11.005741 V 290.9855 H 8.1317306 c 1.8232967,-1.61728 2.6370844,-2.7916 2.6370844,-3.98653 0,-1.28764 -0.9374011,-2.11173 -2.41046,-2.11173 -0.8858955,0 -1.7099844,0.29873 -2.31775,0.83439 l 0.3605389,0.958 c 0.5356578,-0.40174 1.1434234,-0.62837 1.6996834,-0.62837 0.7931855,0 1.2876389,0.45325 1.2876389,1.15373 0,0.958 -0.9683045,2.03962 -3.1521401,4.01743 z"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.30111122px;font-family:Cantarell;-inkscape-font-specification:'Cantarell, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.24143231"
+         id="path3034" />
+    </g>
   </g>
 </svg>
