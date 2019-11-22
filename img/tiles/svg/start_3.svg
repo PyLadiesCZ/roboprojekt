@@ -15,9 +15,9 @@
    viewBox="0 0 16.933333 16.933334"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.4 (unknown)"
+   inkscape:version="0.92.4 5da689c313, 2019-01-14"
    sodipodi:docname="start_3.svg"
-   inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/img/squares/png/starting_square.png"
+   inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/img/tiles/png/start_3.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -38,18 +38,19 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="7.9999996"
-     inkscape:cx="-21.800508"
-     inkscape:cy="30.351088"
+     inkscape:zoom="11.313708"
+     inkscape:cx="13.172794"
+     inkscape:cy="37.717436"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="text819"
      showgrid="true"
      units="px"
      inkscape:window-width="1920"
      inkscape:window-height="1016"
      inkscape:window-x="0"
      inkscape:window-y="27"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="1"
+     inkscape:snap-global="false">
     <inkscape:grid
        type="xygrid"
        id="grid3713"
@@ -73,19 +74,25 @@
      id="layer1"
      transform="translate(0,-280.06665)">
     <circle
-       style="fill:#ffd42a;stroke:#000000;stroke-width:0.48286462;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#dee3db;stroke:#7c916f;stroke-width:0.33449268;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path3766"
-       cx="8.4501314"
-       cy="288.51678"
-       r="5.7943749" />
+       cx="8.4279947"
+       cy="288.49463"
+       r="4.0139122" />
     <g
-       aria-label="3"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.30111122px;line-height:1.25;font-family:Cantarell;-inkscape-font-specification:'Cantarell, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.24143231"
-       id="text819">
-      <path
-         d="m 8.0297952,292.24223 c 1.7511889,0 2.9255158,-0.82409 2.9255158,-2.04992 0,-0.9065 -0.618067,-1.59667 -1.5863714,-1.8233 0.7313794,-0.19572 1.1949294,-0.81378 1.1949294,-1.60697 0,-1.14342 -0.9271005,-1.8748 -2.3795572,-1.8748 -0.7828844,0 -1.5966722,0.20602 -2.31775,0.60776 l 0.2987322,0.98891 c 0.6283678,-0.28843 1.2258323,-0.45325 1.7408878,-0.45325 0.7725834,0 1.2773378,0.36054 1.2773378,0.9271 0,0.64897 -0.6283678,1.04041 -1.66878,1.04041 H 7.1645018 v 1.05072 h 0.3399367 c 1.2773378,0 2.0808245,0.44295 2.0808245,1.15372 0,0.56656 -0.5459589,0.8962 -1.48336,0.8962 -0.6489701,0 -1.4009512,-0.15452 -2.029319,-0.44295 l -0.2987322,1.05071 c 0.7210778,0.36054 1.4421556,0.53566 2.2559434,0.53566 z"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.30111122px;font-family:Cantarell;-inkscape-font-specification:'Cantarell, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.24143231"
-         id="path3037" />
+       aria-label="1"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.30111122px;line-height:1.25;font-family:Cantarell;-inkscape-font-specification:'Cantarell, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#484537;fill-opacity:1;stroke:none;stroke-width:0.24143231"
+       id="text819"
+       transform="matrix(0.69272558,0,0,0.69272558,2.5743729,88.63169)">
+      <g
+         aria-label="3"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.85229397px;line-height:1.25;font-family:Cantarell;-inkscape-font-specification:Cantarell;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.05343076"
+         id="text3590">
+        <path
+           d="m 8.2865237,291.7008 c 1.354401,0 2.2838923,-0.69048 2.2838923,-1.7085 0,-0.78785 -0.548843,-1.39866 -1.3986629,-1.61111 0.6462175,-0.1859 1.0622749,-0.7613 1.0622749,-1.43407 0,-0.9295 -0.7790015,-1.56686 -1.9032428,-1.56686 -0.6196606,0 -1.2924349,0.1859 -1.8501295,0.50458 l 0.1681936,0.53999 c 0.5311377,-0.24786 1.0799799,-0.39835 1.5314469,-0.39835 0.7878541,0 1.3012872,0.4072 1.3012872,1.03572 0,0.69047 -0.601956,1.11538 -1.5845606,1.11538 H 7.542931 v 0.63737 h 0.3363872 c 1.1773551,0 1.9386524,0.48688 1.9386524,1.23932 0,0.62851 -0.53999,1.00031 -1.4606285,1.00031 -0.5842514,0 -1.2747304,-0.15049 -1.8324249,-0.42491 l -0.1681936,0.5931 c 0.5842514,0.30098 1.2658781,0.47803 1.9298001,0.47803 z"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Cantarell;-inkscape-font-specification:Cantarell;stroke-width:0.05343076"
+           id="path3618" />
+      </g>
     </g>
   </g>
 </svg>

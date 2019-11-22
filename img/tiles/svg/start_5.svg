@@ -15,9 +15,9 @@
    viewBox="0 0 16.933333 16.933334"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.4 (unknown)"
+   inkscape:version="0.92.4 5da689c313, 2019-01-14"
    sodipodi:docname="start_5.svg"
-   inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/img/squares/png/starting_square.png"
+   inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/img/tiles/png/start_5.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -38,18 +38,19 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="6.3930203"
-     inkscape:cx="-31.716078"
-     inkscape:cy="37.083398"
+     inkscape:zoom="11.313708"
+     inkscape:cx="10.079201"
+     inkscape:cy="37.717436"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="text819"
      showgrid="true"
      units="px"
      inkscape:window-width="1920"
      inkscape:window-height="1016"
      inkscape:window-x="0"
      inkscape:window-y="27"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="1"
+     inkscape:snap-global="false">
     <inkscape:grid
        type="xygrid"
        id="grid3713"
@@ -73,19 +74,25 @@
      id="layer1"
      transform="translate(0,-280.06665)">
     <circle
-       style="fill:#ffd42a;stroke:#000000;stroke-width:0.48286462;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#dee3db;stroke:#7c916f;stroke-width:0.33449268;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path3766"
-       cx="8.4501314"
-       cy="288.51678"
-       r="5.7943749" />
+       cx="8.4279947"
+       cy="288.49463"
+       r="4.0139122" />
     <g
-       aria-label="5"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.30111122px;line-height:1.25;font-family:Cantarell;-inkscape-font-specification:'Cantarell, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.24143231"
-       id="text819">
-      <path
-         d="m 8.1835899,292.20903 c 1.7511889,0 2.8843111,-0.9168 2.8843111,-2.40016 0,-1.34945 -0.968304,-2.15293 -2.6370844,-2.15293 -0.2472267,0 -0.46355,0.0206 -0.6592711,0.0618 l 0.072108,-1.60697 h 2.8637087 v -1.15372 H 6.5766166 l -0.1751189,3.93502 c 0.4841522,-0.0927 1.0507133,-0.15452 1.4627578,-0.15452 1.1537244,0 1.8232967,0.45325 1.8232967,1.21554 0,0.70047 -0.5459589,1.10221 -1.4730589,1.10221 -0.6180667,0 -1.29794,-0.15451 -1.8335978,-0.42234 l -0.37084,1.04041 c 0.6695722,0.35024 1.39065,0.53566 2.1735344,0.53566 z"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.30111122px;font-family:Cantarell;-inkscape-font-specification:'Cantarell, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.24143231"
-         id="path3043" />
+       aria-label="1"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.30111122px;line-height:1.25;font-family:Cantarell;-inkscape-font-specification:'Cantarell, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#484537;fill-opacity:1;stroke:none;stroke-width:0.24143231"
+       id="text819"
+       transform="matrix(0.69272558,0,0,0.69272558,2.5743729,88.63169)">
+      <g
+         aria-label="5"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.85229397px;line-height:1.25;font-family:Cantarell;-inkscape-font-specification:Cantarell;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.05343076"
+         id="text3590">
+        <path
+           d="m 8.2229081,291.7008 c 1.3809578,0 2.2927439,-0.77015 2.2927439,-1.99177 0,-1.15965 -0.8232631,-1.87669 -2.204221,-1.87669 -0.2567165,0 -0.5222853,0.0266 -0.8055587,0.0708 l 0.088523,-1.79701 h 2.6291318 v -0.63737 H 6.9304732 l -0.150489,3.15142 c 0.4514669,-0.0974 0.9383431,-0.15049 1.2835826,-0.15049 1.0799798,0 1.6996404,0.50458 1.6996404,1.32784 0,0.78786 -0.5665468,1.25703 -1.4694808,1.25703 -0.5311376,0 -1.1065367,-0.14164 -1.5934129,-0.3895 l -0.212455,0.5754 c 0.5576945,0.29212 1.1242413,0.46032 1.7350496,0.46032 z"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Cantarell;-inkscape-font-specification:Cantarell;stroke-width:0.05343076"
+           id="path3624" />
+      </g>
     </g>
   </g>
 </svg>

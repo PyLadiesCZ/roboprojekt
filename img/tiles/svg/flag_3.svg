@@ -14,8 +14,11 @@
    viewBox="0 0 16.933333 16.933334"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="flag_3.svg">
+   inkscape:version="0.92.4 5da689c313, 2019-01-14"
+   sodipodi:docname="flag_3.svg"
+   inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/img/tiles/png/flag_3.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -25,18 +28,19 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="11.313708"
-     inkscape:cx="41.586503"
-     inkscape:cy="39.155791"
+     inkscape:zoom="22.627416"
+     inkscape:cx="30.989203"
+     inkscape:cy="35.569835"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      units="px"
-     inkscape:window-width="1366"
-     inkscape:window-height="746"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1">
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:snap-grids="false">
     <inkscape:grid
        type="xygrid"
        id="grid10"
@@ -55,7 +59,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -65,36 +69,35 @@
      id="layer1"
      transform="translate(0,-280.06666)">
     <ellipse
-       style="fill:#ffff00;stroke:#010100;stroke-width:0.26458335;stroke-linejoin:round;stroke-opacity:1"
+       style="fill:#ffeb00;stroke:#806600;stroke-width:0.23804098;stroke-linejoin:round;stroke-opacity:1;fill-opacity:1"
        id="path4553"
-       cx="8.1028643"
-       cy="294.72531"
-       rx="5.291667"
-       ry="0.58796299" />
+       cx="8.3368177"
+       cy="293.94742"
+       rx="4.7608199"
+       ry="0.52897996" />
     <path
-       style="fill:#ffff00;stroke:#000000;stroke-width:0.26458335px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
-       d="m 4.2333334,282.18333 v 12.7 h 1.0583334 v -12.7 z"
+       style="fill:#ffeb00;stroke:#806600;stroke-width:0.23804098px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1;fill-opacity:1"
+       d="m 4.8554683,282.66361 v 11.42597 h 0.9521639 v -11.42597 z"
        id="path3738"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:#ffff00;stroke:#000000;stroke-width:0.26458335px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
-       d="m 5.2916668,290.64998 9.5250002,-4.23333 -9.5250002,-4.23333 v 8.46666"
+       style="fill:#ffeb00;stroke:#806600;stroke-width:0.23804098px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1;fill-opacity:1"
+       d="m 5.8076322,290.28091 8.5694748,-3.80866 -8.5694748,-3.80865 v 7.61731"
        id="path3742"
        inkscape:connector-curvature="0" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:3.31212687px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.51316214"
-       x="6.6479311"
-       y="306.84564"
-       id="text4551"
-       transform="scale(1.0669205,0.93727696)"
-       inkscape:transform-center-x="3.7024364"
-       inkscape:transform-center-y="3.1749882"><tspan
-         sodipodi:role="line"
-         id="tspan4549"
-         x="6.6479311"
-         y="306.84564"
-         style="font-size:3.31212687px;stroke-width:0.51316214">3</tspan></text>
+    <g
+       aria-label="3"
+       transform="matrix(0.96580556,0,0,0.84844869,0.73200137,27.227843)"
+       inkscape:transform-center-x="5.9087687"
+       inkscape:transform-center-y="5.0669961"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.8392725px;line-height:1.25;font-family:Cantarell;-inkscape-font-specification:Cantarell;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.90470368"
+       id="text4551">
+      <path
+         d="m 7.35585,307.57536 c 0.8934087,0 1.5065323,-0.45546 1.5065323,-1.12698 0,-0.51969 -0.3620349,-0.9226 -0.922605,-1.06275 0.4262669,-0.12262 0.7007127,-0.50217 0.7007127,-0.94596 0,-0.61312 -0.513856,-1.03355 -1.2554436,-1.03355 -0.4087491,0 -0.8525338,0.12262 -1.220408,0.33284 l 0.1109462,0.35619 c 0.3503564,-0.1635 0.7123913,-0.26276 1.0101942,-0.26276 0.5196952,0 0.858373,0.2686 0.858373,0.68319 0,0.45546 -0.3970705,0.73575 -1.0452298,0.73575 H 6.8653511 v 0.42043 h 0.2218924 c 0.7766232,0 1.2788007,0.32116 1.2788007,0.8175 0,0.41458 -0.3561956,0.65983 -0.96348,0.65983 -0.385392,0 -0.8408552,-0.0993 -1.2087294,-0.28028 l -0.1109462,0.39123 c 0.385392,0.19854 0.835016,0.31532 1.2729614,0.31532 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.8392725px;font-family:Cantarell;-inkscape-font-specification:Cantarell;stroke-width:0.90470368"
+         id="path2506"
+         inkscape:connector-curvature="0" />
+    </g>
     <flowRoot
        xml:space="preserve"
        id="flowRoot22"
@@ -105,7 +108,7 @@
            height="12"
            x="25"
            y="18" /></flowRegion><flowPara
-         id="flowPara28"></flowPara></flowRoot>    <flowRoot
+         id="flowPara28" /></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot38"
        style="fill:black;fill-opacity:1;stroke:none;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:5.33333333px;line-height:1.25;letter-spacing:0px;word-spacing:0px"><flowRegion
@@ -115,5 +118,5 @@
            height="16"
            x="24"
            y="16" /></flowRegion><flowPara
-         id="flowPara44"></flowPara></flowRoot>  </g>
+         id="flowPara44" /></flowRoot>  </g>
 </svg>

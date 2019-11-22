@@ -14,8 +14,11 @@
    viewBox="0 0 16.933333 16.933334"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.4 (unknown)"
-   sodipodi:docname="flag_1.svg">
+   inkscape:version="0.92.4 5da689c313, 2019-01-14"
+   sodipodi:docname="flag_1.svg"
+   inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/img/tiles/png/flag_1.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -25,9 +28,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="11.313708"
-     inkscape:cx="20.379855"
-     inkscape:cy="36.806943"
+     inkscape:zoom="15.999999"
+     inkscape:cx="14.709254"
+     inkscape:cy="33.260689"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -37,7 +40,7 @@
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
-     inkscape:object-nodes="true">
+     inkscape:snap-grids="false">
     <inkscape:grid
        type="xygrid"
        id="grid10"
@@ -66,32 +69,54 @@
      id="layer1"
      transform="translate(0,-280.06666)">
     <ellipse
-       style="fill:#554400;stroke:#554400;stroke-width:0.16568013;stroke-linejoin:round;stroke-opacity:1"
+       style="fill:#ffeb00;stroke:#806600;stroke-width:0.23804098;stroke-linejoin:round;stroke-opacity:1;fill-opacity:1"
        id="path4553"
-       cx="5.9971781"
-       cy="294.00089"
-       rx="2.1073482"
-       ry="0.57892466" />
+       cx="8.3368177"
+       cy="293.94742"
+       rx="4.7608199"
+       ry="0.52897996" />
     <path
-       style="fill:#aa8800;stroke:none;stroke-width:0.24309723px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 5.4500562,282.26252 v 11.66867 H 6.422445 v -11.66867 z"
+       style="fill:#ffeb00;stroke:#806600;stroke-width:0.23804098px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1;fill-opacity:1"
+       d="m 4.8554683,282.66361 v 11.42597 h 0.9521639 v -11.42597 z"
        id="path3738"
        inkscape:connector-curvature="0" />
     <path
-       style="opacity:1;fill:#ffd42a;stroke:none;stroke-width:0.20710067;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:fill markers stroke"
-       d="m 6.6655432,289.92007 6.5636238,-3.76799 -6.5636238,-3.76803 v 7.53602"
+       style="fill:#ffeb00;stroke:#806600;stroke-width:0.23804098px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1;fill-opacity:1"
+       d="m 5.8076322,290.28091 8.5694748,-3.80866 -8.5694748,-3.80865 v 7.61731"
        id="path3742"
        inkscape:connector-curvature="0" />
-    <text
+    <g
+       aria-label="1"
+       transform="matrix(1.0214883,0,0,0.89736534,0.29236468,12.290035)"
+       inkscape:transform-center-x="6.2494345"
+       inkscape:transform-center-y="5.3591282"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.8392725px;line-height:1.25;font-family:Cantarell;-inkscape-font-specification:Cantarell;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.90470368"
+       id="text4551">
+      <path
+         d="M 6.1821563,307.51697 H 8.255098 v -0.41459 H 7.4726355 v -3.63787 H 7.1748326 l -1.1036225,0.71823 0.1810174,0.327 0.7299091,-0.44962 v 3.04226 H 6.1821563 Z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.8392725px;font-family:Cantarell;-inkscape-font-specification:Cantarell;stroke-width:0.90470368"
+         id="path2512"
+         inkscape:connector-curvature="0" />
+    </g>
+    <flowRoot
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.61242104px;line-height:1.25;font-family:Cantarell;-inkscape-font-specification:'Cantarell, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;opacity:0.71220057;fill:#2b2200;fill-opacity:1;stroke:none;stroke-width:0.11531335"
-       x="7.2706542"
-       y="287.44574"
-       id="text824"><tspan
-         sodipodi:role="line"
-         id="tspan822"
-         x="7.2706542"
-         y="287.44574"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.61242104px;font-family:Cantarell;-inkscape-font-specification:'Cantarell, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#2b2200;stroke-width:0.11531335">1</tspan></text>
-  </g>
+       id="flowRoot22"
+       style="fill:black;fill-opacity:1;stroke:none;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:5.33333333px;line-height:1.25;letter-spacing:0px;word-spacing:0px"><flowRegion
+         id="flowRegion24"><rect
+           id="rect26"
+           width="13"
+           height="12"
+           x="25"
+           y="18" /></flowRegion><flowPara
+         id="flowPara28" /></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot38"
+       style="fill:black;fill-opacity:1;stroke:none;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:5.33333333px;line-height:1.25;letter-spacing:0px;word-spacing:0px"><flowRegion
+         id="flowRegion40"><rect
+           id="rect42"
+           width="8"
+           height="16"
+           x="24"
+           y="16" /></flowRegion><flowPara
+         id="flowPara44" /></flowRoot>  </g>
 </svg>
