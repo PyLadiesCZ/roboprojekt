@@ -62,7 +62,7 @@ class Interface:
             message["interface_data"]["game_round"] = self.game_state.game_round
             asyncio.ensure_future(self.ws.send_json(message))
 
-    async def get_messages(self, robot_name):
+    async def get_messages(self, robot_name, own_robot_name):
         """
         Connect to server and receive messages.
         Process information from server: game state, robot and cards.
@@ -77,10 +77,11 @@ class Interface:
                         message = message.json()
                         if "robot_name" in message:
                             robot_name = message["robot_name"]
+                            asyncio.ensure_future(self.ws.send_json({"own_robot_name": own_robot_name}))
                         if "game_state" in message:
-                            self.set_game_state(message, robot_name)
+                            self.set_game_state(message, robot_name, own_robot_name)
                         if "robots" in message:
-                            self.set_robots(message, robot_name)
+                            self.set_robots(message, robot_name, own_robot_name)
                         if "cards" in message:
                             self.interface_state.dealt_cards = self.game_state.cards_from_dict(message["cards"])
                         if "winner" in message:
@@ -100,15 +101,15 @@ class Interface:
         self.on_close()
         self.ws = None
 
-    def set_game_state(self, message, robot_name):
+    def set_game_state(self, message, robot_name, own_robot_name):
         """
         Set game attributes using data from server message:
         - create game state, call set_robots.
         """
         self.game_state = State.whole_from_dict(message)
-        self.set_robots(message["game_state"], robot_name)
+        self.set_robots(message["game_state"], robot_name, own_robot_name)
 
-    def set_robots(self, message, robot_name):
+    def set_robots(self, message, robot_name, own_robot_name):
         """
         Set robots, players and self robot using data from sent message.
         """
@@ -116,6 +117,9 @@ class Interface:
         for robot in self.game_state.robots:
             if robot.name == robot_name:
                 self.interface_state.robot = robot
+                if own_robot_name != "":
+                    robot.displayed_name == own_robot_name
+
 
     def set_blocked_cards(self, cards):
         """
@@ -125,12 +129,12 @@ class Interface:
         del self.interface_state.program[:len(self.interface_state.blocked_cards)]
 
 
-def main(robot_name):
+def main(robot_name, own_robot_name):
     hostname = set_argument_value("localhost")
     interface = Interface(hostname)
 
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
-    asyncio.ensure_future(interface.get_messages(robot_name))
+    asyncio.ensure_future(interface.get_messages(robot_name, own_robot_name))
 
 
 if __name__ == "__main__":

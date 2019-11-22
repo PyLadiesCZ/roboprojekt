@@ -1,6 +1,9 @@
 """
-Welcome board where player can choose his robot.
+Welcome board, where player can choose his robot and name.
 Client receives game state with available robots from server.
+If you want to change robot's name, just type on the keyboard.
+Max lenght of the name is 8 characters.
+Then click on the chosen robot.
 """
 import asyncio
 import aiohttp
@@ -15,7 +18,13 @@ from util_network import set_argument_value
 
 class WelcomeBoard:
     def __init__(self, hostname):
-        self.window = create_window(self.window_draw, self.on_mouse_press)
+        self.own_robot_name = ""
+        self.window = create_window(
+            self.window_draw,
+            self.on_mouse_press,
+            self.on_text,
+            self.on_text_motion,
+        )
         self.state = None
         self.available_robots = None
         self.hostname = hostname
@@ -25,7 +34,12 @@ class WelcomeBoard:
         Draw the window with available robots.
         """
         self.window.clear()
-        draw_board(self.state, self.available_robots, self.window)
+        draw_board(
+            self.state,
+            self.available_robots,
+            self.window,
+            self.own_robot_name,
+        )
 
     def on_mouse_press(self, x, y, button, mod):
         """
@@ -33,8 +47,23 @@ class WelcomeBoard:
         """
         robot_name = handle_click(self.state, x, y, self.window, self.available_robots)
         if robot_name is not None:
-            interface_main(robot_name)
+            interface_main(robot_name, self.own_robot_name)
             self.window.close()
+
+    def on_text(self, text):
+        """
+        Welcome board reacts on input text. Set up own robot name (max 8 char.)
+        """
+        if len(self.own_robot_name) < 8:
+            if text != '\r':
+                self.own_robot_name = self.own_robot_name + text
+
+    def on_text_motion(self, motion):
+        """
+        React on backspace motion - when it is pressed, delete one letter.
+        """
+        if motion == pyglet.window.key.MOTION_BACKSPACE:
+            self.own_robot_name = self.own_robot_name[:-1]
 
     async def process_message(self):
         """
@@ -49,7 +78,12 @@ class WelcomeBoard:
                     if "game_state" in message:
                         self.state = State.whole_from_dict(message)
                         if self.window is None:
-                            self.window = create_window(self.window_draw, self.on_mouse_press)
+                            self.window = create_window(
+                                self.window_draw,
+                                self.on_mouse_press,
+                                self.on_text,
+                                self.on_text_motion,
+                            )
                     if "available_robots" in message:
                         self.available_robots = self.state.robots_from_dict({"robots": message["available_robots"]})
 

@@ -145,24 +145,31 @@ class Server:
 
     async def process_message(self, message, robot):
         """
-        Process the data sent by interface: chosen cards,
+        Process the data sent by interface: own robot name, chosen cards,
         confirmation of selected cards, power down state, played game round.
         """
         if robot.selection_confirmed:
             return
         message = message.json()
-        robot_game_round = message["interface_data"]["game_round"]
-        if robot_game_round != self.state.game_round:
-            return
-        # Set robot's attributes according to data in message
-        # Choice of cards was blocked by the player
-        if message["interface_data"]["confirmed"]:
-            await self.actions_after_robot_confirmed_selection(robot)
-        else:
-            # While selection is not confirmed, it is still possible to choose cards
-            robot.power_down = message["interface_data"]["power_down"]
-            # Set robot's selection with chosen card´s index
-            robot.card_indexes = message["interface_data"]["program"]
+        if "interface_data" in message:
+            robot_game_round = message["interface_data"]["game_round"]
+            if robot_game_round != self.state.game_round:
+                return
+            # Set robot's attributes according to data in message
+            # Choice of cards was blocked by the player
+            if message["interface_data"]["confirmed"]:
+                await self.actions_after_robot_confirmed_selection(robot)
+            else:
+                # While selection is not confirmed, it is still possible to choose cards
+                robot.power_down = message["interface_data"]["power_down"]
+                # Set robot's selection with chosen card´s index
+                robot.card_indexes = message["interface_data"]["program"]
+
+        # Set own robot name as displayed name on Interface
+        if "own_robot_name" in message:
+            own_robot_name = message["own_robot_name"]
+            if own_robot_name != "":
+                robot.displayed_name = message["own_robot_name"]
 
         await self.send_message(self.state.robots_as_dict())
 

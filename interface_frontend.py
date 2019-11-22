@@ -1,9 +1,8 @@
 import pyglet
-from pathlib import Path
 from time import monotonic
 
-from util_frontend import TILE_WIDTH, TILE_HEIGHT, get_label, get_sprite, window_zoom
-
+from util_frontend import TILE_WIDTH, TILE_HEIGHT, get_label, get_sprite
+from util_frontend import window_zoom, loaded_robots_images, player_sprite
 
 MAX_LIVES_COUNT = 3
 MAX_FLAGS_COUNT = 8
@@ -54,14 +53,7 @@ winner_of_the_game_sprite = get_sprite('img/interface/png/game_winner.png', x=16
 game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=280)
 # Other robot card
 players_background = get_sprite('img/interface/png/player.png')
-# Loading of robots images
-loaded_robots_images = {}
-for image_path in Path('./img/robots/png').iterdir():
-    loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
-
-# Player_sprite and my_robot_sprite use fake images just to create sprites,
-# below replaced with the actual ones.
-player_sprite = get_sprite('img/robots/png/bender.png')
+# My_robot_sprite, below replaced with the actual image.
 my_robot_sprite = get_sprite('img/robots/png/bender.png', x=74, y=888)
 
 lives_sprites = []
@@ -281,6 +273,7 @@ def draw_interface(interface_state, game_state, winner_time, window):
             my_robot_sprite.image = loaded_robots_images[interface_state.robot.name]
             my_robot_sprite.draw()
 
+            global robot_name
             robot_name = get_label(
                 interface_state.robot.displayed_name,
                 x=250,
@@ -412,7 +405,7 @@ def draw_robot(i, robot, game_state):
         else:
             sprite = loss_sprite
 
-        sprite.x = 78 + i * GAP
+        sprite.x = 75 + i * GAP
         sprite.y = 90
         sprite.draw()
 

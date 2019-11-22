@@ -1,6 +1,8 @@
 import pyglet
 from contextlib import contextmanager
 from functools import lru_cache
+from pathlib import Path
+
 
 # Constatnts for size of tile image in px
 TILE_WIDTH = 64
@@ -46,3 +48,12 @@ def window_zoom(window, WINDOW_WIDTH, WINDOW_HEIGHT):
     pyglet.gl.glScalef(zoom, zoom, 1)
     yield
     pyglet.gl.glPopMatrix()
+
+
+# Loading of robots images
+loaded_robots_images = {}
+for image_path in Path('./img/robots/png').iterdir():
+    loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
+
+# Create player sprite, use fake image, replaced with the actual one-
+player_sprite = get_sprite('img/robots/png/bender.png')
