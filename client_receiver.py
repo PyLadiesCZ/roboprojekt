@@ -37,7 +37,8 @@ class Receiver:
             if self.log_to_play:
                 new_state = self.log_to_play.pop(0)
                 if new_state == None:
-                    self.winner_time = monotonic()
+                    if self.winner_time == 0:
+                        self.winner_time = monotonic()
                 else:
                     self.state.robots = self.state.robots_from_dict(new_state)
             await asyncio.sleep(delay)

@@ -48,7 +48,7 @@ select_sprite = get_sprite('img/interface/png/card_cv.png')
 cursor_sprite = get_sprite('img/interface/png/card_sl.png')
 # Winner
 you_win_sprite = get_sprite('img/interface/png/winner.png', x=160, y=290)
-winner_of_the_game_sprite = get_sprite('img/interface/png/game_winner.png', x=160, y=290)
+winner_of_the_game_sprite = get_sprite('img/interface/png/game_winner.png', x=160, y=200)
 # Game over
 game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=280)
 # Other robot card

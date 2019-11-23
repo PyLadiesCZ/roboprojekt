@@ -22,7 +22,7 @@ class Interface:
         # When something has changed in interface state, the function 'send_state_to_server' is called.
         self.interface_state = InterfaceState(change_callback=self.send_state_to_server)
         self.game_state = None
-        self.winner_time = None
+        self.winner_time = 0
         # Connection attribute
         self.ws = None
         self.hostname = hostname
@@ -86,7 +86,8 @@ class Interface:
                             self.interface_state.dealt_cards = self.game_state.cards_from_dict(message["cards"])
                         if "winner" in message:
                             self.game_state.winners = message["winner"]
-                            self.winner_time = monotonic()
+                            if self.winner_time == 0:
+                                self.winner_time = monotonic()
                         if "timer_start" in message:
                             self.interface_state.timer = monotonic()
                         if "blocked_cards" in message:
