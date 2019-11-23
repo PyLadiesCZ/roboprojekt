@@ -4,18 +4,19 @@ from util_frontend import get_sprite, get_label, window_zoom
 from util_frontend import loaded_robots_images, player_sprite
 
 
-WINDOW_WIDTH = 1000
-WINDOW_HEIGHT = 500
+WINDOW_WIDTH = 900
+WINDOW_HEIGHT = 578
 
 # Background
-background_sprite = get_sprite('img/interface/png/board.png', x=10, y=0)
+background_sprite = get_sprite('img/interface/png/board.png', x=0, y=0)
 # Border of available robot's picture
 border_sprite = get_sprite('img/interface/png/border.png')
+robot_background_sprite = get_sprite('img/interface/png/robot_bcg.png')
 
 picture_coordinates = []
 for i in range(8):
     x = 50 + i * 120
-    y = 200
+    y = 120
     picture_coordinates.append((x, y))
 
 not_available_label = get_label(
@@ -52,21 +53,23 @@ def draw_board(state, available_robots, window, own_robot_name):
             for coordinate, robot in zip(picture_coordinates, state.robots):
                 x, y = coordinate
                 if robot.name in loaded_robots_images.keys():
+                    robot_background_sprite.x = x
+                    robot_background_sprite.y = y
+                    robot_background_sprite.draw()
                     player_sprite.image = loaded_robots_images[robot.name]
                     player_sprite.x = x
                     player_sprite.y = y
                     player_sprite.draw()
-
                     robot_name_label = get_label(
-                        str(robot.displayed_name), player_sprite.x + 30, player_sprite.y - 20,
+                        str(robot.displayed_name), player_sprite.x + 30, player_sprite.y - 26,
                         16, "center", (0, 0, 0, 255),
                     )
                     robot_name_label.draw()
 
                 for available_robot in available_robots:
                     if available_robot.name == robot.name:
-                        border_sprite.x = player_sprite.x
-                        border_sprite.y = player_sprite.y
+                        border_sprite.x = player_sprite.x 
+                        border_sprite.y = player_sprite.y 
                         border_sprite.draw()
 
             if not available_robots:

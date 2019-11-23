@@ -10,7 +10,7 @@ MAX_DAMAGES_COUNT = 9
 WINDOW_WIDTH = 768
 WINDOW_HEIGHT = 1024
 # Gap between other robots pictures
-GAP = 98
+GAP = 96
 
 
 def create_window(on_draw, on_text, on_mouse_press, on_close):
@@ -54,7 +54,7 @@ game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=280)
 # Other robot card
 players_background = get_sprite('img/interface/png/player.png')
 # My_robot_sprite, below replaced with the actual image.
-my_robot_sprite = get_sprite('img/robots/png/bender.png', x=74, y=888)
+my_robot_sprite = get_sprite('img/robots/png/bender.png', x=64, y=882)
 
 lives_sprites = []
 for i in range(MAX_LIVES_COUNT):
@@ -73,8 +73,8 @@ flag_slot_sprite = get_sprite('img/interface/png/flag_slot.png')
 # Tokens of damage
 damages_tokens_sprites = []
 for i in range(MAX_DAMAGES_COUNT):
-    x = 676 + i * -70
-    y = 768
+    x = 677 + i * -70
+    y = 773
     damages_tokens_sprites.append(get_sprite('img/interface/png/token.png', x, y))
 
 permanent_damages_sprites = []
@@ -194,20 +194,14 @@ def draw_interface(interface_state, game_state, winner_time, window):
                 if interface_state.robot and interface_state.robot.name != robot.name:
                     players.append(robot)
 
-            # Other robots background
-            for i, player_background in enumerate(players):
-                players_background.x = 50 + i * 98
-                players_background.y = 50
-                players_background.draw()
-
             # Other robots and their attributes
             for i, robot in enumerate(players):
                 draw_robot(i, robot, game_state)
 
             # Flag slot
             for i in range(game_state.flag_count):
-                flag_slot_sprite.x = 341 + i * 48
-                flag_slot_sprite.y = 933
+                flag_slot_sprite.x = 332 + i * 48
+                flag_slot_sprite.y = 928
                 flag_slot_sprite.draw()
 
             # Game over
@@ -276,9 +270,9 @@ def draw_interface(interface_state, game_state, winner_time, window):
             global robot_name
             robot_name = get_label(
                 interface_state.robot.displayed_name,
-                x=250,
-                y=862,
-                font_size=20,
+                x=248,
+                y=864,
+                font_size=16,
                 anchor_x="center",
                 color=(0, 0, 0, 255),
             )
@@ -309,8 +303,8 @@ def draw_interface(interface_state, game_state, winner_time, window):
                     crown = crown_sprite
                 else:
                     crown = loss_sprite
-                crown.x = 120
-                crown.y = 945
+                crown.x = 116
+                crown.y = 938
                 crown.draw()
 
                 seconds = 5 - (monotonic() - winner_time)
@@ -325,7 +319,7 @@ def draw_interface(interface_state, game_state, winner_time, window):
                             winner_label = get_label(
                                 str(name),
                                 x=(game_state.tile_count[0] * TILE_WIDTH) / 2 - 50,
-                                y=(game_state.tile_count[1] * TILE_HEIGHT) / 2 - i * 50,
+                                y=(game_state.tile_count[1] * TILE_HEIGHT) / 2 - 25 - i * 50,
                                 font_size=26,
                                 anchor_x="center",
                                 color=(255, 0, 0, 255),
@@ -338,8 +332,8 @@ def draw_robot(i, robot, game_state):
     Draw robot and his attributes.
     """
     # Robot's background
-    players_background.x = 50 + i * GAP
-    players_background.y = 50
+    players_background.x = 47 + i * GAP
+    players_background.y = 40
     players_background.draw()
 
     # Robot´s image
@@ -360,7 +354,7 @@ def draw_robot(i, robot, game_state):
         str(robot.flags),
         x=132 + GAP * i,
         y=160,
-        font_size=20,
+        font_size=16,
         anchor_x="right",
         color=(0, 0, 0, 255),
     )
@@ -370,8 +364,8 @@ def draw_robot(i, robot, game_state):
     damage_label = get_label(
         str(robot.damages),
         x=92 + GAP * i,
-        y=56,
-        font_size=20,
+        y=54,
+        font_size=16,
         anchor_x="right",
         color=(0, 0, 0, 255),
     )
@@ -380,8 +374,8 @@ def draw_robot(i, robot, game_state):
     permanent_damage_label = get_label(
         str(robot.permanent_damages),
         x=132 + GAP * i,
-        y=56,
-        font_size=20,
+        y=54,
+        font_size=16,
         anchor_x="right",
         color=(0, 0, 0, 255),
     )
@@ -392,7 +386,7 @@ def draw_robot(i, robot, game_state):
         str(robot.lives),
         x=92 + GAP * i,
         y=160,
-        font_size=20,
+        font_size=16,
         anchor_x="right",
         color=(0, 0, 0, 255),
     )
@@ -405,8 +399,8 @@ def draw_robot(i, robot, game_state):
         else:
             sprite = loss_sprite
 
-        sprite.x = 75 + i * GAP
-        sprite.y = 90
+        sprite.x = 60 + i * GAP
+        sprite.y = 80
         sprite.draw()
 
 

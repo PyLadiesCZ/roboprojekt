@@ -164,7 +164,7 @@ def draw_state(state, winner_time, available_robots, window):
                     winner_label = get_label(
                         str(name),
                         x=(state.tile_count[0] * TILE_WIDTH) / 2 - 50,
-                        y=(state.tile_count[1] * TILE_HEIGHT) / 2 - i * 50,
+                        y=(state.tile_count[1] * TILE_HEIGHT) / 2 - 100 - i * 50,
                         font_size=26,
                         anchor_x="center",
                         color=(255, 0, 0, 255),
