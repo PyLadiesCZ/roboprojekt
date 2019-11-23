@@ -97,7 +97,10 @@ class Robot:
         """
         robot_description = robot_description["robot_data"]
         direction = Direction(robot_description["direction"])
-        coordinates = tuple(robot_description["coordinates"])
+        if robot_description["coordinates"] == None:
+            coordinates = None
+        else:
+            coordinates = tuple(robot_description["coordinates"])
         name = robot_description["name"]
         robot = cls(direction, coordinates, name)
         robot.lives = robot_description["lives"]
@@ -184,6 +187,7 @@ class Robot:
                 # If robot falls into hole, he becomes inactive.
                 if self.inactive:
                     break
+                state.record_log()
 
     def move(self, direction, distance, state):
         """
@@ -208,7 +212,7 @@ class Robot:
 
         self.coordinates = None
 
-    def rotate(self, where_to):
+    def rotate(self, where_to, state):
         """
         Rotate robot according to a given direction.
         """
@@ -220,7 +224,7 @@ class Robot:
         """
 
         for tile in state.get_tiles(self.coordinates):
-            tile.kill_robot(self)
+            tile.kill_robot(state, self)
             if self.inactive:
                 break
 
@@ -247,7 +251,7 @@ class Robot:
 
                     # There is a robot, shoot him and break the cycle (only one gets shot).
                     if robot_in_the_way:
-                        robot_in_the_way.be_damaged()
+                        robot_in_the_way.be_damaged(state)
                         break
 
                 # Check if there is a wall, if is: end of shot.
@@ -258,7 +262,7 @@ class Robot:
                 else:
                     next_coordinates = get_next_coordinates(next_coordinates, self.direction)
 
-    def be_damaged(self, strength=1):
+    def be_damaged(self, state, strength=1):
         """
         Give one or more damages to the robot.
         If the robot has reached the maximum damage value, he gets killed.
@@ -277,6 +281,7 @@ class Robot:
         else:
             # Robot is damaged so much that laser kills it.
             self.die()
+        state.record_log()
 
     def clear_robot_attributes(self, state):
         """
@@ -308,7 +313,9 @@ class Robot:
             if robot.start_coordinates == self.coordinates:
                 return
         else:
-            self.start_coordinates = self.coordinates
+            if self.start_coordinates != self.coordinates:
+                self.start_coordinates = self.coordinates
+                state.record_log()
 
     def select_blocked_cards_from_program(self):
         """
@@ -423,7 +430,7 @@ class RotationCard(Card):
         """
         Card calls robot's method rotate.
         """
-        robot.rotate(self.rotation)
+        robot.rotate(self.rotation, state)
 
     def as_dict(self):
         """
@@ -454,6 +461,7 @@ class State:
         self.game_round = 1
         self.winners = []
         self.flag_count = self.get_flag_count()
+        self.log = []
 
     def __repr__(self):
         return "<State {} {}>".format(self._board, self.robots)
@@ -491,6 +499,9 @@ class State:
         Return robots from state as dictionary for sending with server.
         """
         return {"robots": [robot.as_dict() for robot in self.robots]}
+
+    def record_log(self):
+        self.log.append(self.robots_as_dict())
 
     @classmethod
     def get_start_state(cls, map_name):
@@ -618,7 +629,8 @@ class State:
                     )
                     # Check if the next tile is rotating belt.
                     for tile in self.get_tiles(robots_next_coordinates[robot]):
-                        tile.rotate_robot_on_belt(robot, direction)
+                        tile.rotate_robot_on_belt(robot, direction, self)
+                    self.record_log()
                 robot.coordinates = robots_next_coordinates[robot]
                 robot.fall_into_hole(self)
 
@@ -650,27 +662,40 @@ class State:
         The method name is not entirely exact: the whole register phase actions
         take place (both tiles and robot's effects).
         """
+
         # Activate belts
         self.move_belts()
 
         # Activate pusher
+        active_pusher = False
         for robot in self.get_active_robots():
             for tile in self.get_tiles(robot.coordinates):
-                tile.push_robot(robot, self, register)
+                if tile.push_robot(robot, self, register):
+                    active_pusher = True
                 if robot.inactive:
                     break
+        if active_pusher:
+            self.record_log()
 
         # Activate gear
+        active_gear = False
         for robot in self.get_active_robots():
             for tile in self.get_tiles(robot.coordinates):
-                tile.rotate_robot(robot)
+                if tile.rotate_robot(robot, self):
+                    active_gear = True
+        if active_gear:
+            self.record_log()
 
         # Activate laser
+        active_laser = False
         for robot in self.get_active_robots():
             for tile in self.get_tiles(robot.coordinates):
-                tile.shoot_robot(robot, self)
+                if tile.shoot_robot(robot, self):
+                    active_laser = True
                 if robot.inactive:
                     break
+        if active_laser:
+            self.record_log()
 
         # Activate robot laser
         for robot in self.get_active_robots():
@@ -696,6 +721,7 @@ class State:
             if robot.inactive:
                 robot.coordinates = robot.start_coordinates
                 robot.damages = 0
+                self.record_log()
 
     def get_robots_ordered_by_cards_priority(self, register):
         """

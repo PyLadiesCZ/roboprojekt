@@ -1,7 +1,7 @@
 import pyglet
-from pathlib import Path
 
 from util_frontend import get_sprite, get_label, window_zoom
+from util_frontend import loaded_robots_images, player_sprite
 
 
 WINDOW_WIDTH = 1000
@@ -9,14 +9,8 @@ WINDOW_HEIGHT = 500
 
 # Background
 background_sprite = get_sprite('img/interface/png/board.png', x=10, y=0)
-# Loading of robots images
-loaded_robots_images = {}
-for image_path in Path('./img/robots/png').iterdir():
-    loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
 # Border of available robot's picture
-border_sprite = get_sprite('./img/interface/png/border.png')
-# Robot sprite
-robot_sprite = get_sprite('img/robots/png/bender.png')
+border_sprite = get_sprite('img/interface/png/border.png')
 
 picture_coordinates = []
 for i in range(8):
@@ -32,16 +26,21 @@ not_available_label = get_label(
 )
 
 
-def create_window(on_draw, on_mouse_press):
+def create_window(on_draw, on_mouse_press, on_text, on_text_motion):
     """
     Return a pyglet window for graphic output.
     """
     window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT, resizable=True)
-    window.push_handlers(on_draw=on_draw, on_mouse_press=on_mouse_press)
+    window.push_handlers(
+        on_draw=on_draw,
+        on_mouse_press=on_mouse_press,
+        on_text=on_text,
+        on_text_motion=on_text_motion,
+    )
     return window
 
 
-def draw_board(state, available_robots, window):
+def draw_board(state, available_robots, window, own_robot_name):
     """
     Draw the welcome board for choosing robot,
     react to user's resizing of window by scaling the board.
@@ -49,29 +48,39 @@ def draw_board(state, available_robots, window):
     with window_zoom(window, WINDOW_WIDTH, WINDOW_HEIGHT):
         background_sprite.draw()
 
-        if state is not None:
+        if state is not None and available_robots is not None:
             for coordinate, robot in zip(picture_coordinates, state.robots):
                 x, y = coordinate
                 if robot.name in loaded_robots_images.keys():
-                    robot_sprite.image = loaded_robots_images[robot.name]
-                    robot_sprite.x = x
-                    robot_sprite.y = y
-                    robot_sprite.draw()
+                    player_sprite.image = loaded_robots_images[robot.name]
+                    player_sprite.x = x
+                    player_sprite.y = y
+                    player_sprite.draw()
 
                     robot_name_label = get_label(
-                        str(robot.displayed_name), robot_sprite.x + 30, robot_sprite.y - 20,
+                        str(robot.displayed_name), player_sprite.x + 30, player_sprite.y - 20,
                         16, "center", (0, 0, 0, 255),
                     )
                     robot_name_label.draw()
 
                 for available_robot in available_robots:
                     if available_robot.name == robot.name:
-                        border_sprite.x = robot_sprite.x
-                        border_sprite.y = robot_sprite.y
+                        border_sprite.x = player_sprite.x
+                        border_sprite.y = player_sprite.y
                         border_sprite.draw()
 
             if not available_robots:
                 not_available_label.draw()
+
+            own_name_label = get_label(
+                own_robot_name,
+                x=445,
+                y=327,
+                font_size=20,
+                anchor_x="left",
+                color=(0, 0, 0, 255),
+            )
+            own_name_label.draw()
 
 
 def handle_click(state, x, y, window, available_robots):
@@ -87,8 +96,8 @@ def handle_click(state, x, y, window, available_robots):
     for i, coordinate in enumerate(picture_coordinates):
         coord_x, coord_y = coordinate
         if (
-            coord_x < x < coord_x + robot_sprite.width and
-            coord_y < y < coord_y + robot_sprite.height
+            coord_x < x < coord_x + player_sprite.width and
+            coord_y < y < coord_y + player_sprite.height
         ):
             robot_name = sorted(loaded_robots_images.keys())[i]
             for available_robot in available_robots:

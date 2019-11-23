@@ -1,20 +1,27 @@
 # RoboProject
-*Advanced PyLadies CZ Course*
+*Advanced PyLadies CZ Project*
 
-This course was created primarily for those who successfully passed the PyLadies beginner courses and want to continue with Python via "real" project. It should show participants the process of software development from the very basics, and enable them to try it on their own. It is focused on team cooperation, using Python for real tasks, working with Git and GitHub, showing best practices and trying various useful tools.
+This project was created primarily for those who successfully passed the PyLadies beginner courses and wanted to continue with Python via "real" assignment. Its aim was to show participants the process of software development from the very basics, and enable them to try it on their own. It was focused on team cooperation, using Python for real tasks, working with Git and GitHub, showing best practices and trying various useful tools.
 
-The assignment of this project is transforming board game RoboRally to computer version so the final result should be working playable computer game.
+The goal of this project was transforming board game RoboRally to computer version so the final result is working playable computer game.
 
-You can follow the progress on our [blog](https://roboprojekt.pyladies.cz/).
+You can read about the progress on our [blog](https://roboprojekt.pyladies.cz/).
 
-**Please note that the project is still in progress and the current version is not playable.**
+### Contribution
+
+After over a year of developing we've decided to publish the first version of the game.
+From now on anyone is welcome to contribute. If we like your changes, we'll happily merge it.
+If you spot a bug or have an idea for enhancement, write us an GitHub issue.
 
 ### Requirements
 
 Python v. 3.7
 We recommend to use virtual environment.
 
-To successfully run the project, run the script below. It will install all the requirements including [pyglet](https://bitbucket.org/pyglet/pyglet/wiki/Home) and [asyncio](https://docs.python.org/3/library/asyncio.html) libraries.
+To successfully run the project, run the script below. It will install all the requirements including additional libraries:
+- [pyglet](https://bitbucket.org/pyglet/pyglet/wiki/Home) - the graphical library,
+- [asyncio](https://docs.python.org/3/library/asyncio.html) and [aiohttp](https://aiohttp.readthedocs.io/en/stable/) - asynchronous frameworks to run server and clients,
+- [pyyaml](https://pyyaml.org/) - for reading the configuration files.
 ```
 python -m pip install -r requirements.txt
 ```
@@ -28,7 +35,7 @@ python -m pip install pytest
 
 **How do you run the game?**
 
-The goal is to have a game that is playable through the network. Therefore it is divided into server and client parts. In order to play the game, you need to run the server first.
+The game is playable through the network. Therefore it is divided into server and client parts. In order to play the game, you need to run the server first.
 ```
 python server.py
 ```
@@ -38,27 +45,35 @@ You can choose a map to play directly from command line by writing the location 
 python server.py maps/belt_map.json
 ```
 
-If you run server on a different computer than the clients, get the server's IP address and run clients with its value as the first argument.
-If you want to run both server and client/-s on the same computer, the default value `localhost` will be used.
+If you run server on a different computer than the clients, get the server's hostname and run clients with its value as the first argument.
+If you want to run both server and client/-s on the same computer, the default value `localhost` will be automatically set.
 In order to see the game board with small players' avatars, use for example:
 ```
 python client_receiver.py 192.168.10.1
 ```
 
-And if you want to play with your own robot, there is a prepared interface.
+And if you want to play with your own robot, there is a prepared interface which you can access through the welcome board.
+There you can type a custom name for your robot and pick one from the available list.
+```
+python client_welcome_board.py 192.168.10.1
+```
+In case you want to get the first available robot with its factory name,
+you can run the interface directly. This will skip the choice screen.
 ```
 python client_interface.py 192.168.10.1
 ```
-
 Note that the possibility to connect to server run on a different computer may be limited by your network provider.
-In order to try the game, run as many interfaces as there are starting points on the map and at least one receiver.
+In order to play the game, run as many interfaces as there are starting points on the map and at least one receiver.
 
 **How do you win and how does the game round look like?**
 
 Each player has one robot which can be programmed by cards. The goal is to collect all flags on the board in the increasing order. The first robot who collects all flags wins.
 
+It is possible to play using both keyboard and the mouse. The keys are listed directly on the interface screen.
+
 At the beginning of each round you get a random set of cards and by choosing cards for robot's slots you will set his moves for the round.
 There is a time limit for choosing the cards. During the "choosing cards" part you can also put your robot to `Power Down` mode which means they won't make any actions by their own but they can be affected by other robots' actions.
+Switching on `Power Down` also requires confirming the selection.
 Once the "choosing cards" phase ends, the following steps will repeat 5 times:
 1. The robots' card actions are performed in order of priority
 2. The effects of tiles robots stand on are performed
@@ -70,13 +85,14 @@ After this phase is complete, the robots standing on the repair tile or in Power
 
 ### Tests
 
-The tests are places in `tests/` folder. They are divided into three separate files, `test_effects.py`, `test_backend.py` and `test_loading.py`, covering respective modules.
+The tests are places in `tests/` folder. They are divided into separate files, eg. `test_effects.py`, `test_backend.py`, `test_loading.py`, covering respective modules.
 `test_effects.py` reads the subfolders with test maps and commands. It executes the game on the background and asserts the robots performed the steps and their attributes were changed according to tile effects. For more details about testing framework see `tests/README-tests.md`.
 `test_loading.py` also contains map validator (see map details below).
 
 To run the tests, write the following command into the command line: `python -m pytest -v`
 
 If you want to run only one of the testing files, add the name of the file after the command above.
+The current tests handle only the game logic, not the network interfaces.
 
 ### Create your own map
 

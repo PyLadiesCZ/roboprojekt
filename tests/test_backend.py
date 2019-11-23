@@ -83,7 +83,7 @@ def test_robot_change_direction(current_direction, towards, new_direction):
     Assert that robot rotates correctly according to given rotation.
     """
     robot = Robot(current_direction, None, "bender")
-    robot.rotate(towards)
+    robot.rotate(towards, State.get_start_state("maps/test_3.json"))
     assert robot.direction == new_direction
 
 

@@ -40,6 +40,8 @@ class Server:
         # List of connected clients
         self.ws_receivers = []
 
+        self.last_sent_log_position = 0
+
     async def ws_handler(self, request):
         """
         Set up and return the prepared websocket.
@@ -144,24 +146,31 @@ class Server:
 
     async def process_message(self, message, robot):
         """
-        Process the data sent by interface: chosen cards,
+        Process the data sent by interface: own robot name, chosen cards,
         confirmation of selected cards, power down state, played game round.
         """
         if robot.selection_confirmed:
             return
         message = message.json()
-        robot_game_round = message["interface_data"]["game_round"]
-        if robot_game_round != self.state.game_round:
-            return
-        # Set robot's attributes according to data in message
-        # Choice of cards was blocked by the player
-        if message["interface_data"]["confirmed"]:
-            await self.actions_after_robot_confirmed_selection(robot)
-        else:
-            # While selection is not confirmed, it is still possible to choose cards
-            robot.power_down = message["interface_data"]["power_down"]
-            # Set robot's selection with chosen card´s index
-            robot.card_indexes = message["interface_data"]["program"]
+        if "interface_data" in message:
+            robot_game_round = message["interface_data"]["game_round"]
+            if robot_game_round != self.state.game_round:
+                return
+            # Set robot's attributes according to data in message
+            # Choice of cards was blocked by the player
+            if message["interface_data"]["confirmed"]:
+                await self.actions_after_robot_confirmed_selection(robot)
+            else:
+                # While selection is not confirmed, it is still possible to choose cards
+                robot.power_down = message["interface_data"]["power_down"]
+                # Set robot's selection with chosen card´s index
+                robot.card_indexes = message["interface_data"]["program"]
+
+        # Set own robot name as displayed name on Interface
+        if "own_robot_name" in message:
+            own_robot_name = message["own_robot_name"]
+            if own_robot_name != "":
+                robot.displayed_name = message["own_robot_name"]
 
         await self.send_message(self.state.robots_as_dict())
 
@@ -182,10 +191,13 @@ class Server:
 
     async def play_game_round(self):
         """
-        Contain methods play_round, send_message(robots_as_dict),
-        send_new_dealt_card.
+        Run the cards' and tiles' effects.
+        Send the log of the round to clients, winners (if applicable),
+        round end, current robots' state and the new cards for players.
         """
         self.state.play_round()
+        await self.send_message({'log': self.state.log[self.last_sent_log_position:]})
+        self.last_sent_log_position = len(self.state.log)
         if self.state.winners:
             await self.send_message({"winner": self.state.winners})
         await self.send_message("round_over")

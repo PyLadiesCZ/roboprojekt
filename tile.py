@@ -47,7 +47,7 @@ class Tile:
         """
         return True
 
-    def kill_robot(self, robot):
+    def kill_robot(self, state, robot):
         """
         Take away one robot life, set him to inactive mode
         and set his coordinates to None.
@@ -64,7 +64,7 @@ class Tile:
         """
         return False
 
-    def rotate_robot_on_belt(self, robot, direction):
+    def rotate_robot_on_belt(self, robot, direction, state):
         """
         Rotate robot on rotating conveyor belts. If robot's rotated,
         will be decided by the direction he entered a tile.
@@ -76,13 +76,13 @@ class Tile:
         """
         Move robot by one tile during a specific register phase.
         """
-        return robot
+        return False
 
-    def rotate_robot(self, robot):
+    def rotate_robot(self, robot, state):
         """
         Rotate robot by 90° to the left or right according to tile properties.
         """
-        return robot
+        return False
 
     def shoot_robot(self, robot, state):
         """
@@ -90,25 +90,25 @@ class Tile:
         the strength of laser. If the new number of damages is greater than 9,
         robot is killed.
         """
-        return robot
+        return False
 
     def collect_flag(self, robot, state):
         """
         Collect flag by robot and change robot's start coordinates.
         """
-        return robot
+        return False
 
     def repair_robot(self, robot, state):
         """
         Repair one robot's damage.
         """
-        return robot
+        return False
 
     def set_new_start(self, robot, state):
         """
         Change robot's start coordinates, if possible by tile properties.
         """
-        return robot
+        return False
 
 
 class WallTile(Tile):
@@ -140,10 +140,11 @@ class HoleTile(Tile):
     def __init__(self, direction=Direction.N, name=None, tile_type=None, properties={}):
         super().__init__(direction, name, tile_type, properties)
 
-    def kill_robot(self, robot):
+    def kill_robot(self, state, robot):
         # Call robot's method for dying.
-        return robot.die()
-
+        robot.die()
+        state.record_log()
+        return robot
 
 class BeltTile(Tile):
     def __init__(self, direction, name, tile_type, properties):
@@ -164,19 +165,19 @@ class BeltTile(Tile):
         else:
             return False
 
-    def rotate_robot_on_belt(self, robot, direction):
+    def rotate_robot_on_belt(self, robot, direction, state):
         # Special condition for one type of crossroads:
         # If crossroads have Direction.N, then the special type has exit
         # on south part of tile.
         if self.direction_out == Rotation.U_TURN:
             if self.direction.get_new_direction(Rotation.RIGHT) == direction:
-                robot.rotate(Rotation.RIGHT)
+                robot.rotate(Rotation.RIGHT, state)
             else:
-                robot.rotate(Rotation.LEFT)
+                robot.rotate(Rotation.LEFT, state)
         # All other rotating belts or crossroads.
         elif isinstance(self.direction_out, Rotation):
                 if direction == self.direction:
-                    robot.rotate(self.direction_out)
+                    robot.rotate(self.direction_out, state)
 
 
 class PusherTile(Tile):
@@ -191,16 +192,17 @@ class PusherTile(Tile):
         #  1 for odd register number.
         if (register + 1) % 2 == self.register:
             robot.move(self.direction.get_new_direction(Rotation.U_TURN), 1, state)
-
+            return True
 
 class GearTile(Tile):
     def __init__(self, direction, name, tile_type, properties):
         self.move_direction = Rotation(properties["move_direction"])
         super().__init__(direction, name, tile_type, properties)
 
-    def rotate_robot(self, robot):
+    def rotate_robot(self, robot, state):
         # Rotate robot by 90° according to GearTile property: left or right.
-        robot.rotate(self.move_direction)
+        robot.rotate(self.move_direction, state)
+        return True
 
 
 class LaserTile(Tile):
@@ -241,7 +243,8 @@ class LaserTile(Tile):
                 if tile.start:
                     # Don't check new tiles.
                     break
-        robot.be_damaged(self.laser_strength)
+        robot.be_damaged(state, self.laser_strength)
+        return True
 
 
 class FlagTile(Tile):
@@ -257,6 +260,7 @@ class FlagTile(Tile):
         # Correct flag will have a number that is equal to robot's flag number plus one.
         if (robot.flags + 1) == self.number:
             robot.flags += 1
+        return True
 
 
 class RepairTile(Tile):
@@ -268,11 +272,14 @@ class RepairTile(Tile):
         # Remove one robot damage.
         if robot.damages > 0:
             robot.damages -= 1
+            state.record_log()
+            return True
 
     def set_new_start(self, robot, state):
         # Change start coordinates of robot, if it's a tile property.
         if self.new_start:
             robot.change_start_coordinates(state)
+            return True
 
 
 TILE_CLS = {'wall': WallTile, 'start': StartTile, 'hole': HoleTile,
