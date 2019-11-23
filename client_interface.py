@@ -121,7 +121,6 @@ class Interface:
                 if own_robot_name != "":
                     robot.displayed_name == own_robot_name
 
-
     def set_blocked_cards(self, cards):
         """
         Set blocked cards from the message obtained from server.

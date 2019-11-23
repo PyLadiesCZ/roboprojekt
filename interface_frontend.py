@@ -489,7 +489,8 @@ def handle_click(interface_state, x, y, window):
         if coordinates_in_rectangle(
             x, y, coord_x, coord_y, card_sprite.width, card_sprite.height
         ):
-            interface_state.cursor_index = i
+            if i < len(interface_state.program):
+                interface_state.cursor_index = i
 
     # Return all cards
     # The numbers are coordinate of "Return all cards" rectangle
