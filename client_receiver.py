@@ -51,7 +51,6 @@ class Receiver:
         """
         task = asyncio.create_task(self.tick_log())
         async with aiohttp.ClientSession() as session:
-            # print('http://' + self.hostname + ':8080/receiver/')
             async with session.ws_connect('http://' + self.hostname + ':8080/receiver/') as ws:
                 # for loop is finished when client disconnects from server
                 async for message in ws:

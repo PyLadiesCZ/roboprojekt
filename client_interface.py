@@ -6,8 +6,8 @@ server. It sends messages with its state to server.
 import asyncio
 import aiohttp
 import pyglet
-from time import monotonic
 import click
+from time import monotonic
 
 from interface_frontend import draw_interface, create_window, handle_text, handle_click
 from interface import InterfaceState
@@ -139,11 +139,13 @@ class Interface:
         del self.interface_state.program[:len(self.interface_state.blocked_cards)]
 
 
-def run_from_welcome(robot_name, own_robot_name, hostname):
+def run_from_welcome_board(robot_name, own_robot_name, hostname):
+    """
+    Run the interface when called from client_welcome_board.
+    """
     interface = Interface(hostname)
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
     asyncio.ensure_future(interface.get_messages(robot_name, own_robot_name))
-    pyglet.app.run()
 
 
 @click.command()

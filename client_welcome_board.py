@@ -13,7 +13,7 @@ import click
 from backend import State
 from util_network import tick_asyncio
 from welcome_board_frontend import create_window, draw_board, handle_click
-from client_interface import run_from_welcome as interface_main
+from client_interface import run_from_welcome_board as interface_main
 
 
 class WelcomeBoard:
@@ -45,9 +45,9 @@ class WelcomeBoard:
         """
         Board is handled by mouse press.
         """
-        robot_name = handle_click(self.state, x, y, self.window, self.available_robots)
-        if robot_name is not None:
-            interface_main(robot_name, self.own_robot_name, self.hostname)
+        chosen_robot = handle_click(self.state, x, y, self.window, self.available_robots)
+        if chosen_robot is not None:
+            interface_main(chosen_robot, self.own_robot_name, self.hostname)
             self.window.close()
 
     def on_text(self, text):
