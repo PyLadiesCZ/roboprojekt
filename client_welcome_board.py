@@ -8,12 +8,12 @@ Then click on the chosen robot.
 import asyncio
 import aiohttp
 import pyglet
+import click
 
 from backend import State
 from util_network import tick_asyncio
 from welcome_board_frontend import create_window, draw_board, handle_click
-from client_interface import main as interface_main
-from util_network import set_argument_value
+from client_interface import run_from_welcome_board as interface_main
 
 
 class WelcomeBoard:
@@ -45,9 +45,9 @@ class WelcomeBoard:
         """
         Board is handled by mouse press.
         """
-        robot_name = handle_click(self.state, x, y, self.window, self.available_robots)
-        if robot_name is not None:
-            interface_main(robot_name, self.own_robot_name)
+        chosen_robot = handle_click(self.state, x, y, self.window, self.available_robots)
+        if chosen_robot is not None:
+            interface_main(chosen_robot, self.own_robot_name, self.hostname)
             self.window.close()
 
     def on_text(self, text):
@@ -88,17 +88,18 @@ class WelcomeBoard:
                         self.available_robots = self.state.robots_from_dict({"robots": message["available_robots"]})
 
 
-def main():
-    hostname = set_argument_value("localhost")
+@click.command()
+@click.option("-h", "--hostname", default="localhost",
+              help="Server's hostname.")
+def main(hostname):
     welcome_board = WelcomeBoard(hostname)
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
-
     # Schedule the "client" task
     # More about Futures - official documentation
     # https://docs.python.org/3/library/asyncio-future.html
     asyncio.ensure_future(welcome_board.process_message())
+    pyglet.app.run()
 
 
 if __name__ == "__main__":
     main()
-    pyglet.app.run()

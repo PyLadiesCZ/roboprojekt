@@ -2,3 +2,4 @@ pyglet
 asyncio
 aiohttp
 pyyaml
+click

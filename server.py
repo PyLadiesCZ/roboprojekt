@@ -8,11 +8,10 @@ it will display the playing area. If you want to play, run also
 client_welcome_board.py in another command line.
 """
 import asyncio
-
+import click
 from aiohttp import web
 
 from backend import State
-from util_network import set_argument_value
 
 
 class Server:
@@ -69,7 +68,7 @@ class Server:
         self.ws_receivers.append(ws)
         try:
             # This message is sent only this (just connected) client
-            await ws.send_json(self.state.whole_as_dict(map_name))
+            await ws.send_json(self.state.whole_as_dict(self.map_name))
             await ws.send_json(self.available_robots_as_dict())
             # For cycle keeps the connection with client alive
             async for message in ws:
@@ -96,7 +95,7 @@ class Server:
             # Prepare message to send: robot name, game state and cards
             welcome_message = {
                 "robot_name": robot.name,
-                **self.state.whole_as_dict(map_name),
+                **self.state.whole_as_dict(self.map_name),
                 **self.state.cards_and_game_round_as_dict(
                     robot.dealt_cards,
                     robot.select_blocked_cards_from_program(),
@@ -241,7 +240,7 @@ class Server:
 
 
 # aiohttp.web application
-def get_app(argv=None):
+def get_app(server):
     app = web.Application()
     app.add_routes([
         web.get("/receiver/", server.talk_to_receiver),
@@ -251,8 +250,14 @@ def get_app(argv=None):
     return app
 
 
-if __name__ == '__main__':
-    map_name = set_argument_value("maps/test_winner.json")
+@click.command()
+@click.option("-m", "--map-name", default="maps/test_winner.json",
+              help="Name of the played map.")
+def main(map_name):
     server = Server(map_name)
-    app = get_app()
+    app = get_app(server)
     web.run_app(app)
+
+
+if __name__ == '__main__':
+    main()

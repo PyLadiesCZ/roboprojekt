@@ -4,8 +4,9 @@ Client receives game state from server and draws it.
 import asyncio
 import aiohttp
 import pyglet
+import click
 from time import monotonic
-from util_network import set_argument_value, tick_asyncio
+from util_network import tick_asyncio
 
 from backend import State
 from frontend import draw_state, create_window
@@ -49,7 +50,6 @@ class Receiver:
         Process information from server.
         """
         task = asyncio.create_task(self.tick_log())
-
         async with aiohttp.ClientSession() as session:
             async with session.ws_connect('http://' + self.hostname + ':8080/receiver/') as ws:
                 # for loop is finished when client disconnects from server
@@ -70,17 +70,18 @@ class Receiver:
         task.cancel()
 
 
-def main():
-    hostname = set_argument_value("localhost")
+@click.command()
+@click.option("-h", "--hostname", default="localhost",
+              help="Server's hostname.")
+def main(hostname):
     receiver = Receiver(hostname)
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
-
     # Schedule the "client" task
     # More about Futures - official documentation
     # https://docs.python.org/3/library/asyncio-future.html
     asyncio.ensure_future(receiver.get_game_state())
+    pyglet.app.run()
 
 
 if __name__ == "__main__":
     main()
-    pyglet.app.run()

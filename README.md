@@ -39,29 +39,32 @@ The game is playable through the network. Therefore it is divided into server an
 ```
 python server.py
 ```
-You can choose a map to play directly from command line by writing the location of the JSON map as the first argument.
+You can choose a map to play directly from command line by writing the location of the JSON map as the optional argument `-m, --map-name`.
 
 ```
-python server.py maps/belt_map.json
+python server.py -m maps/belt_map.json
 ```
 
-If you run server on a different computer than the clients, get the server's hostname and run clients with its value as the first argument.
+If you run server on a different computer than the clients, get the server's hostname and run clients with its value as the named argument `-h, --hostname`.
 If you want to run both server and client/-s on the same computer, the default value `localhost` will be automatically set.
 In order to see the game board with small players' avatars, use for example:
 ```
-python client_receiver.py 192.168.10.1
+python client_receiver.py -h 192.168.10.1
 ```
 
 And if you want to play with your own robot, there is a prepared interface which you can access through the welcome board.
 There you can type a custom name for your robot and pick one from the available list.
 ```
-python client_welcome_board.py 192.168.10.1
+python client_welcome_board.py -h 192.168.10.1
 ```
-In case you want to get the first available robot with its factory name,
+In case you want to get the first available robot with his factory name,
 you can run the interface directly. This will skip the choice screen.
+The list of factory names is available in `robots.yaml` (and can be customized if wanted).
+In case you know which robot you want, use optional argument `-r, --robot-name` to pick him.
 ```
-python client_interface.py 192.168.10.1
+python client_interface.py -h 192.168.10.1 -r Bender
 ```
+Get the list of all possible arguments by typing the client name and `--help`.
 Note that the possibility to connect to server run on a different computer may be limited by your network provider.
 In order to play the game, run as many interfaces as there are starting points on the map and at least one receiver.
 

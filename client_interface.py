@@ -6,19 +6,24 @@ server. It sends messages with its state to server.
 import asyncio
 import aiohttp
 import pyglet
-import sys
+import click
 from time import monotonic
 
 from interface_frontend import draw_interface, create_window, handle_text, handle_click
 from interface import InterfaceState
 from backend import State
-from util_network import set_argument_value, tick_asyncio
+from util_network import tick_asyncio
 
 
 class Interface:
     def __init__(self, hostname):
         # Game attributes
-        self.window = create_window(self.window_draw, self.on_text, self.on_mouse_press, self.on_close)
+        self.window = create_window(
+            self.window_draw,
+            self.on_text,
+            self.on_mouse_press,
+            self.on_close,
+        )
         # When something has changed in interface state, the function 'send_state_to_server' is called.
         self.interface_state = InterfaceState(change_callback=self.send_state_to_server)
         self.game_state = None
@@ -32,7 +37,12 @@ class Interface:
         Draw the window containing game interface with its current state.
         """
         self.window.clear()
-        draw_interface(self.interface_state, self.game_state, self.winner_time, self.window)
+        draw_interface(
+            self.interface_state,
+            self.game_state,
+            self.winner_time,
+            self.window
+        )
 
     def on_text(self, text):
         """
@@ -62,7 +72,7 @@ class Interface:
             message["interface_data"]["game_round"] = self.game_state.game_round
             asyncio.ensure_future(self.ws.send_json(message))
 
-    async def get_messages(self, robot_name, own_robot_name):
+    async def get_messages(self, robot_name, own_robot_name=""):
         """
         Connect to server and receive messages.
         Process information from server: game state, robot and cards.
@@ -129,20 +139,26 @@ class Interface:
         del self.interface_state.program[:len(self.interface_state.blocked_cards)]
 
 
-def main(robot_name, own_robot_name):
-    hostname = set_argument_value("localhost")
+def run_from_welcome_board(robot_name, own_robot_name, hostname):
+    """
+    Run the interface when called from client_welcome_board.
+    """
     interface = Interface(hostname)
-
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
     asyncio.ensure_future(interface.get_messages(robot_name, own_robot_name))
 
 
-if __name__ == "__main__":
-    # Chosen robot name can be entered as a second argument in the command line.
-    # (First argument is hostname).
-    if len(sys.argv) == 1:
-        robot_name = ""
-    else:
-        robot_name = sys.argv[2]
-    main(robot_name)
+@click.command()
+@click.option("-h", "--hostname", default="localhost",
+              help="Server's hostname.")
+@click.option("-r", "--robot-name", default="",
+              help="Choose robot's name directly from the command line.")
+def main(hostname, robot_name):
+    interface = Interface(hostname)
+    pyglet.clock.schedule_interval(tick_asyncio, 1/30)
+    asyncio.ensure_future(interface.get_messages(robot_name))
     pyglet.app.run()
+
+
+if __name__ == "__main__":
+    main()
