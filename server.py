@@ -240,26 +240,22 @@ class Server:
 
 
 # aiohttp.web application
-def get_app(game_name, games):
+def get_app(server):
     app = web.Application()
     app.add_routes([
-        web.get("/receiver/" + game_name, games[game_name].talk_to_receiver),
-        web.get("/interface/", games[game_name].talk_to_interface),
-        web.get("/interface/{robot_name}", games[game_name].talk_to_interface)
+        web.get("/receiver/", server.talk_to_receiver),
+        web.get("/interface/", server.talk_to_interface),
+        web.get("/interface/{robot_name}", server.talk_to_interface)
     ])
     return app
 
 
 @click.command()
-@click.option("-h", "--mapname", default="maps/test_winner.json",
+@click.option("-m", "--map-name", default="maps/test_winner.json",
               help="Name of the played map.")
-@click.argument("game_name")
-def main(mapname, game_name):
-    server = Server(mapname)
-    games = {}
-    games[game_name] = server
-    print(games)
-    app = get_app(game_name, games)
+def main(map_name):
+    server = Server(map_name)
+    app = get_app(server)
     web.run_app(app)
 
 

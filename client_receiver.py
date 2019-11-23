@@ -13,13 +13,12 @@ from frontend import draw_state, create_window
 
 
 class Receiver:
-    def __init__(self, hostname, game_name):
+    def __init__(self, hostname):
         self.window = None
         self.state = None
         self.available_robots = None
         self.winner_time = 0
         self.hostname = hostname
-        self.game_name = game_name
         self.log_to_play = []
 
     def window_draw(self):
@@ -53,7 +52,7 @@ class Receiver:
         task = asyncio.create_task(self.tick_log())
         async with aiohttp.ClientSession() as session:
             # print('http://' + self.hostname + ':8080/receiver/')
-            async with session.ws_connect('http://' + self.hostname + ':8080/receiver/' + self.game_name) as ws:
+            async with session.ws_connect('http://' + self.hostname + ':8080/receiver/') as ws:
                 # for loop is finished when client disconnects from server
                 async for message in ws:
                     message = message.json()
@@ -75,9 +74,8 @@ class Receiver:
 @click.command()
 @click.option("-h", "--hostname", default="localhost",
               help="Server's hostname.")
-@click.argument("game_name")
-def main(hostname, game_name):
-    receiver = Receiver(hostname, game_name)
+def main(hostname):
+    receiver = Receiver(hostname)
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
     # Schedule the "client" task
     # More about Futures - official documentation

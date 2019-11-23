@@ -13,11 +13,11 @@ import click
 from backend import State
 from util_network import tick_asyncio
 from welcome_board_frontend import create_window, draw_board, handle_click
-from client_interface import main as interface_main
+from client_interface import run_from_welcome as interface_main
 
 
 class WelcomeBoard:
-    def __init__(self, hostname, game_name):
+    def __init__(self, hostname):
         self.own_robot_name = ""
         self.window = create_window(
             self.window_draw,
@@ -28,7 +28,6 @@ class WelcomeBoard:
         self.state = None
         self.available_robots = None
         self.hostname = hostname
-        self.game_name = game_name
 
     def window_draw(self):
         """
@@ -48,7 +47,7 @@ class WelcomeBoard:
         """
         robot_name = handle_click(self.state, x, y, self.window, self.available_robots)
         if robot_name is not None:
-            interface_main(robot_name, self.own_robot_name, self.hostname, self.game_name)
+            interface_main(robot_name, self.own_robot_name, self.hostname)
             self.window.close()
 
     def on_text(self, text):
@@ -72,7 +71,7 @@ class WelcomeBoard:
         Process information from server.
         """
         async with aiohttp.ClientSession() as session:
-            async with session.ws_connect('http://' + self.hostname + ':8080/receiver/' + self.game_name) as ws:
+            async with session.ws_connect('http://' + self.hostname + ':8080/receiver/') as ws:
                 # Loop "for" is finished when client disconnects from server
                 async for message in ws:
                     message = message.json()
@@ -92,9 +91,8 @@ class WelcomeBoard:
 @click.command()
 @click.option("-h", "--hostname", default="localhost",
               help="Server's hostname.")
-@click.argument("game_name")
-def main(hostname, game_name):
-    welcome_board = WelcomeBoard(hostname, game_name)
+def main(hostname):
+    welcome_board = WelcomeBoard(hostname)
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
     # Schedule the "client" task
     # More about Futures - official documentation
