@@ -29,7 +29,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="4.7398251"
-     inkscape:cx="33.155546"
+     inkscape:cx="-10.305973"
      inkscape:cy="15.46407"
      inkscape:document-units="px"
      inkscape:current-layer="layer3"
@@ -116,10 +116,5 @@
          x="18"
          y="63.999939" />
     </g>
-    <path
-       style="fill:#ffd42a;stroke:#000000;stroke-width:1.98396182px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 6.723322,62.304589 V 46 H 0.446643 L 9.861661,40.983129 19.276678,46 H 13 v 16.304589 z"
-       id="path3738"
-       inkscape:connector-curvature="0" />
   </g>
 </svg>

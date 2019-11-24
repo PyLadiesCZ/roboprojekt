@@ -15,8 +15,8 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.92.4 5da689c313, 2019-01-14"
-   sodipodi:docname="laser_1.svg"
-   inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/img/tiles/png/laser_1.png"
+   sodipodi:docname="laser_1_tiled.svg"
+   inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/img/tiles/png/laser_1_tiled.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -32,7 +32,7 @@
      inkscape:cx="11.402832"
      inkscape:cy="40.738128"
      inkscape:document-units="px"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer1"
      showgrid="true"
      units="px"
      inkscape:window-width="1920"
@@ -64,7 +64,13 @@
   <g
      inkscape:groupmode="layer"
      id="layer2"
-     inkscape:label="Layer 2" />
+     inkscape:label="Layer 2">
+    <path
+       style="fill:#ffd42a;stroke:#000000;stroke-width:1.98396182px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 6.723322,62.304589 V 46 H 0.446643 L 9.861661,40.983129 19.276678,46 H 13 v 16.304589 z"
+       id="path3738"
+       inkscape:connector-curvature="0" />
+  </g>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
