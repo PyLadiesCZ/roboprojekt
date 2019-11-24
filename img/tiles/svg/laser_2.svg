@@ -14,9 +14,9 @@
    viewBox="0 0 64.000001 64.000001"
    id="svg2"
    version="1.1"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   inkscape:version="0.92.4 5da689c313, 2019-01-14"
    sodipodi:docname="laser_2.svg"
-   inkscape:export-filename="C:\Users\user\Documents\_Pyladies\roboprojekt\img\squares\png\laser_2.png"
+   inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/img/tiles/png/laser_2.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -28,17 +28,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="13.40625"
-     inkscape:cx="32"
-     inkscape:cy="32"
+     inkscape:zoom="4.7398251"
+     inkscape:cx="-10.305973"
+     inkscape:cy="15.46407"
      inkscape:document-units="px"
      inkscape:current-layer="layer3"
      showgrid="true"
      units="px"
      inkscape:window-width="1920"
-     inkscape:window-height="1027"
-     inkscape:window-x="1912"
-     inkscape:window-y="-8"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
      inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
@@ -61,58 +61,60 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-988.36216)">
-    <rect
-       style="opacity:0.91600001;fill:#ff0000;fill-opacity:1;stroke:none"
-       id="rect4208"
-       width="4"
-       height="64"
-       x="17.898613"
-       y="988.36218" />
-    <rect
-       style="opacity:0.91600001;fill:#a00000;fill-opacity:1;stroke:none"
-       id="rect4210"
-       width="2"
-       height="64"
-       x="15.898612"
-       y="988.36218" />
-    <rect
-       style="opacity:0.91600001;fill:#a00000;fill-opacity:1;stroke:none"
-       id="rect4212"
-       width="2"
-       height="64.000023"
-       x="21.898613"
-       y="988.36218" />
-    <rect
-       style="opacity:0.91600001;fill:#ff0000;fill-opacity:1;stroke:none"
-       id="rect4208-3"
-       width="4"
-       height="64"
-       x="42.026787"
-       y="988.37109" />
-    <rect
-       style="opacity:0.91600001;fill:#a00000;fill-opacity:1;stroke:none"
-       id="rect4210-6"
-       width="2"
-       height="64"
-       x="40.026787"
-       y="988.37109" />
-    <rect
-       style="opacity:0.91600001;fill:#a00000;fill-opacity:1;stroke:none"
-       id="rect4212-7"
-       width="2"
-       height="64.000023"
-       x="45.982143"
-       y="988.37109" />
-  </g>
+     transform="translate(0,-988.36216)" />
   <g
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="Layer 2">
-    <path
-       style="fill:#ffd42a;stroke:#000000;stroke-width:1.98396182px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 6.723322,62.304589 V 46 H 0.446643 L 9.861661,40.983129 19.276678,46 H 13 v 16.304589 z"
-       id="path3738"
-       inkscape:connector-curvature="0" />
+    <g
+       id="g3085"
+       transform="translate(2,-64)">
+      <rect
+         y="64"
+         x="19"
+         height="64.000076"
+         width="2"
+         id="rect4158"
+         style="display:inline;fill:#ff2a2a;stroke:none;stroke-width:0.70700848" />
+      <rect
+         y="64"
+         x="21"
+         height="64.000008"
+         width="1"
+         id="rect4160"
+         style="display:inline;fill:#ff5555;fill-opacity:1;stroke:none;stroke-width:0.70651561" />
+      <rect
+         y="63.999939"
+         x="18"
+         height="64.000031"
+         width="1"
+         id="rect4162"
+         style="display:inline;fill:#ff5555;fill-opacity:1;stroke:none;stroke-width:0.7070083" />
+    </g>
+    <g
+       transform="translate(22,-63.999969)"
+       id="g3093">
+      <rect
+         style="display:inline;fill:#ff2a2a;stroke:none;stroke-width:0.70700848"
+         id="rect3087"
+         width="2"
+         height="64.000076"
+         x="19"
+         y="64" />
+      <rect
+         style="display:inline;fill:#ff5555;fill-opacity:1;stroke:none;stroke-width:0.70651561"
+         id="rect3089"
+         width="1"
+         height="64.000008"
+         x="21"
+         y="64" />
+      <rect
+         style="display:inline;fill:#ff5555;fill-opacity:1;stroke:none;stroke-width:0.7070083"
+         id="rect3091"
+         width="1"
+         height="64.000031"
+         x="18"
+         y="63.999939" />
+    </g>
   </g>
 </svg>

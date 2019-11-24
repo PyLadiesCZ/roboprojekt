@@ -14,10 +14,10 @@
    viewBox="0 0 8.4666663 8.4666663"
    version="1.1"
    id="svg8"
-   inkscape:export-filename="/home/terezievahalova/dev/roboprojekt_muj/interface/png/green.png"
+   inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/img/interface/png/red.png"
    inkscape:export-xdpi="96.000008"
    inkscape:export-ydpi="96.000008"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   inkscape:version="0.92.4 (unknown)"
    sodipodi:docname="red.svg">
   <defs
      id="defs2" />
@@ -29,8 +29,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="11.2"
-     inkscape:cx="2.912995"
-     inkscape:cy="14.61082"
+     inkscape:cx="-18.694148"
+     inkscape:cy="14.29832"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -54,7 +54,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -78,7 +78,7 @@
        x="54.536366"
        y="102.38227" />
     <circle
-       style="opacity:1;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.26254544;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:21.1607151;stroke-opacity:1;paint-order:markers stroke fill"
+       style="opacity:1;fill:#d80000;fill-opacity:1;stroke:none;stroke-width:0.26254544;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:21.1607151;stroke-opacity:1;paint-order:markers stroke fill"
        id="path5571"
        cx="57.67918"
        cy="104.91246"

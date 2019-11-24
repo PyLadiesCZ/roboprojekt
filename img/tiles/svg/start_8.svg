@@ -15,11 +15,11 @@
    viewBox="0 0 16.933333 16.933334"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="starting_square08.svg"
-   inkscape:export-filename="C:\Users\user\Documents\_Pyladies\roboprojekt\img\squares\png\starting_square05.png"
-   inkscape:export-xdpi="122.88001"
-   inkscape:export-ydpi="122.88001">
+   inkscape:version="0.92.4 5da689c313, 2019-01-14"
+   sodipodi:docname="start_8.svg"
+   inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/img/tiles/png/start_8.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
   <defs
      id="defs2">
     <linearGradient
@@ -39,17 +39,18 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="11.313708"
-     inkscape:cx="33.177807"
-     inkscape:cy="32.841263"
+     inkscape:cx="13.703123"
+     inkscape:cy="37.363883"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="text819"
      showgrid="true"
      units="px"
      inkscape:window-width="1920"
-     inkscape:window-height="1027"
-     inkscape:window-x="1912"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1">
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:snap-global="false">
     <inkscape:grid
        type="xygrid"
        id="grid3713"
@@ -73,26 +74,27 @@
      id="layer1"
      transform="translate(0,-280.06665)">
     <circle
-       style="fill:#ffd42a;stroke:#000000;stroke-width:0.52916667;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:#dee3db;stroke:#7c916f;stroke-width:0.33449268;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path3766"
-       cx="8.4666672"
-       cy="288.53333"
-       r="6.3499999"
-       inkscape:export-filename="C:\Users\user\Documents\_Pyladies\roboprojekt\img\squares\png\starting_square08.png"
-       inkscape:export-xdpi="122.88001"
-       inkscape:export-ydpi="122.88001" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458335"
-       x="4.4538198"
-       y="292.63712"
+       cx="8.4279947"
+       cy="288.49463"
+       r="4.0139122" />
+    <g
+       aria-label="1"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:10.30111122px;line-height:1.25;font-family:Cantarell;-inkscape-font-specification:'Cantarell, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#484537;fill-opacity:1;stroke:none;stroke-width:0.24143231"
        id="text819"
-       inkscape:export-filename="C:\Users\user\Documents\_Pyladies\roboprojekt\img\squares\png\starting_square08.png"
-       inkscape:export-xdpi="122"
-       inkscape:export-ydpi="122"><tspan
-         sodipodi:role="line"
-         id="tspan833"
-         x="4.4538198"
-         y="292.63712">8</tspan></text>
+       transform="matrix(0.69272558,0,0,0.69272558,2.5743729,88.63169)">
+      <g
+         aria-label="8"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.85229397px;line-height:1.25;font-family:Cantarell;-inkscape-font-specification:Cantarell;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.05343076"
+         id="text3590"
+         transform="translate(-0.6751904)">
+        <path
+           d="m 9.1204525,291.7008 c 1.2924345,0 2.1334025,-0.64622 2.1334025,-1.64653 0,-0.90293 -0.690479,-1.32784 -1.4340713,-1.65538 0.7170363,-0.27442 1.1596503,-0.84982 1.1596503,-1.5403 0,-0.88523 -0.73474,-1.47833 -1.8412769,-1.47833 -1.1685028,0 -1.9386524,0.64622 -1.9386524,1.61997 0,0.779 0.4780239,1.19506 1.0711276,1.48718 -0.7878542,0.23016 -1.2835826,0.83212 -1.2835826,1.58457 0,0.97375 0.8498202,1.62882 2.1334028,1.62882 z m -1.1862074,-4.81565 c 0,-0.53999 0.4160578,-0.87638 1.0976845,-0.87638 0.7435927,0 1.2481734,0.3895 1.2481734,0.97375 0,0.53114 -0.4160578,1.00031 -1.053423,1.16851 -0.6904789,-0.29213 -1.2924349,-0.60196 -1.2924349,-1.26588 z m -0.1947505,3.08945 c 0,-0.5754 0.451467,-1.04457 1.1330937,-1.22162 0.8232633,0.32754 1.6288217,0.59311 1.6288217,1.36326 0,0.5931 -0.451467,0.93834 -1.2570254,0.93834 -0.902934,0 -1.50489,-0.43376 -1.50489,-1.07998 z"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Cantarell;-inkscape-font-specification:Cantarell;stroke-width:0.05343076"
+           id="path3805"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
   </g>
 </svg>

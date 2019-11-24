@@ -14,10 +14,10 @@
    viewBox="0 0 8.4666663 8.8106937"
    version="1.1"
    id="svg8"
-   inkscape:export-filename="/home/terezievahalova/dev/roboprojekt_muj/interface/png/life.png"
+   inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/img/interface/png/life.png"
    inkscape:export-xdpi="96.000008"
    inkscape:export-ydpi="96.000008"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   inkscape:version="0.92.4 (unknown)"
    sodipodi:docname="life.svg">
   <defs
      id="defs2" />
@@ -28,9 +28,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="11.2"
-     inkscape:cx="26.932362"
-     inkscape:cy="12.999661"
+     inkscape:zoom="7.919596"
+     inkscape:cx="25.874741"
+     inkscape:cy="14.835753"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -54,7 +54,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -78,7 +78,7 @@
        x="56.091675"
        y="104.13078" />
     <path
-       style="opacity:1;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:0.63735014;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:21.1607151;stroke-opacity:1;paint-order:markers stroke fill"
+       style="opacity:1;fill:#d80000;fill-opacity:1;stroke:none;stroke-width:0.63735014;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:21.1607151;stroke-opacity:1;paint-order:markers stroke fill"
        d="m 61.453727,102.5592 c 0,0 1.881739,-2.9199 3.831595,-1.09477 1.949854,1.82513 -3.831595,8.21055 -3.831595,8.21055 0,0 -5.781448,-6.38542 -3.831595,-8.21055 1.949862,-1.82513 3.831595,1.09477 3.831595,1.09477 z"
        id="rect1559"
        inkscape:connector-curvature="0"
