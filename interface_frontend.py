@@ -319,7 +319,7 @@ def draw_interface(interface_state, game_state, winner_time, window):
                             winner_label = get_label(
                                 str(name),
                                 x=(game_state.tile_count[0] * TILE_WIDTH) / 2 - 50,
-                                y=(game_state.tile_count[1] * TILE_HEIGHT) / 2 - 25 - i * 50,
+                                y=(game_state.tile_count[1] * TILE_HEIGHT) / 2 - 100 - i * 50,
                                 font_size=26,
                                 anchor_x="center",
                                 color=(255, 0, 0, 255),

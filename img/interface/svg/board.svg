@@ -68,9 +68,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.0323759"
-     inkscape:cx="535.62807"
-     inkscape:cy="318.90207"
+     inkscape:zoom="0.73"
+     inkscape:cx="214.66546"
+     inkscape:cy="488.99817"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -98,6 +98,35 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(15.127263,-152.98864)">
+    <g
+       id="g2307">
+      <flowRoot
+         transform="matrix(0.3553409,0,0,0.36398841,1.4605386,190.09395)"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#aa0000;stroke-width:3.17080235;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="flowRoot2267"
+         xml:space="preserve"><flowRegion
+           style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;stroke:#aa0000;stroke-width:3.17080235;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="flowRegion2263"><rect
+             style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;stroke:#aa0000;stroke-width:3.17080235;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+             y="-145.89041"
+             x="-8.90411"
+             height="95.205482"
+             width="471.91782"
+             id="rect2261" /></flowRegion><flowPara
+           id="flowPara2265">ROBOPROJECT</flowPara></flowRoot>      <flowRoot
+         xml:space="preserve"
+         id="flowRoot2275"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#ff6600;stroke-width:3.17080266;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:1.58540133,1.58540133;stroke-dashoffset:0;stroke-opacity:1"
+         transform="matrix(0.35385362,0,0,0.35385362,1.0395589,188.86454)"><flowRegion
+           id="flowRegion2271"
+           style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;stroke:#ff6600;stroke-width:3.17080266;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:1.58540133,1.58540133;stroke-dashoffset:0;stroke-opacity:1"><rect
+             id="rect2269"
+             width="471.91782"
+             height="95.205482"
+             x="-8.90411"
+             y="-145.89041"
+             style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;stroke:#ff6600;stroke-width:3.17080266;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:1.58540133,1.58540133;stroke-dashoffset:0;stroke-opacity:1" /></flowRegion><flowPara
+           id="flowPara2273">ROBOPROJECT</flowPara></flowRoot>    </g>
     <g
        transform="translate(43.8565,-92.643082)"
        id="g3700"
@@ -1660,15 +1689,7 @@
            x="-8.90411"
            y="-145.89041"
            style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;stroke:#c83737;stroke-width:3.17080259;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:0.79270067, 0.79270067;stroke-dashoffset:0;stroke-opacity:1" /></flowRegion><flowPara
-         id="flowPara1982">ROBOPROJEKT</flowPara></flowRoot>    <rect
-       style="opacity:0.42399998;fill:#ffffff;fill-opacity:1;stroke:#cccccc;stroke-width:0.46499997;stroke-miterlimit:4;stroke-dasharray:0.2325, 0.2325;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter3165)"
-       id="rect3151"
-       width="131.62398"
-       height="34.487545"
-       x="-1.8514222"
-       y="164.66774"
-       transform="matrix(0.90227638,0,0,0.90227638,30.773123,-61.327777)" />
-    <g
+         id="flowPara1982">ROBOPROJECT</flowPara></flowRoot>    <g
        transform="translate(-23.876823,-75.709763)"
        id="g3282"
        inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/img/interface/png/board.png"
@@ -20654,7 +20675,7 @@
        inkscape:export-ydpi="96" />
     <g
        aria-label="ROBOPROJEKT"
-       transform="matrix(0.46136624,0,-0.07359121,0.46136624,6.3033807,235.68741)"
+       transform="matrix(0.46136624,0,-0.07359121,0.46136624,-4.2043391,144.70593)"
        style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#c83737;stroke-width:3.17080259;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:0.79270067, 0.79270067;stroke-dashoffset:0;stroke-opacity:1"
        id="flowRoot1976-3"
        inkscape:export-filename="/home/terezievahalova/dev/roboprojekt/img/interface/png/board.png"
@@ -20745,5 +20766,132 @@
          x="3.9933522"
          y="219.74762"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.76111126px;font-family:'Emoji One';-inkscape-font-specification:'Emoji One';stroke-width:0.26458332">Enter Robot name</tspan></text>
+    <flowRoot
+       transform="matrix(0.35385362,0,0,0.35385362,1.9456662,172.55461)"
+       style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#c83737;stroke-width:3.17080247;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:0.31708025,0.31708025;stroke-dashoffset:0;stroke-opacity:1"
+       id="flowRoot2259"
+       xml:space="preserve"><flowRegion
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;stroke:#c83737;stroke-width:3.17080247;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:0.31708025,0.31708025;stroke-dashoffset:0;stroke-opacity:1"
+         id="flowRegion2255"><rect
+           style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;stroke:#c83737;stroke-width:3.17080247;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:0.31708025,0.31708025;stroke-dashoffset:0;stroke-opacity:1"
+           y="-145.89041"
+           x="-8.90411"
+           height="95.205482"
+           width="471.91782"
+           id="rect2253" /></flowRegion><flowPara
+         id="flowPara2257">ROBOPROJECT</flowPara></flowRoot>    <g
+       id="g2425"
+       transform="matrix(1,0,-0.15950068,1,-121.44672,75.56174)">
+      <path
+         d="m 150.98376,102.12128 q 1.83701,0 2.77655,-0.87623 0.95356,-0.87621 0.95356,-2.57119 0,-1.062952 -0.65907,-1.551334 -0.64507,-0.502753 -2.04736,-0.502753 h -2.22966 l -1.06575,5.501507 z m -2.9869,3.82088 -1.55655,8.1158 h -5.39885 l 4.08069,-21.445811 h 7.97908 q 3.44965,0 5.23057,1.321513 1.78092,1.321507 1.78092,3.89271 0,2.599918 -1.40231,4.280538 -1.40229,1.68062 -3.80022,1.92481 1.09379,0.22983 1.823,1.14914 0.72918,0.90494 1.27608,2.78667 l 1.78092,6.09043 h -5.37081 l -1.57057,-5.32912 q -0.47678,-1.59444 -1.1639,-2.18337 -0.6731,-0.60331 -1.96321,-0.60331 z"
+         id="path2358"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#aa0000;stroke-width:2.30409622;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 174.50804,98.935414 q 0,-1.766133 -0.78371,-2.689341 -0.77392,-0.923203 -2.25318,-0.923203 -1.95929,0 -3.29161,1.806269 -1.32252,1.796241 -1.32252,4.505641 0,1.726 0.77392,2.67931 0.77392,0.95331 2.15522,0.95331 1.12659,0 1.99847,-0.48167 0.88168,-0.49171 1.49886,-1.44502 0.58778,-0.91317 0.90127,-2.05714 0.32328,-1.14397 0.32328,-2.348156 z m -2.48829,-6.412266 q 2.91933,0 4.69249,1.665786 1.78295,1.655746 1.78295,4.335052 0,1.826334 -0.5486,3.451984 -0.5388,1.62565 -1.57723,2.92014 -1.27353,1.59554 -3.0173,2.38829 -1.73397,0.78272 -4.00674,0.78272 -2.90954,0 -4.6827,-1.65575 -1.77316,-1.65575 -1.77316,-4.34509 0,-1.83637 0.53881,-3.462015 0.5388,-1.625644 1.58702,-2.930177 1.25395,-1.585502 2.98792,-2.368221 1.74376,-0.782719 4.01654,-0.782719 z"
+         id="path2360"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#aa0000;stroke-width:1.60963929;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 187.24341,98.59423 q 1.00903,0 1.57723,-0.521814 0.56819,-0.521809 0.56819,-1.434983 0,-0.592054 -0.40165,-0.903135 -0.39186,-0.311081 -1.13639,-0.311081 h -2.10623 l -0.60738,3.171013 z m -1.11679,6.55275 q 1.29313,0 1.98868,-0.6322 0.69554,-0.63219 0.69554,-1.8163 0,-0.75262 -0.48002,-1.11387 -0.48003,-0.36125 -1.46947,-0.36125 h -2.22379 l -0.74453,3.92362 z m 4.46717,-5.38871 q 0.96005,0.28098 1.47927,1.03359 0.529,0.74258 0.529,1.84641 0,2.4184 -1.76336,3.78314 -1.75356,1.3547 -4.9374,1.3547 h -6.25993 l 2.85077,-14.982023 h 5.65254 q 2.60586,0 3.85,0.782719 1.25395,0.782719 1.25395,2.418397 0,1.374773 -0.73473,2.418396 -0.73474,1.03359 -1.92011,1.344671 z"
+         id="path2362"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#aa0000;stroke-width:1.60963929;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 206.85588,98.935414 q 0,-1.766133 -0.78371,-2.689341 -0.77392,-0.923203 -2.25318,-0.923203 -1.95929,0 -3.29161,1.806269 -1.32252,1.796241 -1.32252,4.505641 0,1.726 0.77392,2.67931 0.77392,0.95331 2.15522,0.95331 1.12659,0 1.99847,-0.48167 0.88168,-0.49171 1.49886,-1.44502 0.58779,-0.91317 0.90127,-2.05714 0.32328,-1.14397 0.32328,-2.348156 z m -2.48829,-6.412266 q 2.91934,0 4.69249,1.665786 1.78296,1.655746 1.78296,4.335052 0,1.826334 -0.5486,3.451984 -0.53881,1.62565 -1.57724,2.92014 -1.27353,1.59554 -3.0173,2.38829 -1.73397,0.78272 -4.00674,0.78272 -2.90954,0 -4.6827,-1.65575 -1.77315,-1.65575 -1.77315,-4.34509 0,-1.83637 0.5388,-3.462015 0.5388,-1.625644 1.58702,-2.930177 1.25395,-1.585502 2.98792,-2.368221 1.74376,-0.782719 4.01654,-0.782719 z"
+         id="path2364"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#aa0000;stroke-width:1.60963929;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 216.708,92.60205 h 8.88214 q 3.26652,0 5.10133,1.537744 1.84871,1.523498 1.84871,4.24302 0,1.665886 -0.61161,3.175146 -0.6116,1.49502 -1.75141,2.61986 -1.2371,1.21025 -2.94682,1.76553 -1.7097,0.54107 -4.2951,0.54107 h -3.53062 l -1.39002,7.37545 h -5.35151 z m 4.61483,3.972495 -1.13981,5.937375 h 2.96071 q 1.89041,0 2.89121,-0.91125 1.0008,-0.91125 1.0008,-2.648323 0,-1.153304 -0.72279,-1.765549 -0.70891,-0.612253 -2.05722,-0.612253 z"
+         id="path2366"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#aa0000;stroke-width:2.28389931;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 241.0477,99.437155 q 1.28333,0 1.93969,-0.612128 0.66616,-0.612122 0.66616,-1.796235 0,-0.742577 -0.46043,-1.08376 -0.45064,-0.351223 -1.43028,-0.351223 h -1.55763 l -0.74454,3.843346 z m -2.08664,2.669265 -1.08741,5.66969 h -3.77163 l 2.85076,-14.982023 h 5.57418 q 2.40992,0 3.65407,0.923208 1.24415,0.923203 1.24415,2.719443 0,1.816304 -0.97965,2.990383 -0.97964,1.174079 -2.65483,1.344669 0.76412,0.16056 1.27354,0.80279 0.50941,0.63219 0.89147,1.94676 l 1.24415,4.25477 h -3.75204 l -1.0972,-3.72292 q -0.33307,-1.11387 -0.8131,-1.5253 -0.47023,-0.42147 -1.3715,-0.42147 z"
+         id="path2368"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#aa0000;stroke-width:1.60963929;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 261.47327,98.935414 q 0,-1.766133 -0.78371,-2.689341 -0.77392,-0.923203 -2.25318,-0.923203 -1.95929,0 -3.29161,1.806269 -1.32252,1.796241 -1.32252,4.505641 0,1.726 0.77392,2.67931 0.77392,0.95331 2.15522,0.95331 1.12659,0 1.99847,-0.48167 0.88168,-0.49171 1.49886,-1.44502 0.58778,-0.91317 0.90127,-2.05714 0.32328,-1.14397 0.32328,-2.348156 z m -2.48829,-6.412266 q 2.91934,0 4.69249,1.665786 1.78295,1.655746 1.78295,4.335052 0,1.826334 -0.5486,3.451984 -0.5388,1.62565 -1.57722,2.92014 -1.27354,1.59554 -3.01731,2.38829 -1.73397,0.78272 -4.00674,0.78272 -2.90954,0 -4.6827,-1.65575 -1.77315,-1.65575 -1.77315,-4.34509 0,-1.83637 0.5388,-3.462015 0.53881,-1.625644 1.58702,-2.930177 1.25395,-1.585502 2.98792,-2.368221 1.74376,-0.782719 4.01654,-0.782719 z"
+         id="path2370"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#aa0000;stroke-width:1.60963929;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 269.45737,92.794087 h 3.77163 l -2.56667,13.526973 q -0.56819,2.93017 -2.23358,4.24474 -1.6556,1.32459 -4.81006,1.32459 h -0.76412 l 0.5584,-2.92013 h 0.58778 q 1.16578,0 1.91031,-0.68237 0.73473,-0.67234 0.97964,-1.96683 z"
+         id="path2372"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#aa0000;stroke-width:1.60963929;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 276.92226,92.794087 h 10.1687 l -0.5584,2.920143 h -6.39707 l -0.52901,2.789688 h 6.02481 l -0.56819,2.920142 h -6.01502 l -0.64656,3.43191 h 6.6028 l -0.53881,2.92014 h -10.39402 z"
+         id="path2374"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#aa0000;stroke-width:1.60963929;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 299.51284,107.07367 q -1.3519,0.49171 -2.59605,0.74258 -1.24415,0.25087 -2.36094,0.25087 -2.94873,0 -4.71209,-1.65575 -1.76336,-1.65575 -1.76336,-4.38523 0,-1.79623 0.5584,-3.381739 0.5584,-1.59554 1.6458,-2.910103 1.28333,-1.545364 3.08588,-2.37826 1.81234,-0.83289 3.89898,-0.83289 1.13639,0 2.28257,0.280978 1.14619,0.270939 2.33156,0.832891 l -0.60739,3.100768 q -0.94045,-0.732548 -1.89071,-1.073731 -0.95025,-0.341184 -2.03766,-0.341184 -2.26297,0 -3.79122,1.786201 -1.52824,1.786201 -1.52824,4.465509 0,1.72599 0.94045,2.7094 0.94046,0.98342 2.59606,0.98342 0.98944,0 2.09644,-0.36126 1.11679,-0.37128 2.49809,-1.154 z"
+         id="path2376"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#aa0000;stroke-width:1.60963929;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 303.60776,92.794087 h 13.4799 l -0.5584,2.920143 h -4.85903 l -2.29237,12.06188 h -3.77163 l 2.29237,-12.06188 h -4.85904 z"
+         id="path2378"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#aa0000;stroke-width:1.60963929;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 150.11577,102.23236 q 1.82933,0 2.76493,-0.85183 0.94958,-0.85181 0.94958,-2.499599 0,-1.033355 -0.65632,-1.50814 -0.64235,-0.488754 -2.03879,-0.488754 h -2.22032 l -1.06129,5.348323 z m -2.97438,3.71449 -1.55005,7.88982 h -5.37624 l 4.0636,-20.848669 h 7.94569 q 3.4352,0 5.20867,1.284717 1.77346,1.284711 1.77346,3.784323 0,2.527529 -1.39642,4.161349 -1.39643,1.63383 -3.78432,1.87122 1.08921,0.22343 1.81535,1.11715 0.72615,0.87974 1.27076,2.70906 l 1.77346,5.92085 h -5.34832 l -1.564,-5.18074 q -0.47479,-1.55003 -1.15903,-2.12257 -0.67029,-0.58651 -1.955,-0.58651 z"
+         id="path2335"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#ff6600;stroke-width:2.26703334;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:1.13351674, 1.13351674;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 173.81618,99.026986 q 0,-1.716957 -0.78044,-2.614459 -0.77068,-0.897498 -2.24375,-0.897498 -1.95108,0 -3.27782,1.755976 -1.31699,1.746226 -1.31699,4.380195 0,1.67793 0.77068,2.6047 0.77068,0.92677 2.1462,0.92677 1.12187,0 1.99011,-0.46826 0.87799,-0.47802 1.49258,-1.40479 0.58533,-0.88774 0.8975,-1.99986 0.32193,-1.11212 0.32193,-2.282774 z m -2.47788,-6.233724 q 2.90712,0 4.67285,1.619403 1.77549,1.609644 1.77549,4.214349 0,1.775486 -0.5463,3.355866 -0.53655,1.58038 -1.57063,2.83883 -1.26821,1.55112 -3.00467,2.3218 -1.72671,0.76092 -3.98998,0.76092 -2.89736,0 -4.66309,-1.60964 -1.76574,-1.60965 -1.76574,-4.22411 0,-1.78524 0.53655,-3.365623 0.53655,-1.580379 1.58038,-2.84859 1.2487,-1.541355 2.97541,-2.30228 1.73647,-0.760925 3.99973,-0.760925 z"
+         id="path2337"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#ff6600;stroke-width:1.58374715;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:0.79187361, 0.79187361;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 186.49825,98.695302 q 1.00481,0 1.57062,-0.507285 0.56582,-0.50728 0.56582,-1.395028 0,-0.575569 -0.39998,-0.877988 -0.39021,-0.302419 -1.13163,-0.302419 h -2.09742 l -0.60483,3.08272 z m -1.11212,6.370298 q 1.28771,0 1.98035,-0.61459 0.69264,-0.6146 0.69264,-1.76573 0,-0.73167 -0.47802,-1.08286 -0.47802,-0.3512 -1.46332,-0.3512 h -2.21448 l -0.74141,3.81438 z m 4.44848,-5.23867 q 0.95603,0.27316 1.47307,1.00481 0.52679,0.7219 0.52679,1.795 0,2.35106 -1.75598,3.6778 -1.74622,1.31698 -4.91674,1.31698 h -6.23372 l 2.83883,-14.564863 h 5.62889 q 2.59494,0 3.83388,0.760925 1.2487,0.760925 1.2487,2.351059 0,1.336494 -0.73166,2.35106 -0.73166,1.00481 -1.91206,1.307229 z"
+         id="path2339"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#ff6600;stroke-width:1.58374715;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:0.79187361, 0.79187361;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 206.02863,99.026986 q 0,-1.716957 -0.78043,-2.614459 -0.77068,-0.897498 -2.24376,-0.897498 -1.95108,0 -3.27782,1.755976 -1.31699,1.746226 -1.31699,4.380195 0,1.67793 0.77068,2.6047 0.77068,0.92677 2.1462,0.92677 1.12187,0 1.99011,-0.46826 0.87799,-0.47802 1.49258,-1.40479 0.58533,-0.88774 0.8975,-1.99986 0.32193,-1.11212 0.32193,-2.282774 z m -2.47788,-6.233724 q 2.90712,0 4.67285,1.619403 1.77549,1.609644 1.77549,4.214349 0,1.775486 -0.5463,3.355866 -0.53655,1.58038 -1.57063,2.83883 -1.26821,1.55112 -3.00467,2.3218 -1.72671,0.76092 -3.98997,0.76092 -2.89737,0 -4.6631,-1.60964 -1.76574,-1.60965 -1.76574,-4.22411 0,-1.78524 0.53655,-3.365623 0.53655,-1.580379 1.58038,-2.84859 1.2487,-1.541355 2.97541,-2.30228 1.73647,-0.760925 3.99973,-0.760925 z"
+         id="path2341"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#ff6600;stroke-width:1.58374715;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:0.79187361, 0.79187361;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 215.48681,92.974608 h 8.84496 q 3.25284,0 5.07997,1.494925 1.84097,1.481079 1.84097,4.124879 0,1.619498 -0.60905,3.086738 -0.60904,1.4534 -1.74407,2.54691 -1.23192,1.17656 -2.93448,1.71639 -1.70254,0.52599 -4.27713,0.52599 h -3.51584 l -1.3842,7.17009 h -5.32912 z m 4.5955,3.861885 -1.13503,5.772057 h 2.94831 q 1.8825,0 2.87911,-0.88588 0.99663,-0.88588 0.99663,-2.574583 0,-1.12119 -0.71978,-1.716389 -0.70594,-0.595205 -2.0486,-0.595205 z"
+         id="path2343"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#ff6600;stroke-width:2.24716139;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:1.1235807, 1.1235807;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 240.10834,99.514756 q 1.27796,0 1.93158,-0.595083 0.66337,-0.595078 0.66337,-1.746221 0,-0.721901 -0.45851,-1.053585 -0.44875,-0.341443 -1.42429,-0.341443 h -1.55111 l -0.74142,3.736332 z m -2.07791,2.594944 -1.08285,5.51182 h -3.75584 l 2.83883,-14.564863 h 5.55084 q 2.39984,0 3.63878,0.897502 1.23894,0.897498 1.23894,2.643724 0,1.765731 -0.97554,2.907119 -0.97555,1.141388 -2.64373,1.307228 0.76093,0.15609 1.26821,0.78044 0.50728,0.61459 0.88774,1.89255 l 1.23895,4.1363 h -3.73634 l -1.09261,-3.61926 q -0.33168,-1.08285 -0.8097,-1.48283 -0.46826,-0.40973 -1.36576,-0.40973 z"
+         id="path2345"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#ff6600;stroke-width:1.58374715;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:0.79187361, 0.79187361;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 260.44843,99.026986 q 0,-1.716957 -0.78044,-2.614459 -0.77068,-0.897498 -2.24375,-0.897498 -1.95109,0 -3.27783,1.755976 -1.31698,1.746226 -1.31698,4.380195 0,1.67793 0.77068,2.6047 0.77068,0.92677 2.1462,0.92677 1.12187,0 1.9901,-0.46826 0.878,-0.47802 1.49258,-1.40479 0.58533,-0.88774 0.89751,-1.99986 0.32193,-1.11212 0.32193,-2.282774 z m -2.47789,-6.233724 q 2.90713,0 4.67286,1.619403 1.77549,1.609644 1.77549,4.214349 0,1.775486 -0.54631,3.355866 -0.53655,1.58038 -1.57062,2.83883 -1.26821,1.55112 -3.00468,2.3218 -1.72671,0.76092 -3.98997,0.76092 -2.89736,0 -4.6631,-1.60964 -1.76573,-1.60965 -1.76573,-4.22411 0,-1.78524 0.53655,-3.365623 0.53655,-1.580379 1.58038,-2.84859 1.24869,-1.541355 2.97541,-2.30228 1.73646,-0.760925 3.99972,-0.760925 z"
+         id="path2347"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#ff6600;stroke-width:1.58374715;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:0.79187361, 0.79187361;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 268.39911,93.056657 h 3.75584 l -2.55593,13.150333 q -0.56581,2.84858 -2.22423,4.12655 -1.64867,1.28771 -4.78993,1.28771 h -0.76092 l 0.55606,-2.83883 h 0.58533 q 1.16089,0 1.90231,-0.66337 0.73166,-0.65361 0.97554,-1.91206 z"
+         id="path2349"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#ff6600;stroke-width:1.58374715;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:0.79187361, 0.79187361;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 275.83275,93.056657 h 10.12614 l -0.55606,2.838835 h -6.3703 l -0.52679,2.712012 h 5.99959 l -0.56581,2.838826 h -5.98984 l -0.64386,3.33636 h 6.57516 l -0.53655,2.83883 h -10.35051 z"
+         id="path2351"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#ff6600;stroke-width:1.58374715;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:0.79187361, 0.79187361;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 298.32878,106.93864 q -1.34625,0.47802 -2.58519,0.7219 -1.23894,0.24389 -2.35106,0.24389 -2.93638,0 -4.69236,-1.60964 -1.75598,-1.60965 -1.75598,-4.26313 0,-1.74622 0.55606,-3.287584 0.55606,-1.551115 1.63892,-2.829075 1.27796,-1.502336 3.07296,-2.31204 1.80475,-0.809699 3.88266,-0.809699 1.13163,0 2.27302,0.273154 1.14138,0.263395 2.32179,0.8097 l -0.60484,3.014431 q -0.93652,-0.712151 -1.8828,-1.043835 -0.94627,-0.331683 -2.02913,-0.331683 -2.2535,0 -3.77535,1.736466 -1.52185,1.736467 -1.52185,4.341175 0,1.67793 0.93652,2.63396 0.93653,0.95604 2.58519,0.95604 0.9853,0 2.08767,-0.3512 1.11212,-0.36095 2.48763,-1.12187 z"
+         id="path2353"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#ff6600;stroke-width:1.58374715;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:0.79187361, 0.79187361;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         d="m 302.40656,93.056657 h 13.42348 l -0.55606,2.838835 h -4.8387 l -2.28277,11.726028 h -3.75585 l 2.28278,-11.726028 h -4.8387 z"
+         id="path2355"
+         inkscape:connector-curvature="0"
+         style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'STIX MathJax Script';-inkscape-font-specification:'STIX MathJax Script, Bold Italic';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffcc00;fill-opacity:1;stroke:#ff6600;stroke-width:1.58374715;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:3.20000005;stroke-dasharray:0.79187361, 0.79187361;stroke-dashoffset:0;stroke-opacity:1" />
+    </g>
   </g>
 </svg>
