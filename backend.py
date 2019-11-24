@@ -217,6 +217,7 @@ class Robot:
         Rotate robot according to a given direction.
         """
         self.direction = self.direction.get_new_direction(where_to)
+        state.record_log()
 
     def fall_into_hole(self, state):
         """
