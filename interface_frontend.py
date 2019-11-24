@@ -79,8 +79,8 @@ for i in range(MAX_DAMAGES_COUNT):
 
 permanent_damages_sprites = []
 for i in range(MAX_DAMAGES_COUNT):
-    x = 676 + i * -70
-    y = 768
+    x = 677 + i * -70
+    y = 773
     permanent_damages_sprites.append(get_sprite('img/interface/png/permanent_damage.png', x, y))
 
 # Cards sprites
