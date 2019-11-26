@@ -28,10 +28,10 @@ class Server:
 
     Handle diconnection nicely - remove those clients from the list.
     """
-    def __init__(self, map_name):
+    def __init__(self, map_name, players):
         # Attributes related to game logic
         self.map_name = map_name
-        self.state = State.get_start_state(map_name)
+        self.state = State.get_start_state(map_name, players)
         self.available_robots = list(self.state.robots)
         # Dictionary {robot_name: ws_interface}
         self.assigned_robots = {}
@@ -253,8 +253,9 @@ def get_app(server):
 @click.command()
 @click.option("-m", "--map-name", default="maps/test_winner.json",
               help="Name of the played map.")
-def main(map_name):
-    server = Server(map_name)
+@click.option("-p", "--players", default=8, help="Number of players", type=int)
+def main(map_name, players):
+    server = Server(map_name, players)
     app = get_app(server)
     web.run_app(app)
 
