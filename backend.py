@@ -911,7 +911,7 @@ def get_robot_names():
     return robot_names
 
 
-def get_start_tiles(board, players, tile_type="start"):
+def get_start_tiles(board, tile_type="start", players=None):
     """
     Get initial tiles for robots. It can be either start or stop tiles.
 
@@ -930,7 +930,7 @@ def get_start_tiles(board, players, tile_type="start"):
     for coordinate, tiles in board.items():
         for tile in tiles:
             if tile.type == tile_type:
-                if len(robot_tiles) < players:
+                if players == None or len(robot_tiles) < players:
                     robot_tiles[tile.number] = {"coordinates": coordinate,
                                                 "tile_direction": tile.direction}
                 else:
@@ -942,7 +942,7 @@ def get_start_tiles(board, players, tile_type="start"):
     return robot_tiles
 
 
-def create_robots(board, players):
+def create_robots(board, players=None):
     """
     Place robots on start tiles.
 
@@ -954,7 +954,7 @@ def create_robots(board, players):
     Robots are placed on board in the direction of their start tiles.
     The robots are ordered according to their start tiles.
     """
-    start_tiles = get_start_tiles(board, players)
+    start_tiles = get_start_tiles(board, players=players)
     robots_on_start = []
     robot_names = get_robot_names()
 
