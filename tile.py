@@ -142,8 +142,7 @@ class HoleTile(Tile):
 
     def kill_robot(self, state, robot):
         # Call robot's method for dying.
-        robot.die()
-        state.record_log()
+        robot.die(state)
         return robot
 
 class BeltTile(Tile):

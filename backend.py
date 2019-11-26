@@ -143,7 +143,7 @@ class Robot:
         state.past_deck.extend(available_cards)
         available_cards.clear()
 
-    def walk(self, distance, state, direction=None, push_others=True):
+    def walk(self, distance, state, direction=None, push_others=True, log=True):
         """
         Move a robot to next coordinates based on his direction.
         Optional argument:
@@ -173,7 +173,8 @@ class Robot:
                 # Move robot in the way.
                 if robot_in_the_way:
                     if push_others:
-                        robot_in_the_way.walk(1, state, direction)
+                        # Move other robot, but don't log it as a separate action
+                        robot_in_the_way.walk(1, state, direction, log=False)
                         # Check that robot moved.
                         if robot_in_the_way.coordinates == next_coordinates:
                             break
@@ -182,12 +183,13 @@ class Robot:
 
                 # Robot walks to next coordinates.
                 self.coordinates = next_coordinates
+                if log:
+                    state.record_log()
                 # Check hole on next coordinates.
                 self.fall_into_hole(state)
                 # If robot falls into hole, he becomes inactive.
                 if self.inactive:
                     break
-                state.record_log()
 
     def move(self, direction, distance, state):
         """
@@ -199,11 +201,12 @@ class Robot:
         """
         self.walk(distance=distance, state=state, direction=direction, push_others=False)
 
-    def die(self):
+    def die(self, state):
         """
         Robot lose life and skip rest of game round.
         Robot is moved out of game board for the rest of the round.
         """
+        state.record_log()
         if self.lives > 0:
             self.lives -= 1
 
@@ -211,6 +214,7 @@ class Robot:
             self.permanent_damages += 1
 
         self.coordinates = None
+        state.record_log()
 
     def rotate(self, where_to, state):
         """
@@ -224,10 +228,11 @@ class Robot:
         Check tiles on robot's coordinates for HoleTile and apply its effect.
         """
 
-        for tile in state.get_tiles(self.coordinates):
-            tile.kill_robot(state, self)
-            if self.inactive:
-                break
+        if self.coordinates != None:
+            for tile in state.get_tiles(self.coordinates):
+                tile.kill_robot(state, self)
+                if self.inactive:
+                    break
 
     def shoot(self, state):
         """
@@ -281,7 +286,7 @@ class Robot:
             self.damages += strength
         else:
             # Robot is damaged so much that laser kills it.
-            self.die()
+            self.die(state)
         state.record_log()
 
     def clear_robot_attributes(self, state):
@@ -502,7 +507,11 @@ class State:
         return {"robots": [robot.as_dict() for robot in self.robots]}
 
     def record_log(self):
-        self.log.append(self.robots_as_dict())
+        new_entry = self.robots_as_dict()
+        if self.log and self.log[-1] == new_entry:
+            # The new entry is the same as the previous one.
+            return
+        self.log.append(new_entry)
 
     @classmethod
     def get_start_state(cls, map_name):
@@ -631,11 +640,10 @@ class State:
                     # Check if the next tile is rotating belt.
                     for tile in self.get_tiles(robots_next_coordinates[robot]):
                         tile.rotate_robot_on_belt(robot, direction, self)
-                    self.record_log()
                 robot.coordinates = robots_next_coordinates[robot]
+            self.record_log()
+            for robot in self.robots:
                 robot.fall_into_hole(self)
-                self.record_log()
-
 
     def get_next_coordinates_for_belts(self, express_belts):
         """
