@@ -343,6 +343,17 @@ def draw_robot(i, robot, game_state):
         player_sprite.y = 90
         player_sprite.draw()
 
+    # Robot's name
+    robot_name_label = get_label(
+        str(robot.displayed_name),
+        x=97 + GAP * i,
+        y=75,
+        font_size=10,
+        anchor_x="center",
+        color=(0, 0, 0, 255),
+    )
+    robot_name_label.draw()
+
     # Power_down
     if robot.power_down:
         power_down_player_sprite.x = 80 + GAP * i
