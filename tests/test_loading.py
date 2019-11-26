@@ -20,13 +20,13 @@ from validator import NumberedTilesNotInOrderError
 # List of paths to valid test maps.
 # To be used as an argument for check_tiles which checks validity of all maps
 VALID_MAPS_PATHS = []
-for map_path in Path("maps/").glob("test_*.json"):
+for map_path in Path("maps/test_maps/").glob("test_*.json"):
     VALID_MAPS_PATHS.append(map_path)
 # add test maps
 for map_path in Path("tests/").glob("test_*"):
     if map_path.is_dir():
         VALID_MAPS_PATHS.append(map_path / Path("map.json"))
-for map_path in Path("maps/").glob("game_*.json"):
+for map_path in Path("maps/test_maps/").glob("game_*.json"):
     VALID_MAPS_PATHS.append(map_path)
 
 
@@ -41,13 +41,13 @@ def test_map_is_valid(map_name):
 @pytest.mark.parametrize(
     ("map_name", "map_exception"),
     [
-        ("maps/bad_maps/bad_1.json", WrongLayersOrderError),
-        ("maps/bad_maps/bad_2.json", RepeatingTilesError),
-        ("maps/bad_maps/bad_3.json", TilesOfOneTypeError),
-        ("maps/bad_maps/bad_4.json", FlagOnStartOrHoleError),
-        ("maps/bad_maps/bad_5.json", LasersInOppositeDirectionError),
-        ("maps/bad_maps/bad_6.json", LasersWithoutWallError),
-        ("maps/bad_maps/bad_7.json", NumberedTilesNotInOrderError),
+        ("maps/test_maps/bad_maps/bad_1.json", WrongLayersOrderError),
+        ("maps/test_maps/bad_maps/bad_2.json", RepeatingTilesError),
+        ("maps/test_maps/bad_maps/bad_3.json", TilesOfOneTypeError),
+        ("maps/test_maps/bad_maps/bad_4.json", FlagOnStartOrHoleError),
+        ("maps/test_maps/bad_maps/bad_5.json", LasersInOppositeDirectionError),
+        ("maps/test_maps/bad_maps/bad_6.json", LasersWithoutWallError),
+        ("maps/test_maps/bad_maps/bad_7.json", NumberedTilesNotInOrderError),
     ])
 def test_map_is_invalid(map_name, map_exception):
     """
@@ -76,7 +76,7 @@ def test_map_1_is_right_oriented(coordinates, tile_type):
 
     Uses test_1.json map for this.
     """
-    board = get_board("maps/test_1.json")
+    board = get_board("maps/test_maps/test_1.json")
     assert isinstance(board[coordinates][0], tile_type)
 
 
@@ -96,7 +96,7 @@ def test_map_returns_correct_image_ID(index_number, expected_value):
 
     Regression test of get_data function. Uses test_1.json map for this.
     """
-    loaded_tileset = get_tiles_data(get_map_data("maps/test_1.json"))
+    loaded_tileset = get_tiles_data(get_map_data("maps/test_maps/test_1.json"))
     assert loaded_tileset[index_number]["id"] == expected_value
 
 
@@ -116,7 +116,7 @@ def test_map_returns_correct_image_names(index_number, expected_value):
 
     Regression test of get_data function. Uses test_1.json map for this.
     """
-    loaded_tileset = get_tiles_data(get_map_data("maps/test_1.json"))
+    loaded_tileset = get_tiles_data(get_map_data("maps/test_maps/test_1.json"))
     assert loaded_tileset[index_number]["image"] == expected_value
 
 
@@ -133,7 +133,7 @@ def test_map_returns_correct_image_names(index_number, expected_value):
     ]
 )
 def test_lasers_on_board(coordinates, laser_attribute, start_attribute):
-    test_board = get_board("maps/test_6.json")
+    test_board = get_board("maps/test_maps/test_6.json")
     test_tile = test_board[coordinates][1]
     assert test_tile.laser_strength == laser_attribute
     assert test_tile.start == start_attribute
@@ -147,7 +147,7 @@ def test_lasers_on_board(coordinates, laser_attribute, start_attribute):
     ]
 )
 def test_pusher_on_board(coordinates, register):
-    test_board = get_board("maps/test_6.json")
+    test_board = get_board("maps/test_maps/test_6.json")
     test_tile = test_board[coordinates][1]
     assert test_tile.register == register
 
@@ -160,7 +160,7 @@ def test_pusher_on_board(coordinates, register):
     ]
 )
 def test_repair_on_board(coordinates, new_start):
-    test_board = get_board("maps/test_6.json")
+    test_board = get_board("maps/test_maps/test_6.json")
     test_tile = test_board[coordinates][1]
     assert test_tile.new_start == new_start
 
@@ -173,7 +173,7 @@ def test_repair_on_board(coordinates, new_start):
     ]
 )
 def test_start_flag_on_board(coordinates, number):
-    test_board = get_board("maps/test_6.json")
+    test_board = get_board("maps/test_maps/test_6.json")
     test_tile = test_board[coordinates][1]
     assert test_tile.number == number
 
@@ -186,7 +186,7 @@ def test_start_flag_on_board(coordinates, number):
     ]
 )
 def test_gear_on_board(coordinates, move_direction):
-    test_board = get_board("maps/test_6.json")
+    test_board = get_board("maps/test_maps/test_6.json")
     test_tile = test_board[coordinates][1]
     assert test_tile.move_direction == move_direction
 
@@ -205,7 +205,7 @@ def test_gear_on_board(coordinates, move_direction):
     ]
 )
 def test_belts_on_board(coordinates, direction_out, express):
-    test_board = get_board("maps/test_6.json")
+    test_board = get_board("maps/test_maps/test_6.json")
     test_tile = test_board[coordinates][1]
     assert test_tile.direction_out == direction_out
     assert test_tile.express == express
@@ -231,7 +231,7 @@ def test_loading_of_tile_type_properties(id, tile_type, tile_properties):
     Use test_1.json map, but all maps would work. All of them refers
     to the same external tileset (except for test_4.json).
     """
-    map_data = get_map_data("maps/test_1.json")
+    map_data = get_map_data("maps/test_maps/test_1.json")
     types, properties, path = get_tiles_properties(map_data)
     assert types[id] == tile_type
     assert properties[id] == tile_properties

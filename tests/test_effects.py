@@ -31,7 +31,7 @@ def get_test_names():
     Go through all 'tests/' folders and get their names.
     Yield the next folder name.
     """
-    source_path = Path("tests/test_maps")
+    source_path = Path("tests/")
     for path in source_path.glob("test_*"):
         if path.is_dir():
             yield path.name
@@ -151,8 +151,8 @@ def test_play_game(test_name):
     """
     Play the game with given map.
     """
-    map_file = Path("tests/test_maps") / test_name / "map.json"
-    commands_file = Path("tests/test_maps") / test_name / "commands.yaml"
+    map_file = Path("tests/") / test_name / "map.json"
+    commands_file = Path("tests/") / test_name / "commands.yaml"
     if not commands_file.exists():
         commands_file = None
 
