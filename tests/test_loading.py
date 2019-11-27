@@ -26,7 +26,7 @@ for map_path in Path("maps/test_maps/").glob("test_*.json"):
 for map_path in Path("tests/").glob("test_*"):
     if map_path.is_dir():
         VALID_MAPS_PATHS.append(map_path / Path("map.json"))
-for map_path in Path("maps/test_maps/").glob("game_*.json"):
+for map_path in Path("maps/").glob("game_*.json"):
     VALID_MAPS_PATHS.append(map_path)
 
 
