@@ -1,13 +1,17 @@
 # RoboProject
+
+This is a video game based on the board game [RoboRally](https://en.wikipedia.org/wiki/RoboRally).
+
+It includes a network server and graphical desktop clients.
+
+### The Project
 *Advanced PyLadies CZ Project*
 
-This project was created primarily for those who successfully passed the PyLadies beginner courses and wanted to continue with Python via "real" assignment. Its aim was to show participants the process of software development from the very basics, and enable them to try it on their own. It was focused on team cooperation, using Python for real tasks, working with Git and GitHub, showing best practices and trying various useful tools.
+This project was created for PyLadies who successfully passed beginner Python courses and wanted to continue with Python via a "real" assignment. Its aim was to show participants the process of software development from the very basics, and enable them to try it on their own. It was focused on team cooperation, using Python for real tasks, working with Git and GitHub, showing best practices and trying various useful tools.
 
-The goal of this project was transforming board game RoboRally to computer version so the final result is working playable computer game.
+You can read about the progress on our [blog](https://roboprojekt.pyladies.cz/) (in Czech).
 
-You can read about the progress on our [blog](https://roboprojekt.pyladies.cz/).
-
-### Contribution
+#### Contribution
 
 After over a year of developing we've decided to publish the first version of the game.
 From now on anyone is welcome to contribute. If we like your changes, we'll happily merge it.
