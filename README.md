@@ -39,10 +39,11 @@ The game is playable through the network. Therefore it is divided into server an
 ```
 python server.py
 ```
-You can choose a map to play directly from command line by writing the location of the JSON map as the optional argument `-m, --map-name`.
+You can choose a map to play directly from command line by writing the location of the JSON map as the optional argument `-m, --map-name`. For easier choice you can see the preview of maps in folder `maps/`.
+The same way you can enter the number of players `-p, --players`. The current maps are prepared for the max. 8 players.
 
 ```
-python server.py -m maps/belt_map.json
+python server.py -m maps/game_1.json -p 6
 ```
 
 If you run server on a different computer than the clients, get the server's hostname and run clients with its value as the named argument `-h, --hostname`.
