@@ -100,7 +100,7 @@ def test_count_of_lasers_is_valid(tiles_layers, count):
 
 def test_get_flags_starts():
     """ Assert count of start and flags tiles is computed correctly. """
-    board = get_board("./maps/test_6.json")
+    board = get_board("./maps/test_maps/test_6.json")
     f = []
     s = []
     for coordinate, tiles in board.items():
@@ -112,7 +112,7 @@ def test_get_flags_starts():
 def test_get_tiles_raises_exception():
     """ Raise RepeatingTilesError when the same tile is placed twice
     on one coordinates. """
-    board = get_board("./maps/bad_maps/bad_2.json")
+    board = get_board("./maps/test_maps/bad_maps/bad_2.json")
     for coordinate, tiles in board.items():
         with pytest.raises(RepeatingTilesError):
             get_tiles(coordinate, tiles)
@@ -120,7 +120,7 @@ def test_get_tiles_raises_exception():
 
 def test_get_tiles():
     """ Assert the tiles are correctly matched to their types. """
-    board = get_board("./maps/test_6.json")
+    board = get_board("./maps/test_maps/test_6.json")
     ttl_1_1 = get_tiles((1, 1), board[(1, 1)])
     ttl_2_2 = get_tiles((2, 2), board[(2, 2)])
     assert ttl_1_1 == ['A_ground', 'E_laser', 'E_wall']
