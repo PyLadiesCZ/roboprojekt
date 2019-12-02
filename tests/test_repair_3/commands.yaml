@@ -33,10 +33,16 @@ prerequisites:
 results:
   -
     damages: 9
-    start: [1, 2]
+    start:
+      - [0, 2]
+      - [1, 2]
   -
     damages: 8
-    start: [2, 1]
+    start:
+      - [0, 1]
+      - [2, 1]
   -
     damages: 5
-    start: [2, 0]
+    start:
+      - [0, 0]
+      - [2, 0]

@@ -31,7 +31,7 @@ class Robot:
     def __init__(self, direction, coordinates, name):
         self.direction = direction
         self.coordinates = coordinates
-        self.start_coordinates = coordinates
+        self.start_coordinates = [coordinates]
         self.program = [None, None, None, None, None]
         self.lives = 3
         self.flags = 0
@@ -308,20 +308,23 @@ class Robot:
         self.power_down = True
         self.selection_confirmed = True
 
-    def change_start_coordinates(self, state):
+    def find_free_start(self, state):
         """
-        Check if the other robots have the same starting coordinates as
-        own current coordinates. If so, don't change the starting coordinates.
-        If there is no other robot with the same starting coordinates,
-        change the start coordinates to current ones.
+        Check the possible start coodinates from the last in the list.
+        If no other robots stand on them, set current coordinates there. If there stands another robot,
+        check the next until you get the free ones.
+        When the history of robot's own coordinates ends,
+        iterate through the other start tiles coordinates.
         """
-        for robot in state.robots:
-            if robot.start_coordinates == self.coordinates:
-                return
-        else:
-            if self.start_coordinates != self.coordinates:
-                self.start_coordinates = self.coordinates
-                state.record_log()
+        last_robot_starts = list(reversed(self.start_coordinates))
+        last_robot_starts.extend(state.start_coordinates)
+        for last_coordinates in last_robot_starts:
+            for robot in state.robots:
+                if robot.coordinates == last_coordinates:
+                    break
+            else:
+                self.coordinates = last_coordinates
+                break
 
     def select_blocked_cards_from_program(self):
         """
@@ -522,10 +525,13 @@ class State:
         initialize State object with them.
         """
         board = get_board(map_name)
-        robots_start = create_robots(board, players)
+        robots_start, start_coordinates = create_robots(board, players)
         state = cls(board, robots_start)
         for robot in state.robots:
             state.deal_cards(robot)
+        # Save the list of start tiles coordinates for robots
+        # reinitialising purposes.
+        state.start_coordinates = start_coordinates
         return state
 
     def get_tile_count(self):
@@ -715,8 +721,8 @@ class State:
         # Collect flags, repair robots
         for robot in self.get_active_robots():
             for tile in self.get_tiles(robot.coordinates):
-                tile.collect_flag(robot, self)
-                tile.set_new_start(robot, self)
+                tile.collect_flag(robot)
+                tile.set_new_start(robot)
 
     def set_robots_for_new_turn(self):
         """
@@ -728,10 +734,11 @@ class State:
         for robot in self.robots:
             for tile in self.get_tiles(robot.coordinates):
                 tile.repair_robot(robot, self)
-            # Robot will now ressurect at his start coordinates
             if robot.inactive:
-                robot.coordinates = robot.start_coordinates
                 robot.damages = 0
+                # Robot will now ressurect at the first free
+                # start coordinates he stepped on during the game.
+                robot.find_free_start(self)
                 self.record_log()
 
     def get_robots_ordered_by_cards_priority(self, register):
@@ -911,7 +918,7 @@ def get_robot_names():
     return robot_names
 
 
-def get_start_tiles(board, tile_type="start", players=None):
+def get_start_tiles(board, tile_type="start"):
     """
     Get initial tiles for robots. It can be either start or stop tiles.
 
@@ -930,43 +937,42 @@ def get_start_tiles(board, tile_type="start", players=None):
     for coordinate, tiles in board.items():
         for tile in tiles:
             if tile.type == tile_type:
-                if players == None or len(robot_tiles) < players:
-                    robot_tiles[tile.number] = {"coordinates": coordinate,
-                                                "tile_direction": tile.direction}
-                else:
-                    break
+                robot_tiles[tile.number] = {"coordinates": coordinate,
+                                            "tile_direction": tile.direction}
 
     # Sort created dictionary by the first element - start tile number
     robot_tiles = OrderedDict(sorted(robot_tiles.items(), key=lambda stn: stn[0]))
-
     return robot_tiles
 
 
 def create_robots(board, players=None):
     """
-    Place robots on start tiles.
-
+    Place and return robots on start tiles and return start tiles coordinates.
     board: dictionary returned by get_board()
-    Initialize Robot objects on the start tiles coordinates with random
-    choice of robot's avatar on particular tile.
-    Once the robot is randomly chosen, he is removed from the list
-    (he cannot appear twice on the board).
+    Initialize Robot objects on the start tiles coordinates with a robot's
+    avatar on particular tile. Once the robot is assigned,
+    he is removed from the list (he cannot appear twice on the board).
     Robots are placed on board in the direction of their start tiles.
     The robots are ordered according to their start tiles.
+    Return also start tiles coordinates for further processing.
     """
-    start_tiles = get_start_tiles(board, players=players)
+    start_tiles = get_start_tiles(board)
     robots_on_start = []
+    tiles_coordinates = []
     robot_names = get_robot_names()
 
     for start_tile_number, name in zip(start_tiles, robot_names):
-        # Get direction and coordinates for the robot on the tile
-        initial_direction = start_tiles[start_tile_number]["tile_direction"]
-        initial_coordinates = start_tiles[start_tile_number]["coordinates"]
-
-        # Create a robot, add him to robot's list
-        robot = Robot(initial_direction, initial_coordinates, name)
-        robots_on_start.append(robot)
-    return robots_on_start
+        if players is not None and len(robots_on_start) >= players:
+            break
+        else:
+            # Get direction and coordinates for the robot on the tile
+            initial_direction = start_tiles[start_tile_number]["tile_direction"]
+            initial_coordinates = start_tiles[start_tile_number]["coordinates"]
+            tiles_coordinates.append(initial_coordinates)
+            # Create a robot, add him to robot's list
+            robot = Robot(initial_direction, initial_coordinates, name)
+            robots_on_start.append(robot)
+    return robots_on_start, tiles_coordinates
 
 
 def get_colliding_robots(robots):

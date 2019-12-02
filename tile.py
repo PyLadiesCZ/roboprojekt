@@ -92,7 +92,7 @@ class Tile:
         """
         return False
 
-    def collect_flag(self, robot, state):
+    def collect_flag(self, robot):
         """
         Collect flag by robot and change robot's start coordinates.
         """
@@ -104,7 +104,7 @@ class Tile:
         """
         return False
 
-    def set_new_start(self, robot, state):
+    def set_new_start(self, robot):
         """
         Change robot's start coordinates, if possible by tile properties.
         """
@@ -144,6 +144,7 @@ class HoleTile(Tile):
         # Call robot's method for dying.
         robot.die(state)
         return robot
+
 
 class BeltTile(Tile):
     def __init__(self, direction, name, tile_type, properties):
@@ -192,6 +193,7 @@ class PusherTile(Tile):
         if (register + 1) % 2 == self.register:
             robot.move(self.direction.get_new_direction(Rotation.U_TURN), 1, state)
             return True
+
 
 class GearTile(Tile):
     def __init__(self, direction, name, tile_type, properties):
@@ -251,10 +253,10 @@ class FlagTile(Tile):
         self.number = properties["number"]
         super().__init__(direction, name, tile_type, properties)
 
-    def collect_flag(self, robot, state):
+    def collect_flag(self, robot):
         # Robot always changes his start coordinates, when he is on a flag.
         # Flag number doesn't play a role.
-        robot.change_start_coordinates(state)
+        robot.start_coordinates.append(robot.coordinates)
         # Collect only correct flag.
         # Correct flag will have a number that is equal to robot's flag number plus one.
         if (robot.flags + 1) == self.number:
@@ -274,10 +276,10 @@ class RepairTile(Tile):
             state.record_log()
             return True
 
-    def set_new_start(self, robot, state):
+    def set_new_start(self, robot):
         # Change start coordinates of robot, if it's a tile property.
         if self.new_start:
-            robot.change_start_coordinates(state)
+            robot.start_coordinates.append(robot.coordinates)
             return True
 
 

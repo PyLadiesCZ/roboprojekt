@@ -251,7 +251,7 @@ def get_app(server):
 
 
 @click.command()
-@click.option("-m", "--map-name", default="maps/game_8_1.json",
+@click.option("-m", "--map-name", default="maps/belt_map.json",
               help="Name of the played map.")
 @click.option("-p", "--players", help="Number of players", type=int)
 def main(map_name, players):
