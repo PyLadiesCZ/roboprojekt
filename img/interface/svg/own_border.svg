@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="25.909527mm"
+   height="38.119469mm"
+   viewBox="0 0 25.909528 38.11947"
+   version="1.1"
+   id="svg8"
+   inkscape:export-filename="/home/iveta/pyladies/roboprojekt/img/interface/png/own_border.png"
+   inkscape:export-xdpi="93.285667"
+   inkscape:export-ydpi="93.285667"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="own_border.svg">
+  <defs
+     id="defs2">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient1500">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0.073"
+         offset="0"
+         id="stop1496" />
+      <stop
+         style="stop-color:#ffff00;stop-opacity:0.165"
+         offset="1"
+         id="stop1498" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient1454"
+       osb:paint="gradient">
+      <stop
+         style="stop-color:#fff900;stop-opacity:1;"
+         offset="0"
+         id="stop1450" />
+      <stop
+         style="stop-color:#fff900;stop-opacity:0;"
+         offset="1"
+         id="stop1452" />
+    </linearGradient>
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1500"
+       id="radialGradient1502"
+       cx="19.444263"
+       cy="7.5621819"
+       fx="19.444263"
+       fy="7.5621819"
+       r="12.26125"
+       gradientTransform="matrix(1.3276851e-7,3.3662964,-1.6399906,3.6300686e-6,25.101886,-47.463546)"
+       gradientUnits="userSpaceOnUse" />
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter1592"
+       x="-0.084359999"
+       width="1.16872"
+       y="-0.057518182"
+       height="1.1150364">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.83700936"
+         id="feGaussianBlur1594" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="9.3994533"
+     inkscape:cx="-3.9056996"
+     inkscape:cy="20.091834"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer4"
+     showgrid="true"
+     inkscape:window-width="1366"
+     inkscape:window-height="660"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:measure-start="0,0"
+     inkscape:measure-end="0,0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid1554"
+       empspacing="4"
+       originx="-52.675009"
+       originy="-162.74165" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Vrstva 2"
+     style="display:inline"
+     transform="translate(0.2416743,-0.22218406)" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Vrstva 3"
+     transform="translate(0.2416743,-0.22218406)" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="Vrstva 4"
+     transform="translate(0.2416743,-0.22218406)">
+    <rect
+       style="opacity:0.504;fill:url(#radialGradient1502);fill-opacity:1;stroke:#ffff00;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal;filter:url(#filter1592)"
+       id="rect1494"
+       width="23.8125"
+       height="34.924999"
+       x="0.52915007"
+       y="2.116636" />
+    <rect
+       style="opacity:0.917;fill:none;fill-opacity:1;stroke:#ffff00;stroke-width:0.65786332;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       id="rect1600"
+       width="23.260397"
+       height="35.983334"
+       x="0.99523622"
+       y="1.0583028" />
+    <rect
+       style="opacity:0.931;fill:none;fill-opacity:1;stroke:#1a1a1a;stroke-width:0.12026378;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       id="rect1602"
+       width="23.922604"
+       height="36.567898"
+       x="0.530119"
+       y="0.67061818"
+       inkscape:export-filename="/home/iveta/pyladies/roboprojekt/img/interface/png/rect1602.png"
+       inkscape:export-xdpi="93"
+       inkscape:export-ydpi="93" />
+  </g>
+</svg>
