@@ -3,7 +3,6 @@ from contextlib import contextmanager
 from functools import lru_cache
 from pathlib import Path
 
-
 # Constatnts for size of tile image in px
 TILE_WIDTH = 64
 TILE_HEIGHT = 64
@@ -39,21 +38,54 @@ def window_zoom(window, WINDOW_WIDTH, WINDOW_HEIGHT):
     """
     Contextmanager for zoom of window.
     """
-    pyglet.gl.glPushMatrix()
+    pyglet.gl.gl_compat.glPushMatrix()
     window.clear()
     zoom = min(
         window.height / WINDOW_HEIGHT,
         window.width / WINDOW_WIDTH
     )
-    pyglet.gl.glScalef(zoom, zoom, 1)
+    pyglet.gl.gl_compat.glScalef(zoom, zoom, 1)
     yield
-    pyglet.gl.glPopMatrix()
+    pyglet.gl.gl_compat.glPopMatrix()
 
 
-# Loading of robots images
-loaded_robots_images = {}
-for image_path in Path('./img/robots/png').iterdir():
-    loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
+_init_module_after_gl_context_called = False
 
-# Create player sprite, use fake image, replaced with the actual one-
-player_sprite = get_sprite('img/robots/png/bender.png')
+def _init_module_after_gl_context():
+    """ loads sprites into global variables after a GL context is created. """
+    global _init_module_after_gl_context_called
+    if _init_module_after_gl_context_called:
+        return
+    _init_module_after_gl_context_called = True
+
+    # Loading of robots images
+    for image_path in Path('./img/robots/png').iterdir():
+        loaded_robots_images[image_path.stem] = pyglet.image.load(str(image_path))
+
+    # Create player sprite, use fake image, replaced with the actual one-
+    player_sprite_proxy._set_actual_sprite(get_sprite('img/robots/png/bender.png'))
+
+loaded_robots_images = {}  # initialized in init_module_after_gl_context
+
+class PlayerSpriteProxy:
+    # player_sprite is used from multiple modules in same running program
+    # and cannot be created as None -> a proxy object
+
+    def __init__(self):
+        self.__dict__['_actual_sprite'] = None
+
+    def _set_actual_sprite(self, actual_sprite):
+        self._actual_sprite = actual_sprite
+
+    def __getattr__(self, name):
+        if name in self.__dict__:
+            return self.__dict__[name]
+        return getattr(self._actual_sprite, name)
+
+    def __setattr__(self, name, value):
+        if name in self.__dict__:
+            self.__dict__[name] = value
+        else:
+            setattr(self._actual_sprite, name, value)
+
+player_sprite_proxy = PlayerSpriteProxy()

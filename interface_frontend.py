@@ -1,8 +1,12 @@
 import pyglet
+pyglet.options['shadow_window'] = False
+
+from pyglet.gl import Config as GLConfig
 from time import monotonic
 
 from util_frontend import TILE_WIDTH, TILE_HEIGHT, get_label, get_sprite
-from util_frontend import window_zoom, loaded_robots_images, player_sprite
+from util_frontend import (window_zoom, loaded_robots_images, player_sprite_proxy,
+                           _init_module_after_gl_context as _util_frontend_init_module_after_gl_context)
 
 MAX_LIVES_COUNT = 3
 MAX_FLAGS_COUNT = 8
@@ -17,7 +21,13 @@ def create_window(on_draw, on_text, on_mouse_press, on_close):
     """
     Return a pyglet window for graphic output.
     """
-    window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT, resizable=True)
+    gl_config = GLConfig(major_version=2, minor_version=1, forward_compatible=False)
+    window = pyglet.window.Window(WINDOW_WIDTH, WINDOW_HEIGHT,
+                                  config=gl_config, resizable=True)
+
+    _util_frontend_init_module_after_gl_context()
+    _init_module_after_gl_context()
+
     window.push_handlers(
         on_draw=on_draw,
         on_text=on_text,
@@ -26,92 +36,108 @@ def create_window(on_draw, on_text, on_mouse_press, on_close):
     )
     return window
 
+_init_module_after_gl_context_called = False
 
-# Interface element sprites
-# Interface background
-interface_sprite = get_sprite('img/interface/png/interface.png', x=0, y=0)
-power_down_sprite = get_sprite('img/interface/png/power.png', x=210, y=900)
-power_down_player_sprite = get_sprite('img/interface/png/power_player.png')
-# Winner crown
-crown_sprite = get_sprite('img/interface/png/crown.png')
-# Loss crown
-loss_sprite = get_sprite('img/interface/png/no_crown.png')
-# Time indicator
-indicator_green_sprite = get_sprite('img/interface/png/green.png', x=688, y=864)
-# Time indicator
-indicator_red_sprite = get_sprite('img/interface/png/red.png', x=688, y=864)
-# Universal cards background
-card_background_sprite = get_sprite('img/interface/png/card_bg.png')
-# Own robot's border
-own_border_sprite = get_sprite('img/interface/png/own_border.png', x=33, y=42)
-# Gray overlay on selected cards
-select_sprite = get_sprite('img/interface/png/card_cv.png')
-# Selection cursor
-cursor_sprite = get_sprite('img/interface/png/card_sl.png')
-# Winner
-you_win_sprite = get_sprite('img/interface/png/winner.png', x=160, y=290)
-winner_of_the_game_sprite = get_sprite('img/interface/png/game_winner.png', x=160, y=200)
-# Game over
-game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=280)
-# Other robot card
-players_background = get_sprite('img/interface/png/player.png')
-# My_robot_sprite, below replaced with the actual image.
-my_robot_sprite = get_sprite('img/robots/png/bender.png', x=64, y=882)
+def _init_module_after_gl_context():
+    global interface_sprite, power_down_sprite, power_down_player_sprite
+    global crown_sprite, loss_sprite, indicator_green_sprite, indicator_red_sprite
+    global card_background_sprite, own_border_sprite, select_sprite
+    global cursor_sprite, you_win_sprite, winner_of_the_game_sprite
+    global game_over_sprite, players_background, my_robot_sprite, flag_slot_sprite
+    global _init_module_after_gl_context_called
+    if _init_module_after_gl_context_called:
+        return
+    _init_module_after_gl_context_called = True
+
+    # Interface element sprites
+    # Interface background
+    interface_sprite = get_sprite('img/interface/png/interface.png', x=0, y=0)
+    power_down_sprite = get_sprite('img/interface/png/power.png', x=210, y=900)
+    power_down_player_sprite = get_sprite('img/interface/png/power_player.png')
+    # Winner crown
+    crown_sprite = get_sprite('img/interface/png/crown.png')
+    # Loss crown
+    loss_sprite = get_sprite('img/interface/png/no_crown.png')
+    # Time indicator
+    indicator_green_sprite = get_sprite('img/interface/png/green.png', x=688, y=864)
+    # Time indicator
+    indicator_red_sprite = get_sprite('img/interface/png/red.png', x=688, y=864)
+    # Universal cards background
+    card_background_sprite = get_sprite('img/interface/png/card_bg.png')
+    # Own robot's border
+    own_border_sprite = get_sprite('img/interface/png/own_border.png', x=33, y=42)
+    # Gray overlay on selected cards
+    select_sprite = get_sprite('img/interface/png/card_cv.png')
+    # Selection cursor
+    cursor_sprite = get_sprite('img/interface/png/card_sl.png')
+    # Winner
+    you_win_sprite = get_sprite('img/interface/png/winner.png', x=160, y=290)
+    winner_of_the_game_sprite = get_sprite('img/interface/png/game_winner.png', x=160, y=200)
+    # Game over
+    game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=280)
+    # Other robot card
+    players_background = get_sprite('img/interface/png/player.png')
+    # My_robot_sprite, below replaced with the actual image.
+    my_robot_sprite = get_sprite('img/robots/png/bender.png', x=64, y=882)
+    flag_slot_sprite = get_sprite('img/interface/png/flag_slot.png')
+
+    for i in range(MAX_LIVES_COUNT):
+        x = 354 + i * 46
+        y = 864
+        lives_sprites.append(get_sprite('img/interface/png/life.png', x, y))
+    for i in range(MAX_FLAGS_COUNT):
+        x = 332 + i * 48
+        y = 928
+        flags_sprites.append(get_sprite(f'img/tiles/png/flag_{i+1}.png', x, y))
+
+    for i in range(MAX_DAMAGES_COUNT):
+        x = 677 + i * -70
+        y = 773
+        damages_tokens_sprites.append(get_sprite('img/interface/png/token.png', x, y))
+
+    for i in range(MAX_DAMAGES_COUNT):
+        x = 677 + i * -70
+        y = 773
+        permanent_damages_sprites.append(get_sprite('img/interface/png/permanent_damage.png', x, y))
+
+    cards_type_sprites.update({
+        'u_turn': get_sprite('img/interface/png/u_turn.png'),
+        'back_up': get_sprite('img/interface/png/back.png'),
+        'left': get_sprite('img/interface/png/rotate_left.png'),
+        'right': get_sprite('img/interface/png/rotate_right.png'),
+        'move1': get_sprite('img/interface/png/move1.png'),
+        'move2': get_sprite('img/interface/png/move2.png'),
+        'move3': get_sprite('img/interface/png/move3.png'),
+    })
+
+    for i in range(5):
+        x, y = 47, 384
+        # 144 space between cards
+        x = x + i * 144
+        dealt_cards_coordinates.append((x, y))
+    for i in range(4):
+        x, y = 120, 224
+        x = x + i * 144
+        dealt_cards_coordinates.append((x, y))
+    for i in range(5):
+        x, y = 47, 576
+        x = x + i * 144
+        program_coordinates.append((x, y))
 
 lives_sprites = []
-for i in range(MAX_LIVES_COUNT):
-    x = 354 + i * 46
-    y = 864
-    lives_sprites.append(get_sprite('img/interface/png/life.png', x, y))
-
 flags_sprites = []
-for i in range(MAX_FLAGS_COUNT):
-    x = 332 + i * 48
-    y = 928
-    flags_sprites.append(get_sprite(f'img/tiles/png/flag_{i+1}.png', x, y))
-
-flag_slot_sprite = get_sprite('img/interface/png/flag_slot.png')
 
 # Tokens of damage
 damages_tokens_sprites = []
-for i in range(MAX_DAMAGES_COUNT):
-    x = 677 + i * -70
-    y = 773
-    damages_tokens_sprites.append(get_sprite('img/interface/png/token.png', x, y))
 
 permanent_damages_sprites = []
-for i in range(MAX_DAMAGES_COUNT):
-    x = 677 + i * -70
-    y = 773
-    permanent_damages_sprites.append(get_sprite('img/interface/png/permanent_damage.png', x, y))
 
 # Cards sprites
-cards_type_sprites = {
-    'u_turn': get_sprite('img/interface/png/u_turn.png'),
-    'back_up': get_sprite('img/interface/png/back.png'),
-    'left': get_sprite('img/interface/png/rotate_left.png'),
-    'right': get_sprite('img/interface/png/rotate_right.png'),
-    'move1': get_sprite('img/interface/png/move1.png'),
-    'move2': get_sprite('img/interface/png/move2.png'),
-    'move3': get_sprite('img/interface/png/move3.png'),
-}
+cards_type_sprites = {}
 
 dealt_cards_coordinates = []
-for i in range(5):
-    x, y = 47, 384
-    # 144 space between cards
-    x = x + i * 144
-    dealt_cards_coordinates.append((x, y))
-for i in range(4):
-    x, y = 120, 224
-    x = x + i * 144
-    dealt_cards_coordinates.append((x, y))
 
 program_coordinates = []
-for i in range(5):
-    x, y = 47, 576
-    x = x + i * 144
-    program_coordinates.append((x, y))
 
 # dict for drawing cards names
 cards_type_names = {
@@ -341,10 +367,10 @@ def draw_robot(i, robot, game_state):
 
     # Robot´s image
     if robot.name in loaded_robots_images:
-        player_sprite.image = loaded_robots_images[robot.name]
-        player_sprite.x = 139 + i * GAP
-        player_sprite.y = 90
-        player_sprite.draw()
+        player_sprite_proxy.image = loaded_robots_images[robot.name]
+        player_sprite_proxy.x = 139 + i * GAP
+        player_sprite_proxy.y = 90
+        player_sprite_proxy.draw()
 
     # Robot's name
     robot_name_label = get_label(

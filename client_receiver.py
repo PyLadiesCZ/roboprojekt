@@ -4,6 +4,8 @@ Client receives game state from server and draws it.
 import asyncio
 import aiohttp
 import pyglet
+pyglet.options['shadow_window'] = False
+
 import click
 from time import monotonic
 from util_network import tick_asyncio
@@ -107,6 +109,8 @@ def main(hostname):
     # Schedule the "client" task
     # More about Futures - official documentation
     # https://docs.python.org/3/library/asyncio-future.html
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     asyncio.ensure_future(receiver.get_game_state())
     pyglet.app.run()
 

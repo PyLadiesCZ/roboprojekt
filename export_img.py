@@ -6,7 +6,7 @@ Program export all images in SVG format to PNG format in directories/subdirector
 import subprocess
 from pathlib import Path
 
-inkscape_paths = [
+INKSCAPE_PATHS = [
     "inkscape",
     "C:/Program Files/Inkscape/inkscape",
     "C:/Program Files (x86)/Inkscape/inkscape"
@@ -29,11 +29,11 @@ def find_inkscape_path():
     """
     Return first functional Inkscape path
     """
-    for path in inkscape_paths:
+    for path in INKSCAPE_PATHS:
         if run_inkscape(path):
             return path
 
-inkscape = find_inkscape_path()
+INKSCAPE = find_inkscape_path()
 
 def export_svg_png():
     """
@@ -56,7 +56,9 @@ def export_svg_png():
         new_name.parent.mkdir(exist_ok=True, parents=True)
         # launch Inkscape and export all images to PNG format
         # More info about subprocess in official documentation - https://docs.python.org/3/library/subprocess.html
-        subprocess.run([inkscape, name, "--export-png=" + str(new_name), "--export-area-page"], check=True)
+        print(name)
+        subprocess.run([INKSCAPE, name, "--export-filename="+str(new_name), "--export-area-page"], check=True)
 
-export_svg_png()
-print("Done")
+if __name__ == '__main__':
+    export_svg_png()
+    print("Done")

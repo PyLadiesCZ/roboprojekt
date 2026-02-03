@@ -19,8 +19,10 @@ If you spot a bug or have an idea for enhancement, write us an GitHub issue.
 
 ### Requirements
 
-Python v. 3.7
+Python v. 3.8
 We recommend to use virtual environment.
+
+(Python version was raised from 3.7 to 3.8 for Pyglet 2)
 
 To successfully run the project, run the script below. It will install all the requirements including additional libraries:
 - [pyglet](https://bitbucket.org/pyglet/pyglet/wiki/Home) - the graphical library,
@@ -47,7 +49,7 @@ You can choose a map to play directly from command line by writing the location 
 The same way you can enter the number of players `-p, --players`. The current maps are prepared for the max. 8 players.
 
 ```
-python server.py -m maps/game_1.json -p 6
+python server.py -m maps/belt_map.json -p 6
 ```
 
 If you run server on a different computer than the clients, get the server's hostname and run clients with its value as the named argument `-h, --hostname`.

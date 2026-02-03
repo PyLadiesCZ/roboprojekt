@@ -5,6 +5,8 @@ The game module
     - choose standard or other map to be loaded
 """
 import pyglet
+pyglet.options['shadow_window'] = False
+
 import sys
 
 from backend import State

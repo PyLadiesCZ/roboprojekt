@@ -8,6 +8,8 @@ Then click on the chosen robot.
 import asyncio
 import aiohttp
 import pyglet
+pyglet.options['shadow_window'] = False
+
 import click
 
 from backend import State
@@ -97,6 +99,8 @@ def main(hostname):
     # Schedule the "client" task
     # More about Futures - official documentation
     # https://docs.python.org/3/library/asyncio-future.html
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     asyncio.ensure_future(welcome_board.process_message())
     pyglet.app.run()
 

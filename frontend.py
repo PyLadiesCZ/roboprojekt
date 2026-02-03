@@ -5,36 +5,61 @@ The frontend module
 """
 
 import pyglet
+pyglet.options['shadow_window'] = False
+
+from pyglet.gl import Config as GLConfig
 from pathlib import Path
 from time import monotonic
-from util_frontend import TILE_WIDTH, TILE_HEIGHT, get_label, get_sprite, window_zoom
+from util_frontend import (TILE_WIDTH, TILE_HEIGHT, get_label, get_sprite, window_zoom,
+                           _init_module_after_gl_context as _util_frontend_init_module_after_gl_context)
 import math
 
-# Loading of tiles and robots images
-loaded_tiles_images = {}
-for image_path in Path('./img/tiles/png').iterdir():
-    loaded_tiles_images[image_path.stem] = pyglet.image.load(image_path)
 
-loaded_robots_images = {}
-for image_path in Path('./img/robots_map/png').iterdir():
-    loaded_robots_images[image_path.stem] = pyglet.image.load(image_path)
+loaded_tiles_images = {}  # init inside _init_module_after_gl_context
+loaded_robots_images = {} # init inside _init_module_after_gl_context
 
-# Border of available robot's picture
-border_sprite = get_sprite('./img/interface/png/border.png')
-# Winner
-winner_sprite = get_sprite('img/interface/png/game_winner.png', x=170, y=200)
-# Game over
-# game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=180)
+_init_module_after_gl_context_called = False
+
+def _init_module_after_gl_context():
+    """ Loading of tiles and robots images
+        because of the gl.gl_compat functions we need to load sprites
+        after a window with correct GL context is created
+    """
+    global loaded_tiles_images, loaded_robots_images
+    global border_sprite, winner_sprite #, game_over_sprite
+    global _init_module_after_gl_context_called
+    if _init_module_after_gl_context_called:
+        return
+    _init_module_after_gl_context_called = True
+
+    for image_path in Path('./img/tiles/png').iterdir():
+        loaded_tiles_images[image_path.stem] = pyglet.image.load(str(image_path))
+
+    for image_path in Path('./img/robots_map/png').iterdir():
+        loaded_robots_images[image_path.stem] = pyglet.image.load(str(image_path))
+
+    # Border of available robot's picture
+    border_sprite = get_sprite('./img/interface/png/border.png')
+    # Winner
+    winner_sprite = get_sprite('img/interface/png/game_winner.png', x=170, y=200)
+    # Game over
+    # game_over_sprite = get_sprite('img/interface/png/game_over.png', x=140, y=180)
 
 
 def create_window(state, on_draw):
     """
     Return a pyglet window for graphic output.
+    Loads global sprites in the first call after the window is created with compatible GL context.
 
     state: State object containing game board, robots and map sizes
     """
+    gl_config = GLConfig(major_version=2, minor_version=1, forward_compatible=False)
     window = pyglet.window.Window(state.tile_count[0] * TILE_WIDTH,
-                                  state.tile_count[1] * TILE_HEIGHT + 50, resizable=True)
+                                  state.tile_count[1] * TILE_HEIGHT + 50,
+                                  config=gl_config, resizable=True)
+    _util_frontend_init_module_after_gl_context()
+    _init_module_after_gl_context()
+
     window.push_handlers(on_draw=on_draw)
     return window
 

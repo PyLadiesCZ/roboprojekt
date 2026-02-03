@@ -58,9 +58,7 @@ def get_tiles_data(map_data):
     except KeyError:
         loaded_tileset = map_data['tilesets'][0]['tiles']
 
-    # Whatever happened above, return the set variable for further processing.
-    finally:
-        return loaded_tileset
+    return loaded_tileset
 
 
 def get_tiles_properties(map_data):

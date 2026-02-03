@@ -2,3 +2,9 @@ __pycache__/
 *.pyc
 .coverage
 htmlcov/
+
+.venv/
+venv/
+venv38/
+
+.idea

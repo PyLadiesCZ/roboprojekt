@@ -6,6 +6,8 @@ server. It sends messages with its state to server.
 import asyncio
 import aiohttp
 import pyglet
+pyglet.options['shadow_window'] = False
+
 import click
 from time import monotonic
 
@@ -156,6 +158,8 @@ def run_from_welcome_board(robot_name, own_robot_name, hostname):
 def main(hostname, robot_name):
     interface = Interface(hostname)
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     asyncio.ensure_future(interface.get_messages(robot_name))
     pyglet.app.run()
 
