@@ -59,7 +59,7 @@ def load_robots(state, last_robots, animation_pos):
     state: State object containing game board and robots
     """
     robot_sprites = []
-    # Only active robots will be drawn.
+    # Only robots with coordinates (selected by players) will be drawn on map.
     for robot in state.robots:
         last_robot = last_robots.get(robot.name, robot)
         robot_sprite = create_robot_sprite(robot, last_robot, animation_pos)
@@ -208,6 +208,9 @@ def draw_state(state, winner_time, available_robots, window, last_robots=None, a
 
         if available_robots:
             for robot in available_robots:
+                # Skip robots without coordinates (not selected yet)
+                if robot.coordinates is None:
+                    continue
                 x, y = robot.coordinates
                 for robot_sprite in robot_sprites:
                     border_sprite.x = robot_sprite.x*TILE_WIDTH

@@ -8,11 +8,11 @@ import click
 from time import monotonic
 from util_network import tick_asyncio
 
-from backend import State
+from backend import State, Robot
 from frontend import draw_state, create_window
 
 # How long one state from the log should be displayed (in seconds)
-LOG_FRAME_TIME = 0.2
+LOG_FRAME_TIME = 0.5
 
 
 class Receiver:
@@ -49,8 +49,13 @@ class Receiver:
 
     def reset_last_robots(self):
         """Set the starting point of the animation to the current state.
+        Make copies of robots so changes don't affect the animation baseline.
         """
-        self.last_robots = {robot.name: robot for robot in self.state.robots}
+        self.last_robots = {}
+        for robot in self.state.robots:
+            # Create a copy of the robot by serializing and deserializing
+            robot_copy = Robot.from_dict(robot.as_dict())
+            self.last_robots[robot.name] = robot_copy
 
     async def tick_log(self):
         """
@@ -59,9 +64,10 @@ class Receiver:
         After the given delay (in seconds), repeat.
         """
         while True:
-            if self.state:
-                self.reset_last_robots()
             if self.log_to_play:
+                # Save current state as animation starting point
+                if self.state:
+                    self.reset_last_robots()
                 self.animation_start = monotonic()
                 new_state = self.log_to_play.pop(0)
                 if new_state == None:
@@ -89,6 +95,8 @@ class Receiver:
                             self.window = create_window(self.state, self.window_draw)
                     if "available_robots" in message:
                         self.available_robots = self.state.robots_from_dict({"robots": message["available_robots"]})
+                    # Receiver client ignores "robots" messages - it only uses "log" for animations
+                    # This prevents the animation glitch where robot jumps to end position
                     if 'log' in message:
                         self.log_to_play.extend(message['log'])
                     if "winner" in message:
@@ -102,12 +110,14 @@ class Receiver:
 @click.option("-h", "--hostname", default="localhost",
               help="Server's hostname.")
 def main(hostname):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     receiver = Receiver(hostname)
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
     # Schedule the "client" task
     # More about Futures - official documentation
     # https://docs.python.org/3/library/asyncio-future.html
-    asyncio.ensure_future(receiver.get_game_state())
+    loop.create_task(receiver.get_game_state())
     pyglet.app.run()
 
 

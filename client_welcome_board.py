@@ -92,12 +92,14 @@ class WelcomeBoard:
 @click.option("-h", "--hostname", default="localhost",
               help="Server's hostname.")
 def main(hostname):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     welcome_board = WelcomeBoard(hostname)
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
     # Schedule the "client" task
     # More about Futures - official documentation
     # https://docs.python.org/3/library/asyncio-future.html
-    asyncio.ensure_future(welcome_board.process_message())
+    loop.create_task(welcome_board.process_message())
     pyglet.app.run()
 
 

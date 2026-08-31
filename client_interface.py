@@ -61,7 +61,8 @@ class Interface:
         """
         When windows is closed, WebSocket is disconnected.
         """
-        asyncio.ensure_future(self.ws.close())
+        if self.ws is not None:
+            asyncio.get_event_loop().create_task(self.ws.close())
 
     def send_state_to_server(self):
         """
@@ -129,7 +130,7 @@ class Interface:
             if robot.name == robot_name:
                 self.interface_state.robot = robot
                 if own_robot_name != "":
-                    robot.displayed_name == own_robot_name
+                    robot.displayed_name = own_robot_name  # Fixed: = instead of ==
 
     def set_blocked_cards(self, cards):
         """
@@ -154,9 +155,11 @@ def run_from_welcome_board(robot_name, own_robot_name, hostname):
 @click.option("-r", "--robot-name", default="",
               help="Choose robot's name directly from the command line.")
 def main(hostname, robot_name):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     interface = Interface(hostname)
     pyglet.clock.schedule_interval(tick_asyncio, 1/30)
-    asyncio.ensure_future(interface.get_messages(robot_name))
+    loop.create_task(interface.get_messages(robot_name))
     pyglet.app.run()
 
 

@@ -11,7 +11,8 @@ import asyncio
 import click
 from aiohttp import web
 
-from backend import State
+from backend import State, Robot, get_robot_names, get_start_tiles, get_board
+from util_backend import Direction
 
 
 class Server:
@@ -31,8 +32,37 @@ class Server:
     def __init__(self, map_name, players):
         # Attributes related to game logic
         self.map_name = map_name
-        self.state = State.get_start_state(map_name, players)
+        self.max_players = players
+
+        # Create game state with board
+        board = get_board(map_name)
+
+        # Get start positions for actual players
+        start_tiles = get_start_tiles(board)
+        self.player_start_positions = []
+        start_tile_keys = sorted(start_tiles.keys())
+        for start_tile_number in start_tile_keys[:players]:
+            tile_info = start_tiles[start_tile_number]
+            self.player_start_positions.append({
+                'coordinates': tile_info['coordinates'],
+                'direction': tile_info['tile_direction']
+            })
+
+        # Create ALL robots for selection WITHOUT coordinates (inactive)
+        robot_names = get_robot_names()
+        all_robots = []
+        for name in robot_names:
+            # Create robot without position (inactive, not on map yet)
+            robot = Robot(direction=Direction.N, coordinates=None, name=name)
+            all_robots.append(robot)
+
+        # Create state with all robots (they're inactive until assigned)
+        self.state = State(board, all_robots)
+        self.state.start_coordinates = []
+
+        # All robots are available for selection at start
         self.available_robots = list(self.state.robots)
+
         # Dictionary {robot_name: ws_interface}
         self.assigned_robots = {}
 
@@ -89,7 +119,6 @@ class Server:
         # Get first data for connected client: robot and cards
         # and assign it to client
         robot = self.assign_robot_to_client(request.match_info.get("robot_name"), ws)
-        await self.send_message(self.available_robots_as_dict())
 
         try:
             # Prepare message to send: robot name, game state and cards
@@ -104,28 +133,44 @@ class Server:
             # Send the message to the connected client
             await ws.send_json(welcome_message)
 
+            # Now send updates to all clients (after this client has game_state)
+            await self.send_message(self.available_robots_as_dict())
+            # Send robots state (for interface client) and log (for receiver client)
+            await self.send_message(self.state.robots_as_dict())
+            await self.send_message({'log': [self.state.robots_as_dict()]})
+
             # React to the sent state of this client and send new state to all
             async for message in ws:
                 await self.process_message(message, robot)
             return ws
 
         finally:
-            # Deleted robot from assigned and return him to available robots
-            # Set the respective robot as off (power down) and confirm their
-            # card selection.
+            # Delete robot from assigned and return him to available robots
             del self.assigned_robots[robot.name]
+            # Find robot's start coordinate and remove it
+            if robot.start_coordinates and robot.start_coordinates[0] in self.state.start_coordinates:
+                self.state.start_coordinates.remove(robot.start_coordinates[0])
+            # Make robot inactive - remove from map
+            robot.coordinates = None
+            robot.direction = Direction.N
+            robot.start_coordinates = []
+            robot.selection_confirmed = False
             self.available_robots.append(robot)
             await self.send_message(self.available_robots_as_dict())
-            for robot_in_game in self.state.robots:
-                if robot_in_game in self.available_robots:
-                    robot_in_game.freeze()
+            # Send updated robot states to map viewer
+            await self.send_message(self.state.robots_as_dict())
 
     def assign_robot_to_client(self, robot_name, ws):
         """
         Assign the first available robots to the client.
         Store the pair in a dictionary of assigned robots.
+        Place robot on the next available start position.
         Return the assigned robot.
         """
+        # Check if we've reached max players
+        if len(self.assigned_robots) >= self.max_players:
+            raise web.HTTPForbidden(reason="Maximum number of players reached")
+
         # Client_interface is added to dictionary (robot.name: ws)
         if robot_name is not None:
             for robot in self.available_robots:
@@ -138,6 +183,19 @@ class Server:
                 raise web.HTTPNotFound()
         else:
             robot = self.available_robots.pop(0)
+
+        # Place robot on next available player start position
+        start_position = self.player_start_positions[len(self.assigned_robots)]
+        robot.coordinates = start_position['coordinates']
+        robot.direction = start_position['direction']
+        robot.start_coordinates = [start_position['coordinates']]
+
+        # Robot is already in state.robots, just deal cards
+        self.state.start_coordinates.append(start_position['coordinates'])
+        self.state.deal_cards(robot)
+
+        # Log robot appearing on map so receiver client can see it
+        self.state.record_log()
 
         self.assigned_robots[robot.name] = ws
         # Whenever robot is assigned to the client, unset his selection.
@@ -181,12 +239,16 @@ class Server:
         started or game round is played.
         """
         robot.selection_confirmed = True
-        confirmed_count = self.state.count_confirmed_selections()
+        # Count only robots with coordinates (selected by players)
+        active_robots = [r for r in self.state.robots if r.coordinates is not None]
+        active_robot_count = len(active_robots)
+        # Count confirmations only for active robots
+        confirmed_count = sum(1 for r in active_robots if r.selection_confirmed)
         # If last robot doesnt selected his cards, the timer starts.
-        if confirmed_count == len(self.state.robots) - 1:
+        if confirmed_count == active_robot_count - 1:
             await self.send_message("timer_start")
             asyncio.create_task(self.timer(self.state.game_round))
-        if confirmed_count == len(self.state.robots):
+        if confirmed_count == active_robot_count:
             await self.play_game_round()
 
     async def play_game_round(self):
@@ -201,7 +263,7 @@ class Server:
         if self.state.winners:
             await self.send_message({"winner": self.state.winners})
         await self.send_message("round_over")
-        await self.send_message(self.state.robots_as_dict())
+        # Don't send robots state here - it's already in the log!
         await self.send_new_dealt_cards()
 
     async def timer(self, game_round):

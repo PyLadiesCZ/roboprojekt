@@ -193,6 +193,9 @@ def draw_interface(interface_state, game_state, winner_time, window):
         if game_state is not None:
             players = []
             for robot in game_state.robots:
+                # Only show robots with coordinates (selected by players), exclude own robot
+                if robot.coordinates is None:
+                    continue
                 if interface_state.robot and interface_state.robot.name != robot.name:
                     players.append(robot)
 
@@ -245,7 +248,7 @@ def draw_interface(interface_state, game_state, winner_time, window):
         # Timer
         if interface_state.timer is not None:
             seconds = monotonic() - interface_state.timer
-            seconds_left = round(30-seconds)
+            seconds_left = max(0, round(30-seconds))
             timer_label = get_label(
                 # format'02' means that number has always 2 digits,
                 # shorter is filled with '0' before it.

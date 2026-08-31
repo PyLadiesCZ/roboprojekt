@@ -1,4 +1,4 @@
-pyglet
+pyglet<2.0
 asyncio
 aiohttp
 pyyaml
